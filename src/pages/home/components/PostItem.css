@@ -1,0 +1,45 @@
+.post-item {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  background-color: aliceblue;
+}
+
+.user-info {
+  display: flex;
+}
+
+.user-name {
+  flex: 7;
+}
+
+.post-actions-icon {
+  margin-right: 5px;
+  font-size: 22px;
+  color: 'blue';
+  background-color: none;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-around;
+}
+
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  background-color: #1877f2;
+  /* Màu nền xanh dương của Facebook */
+  color: white;
+  /* Màu chữ trắng */
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.like-button i {
+  margin-right: 8px;
+  color: white;
+  /* Màu biểu tượng thích trắng */
+}

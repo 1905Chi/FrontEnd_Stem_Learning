@@ -1,0 +1,14 @@
+.postbutton {
+    width: 100%;
+}
+
+.anhluachon {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.post {
+    background-color: aliceblue;
+}
