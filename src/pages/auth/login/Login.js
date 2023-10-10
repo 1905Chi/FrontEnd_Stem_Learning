@@ -1,28 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input,Spin  } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { url } from "../../../constants/Constant";
+import { useNavigate } from "react-router-dom";
 
 import "./Login.css";
 
 function Login() {
+  const navigate = useNavigate();
   const notify = (string) => toast(string); // Hàm hiển thị thông báo
+  const [loading, setLoading] = useState(false); // Trạng thái loading
 
   const onFinish = (values) => {
     // Thực hiện kiểm tra đăng nhập tại đây
+    setLoading(true);
     const data = { email: values.email, password: values.password };
+    
     axios
       .post(url + "api/auth/login", data)
       .then((response) => {
         // Xử lý kết quả sau khi gửi thành công
-        if (response.data.statusCode === 200) {
-          localStorage.setItem("token", "yourtoken"); // Lưu token vào localStorage
-          localStorage.setItem("login", true); // Lưu thông tin user vào localStorage
+        if (response.data.statusCode === 200) {  
+          //navigate("/");         
+            localStorage.setItem("accessToken", response.data.result.accessToken);
+            localStorage.setItem("refreshToken", response.data.result.refreshToken);
+            localStorage.setItem("login", true); 
+          // localStorage.setItem("accessToken", response.data.accessToken); // Lưu token vào localStorage
+          // localStorage.setItem("refreshToken", response.data.refreshToken); // Lưu refreshToken vào localStorage
+          // localStorage.setItem("login", true); // Lưu thông tin user vào localStorage
           // navigate('/');
           // Chuyển hướng về trang chủ
+          
           window.location.href = "/";
         } else {
           toast.error(response.data.message);
@@ -43,11 +54,14 @@ function Login() {
           }
         } else if (error.request) {
           // Lỗi không có phản hồi từ máy chủ
-          toast.error(error.request);
+          toast.error("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
         } else {
           // Lỗi trong quá trình thiết lập yêu cầu
           toast.error("Lỗi khi thiết lập yêu cầu.");
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -56,6 +70,12 @@ function Login() {
   };
 
   return (
+    <div className="login-page">
+    <div>
+      <Spin tip="Loading" size="large" spinning={loading} className="Loading-login" >
+        
+      </Spin>
+   
     <div className="body-login">
       <div className="login-container">
         <h2> Đăng nhập </h2>{" "}
@@ -78,15 +98,15 @@ function Login() {
         >
           <Form.Item
             label="Email"
-            name="Email"
+            name="email"
             rules={[
               {
                 type: "email",
-                message: "The input is not valid E-mail!",
+                message: "Email không hợp lệ!",
               },
               {
                 required: true,
-                message: "Please input your E-mail!",
+                message: "Vui lòng nhập địa chỉ email của bạn!",
               },
             ]}
           >
@@ -97,26 +117,27 @@ function Login() {
           </Form.Item>{" "}
           <Form.Item
             label="Password"
-            name="Password"
+            name="password"
             rules={[
               {
                 required: true,
-                message: "Please input your password!",
+                message: "Vui lòng nhập mật khẩu của bạn!",
               },
             ]}
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
-              placeholder="Password"
+              placeholder="password"
             />
           </Form.Item>{" "}
+       
           <Form.Item>
             <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox> Remember me </Checkbox>{" "}
+              <Checkbox> Lưu  </Checkbox>{" "}
             </Form.Item>{" "}
-            <a className="login-form-forgot" href="">
-              Forgot password{" "}
+            <a className="login-form-forgot" href="/forgot-password">
+              Quên mật khẩu{" "}
             </a>{" "}
           </Form.Item>{" "}
           <Form.Item
@@ -126,13 +147,15 @@ function Login() {
             }}
           >
             <Button type="primary" htmlType="submit">
-              Submit{" "}
+              Gửi{" "}
             </Button>{" "}
-            Or <a href=""> register now! </a>{" "}
+            Or <a href="/register"> Đăng ký ngay! </a>{" "}
           </Form.Item>{" "}
         </Form>{" "}
       </div>{" "}
       <ToastContainer />{" "}
+    </div>
+    </div>
     </div>
   );
 }

@@ -8,9 +8,8 @@ import { useEffect } from 'react';
 
 export default function App() {
   const [isLogin, setIsLogin] = useState(
-    localStorage.getItem('token') ? true : false
+    localStorage.getItem('accessToken') ? true : false
   );
-
   const Page404 = notFoundRoute.component;
 
   return (
