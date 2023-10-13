@@ -16,17 +16,17 @@ function PostItem({ user, content, image, likes }) {
     <div className="post-item">
       <div className="user-info">
         <div className="avatarPost">
-          <Avatar src={user.avatar} />{' '}
-        </div>{' '}
-        <p className="user-name"> {user.name} </p>{' '}
-      </div>{' '}
-      <p className="post-content"> {content} </p>{' '}
-      {image && <img src={image} alt="Post" className="post-image" />}{' '}
+          <Avatar src={user.avatar} />
+        </div>
+        <p className="user-name"> {user.name} </p>
+      </div>
+      <p className="post-content"> {content} </p>
+      {image && <img src={image} alt="Post" className="post-image" />}
       <p className="likes-count">
-        {' '}
+        
         {likes}
-        likes{' '}
-      </p>{' '}
+        likes
+      </p>
       <div className="post-actions">
         <button
           style={{
@@ -37,9 +37,9 @@ function PostItem({ user, content, image, likes }) {
           }}
           onClick={handleLike}
         >
-          {' '}
-          <BiLike style={likeButtonStyle} />{' '}
-        </button>{' '}
+          
+          <BiLike style={likeButtonStyle} />
+        </button>
         <button
           style={{
             marginRight: '5px',
@@ -48,16 +48,16 @@ function PostItem({ user, content, image, likes }) {
             background: 'none',
           }}
         >
-          {' '}
-          <BiCommentDetail />{' '}
-        </button>{' '}
+          
+          <BiCommentDetail />
+        </button>
         <button
           style={{ fontSize: '22px', background: 'none', color: 'black' }}
         >
-          {' '}
-          <BiSolidShare />{' '}
-        </button>{' '}
-      </div>{' '}
+          
+          <BiSolidShare />
+        </button>
+      </div>
     </div>
   );
 }

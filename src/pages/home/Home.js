@@ -45,7 +45,8 @@ function Home() {
   ];
   return (
     <>
-      <Post />{' '}
+      <div className="home-page">
+      <Post />
       {post.map((post, index) => {
         return (
           <PostItem
@@ -56,8 +57,9 @@ function Home() {
             likes={post.likes}
           />
         );
-      })}{' '}
-      <ToastContainer />{' '}
+      })}
+      <ToastContainer />
+      </div>
     </>
   );
 }

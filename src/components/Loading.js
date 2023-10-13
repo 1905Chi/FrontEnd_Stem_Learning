@@ -1,11 +1,11 @@
 import React from 'react';
 import { Spin } from 'antd';
+import './Loading.css';
 
-export default function Loading() {
+export default function Loading(props) {
   return (
-    <div className="content-loading-wrapper">
-      <Spin tip="Loading" size="small">
-      </Spin>
-    </div>
+    <div className="Loading">
+    <Spin tip="Loading" size="large" spinning={props.Loading}></Spin>
+  </div>
   );
 }

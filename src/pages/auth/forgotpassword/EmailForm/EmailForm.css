@@ -1,21 +1,18 @@
 .body-enteremail-resetform {
-  background-color: #f5f5f5;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding-top: 100px;
+
 }
 
 .enteremail-resetform {
-  width: 100%;
-  max-width: 330px;
-  padding: 5px;
-  content: 30px;
+  width: 25%;
+  padding: 16px;
   border: 3px solid blue;
+  background-color: #f8f8f8;
+  border-radius: 12px;
 }
-.Loading-email-forgot{
-  position: absolute;
-  top: 50vh;
-  left: 50vw;
-  transform: translate(-50%, -50%); 
+
+
+.logo{
+  width: 330px;
+  height: 110px;
 }

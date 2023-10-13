@@ -2,8 +2,34 @@
   top: 0;
   left: 0;
   width: 100%;
+  position: fixed;
+  z-index: 100;
 }
 
 .content {
   display: flex;
+  flex-direction: row;
+  flex:10;
+ 
+}
+
+.sider-left {
+  position: fixed; 
+  top:80px;
+  flex:2.5;
+
+}
+
+.sider-right {
+  position: fixed; 
+  top:80px;
+  flex:2.5
+
+}
+
+.content-main{
+  flex:5;
+  position: relative; 
+  top: 60px;
+
 }

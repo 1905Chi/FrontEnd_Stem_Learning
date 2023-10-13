@@ -53,20 +53,16 @@ export default function App() {
               />
             );
           })}
-          ,{' '}
-          {(notFoundRoute) => {
-            return (
+          ,                   
               <Route
                 key={notFoundRoute.path}
                 path={notFoundRoute.path}
                 element={
-                  <DefaultLayout>
+                  <DefaultLayoutLogin>
                     <Page404 />
-                  </DefaultLayout>
+                  </DefaultLayoutLogin>
                 }
-              />
-            );
-          }}
+              />         
           ,{' '}
         </Routes>{' '}
       </div>{' '}
