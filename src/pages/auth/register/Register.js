@@ -35,7 +35,7 @@ export default function Register() {
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
-					toast.success('Đăng ký thành công');
+					toast.success(response.data.message);
 					setTimeout(() => {
 						navigate('*');
 					}, 2000);

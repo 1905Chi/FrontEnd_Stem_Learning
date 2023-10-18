@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import React from 'react';
+import React, { Children } from 'react';
 import { useState } from 'react';
 import DefaultLayout from './layouts/DefaultLayout';
 import DefaultLayoutLogin from './layouts/DefaultLayoutLogin';
@@ -16,7 +16,7 @@ export default function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-          {' '}
+          
           {publicRoutes.map((route, index) => {
             const Page = route.component;
             return (
@@ -31,17 +31,20 @@ export default function App() {
               />
             );
           })}
-          ,{' '}
+          ,
           {privateRoutes.map((route, index) => {
             const Page = route.component;
+            const Left = route.Left;
+            const Right = route.Right;
             return (
               <Route
                 key={index}
                 path={route.path}
                 element={
                   isLogin ? (
-                    <DefaultLayout setIsLogin={setIsLogin}>
+                    <DefaultLayout setIsLogin={setIsLogin} Left={<Left/>} Right={<Right/>} >
                       <Page />
+                     
                     </DefaultLayout>
                   ) : (
                     <Navigate
@@ -63,9 +66,9 @@ export default function App() {
                   </DefaultLayoutLogin>
                 }
               />         
-          ,{' '}
-        </Routes>{' '}
-      </div>{' '}
+          ,
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

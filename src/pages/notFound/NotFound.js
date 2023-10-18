@@ -1,6 +1,8 @@
 import React from 'react';
 import { Layout, Space } from 'antd';
+import anh_logo_1 from '../../assets/images/anh_logo_1.jpg';
 const { Footer, Content } = Layout;
+
 
 const contentStyle = {
 	textAlign: 'center',
@@ -31,16 +33,17 @@ const NotFound = () => {
 	return (
 		<Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
 			<nav >
-          <ul style={{display:'flex', listStyle:'none' , justifyContent:'space-around'}}>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Register</a></li>
-            <li><a href="/help">Xem hướng dẫn</a></li>
+          <ul style={{display:'flex', listStyle:'none' , justifyContent:'space-around',backgroundColor:'blue',height:'50px'}}>
+			<li style={{marginTop:'5px'}}><a href="/" style={{color:'black', fontWeight: 'bold',fontSize: '30px' }} >STEM</a></li>
+            <li style={{marginTop:'15px'}}><a href="/login" style={{color:'black'}}>Login</a></li>
+            <li style={{marginTop:'15px'}}><a href="/register" style={{color:'black'}}>Register</a></li>
+            <li style={{marginTop:'15px'}}><a href="/help" style={{color:'black'}}>Xem hướng dẫn</a></li>
           </ul>
         </nav>
 			<Layout>
 				<Content style={contentStyle}>
-					<div>
-						<img src="https://i.pinimg.com/736x/fc/fc/5b/fcfc5ba1f115d6905b43cec76858bd94.jpg" alt="anh" />
+					<div style={{width: '50%',height:'50%'}}>
+						<img src={anh_logo_1} alt="anh"  style={{width: '100%',height:'100%'}}/>
 					</div>
 					<div>
 						<h1>STEM</h1>

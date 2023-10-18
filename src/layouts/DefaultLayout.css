@@ -9,27 +9,39 @@
 .content {
   display: flex;
   flex-direction: row;
-  flex:10;
- 
+  position: relative;
+  
 }
 
 .sider-left {
-  position: fixed; 
-  top:80px;
-  flex:2.5;
+  position: relative; 
+  top:65px;
+  flex: 2.3;
+  padding-left: 15px;
+  overflow-y: auto; /* Cho phép thanh cuộn dọc cho cả hai phần */
+
+  max-height: calc(100vh );
 
 }
 
 .sider-right {
-  position: fixed; 
-  top:80px;
-  flex:2.5
-
+  position: relative; 
+  top:65px;
+  flex:2.3;
+  overflow-y: auto; /* Cho phép thanh cuộn dọc cho cả hai phần */
+  max-height: calc(100vh );
 }
 
-.content-main{
-  flex:5;
-  position: relative; 
-  top: 60px;
 
+
+
+.content-main{
+
+  position: relative  ; 
+  margin: 25px 15px 0 15px;
+  top:65px;
+  flex: 5.4; 
+  overflow-y: auto; /* Cho phép thanh cuộn dọc cho cả hai phần */
+  max-height: calc(100vh );
+ 
 }

@@ -23,6 +23,9 @@ const EmailForm = () => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
 					toast.success('Vui lòng kiểm tra mail để đặt lại mật khẩu');
+					setTimeout(() => {
+						navigate('*');
+					}, 2000);
 				} else {
 					toast.error(response.data.message);
 				}

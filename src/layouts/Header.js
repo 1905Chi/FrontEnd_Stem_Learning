@@ -18,11 +18,11 @@ export default function Header() {
         <div className="block1">
           <Col>
             <Space>
-              <span className="stem"> STEM </span>{" "}
-              <Search placeholder="Tìm kiếm" />{" "}
-            </Space>{" "}
-          </Col>{" "}
-        </div>{" "}
+              <span className="stem"> STEM </span>
+              <Search placeholder="Tìm kiếm" />
+            </Space>
+          </Col>
+        </div>
         <div className="block2">
           <Col>
             <Space>
@@ -31,36 +31,36 @@ export default function Header() {
                 icon={<HomeOutlined />}
                 className="iconHome"
               >
-                {" "}
-              </Button>{" "}
+                
+              </Button>
               <Button
                 shape="circle"
                 icon={<VideoCameraOutlined />}
                 className="iconHome"
-              />{" "}
+              />
               <Button
                 shape="circle"
                 icon={<MenuOutlined />}
                 className="iconHome"
-              />{" "}
+              />
               <Button
                 shape="circle"
                 icon={<BellOutlined />}
                 className="iconHome"
-              />{" "}
-            </Space>{" "}
-          </Col>{" "}
-        </div>{" "}
+              />
+            </Space>
+          </Col>
+        </div>
         <div className="block3">
           <Col>
             <Space>
-              <Button size="circle" icon={<MailOutlined />} />{" "}
-              <Button size="circle" icon={<BellOutlined />} />{" "}
-              <Avatar size="circle" src="" />{" "}
-            </Space>{" "}
-          </Col>{" "}
-        </div>{" "}
-      </div>{" "}
+              <Button size="circle" icon={<MailOutlined />} />
+              <Button size="circle" icon={<BellOutlined />} />
+              <Avatar size="circle" src="" />
+            </Space>
+          </Col>
+        </div>
+      </div>
     </Layout>
   );
 }

@@ -1,25 +1,26 @@
 import Header from './Header';
-import Left from './Left';
 import React from 'react';
 import { Layout } from 'antd';
 import './DefaultLayout.css';
 const { Sider, Content } = Layout;
-export default function DefaultLayout({ children }) {
+export default function DefaultLayout({ Left, Right, children }) {
 	return (
 		<>
-			<Layout className="header">
-				<Header> </Header>
-			</Layout>
-			<Layout className="content">
-				<Sider  theme="light" className="sider-left">
-					<Left> </Left>
-				</Sider>
-				<Content  className="content-main"> {children} </Content>
-				<Sider  theme="light" className="sider-right">
-					
-				</Sider>
-			</Layout>
-      
+			<div>
+				<Layout className="header">
+					<Header> </Header>
+				</Layout>
+				<div className="content">
+					<div theme="light" className="sider-left">
+						{Left}
+					</div>
+					<div className="content-main"> {children} </div>
+					<div theme="light" className="sider-right">
+						{' '}
+						{Right}{' '}
+					</div>
+				</div>
+			</div>
 		</>
 	);
 }

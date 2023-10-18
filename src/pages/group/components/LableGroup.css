@@ -1,0 +1,22 @@
+.labelItem{
+    display: flex;
+    margin: 0 0 10px 0;
+    flex:10;
+}
+.image-group{
+
+    border-radius: 15%;
+    flex:2;
+    border: 0.5px solid #ccc;
+    margin-right: 5px;
+}
+.img-gr{
+    width: 100%;
+    height: 100%;
+    
+}
+.name-group{
+    flex:8;
+    
+}
+
