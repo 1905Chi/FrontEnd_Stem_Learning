@@ -22,7 +22,7 @@ export default function Verify() {
 			},
 		};
 		axios
-			.get(url + `api/auth/verify?token=${uuid}`, config)
+			.get(url + `api/v1/auth/verify?token=${uuid}`, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {

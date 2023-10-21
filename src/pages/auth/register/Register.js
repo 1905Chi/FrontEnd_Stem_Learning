@@ -31,7 +31,7 @@ export default function Register() {
 			},
 		};
 		axios
-			.post(url + 'api/auth/register', data, config)
+			.post(url + 'api/v1/auth/register', data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {

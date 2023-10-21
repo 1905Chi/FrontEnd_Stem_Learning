@@ -1,7 +1,19 @@
+import React from 'react';
+import BannerGroup from '../components/BannerGroup';
+import Post from '../../home/components/Post';
 export default function CreateGroup() {
-    return (
-        <div>
+	const disabledStyle = {
+		pointerEvents: 'none',
+        
+		opacity: 0.4, // Điều này làm cho phần bị vô hiệu hóa trông mờ đi một chút
+	};
+	return (
+		<div style={disabledStyle}>
             
-        </div>
-    )
+			<BannerGroup></BannerGroup>
+			<div >
+				<Post></Post>
+			</div>
+		</div>
+	);
 }

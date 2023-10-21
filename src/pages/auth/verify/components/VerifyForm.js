@@ -38,7 +38,7 @@ export default function VerifyForm(props) {
 			gender: values.gender,
 		};
 		axios
-			.post(url + `api/users/verify?token=${uuid}`, data, config)
+			.post(url + `api/v1/auth/verify?token=${uuid}`, data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {

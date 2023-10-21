@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Input, Button } from 'antd';
 import './LeftsGroup.css';
+import { useNavigate } from 'react-router-dom';
 import LableGroup from '../components/LableGroup';
-import anh_logo_1 from '../../../assets/images/anh_logo_1.jpg';
 const { Search } = Input;
 const LeftsGroup = () => {
 	const [theme, setTheme] = useState('dark');
 	const [current, setCurrent] = useState('1');
+	const navigate = useNavigate();
 	const changeTheme = (value) => {
 		setTheme(value ? 'dark' : 'light');
 	};
@@ -14,6 +15,11 @@ const LeftsGroup = () => {
 		console.log('click ', e);
 		setCurrent(e.key);
 	};
+	const create=()=>{
+		navigate('/groups/create');
+	}
+
+
 	const mygroup=[
 		{
 			image:"https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png",
@@ -50,9 +56,9 @@ const LeftsGroup = () => {
 
 			<Search theme={theme} placeholder="Tìm kiếm nhóm" />
       </div>
-      <div className='button-add' >
+      <div className='button-add'  onClick={create}>
 			<Button type="primary" style={{ width: '100%', marginTop: '10px', height: '50px' }}>
-				+ Tạo nhóm
+				<span style={{fontSize: '15px', fontWeight:'500'}}>+ Tạo nhóm</span>
 			</Button>
       </div>
       <div className='your-group'>

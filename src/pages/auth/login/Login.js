@@ -24,7 +24,7 @@ function Login() {
 		const data = { email: values.email, password: values.password };
 
 		axios
-			.post(url + 'api/auth/login', data)
+			.post(url + 'api/v1/auth/login', data)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {

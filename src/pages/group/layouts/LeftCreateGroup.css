@@ -1,0 +1,30 @@
+.description-policy{
+    font-size: small;
+}
+.custom-option {
+    display: flex;
+    
+  }
+  
+  .rounded-avatar { 
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Để làm cho hình ảnh có góc bo tròn */
+    object-fit: cover; /* Để tùy chỉnh quy cách và hiển thị hình ảnh */
+  }
+  
+  .option-label {
+    text-align: center;
+    margin: 5px 0 0 15px;
+    font-size: small;
+  }
+  /* Điều chỉnh cỡ chữ của placeholder */
+.ant-select-selection-placeholder {
+    font-size: small; /* Điều chỉnh kích thước phù hợp */
+  }
+  
+  .ant-select-selection-item {
+    height: auto !important; /* Đặt chiều cao tự động cho mỗi tùy chọn */
+  }
+  
+  

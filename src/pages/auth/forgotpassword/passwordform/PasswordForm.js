@@ -17,7 +17,7 @@ const PasswordForm = (props) => {
     const data = { password: values.password, confirmPassword: values.confirm };
     // Xử lý logic đặt lại mật khẩu ở đây (gửi yêu cầu đặt lại mật khẩu, lưu mật khẩu mới, vv.)
     axios
-      .post(url + `api/auth/reset-password?token=${props.uuid}`, data)
+      .post(url + `api/v1/auth/reset-password?token=${props.uuid}`, data)
       .then((response) => {
         // Xử lý kết quả sau khi gửi thành công
         if (response.data.statusCode === 200) {

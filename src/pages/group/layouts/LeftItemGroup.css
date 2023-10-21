@@ -1,0 +1,29 @@
+.header-item-group{
+	position: relative;
+	top: 0;
+    border: 0.5px solid rgb(54, 53, 53);
+    border-radius: 10px;
+}
+
+.custom-option-group{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    
+}
+.custom-option-group:hover{
+    background-color:#007bff;
+    border-radius: 10px;
+}
+
+.icon-option-group{
+    color:#007bff;
+
+}
+
+.option-label-group{
+    font-size: 15px;
+    margin-left: 10px;
+    font-weight: 500;
+}

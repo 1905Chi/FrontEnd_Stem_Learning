@@ -10,10 +10,12 @@ import Verify from '../pages/auth/verify/Verify';
 import Right from '../layouts/Right';
 import LeftCreateGroup from '../pages/group/layouts/LeftCreateGroup';
 import CreateGroup from '../pages/group/create/CreateGroup';
+import LeftItemGroup from '../pages/group/layouts/LeftItemGroup';
 const privateRoutes = [
 	{ path: '/', component: Home, Left: Left, Right: Right },
 	{ path: '/groups', component: Home, Left: LeftsGroup, Right: Right },
 	{ path: '/groups/create', component: CreateGroup, Left: LeftCreateGroup, Right: Right },
+	{ path: '/groups/:uuid', component: Home, Left: LeftItemGroup, Right: Right },
 ];
 
 const publicRoutes = [

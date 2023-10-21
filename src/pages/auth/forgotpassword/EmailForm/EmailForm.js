@@ -18,7 +18,7 @@ const EmailForm = () => {
 		const data = { email: values.email };
 
 		axios
-			.post(url + 'api/tokens/reset-password', data)
+			.post(url + 'api/v1/tokens/reset-password', data)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
