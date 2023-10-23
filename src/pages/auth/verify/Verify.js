@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
-
+import React, { useEffect ,useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import './Verify.css';
 import axios from 'axios';
 import { url } from '../../../constants/Constant';
 import VerifyForm from './components/VerifyForm';
-import { useState } from 'react';
 import Loading from '../../../components/Loading';
 
 export default function Verify() {
@@ -14,6 +12,7 @@ export default function Verify() {
 	const { uuid } = useParams();
 	const [isVerify, setIsVerify] = useState(false);
 	const [loading, setLoading] = useState(false); // Trạng thái loading
+	let role = '';
 	useEffect(() => {
 		setLoading(true);
 		const config = {
@@ -27,6 +26,7 @@ export default function Verify() {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
 					toast.success(response.data.message);
+					role = response.data.role;
 					setIsVerify(true);
 				} else {
 					toast.error(response.data.message);
@@ -48,7 +48,7 @@ export default function Verify() {
 			{loading ? ( // Nếu đang loading thì hiển thị component loading
 				<Loading></Loading>
 			) : null}
-			<div className="verify">{isVerify ? <VerifyForm uuid={uuid} /> : <ToastContainer />}</div>
+			<div className="verify">{isVerify ? <VerifyForm uuid={uuid}  role={role}/> : <ToastContainer />}</div>
 		</>
 	);
 }

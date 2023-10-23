@@ -11,11 +11,14 @@ import Right from '../layouts/Right';
 import LeftCreateGroup from '../pages/group/layouts/LeftCreateGroup';
 import CreateGroup from '../pages/group/create/CreateGroup';
 import LeftItemGroup from '../pages/group/layouts/LeftItemGroup';
+import MainGroup from '../pages/group/itemgroup/MainGroup';
+import Profile from '../pages/profile/Profile';
 const privateRoutes = [
 	{ path: '/', component: Home, Left: Left, Right: Right },
 	{ path: '/groups', component: Home, Left: LeftsGroup, Right: Right },
 	{ path: '/groups/create', component: CreateGroup, Left: LeftCreateGroup, Right: Right },
-	{ path: '/groups/:uuid', component: Home, Left: LeftItemGroup, Right: Right },
+	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: Right },
+	{path:'/profile',component:Profile,Left:Left,Right:Right}
 ];
 
 const publicRoutes = [

@@ -10,9 +10,6 @@ const contentStyle = {
 	lineHeight: '120px',
 	color: 'black',
 	backgroundColor: 'white',
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
 	
 };
 const footerStyle = {
@@ -31,9 +28,9 @@ const footerStyle = {
 
 const NotFound = () => {
 	return (
-		<Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
+		<Space direction="vertical" style={{ width: '100%',position:'fixed',top:0 }} size={[0, 48]}>
 			<nav >
-          <ul style={{display:'flex', listStyle:'none' , justifyContent:'space-around',backgroundColor:'blue',height:'50px'}}>
+          <ul style={{display:'flex', listStyle:'none' , justifyContent:'space-around',backgroundColor:'blue',width:'100%',height:'50px'}}>
 			<li style={{marginTop:'5px'}}><a href="/" style={{color:'black', fontWeight: 'bold',fontSize: '30px' }} >STEM</a></li>
             <li style={{marginTop:'15px'}}><a href="/login" style={{color:'black'}}>Login</a></li>
             <li style={{marginTop:'15px'}}><a href="/register" style={{color:'black'}}>Register</a></li>
@@ -42,11 +39,10 @@ const NotFound = () => {
         </nav>
 			<Layout>
 				<Content style={contentStyle}>
-					<div style={{width: '50%',height:'50%'}}>
-						<img src={anh_logo_1} alt="anh"  style={{width: '100%',height:'100%'}}/>
+					<div style={{width: '80%',height:'50%'}}>
+						<img src={anh_logo_1} alt="anh"  style={{width: '80%',height:'50%', margin:'0 0 0 300px'}}/>
 					</div>
 					<div>
-						<h1>STEM</h1>
 						<p>Science (Khoa học), Technology (Công nghệ), Engineering(Kỹ thuật), Maths(Toán học)</p>
 					</div>
 				</Content>

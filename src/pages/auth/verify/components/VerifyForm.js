@@ -12,6 +12,7 @@ import { url } from '../../../../constants/Constant';
 export default function VerifyForm(props) {
 	const { uuid } = useParams();
 	const navigate = useNavigate();
+	const role=props.role;
 	const [loading, setLoading] = useState(false); // Trạng thái loading
 	const config = {
 		rules: [
@@ -105,6 +106,52 @@ export default function VerifyForm(props) {
 				<Form.Item name="date_picker" {...config}>
 					<DatePicker format="DD-MM-YYYY" style={{width:'280px', marginLeft:'8px'}} placeholder="Ngày tháng năm sinh" />
 				</Form.Item>
+				{
+					role==='TEACHER'?
+					<Form.Item
+					name="workAt"
+					rules={[
+						{
+							required: true,
+							message: 'Nhập tên trường!',
+							whitespace: true,
+						},
+					]}
+				>
+					<Input  style={{width:'280px' , marginLeft:'8px'}} placeholder="Tên trường"/>
+				</Form.Item>:null
+				}
+				{
+					role ==='STUDENT'?
+					<Form.Item
+					name="workAt"
+					rules={[
+						{
+							required: true,
+							message: 'Nhập tên trường!',
+							whitespace: true,
+						},
+					]}
+				>
+					<Input  style={{width:'280px' , marginLeft:'8px'}} placeholder="Tên trường"/>
+				</Form.Item>:null
+
+				}
+				{
+					role==='PARENT'?
+					<Form.Item
+					name="workAt"
+					rules={[
+						{
+							required: true,
+							message: 'Vui lòng nhập nơi làm việc!',
+							whitespace: true,
+						},
+					]}
+				>
+					<Input  style={{width:'280px' , marginLeft:'8px'}} placeholder="Làm việc tại"/>
+				</Form.Item>:null
+				}
 				<Form.Item
 					name="phone"
 					
