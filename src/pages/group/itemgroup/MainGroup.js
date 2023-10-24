@@ -83,7 +83,7 @@ export default function MainGroup() {
 
                 </div>
 				{isMember1 ? <Post /> : null}
-				{isprivate1
+				{!isprivate1
 					? post.map((post, index) => (
 							<PostItem
 								key={index}

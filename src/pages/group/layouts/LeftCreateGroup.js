@@ -4,6 +4,7 @@ import LableGroup from '../components/LableGroup';
 import { FaEarthEurope } from 'react-icons/fa6';
 import { RiGitRepositoryPrivateFill } from 'react-icons/ri';
 import './LeftCreateGroup.css';
+import {CreateGroup} from '../Api';
 export default function LeftCreateGroup() {
 	const options = [
 		{
@@ -26,11 +27,7 @@ export default function LeftCreateGroup() {
 			label: 'Huy',
 			imageUrl: 'https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png',
 		},
-		{
-			value: 'Khang',
-			label: 'Khang',
-			imageUrl: 'https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png',
-		},
+		
 	];
 	const [policyDescription, setPolicyDescription] = useState('');
 
@@ -45,8 +42,14 @@ export default function LeftCreateGroup() {
 			);
 		}
 	};
+	const create = (values) => {
+		let a= CreateGroup(localStorage.getItem('accessToken'),values.nameGroup,values.descriptionGroup,values.policy);
+
+	};
+
+	
 	return (
-		<>
+		<><div style={{height:'100vh'}}>
 			<div className="header-left-create">
 				<h1 style={{ textAlign: 'start' }}>Tạo Nhóm</h1>
 			</div>
@@ -55,7 +58,7 @@ export default function LeftCreateGroup() {
 					image="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
 					name="Nhóm"
 				></LableGroup>
-				<Form>
+				<Form name='creategroup'onFinish={create} scrollToFirstError>
 					<Form.Item
 						name="nameGroup"
 						rules={[
@@ -136,12 +139,13 @@ export default function LeftCreateGroup() {
 							))}
 						</Select>
 					</Form.Item>
-					<Form.Item>
+					<Form.Item style={{position:'fixed',bottom:'0',width:'285px',margin:'0 15px 0 0'}}>
 						<Button type="primary" htmlType="submit" style={{ width: '100%', height: '45px' }}>
 							Tạo
 						</Button>
 					</Form.Item>
 				</Form>
+			</div>
 			</div>
 		</>
 	);

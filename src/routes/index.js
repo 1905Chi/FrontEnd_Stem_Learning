@@ -13,12 +13,13 @@ import CreateGroup from '../pages/group/create/CreateGroup';
 import LeftItemGroup from '../pages/group/layouts/LeftItemGroup';
 import MainGroup from '../pages/group/itemgroup/MainGroup';
 import Profile from '../pages/profile/Profile';
+import RightProfile from '../../src/pages/profile/layouts/RightProfile';
 const privateRoutes = [
 	{ path: '/', component: Home, Left: Left, Right: Right },
 	{ path: '/groups', component: Home, Left: LeftsGroup, Right: Right },
 	{ path: '/groups/create', component: CreateGroup, Left: LeftCreateGroup, Right: Right },
 	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: Right },
-	{path:'/profile',component:Profile,Left:Left,Right:Right}
+	{path:'/profile',component:Profile,Left:Left,Right:RightProfile}
 ];
 
 const publicRoutes = [

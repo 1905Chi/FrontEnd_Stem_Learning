@@ -1,4 +1,4 @@
-.profile-picture-edit{
+.Avatar-picture-edit{
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -10,7 +10,7 @@
     display: flex;
     margin-top: 30px;
 }
-.edit-profile{
+.edit-Avatar{
     position: fixed;
   top: 0;
   left: 0;
@@ -23,7 +23,7 @@
   background-color: rgba(0, 0, 0, 0.5); /* Độ mờ của form */
   z-index: 999; /* Đảm bảo form nằm trên cả nội dung khác */
 }
-.form-edit-profile{
+.form-edit-Avatar{
 width: 50%;
 margin-top: 125px;
 height:  100vh;
@@ -33,7 +33,7 @@ overflow-y: auto;
 
 
 }
-.profile-picture-edit img{
+.Avatar-picture-edit img{
     width: 100%;
     height: 100%;
     object-fit: cover;
