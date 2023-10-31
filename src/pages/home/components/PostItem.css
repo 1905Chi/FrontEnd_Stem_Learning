@@ -51,11 +51,7 @@
   height: 40vh;
   margin:0 5px
 }
-.last-picture{
-  width: 40%;
-  height: 40vh;
-  margin:0 5px
-}
+
 
 .image-post{
   margin: 0 0 0 60px;
@@ -91,4 +87,15 @@
   padding:90px;
   font-size: 20px;
   font-weight: bold;
+}
+.file-post{
+  display: flex;
+
+}
+.image-file{
+  flex:2;
+}
+
+.name-file{
+  flex:8;
 }

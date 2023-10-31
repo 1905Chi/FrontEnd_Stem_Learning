@@ -10,6 +10,8 @@ import { Form, Input, Button, Radio, DatePicker, Spin, Tooltip } from 'antd';
 import { FcManager } from 'react-icons/fc';
 import { FcBusinesswoman } from 'react-icons/fc';
 import { AiFillQuestionCircle } from 'react-icons/ai';
+
+import Loading from '../../../components/Loading';
 export default function EditProfile({ onCancel }) {
 
 	const [editName, setEditName] = useState(false);
@@ -21,7 +23,7 @@ export default function EditProfile({ onCancel }) {
 	const [editWork, setEditWork] = useState(false);
 	const [editaddress, setEditaddress] = useState(false);
 	const user = JSON.parse(localStorage.getItem('user'));
-
+	const [loading, setLoading] = useState(false); // Trạng thái loading
 	const setdEditName = () => {
 		setEditName(true);
 	};
@@ -46,9 +48,129 @@ export default function EditProfile({ onCancel }) {
 	const setdAdress = () => {
 		setEditaddress(true);
 	};
+	const [isSaving, setIsSaving] = useState(false);
+	console.log(isSaving)
+	const saveUpdate = (values) => {
+		console.log(isSaving)
+
+		
+		if(values.firstname===undefined || values.firstname==="" || values.firstname===null){
+			values.firstname=user.firstName;
+		}
+		if(values.lastname===undefined || values.lastname==="" || values.lastname===null){
+			values.lastname=user.lastName;
+		}
+		if(values.phone===undefined || values.phone==="" || values.phone===null){
+			if(user.phone!==null && user.phone!==undefined){
+				values.phone=user.phone;
+			}
+			else values.phone="";
+		}
+		if(values.dob===undefined || values.dob==="" || values.dob===null){
+			if(user.dob!==null && user.dob!==undefined){
+				values.dob=user.dob;
+			}
+			else values.dob="";
+		}
+		if(values.gender === undefined || values.gender===""|| values===null)	{
+			if(user.gender !==null && user.gender!==undefined){
+			values.gender=user.gender
+			}
+			else values.gender="MALE";
+		}
+		if(values.about===undefined || values.about==="" || values.about===null){
+			if(user.about!==null && user.about!==undefined){
+				values.about=user.about;
+			}
+			else values.about="";
+		}
+		if(values.workAt===undefined || values.workAt==="" || values.workAt===null){
+			if(user.workAt!==null && user.workAt!==undefined){
+				values.workAt=user.workAt;
+			}
+			else values.workAt="";
+		}
+		if(values.adsress===undefined || values.adsress==="" || values.adsress===null){
+			if(user.address!==null && user.address!==undefined){
+				values.adsress=user.address;
+			}
+			else values.adsress="";
+		}
+
+
+		const data = {
+			
+			firstname: values.firstname,
+			lastname: values.lastname,
+			phone: values.phone,
+			dob: values.dob,
+			gender:values.gender,
+			about:values.about,
+			workedAt:values.workAt,
+			address:values.adsress,
+
+
+
+		};
+		const config = {
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+				'Content-Type': 'application/json',
+			},
+		};
+		if (isSaving===false) {
+           
+            return; // Không thực hiện yêu cầu axios
+        }
+
+        setLoading(true);
+		axios
+			.put(url + 'api/v1/users/profile', data, config)
+			.then((response) => {
+				// Xử lý kết quả sau khi gửi thành công
+				if (response.data.statusCode === 200) {
+					toast.success(response.data.message);
+					setTimeout(() => {
+						onCancel();
+					}, 2000);
+				} else {
+					toast.error(response.data.message);
+
+				}
+			})
+			.catch((error) => {
+				// Xử lý lỗi nếu có lỗi xảy ra
+				// Xử lý lỗi nếu có lỗi xảy ra
+				if (error.response) {
+					// Lỗi từ phía máy chủ
+					const status = error.response.status;
+					if (status === 503) {
+						// Xử lý lỗi 503 Service Unavailable
+						toast.error('Máy chủ hiện không khả dụng. Vui lòng thử lại sau.');
+					} else if (status === 404) {
+						toast.error('Không tìm thấy tài khoản này');
+					} else {
+						toast.error(error.response.data.message);
+					}
+				} else if (error.request) {
+					// Lỗi không có phản hồi từ máy chủ
+					toast.error('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+				} else {
+					// Lỗi trong quá trình thiết lập yêu cầu
+					toast.error('Lỗi khi thiết lập yêu cầu.');
+				}
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	}
 
 	return (
+		
 		<div className="edit-profile">
+			{loading ?// Nếu đang loading thì hiển thị component loading
+				<Loading></Loading>:null
+			}
 			<div className="form-edit-profile">
 				<div
 					style={{
@@ -66,7 +188,7 @@ export default function EditProfile({ onCancel }) {
 						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
 					</button>
 				</div>
-				<Form>
+				<Form onFinish={saveUpdate} scrollToFirstError>
 					<div className="ten">
 						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 							<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Tên:</h3>
@@ -323,18 +445,19 @@ export default function EditProfile({ onCancel }) {
 						</div>
 					</div>
 					{editaddress ? (
-						<Form.Item name="phone"  >
+						<Form.Item name="adsress"  >
 							<Input className="form-item" placeholder="Địa chỉ" />
 						</Form.Item>
 					) : null}
 
 					<Form.Item>
-						<Button type="primary" htmlType="submit" className="login-form-button">
+						<Button type="primary" htmlType="submit" className="login-form-button" onClick={() => setIsSaving(true)}>
 							Lưu
 						</Button>
 					</Form.Item>
 				</Form>
 			</div>
+			<ToastContainer />
 		</div>
 	);
 }

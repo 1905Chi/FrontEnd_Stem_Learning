@@ -40,6 +40,15 @@ function PostItem({ user, content, image, likes }) {
               +{image.length - 3} 
             </div></div> : null}
 			</div>
+			<div className='file-post'> 
+			<div className='image-file'>
+
+			</div>
+			<div className='name-file'> 
+
+			</div>
+
+			</div>
 
 			<p className="likes-count">
 				{likes}

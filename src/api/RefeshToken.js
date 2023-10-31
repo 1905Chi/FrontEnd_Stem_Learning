@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { url } from '../constants/Constant';
-export default function RefeshToken() {
+export default async function RefeshToken() {
 
     let accessToken = localStorage.getItem('accessToken');
     let refreshToken = localStorage.getItem('refreshToken');
@@ -27,6 +27,8 @@ export default function RefeshToken() {
 
             console.log(response.data.result.accessToken);
             console.log(response.data.result.refreshToken);
+            console.log(response.data.statusCode);
+            
             return response.data.statusCode;
         }
         else

@@ -7,6 +7,9 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { HiOutlineClipboardDocumentList, HiInformationCircle } from 'react-icons/hi2';
 import { MdEventNote } from 'react-icons/md';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { url } from './../../../constants/Constant';
+import axios from 'axios';
+import RefeshToken from './../../../api/RefeshToken';
 import UseTheme from './../../../layouts/UseTheme';
 
 export default function LeftItemGroup() {
@@ -22,13 +25,7 @@ export default function LeftItemGroup() {
 	};
 	
 	useEffect(() => {
-		const apifake1 = localStorage.getItem('apifake');
-		if (apifake1) {
-			const apifakeparse = JSON.parse(apifake1);
-			setIsAdmin(apifakeparse.isAdmin);
-			setIsMember(apifakeparse.isMember);
-			setIsPrivate(apifakeparse.isPrivate);
-		}
+		
 	}, []);
 
 	const mygroup = {
