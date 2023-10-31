@@ -32,13 +32,28 @@ function Login() {
 					localStorage.setItem('accessToken', response.data.result.accessToken);
 					localStorage.setItem('refreshToken', response.data.result.refreshToken);
 					localStorage.setItem('login', true);
-					// localStorage.setItem("accessToken", response.data.accessToken); // Lưu token vào localStorage
-					// localStorage.setItem("refreshToken", response.data.refreshToken); // Lưu refreshToken vào localStorage
-					// localStorage.setItem("login", true); // Lưu thông tin user vào localStorage
-					// navigate('/');
-					// Chuyển hướng về trang chủ
+					
 
-					window.location.href = '/';
+					 axios.get(url + 'api/v1/users/profile', {
+						headers: {
+							Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+							'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+						},
+					})
+						.then((response) => {
+							if (response.data.statusCode === 200) {
+								localStorage.setItem('user', JSON.stringify(response.data.result));
+								console.log(response.data.result);
+								window.location.href = '/';
+							} else {
+								toast.error(response.data.message);
+							}
+						})
+						.catch((error) => {
+							toast.error(error.response.data.message);
+						});
+
+					
 				} else {
 					toast.error(response.data.message);
 				}
@@ -141,7 +156,7 @@ function Login() {
 						<div style={{ display: 'flex', justifyContent: 'center' }}>Chưa có tài khoản?</div>
 						<br />
 						<div style={{ display: 'flex', justifyContent: 'center' }}>
-							<Button type="primary" onClick={register} className="login-form-button">
+							<Button type="primary" onClick={register} className="login-form-button" style={{backgroundColor:'green'}}>
 								Đăng ký
 							</Button>
 						</div>

@@ -4,13 +4,14 @@ export default function RefeshToken() {
 
     let accessToken = localStorage.getItem('accessToken');
     let refreshToken = localStorage.getItem('refreshToken');
-    let message='';
+
+    
     const config = {
         headers: {
             'Content-Type': 'application/json',
         },
     };
-    let data=
+    const data=
     {
         accessToken:accessToken,
         refreshToken:refreshToken
@@ -19,13 +20,18 @@ export default function RefeshToken() {
     .then((response)=>{
         if(response.data.statusCode===200)
         {
-            localStorage.setItem('accessToken',response.data.accessToken);
-            localStorage.setItem('refreshToken',response.data.refreshToken);
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.setItem('accessToken',response.data.result.accessToken);
+            localStorage.setItem('refreshToken',response.data.result.refreshToken);
+
+            console.log(response.data.result.accessToken);
+            console.log(response.data.result.refreshToken);
             return response.data.statusCode;
         }
         else
         {
-            return response.data.message;
+            return response.data.statusCode;
         }
 
     })

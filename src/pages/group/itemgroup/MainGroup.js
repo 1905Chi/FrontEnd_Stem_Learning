@@ -43,6 +43,11 @@ export default function MainGroup() {
 
 	
 	const [loading, setLoading] = useState(true); // Trạng thái loading
+	const [isgioithieu, setisgioithieu] = useState(true); // Trạng thái compoennt giới thiệu
+	const [isbaiviet, setisbaiviet] = useState(false); // Trạng thái component bài viết
+	const [ismenber, setismenber] = useState(false); // Trạng thái component thành viên
+	const[isevent,setisevent] = useState(false); // Trạng thái component sự kiện
+
 
 	useEffect(() => {
 		const apifake1 = localStorage.getItem('apifake');
@@ -63,7 +68,8 @@ export default function MainGroup() {
 			<div>
 				
 				<BannerGroup></BannerGroup>
-                <div>
+
+				{isgioithieu ? ( <div>
                     <div style={{margin:'25px',borderRadius:'10px',padding:'5px',background:'aliceblue'}}>   
                     <h3 style={{borderBottom:'0.5px solid black'}}>Giới thiệu về nhóm này</h3>
                     {isprivate1 ?<h4>Đây là nhóm riêng tư</h4> : <h4>Đây là nhóm công khai</h4>}
@@ -81,9 +87,11 @@ export default function MainGroup() {
                     <h4>Không được đăng link</h4>
                     </div>
 
-                </div>
+                </div>):null}
+               
 				{isMember1 ? <Post /> : null}
-				{!isprivate1
+
+				{isMember1 || !isprivate1 
 					? post.map((post, index) => (
 							<PostItem
 								key={index}

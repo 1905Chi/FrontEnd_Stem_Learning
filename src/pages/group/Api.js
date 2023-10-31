@@ -18,9 +18,9 @@ export function CreateGroup(accessToken,groupName,groupDescription,groupType)
     .then((response) => {
         // Xử lý kết quả sau khi gửi thành công
         if (response.data.statusCode === 200) {
-            return response.data.data;
+            return response.data;
         } else {
-            return response.data.message;
+            return response.data;
         }
     })
     .catch((error) => {
@@ -40,8 +40,10 @@ export function CreateGroup(accessToken,groupName,groupDescription,groupType)
                 }
                 // token không hợp lệ trả về mã lỗi
 
-                return
+                return a;
+
             }
+            return  error.response.data; 
             
         } else if (error.request) {
             // Lỗi không có phản hồi từ máy chủ

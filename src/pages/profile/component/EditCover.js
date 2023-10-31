@@ -2,17 +2,27 @@ import React, { useState } from 'react';
 import './EditCover.css';
 import anhlogo1 from '../../../assets/images/anh_logo_1.jpg';
 import { GiCancel } from 'react-icons/gi';
-export default function EditCover({ onCancel }) {
-	const [CoverPicture, setCoverPicture] = useState(anhlogo1);
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { url } from '../../../constants/Constant';
+import { toast, ToastContainer } from 'react-toastify';
+import RefeshToken from '../../../../src/api/RefeshToken';
+
+export default function EditCover(props) {
+	const [CoverPicture, setCoverPicture] = useState(props.coverPhoto);
+	const [selectedFile, setSelectedFile] = useState(null);
+	const navigate = useNavigate();
+
 
 	const handleCoverPictureChange = (event) => {
 		// Xử lý khi người dùng chọn hình ảnh đại diện
 		const file = event.target.files[0];
 		if (file) {
 			const reader = new FileReader();
-            console.log('Tên tệp: ', file.name); // In ra tên tệp
+          
 			reader.onload = () => {
 				setCoverPicture(reader.result);
+				setSelectedFile(file);
 			};
 			reader.readAsDataURL(file);
 		}
@@ -22,7 +32,67 @@ export default function EditCover({ onCancel }) {
 		document.getElementById('CoverPictureInput').click();
 	};
 	const Save = () => {
-		onCancel();
+		if (selectedFile) {
+			const formData = new FormData();
+			formData.append('cover', selectedFile);
+			axios
+				.put(url + 'api/v1/users/profile/cover', formData, {
+					headers: {
+						Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+						'Content-Type': 'multipart/form-data',
+					},
+				})
+				.then((res) => {
+					if (res.data.statusCode === 200) {
+						toast.success(res.data.message);
+						localStorage.setItem('user', JSON.stringify(res.data.result));
+						props.changeCoverPhoto(selectedFile);					
+					} else {
+						toast.error(res.data.message);
+					}
+				})
+				.catch((error) => {
+					if (error.response) {
+						// lỗi khi access token hết hạn
+						const status = error.response.status;
+						if (status === 401) {
+							let a = RefeshToken();
+							if (a === 200) {
+								Save();
+							} else if (a === 401) {
+								// lỗi khi refresh token hết hạn
+								toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+								setTimeout(() => {
+									localStorage.clear();
+									navigate('/login');
+								}, 5000);
+							}
+							// token không hợp lệ trả về mã lỗi
+							toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+							setTimeout(() => {
+								localStorage.clear();
+								navigate('/login');
+							}, 5000);
+						}
+					} else if (error.request) {
+						// Lỗi không có phản hồi từ máy chủ
+						toast.error(error.request.data.message);
+						setTimeout(() => {
+							localStorage.clear();
+							navigate('/login');
+						}, 5000);
+					} else {
+						// Lỗi trong quá trình thiết lập yêu cầu
+						toast('Lỗi khi thiết lập yêu cầu.');
+					}
+				})
+				.finally(() => {props.onCancel();});
+		
+			
+		}
+		else{
+			toast.error('Vui lòng chọn ảnh bìa');
+		}
 	};
 
 	return (
@@ -39,7 +109,7 @@ export default function EditCover({ onCancel }) {
 					<h2 style={{ flex: 8, textAlign: 'end' }}>Thay đổi ảnh bìa</h2>
 					<button
 						style={{ flex: 3, height: '72.5px', backgroundColor: 'white', textAlign: 'end' }}
-						onClick={onCancel}
+						onClick={props.onCancel}
 					>
 						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
 					</button>
@@ -71,6 +141,7 @@ export default function EditCover({ onCancel }) {
 					</button>
 				</div>
 			</div>
+			<ToastContainer />
 		</div>
 	);
 }

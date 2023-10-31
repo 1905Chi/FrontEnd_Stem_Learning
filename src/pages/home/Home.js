@@ -1,19 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import EmojiInput from 'react-input-emoji';
-
+import anh_logo_1 from '../../../src/assets/images/anh_logo_1.jpg';
 import Post from './components/Post';
 import PostItem from './components/PostItem';
 import { ToastContainer, toast } from 'react-toastify';
 
+
 function Home() {
+  
+ 
+  
   useEffect(() => {
     if (localStorage.getItem('login')) {
       toast.success('Đăng nhập thành công');
       localStorage.removeItem('login');
+      
+      
     }
+
   }, []);
-  const anh =
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwoon_hT7QiYmBsL0F9ydjogk-wzvXtwp0Ef_1M6E-Kw&s';
+
+  let anh=''
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user && user.profileImageUrl) {
+    anh=user.profileImageUrl;
+  }
+  else{
+    anh=anh_logo_1;
+  }
+ 
+
+ 
+
+  
   const post = [
     {
       user: {
@@ -36,7 +54,7 @@ function Home() {
     {
       user: {
         name: 'John Doe',
-        avatar: anh,
+        avatar: anh
       },
       content: 'This is a sample post on ReactJS.',
       image: anh,

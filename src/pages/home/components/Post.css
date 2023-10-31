@@ -21,3 +21,7 @@
 .post {
     background-color: aliceblue;
 }
+
+.ant-select-selection-item{
+    font-size: 15px;
+}

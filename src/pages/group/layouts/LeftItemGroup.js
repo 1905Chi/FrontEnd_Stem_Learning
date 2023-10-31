@@ -16,8 +16,8 @@ export default function LeftItemGroup() {
 	const [isPrivate, setIsPrivate] = useState(false);
 
 	const apifake = {
-		isAdmin: false,
-		isMember: false,
+		isAdmin: true,
+		isMember: true,
 		isPrivate: true,
 	};
 	

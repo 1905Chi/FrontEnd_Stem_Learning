@@ -6,10 +6,12 @@
 
 .user-info {
   display: flex;
+  margin: 15px 0 0 30px;
 }
 
 .user-name {
   flex: 7;
+  margin:25px 0 0 5px;
 }
 
 .post-actions-icon {
@@ -42,4 +44,51 @@
   margin-right: 8px;
   color: white;
   /* Màu biểu tượng thích trắng */
+}
+
+.post-image{
+  width: 40%;
+  height: 40vh;
+  margin:0 5px
+}
+.last-picture{
+  width: 40%;
+  height: 40vh;
+  margin:0 5px
+}
+
+.image-post{
+  margin: 0 0 0 60px;
+  position: relative;
+}
+.post-content{
+  margin: 0 0 15px 30px;
+}
+
+.avatarPost{
+  margin:15px
+}
+.ant-avatar {
+  width: 50px;
+  height: 50px;
+}
+.overlay {
+  position: absolute;
+  bottom: 4px;
+  right: 113px;
+  background-color: rgba(0, 0, 0, 0.7); /* Màu nền của lớp overlay */
+  color: #fff; /* Màu chữ trắng */
+ display: flex;
+ justify-content: center;
+ text-align: center;
+  width: 40%;
+  height: 40vh;
+  z-index: 2; /* Đảm bảo lớp overlay hiển thị trên ảnh */
+}
+
+.overlay-content{
+  text-align: center;
+  padding:90px;
+  font-size: 20px;
+  font-weight: bold;
 }

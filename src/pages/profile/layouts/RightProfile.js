@@ -7,13 +7,8 @@ import { CiLocationOn } from 'react-icons/ci';
 import { TbBuildingFactory } from 'react-icons/tb';
 import anhlogo1 from '../../../assets/images/anh_logo_1.jpg';
 export default function RightProfile() {
-	const profile = {
-		phone: '0362858057',
-		date: '19/05/2002',
-		gender: 'Male',
-		workAt: 'Trường đại học sư phạm kỹ thuật thành phố Hồ Chí Minh',
-		address: 'Quảng Ngãi, Việt Nam',
-	};
+	const profile = JSON.parse(localStorage.getItem('user'));
+	
 
 	const image = [anhlogo1, anhlogo1, anhlogo1, anhlogo1, anhlogo1, anhlogo1];
 	const friend = [

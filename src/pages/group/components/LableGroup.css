@@ -1,6 +1,6 @@
 .labelItem{
     display: flex;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px 20px;
     flex:10;
 }
 .image-group{
