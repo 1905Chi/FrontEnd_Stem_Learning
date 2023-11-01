@@ -51,9 +51,6 @@ export default function EditProfile({ onCancel }) {
 	const [isSaving, setIsSaving] = useState(false);
 	console.log(isSaving)
 	const saveUpdate = (values) => {
-		console.log(isSaving)
-
-		
 		if(values.firstname===undefined || values.firstname==="" || values.firstname===null){
 			values.firstname=user.firstName;
 		}
@@ -100,10 +97,10 @@ export default function EditProfile({ onCancel }) {
 
 		const data = {
 			
-			firstname: values.firstname,
-			lastname: values.lastname,
+			firstName: values.firstname,
+			lastName: values.lastname,
 			phone: values.phone,
-			dob: values.dob,
+			dob: values.dob.format('YYYY-MM-DD'),
 			gender:values.gender,
 			about:values.about,
 			workedAt:values.workAt,
@@ -112,6 +109,7 @@ export default function EditProfile({ onCancel }) {
 
 
 		};
+		console.log(data);
 		const config = {
 			headers: {
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -255,7 +253,7 @@ export default function EditProfile({ onCancel }) {
 								},
 							]}
 						>
-							<Input className="form-item" placeholder="Họ và tên đệm" />{' '}
+							<Input className="form-item" placeholder="Họ và tên đệm" />
 						</Form.Item>
 					) : null}
 
@@ -293,7 +291,7 @@ export default function EditProfile({ onCancel }) {
 								},
 							]}
 						>
-							<Input className="form-item" placeholder="Số điện thoại" />{' '}
+							<Input className="form-item" placeholder="Số điện thoại" />
 						</Form.Item>
 					) : null}
 
@@ -422,8 +420,8 @@ export default function EditProfile({ onCancel }) {
 					</div>
 					{editWork ? (
 						<Form.Item name="workAt"  >
-							{' '}
-							<Input className="form-item" placeholder="Nơi làm việc" />{' '}
+							
+							<Input className="form-item" placeholder="Nơi làm việc" />
 						</Form.Item>
 					) : null}
 

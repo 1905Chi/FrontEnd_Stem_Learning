@@ -9,6 +9,7 @@ import RefeshToken from '../../../api/RefeshToken';
 import { ToastContainer, toast } from 'react-toastify';
 import anh_logo_1 from '../../../assets/images/anh_logo_1.jpg';
 import Loading from '../../../components/Loading';
+import Api from './../../../api/Api';
 
 const { Search } = Input;
 const LeftsGroup = () => {
@@ -30,7 +31,7 @@ const LeftsGroup = () => {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 		};
-		axios
+		Api
 			.get(url + 'api/v1/groups', { headers })
 			.then(async (response) => {
 				if (response.data.statusCode === 200) {
@@ -41,26 +42,13 @@ const LeftsGroup = () => {
 			.catch(async (error) => {
 				if (error.response) {
 					// lỗi khi access token hết hạn
-					const status = error.response.status;
-					if (status === 401) {
-						// refesh token
-						const giatri = await RefeshToken();					
-						console.log(giatri);
-							if (giatri === 200) {
-								getGroup();
-							} else {
-								// lỗi khi refresh token hết hạn
-								toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-								setTimeout(() => {
-									localStorage.removeItem('accessToken');
-									localStorage.removeItem('refreshToken');
-									navigate('/login');
-								}, 5000);
-							}
-						
-						
-						// token không hợp lệ trả về mã lỗi
-					}
+					toast.error(error.request.data.message);
+					setTimeout(() => {
+						localStorage.removeItem('accessToken');
+						localStorage.removeItem('refreshToken');
+						navigate('/login');
+					}, 5000);
+					
 				} else if (error.request) {
 					// Lỗi không có phản hồi từ máy chủ
 					toast.error(error.request.data.message);
