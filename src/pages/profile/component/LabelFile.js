@@ -7,7 +7,7 @@ import { GiCancel } from 'react-icons/gi';
 export default function LabelFile({ type,filename,onDelete }) {
     return (
        <div style={{display:'flex', backgroundColor:'red', borderRadius:'10px'}}>
-        <div style={{width:'50px',height:'100%',flex:1,textAlign:'center'}}>
+        <div style={{width:'50px',height:'100%',flex:1,textAlign:'center',marginTop:'5px    '}}>
           {type==='word' ? <img src={logo_word} alt="logo_word" style={{width:'50px',height:'100%'}} /> : null}
             {type==='pdf' ? <img src={PDF_file_icon} alt="PDF_file_icon"  style={{width:'50px',height:'100%'}}/> : null}
             {type==='ppt' ? <img src={ppt} alt="ppt" style={{width:'50px',height:'100%'}} /> : null}

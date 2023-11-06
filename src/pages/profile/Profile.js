@@ -8,6 +8,8 @@ import EditAvatar from './component/EditAvatar';
 import EditCover from './component/EditCover';
 import Post from '../home/components/Post';
 import PostItem from '../home/components/PostItem';
+import InputWrite from '../home/components/InputWrite';
+import ReactDOM from "react-dom";
 export default function Profile() {
 	const [isEdit, setIsEdit] = useState(false);
 	const [isEditAvatar, setIsEditAvatar] = useState(false);
@@ -54,6 +56,8 @@ export default function Profile() {
 	const cancelFormCoverPhoto = () => {
 		setIsEditCoverPhoto(false);
 	};
+	const rootElement = document.getElementById("root");
+	ReactDOM.render(<InputWrite />, rootElement);
 
 	const anh = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwoon_hT7QiYmBsL0F9ydjogk-wzvXtwp0Ef_1M6E-Kw&s';
 	const post = [
@@ -120,7 +124,7 @@ export default function Profile() {
 					</div>
 				</div>
 				<div style={{ margin: '125px 0 0 0' }}>
-					<Post></Post>
+
 					{post.map((post, index) => {
 						return (
 							<PostItem

@@ -19,6 +19,8 @@ export default function EditPost({ onCancel }) {
 						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
 					</button>
 				</div>
+
+				
 			</div>
 		</div>
 	);

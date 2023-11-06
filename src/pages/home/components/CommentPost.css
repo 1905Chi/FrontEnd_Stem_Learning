@@ -1,0 +1,19 @@
+.comment-component{
+display: flex;
+margin: 10px    
+
+}
+.avatarPost-comment-self{
+padding-top: 8px;
+margin-left: 15px;
+
+}
+.write-commnent{
+
+    display: flex;
+    width: 90%;
+}
+.user-profile-comment{
+    max-width: 35px;
+    max-height: 35px;
+}

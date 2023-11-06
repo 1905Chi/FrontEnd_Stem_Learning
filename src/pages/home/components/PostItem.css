@@ -1,12 +1,13 @@
 .post-item {
   margin-bottom: 10px;
   margin-top: 20px;
+  margin-right: 15px;
   background-color: aliceblue;
 }
 
 .user-info {
   display: flex;
-  margin: 15px 0 0 30px;
+  margin: 15px 0 0 15px;
 }
 
 .user-name {
@@ -24,6 +25,10 @@
 .post-actions {
   display: flex;
   justify-content: space-around;
+  border-top: 0.1px solid #ddd0d0;
+  border-bottom: 0.1px solid #ddd0d0;
+  width: 90%;
+  margin: 0 30px;
 }
 
 .like-button {
@@ -58,11 +63,11 @@
   position: relative;
 }
 .post-content{
-  margin: 0 0 15px 30px;
+  margin: 0 0 90px 30px;
 }
 
 .avatarPost{
-  margin:15px
+  margin:5px
 }
 .ant-avatar {
   width: 50px;
@@ -99,3 +104,40 @@
 .name-file{
   flex:8;
 }
+.likes-count{
+  margin: 0 0 10px 30px;
+}
+
+.content-container {
+  max-height: 500px;
+  overflow: hidden;
+  position: relative;
+}
+
+
+.show-more.active {
+  display: block;
+}
+
+.show-more-button {
+ 
+  background-color: aliceblue;
+  color: #007bff;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  padding: 25px;
+  width: auto;
+
+}
+
+
+.show-more-button.active {
+  display: block;
+}
+.show-more-button :hover{
+  background-color: aliceblue;
+}
+
+

@@ -22,8 +22,9 @@
 .post {
     background-color: aliceblue;
     border-radius: 10px;
-    width: 100%;
+    width: 98%;
     height: auto;
+ 
 }
 
 .ant-select-selection-item{

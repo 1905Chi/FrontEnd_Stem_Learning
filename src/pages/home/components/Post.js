@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import EmojiInput from 'react-input-emoji';
 import { GiCancel } from 'react-icons/gi';
 import './Post.css';
 import { Select } from 'antd';
 import { BsImageFill } from 'react-icons/bs';
 import LabelFile from '../../profile/component/LabelFile';
+
 export default function Post() {
 	const [emoji, setEmoji] = useState('');
 	const [selectedFiles, setSelectedFiles] = useState([]); // Danh sách các tệp đã chọn
@@ -22,21 +23,29 @@ export default function Post() {
 		console.log(`selected ${value}`);
 	};
 	const openAvatarPictureDialog = () => {
-		document.getElementById('AvatarPictureInput').click();
+		document.getElementById('file-image').click();
 	};
-	const handleAvatarPictureChange = (event) => {
+	const handleFile = (event) => {
 		// Xử lý khi người dùng chọn hình ảnh đại diện
 		// Xử lý khi người dùng chọn hình ảnh đại diện
 		const files = event.target.files;
+		console.log(files.length);
+		console.log(selectedFiles.length)
+	
 
 		if (files.length > 0) {
 			// Chuyển danh sách tệp đã chọn thành mảng và cập nhật selectedFiles
-			setSelectedFiles((prevSelectedFiles) => [...prevSelectedFiles, ...files]);
+			const newSelectedFiles = [...selectedFiles, ...files];
+			setSelectedFiles(newSelectedFiles);
+			
 
 			// Đặt lại giá trị của trường input để cho phép người dùng chọn tiếp
 			event.target.value = null;
 		}
 	};
+	useEffect(() => {
+		console.log(selectedFiles.length);
+	}, [selectedFiles]);
 	const handleDeleteFile = (index) => {
 		setSelectedFiles((prevSelectedFiles) => {
 			const newSelectedFiles = [...prevSelectedFiles];
@@ -44,6 +53,7 @@ export default function Post() {
 			return newSelectedFiles;
 		});
 	};
+	
 	const ClearPost = () => {
 		setEmoji('');
 		setSelectedFiles([]);
@@ -73,14 +83,13 @@ export default function Post() {
 
 	// Sau khi có danh sách các tệp đã chọn (selectedFiles)
 	const fileTypes = selectedFiles.map((file) => checkFileExtension(file.name));
-	console.log('Loại tệp đã chọn:', fileTypes);
 	return (
 		<div className="post">
 			<form onSubmit={handleFormSubmit}>
 				<EmojiInput value={emoji} onChange={handleEmojiChange} placeholder="Bạn có suy nghĩ gì nào" />
 				<div className="anhluachon">
-					<div>
-						<BsImageFill style={{ fontSize: '20px', color: 'blue' }} onClick={openAvatarPictureDialog} />{' '}
+					<div onClick={openAvatarPictureDialog}>
+						<BsImageFill style={{ fontSize: '20px', color: 'blue' }}  />
 						<span style={{ fontSize: '15px' }}> Đính kèm </span>
 					</div>
 					<div>
@@ -154,8 +163,8 @@ export default function Post() {
 						style={{ display: 'none' }}
 						type="file"
 						accept="image/*, application/pdf , .doc, .docx, application/vnd.ms-powerpoint, .ppt, .pptx"
-						onChange={handleAvatarPictureChange}
-						id="AvatarPictureInput"
+						onChange={handleFile}
+						id="file-image"
 					/>
 					<div style={{ display: 'flex' }}>
 						{selectedFiles &&
