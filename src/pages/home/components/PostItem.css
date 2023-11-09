@@ -125,10 +125,12 @@
   color: #007bff;
   cursor: pointer;
   position: absolute;
+text-align: start;
   bottom: 0;
   right: 20px;
-  padding: 25px;
-  width: auto;
+  padding: 5px;
+  width: 395px;
+  margin: 8px 0 0 0;
 
 }
 
@@ -137,7 +139,7 @@
   display: block;
 }
 .show-more-button :hover{
-  background-color: aliceblue;
+  background-color: none;
 }
 
 

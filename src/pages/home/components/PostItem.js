@@ -3,39 +3,40 @@ import './PostItem.css'; // Import tệp CSS
 import { useState } from 'react';
 import { Avatar, Button, Dropdown } from 'antd';
 import { BiCommentDetail, BiSolidShare, BiLike } from 'react-icons/bi';
-import xemthem from '../../../assets/images/xemthem.png';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { MdBugReport } from 'react-icons/md';
 import CommentPost from './CommentPost';
-
-function PostItem({ user, content, image, likes,index }) {
+import { EditOutlined } from '@ant-design/icons';
+import InputWrite from './InputWrite';
+import Editor from './Editor';
+function PostItem({ user, content, likes, index }) {
 	const [isLiked, setIsLiked] = useState(false); // Trạng thái ban đầu là "không thích"
+	const [isEditPost, setisEditPost] = useState(false); // Trạng thái ban đầu là "không chỉnh sửa"
+	const [contentPost, setContentPost] = useState(content);
+
+	function EditContentPost(value) {
+		setContentPost(value);
+	}
 
 	function handleLike() {
 		setIsLiked(!isLiked); // Đảo ngược trạng thái khi nút "like" được nhấn
 	}
-	let firstFourImage = [];
-	if (image && image.length >= 4) {
-		firstFourImage = [...image.slice(0, 3), xemthem];
-	} else {
-		firstFourImage = image;
+
+	function EditPost() {
+		setisEditPost(!isEditPost); //
 	}
 	useEffect(() => {
 		const contentContainer = document.querySelector('.content' + index);
 		const showMoreButton = document.querySelector('#show' + index);
 		if (contentContainer && showMoreButton) {
-		  if (contentContainer.scrollHeight > 500) {
-			showMoreButton.style.display = 'block';
-			
-		  }
-		  else{
-			showMoreButton.style.display = 'none';
-		  }
+			if (contentContainer.scrollHeight > 500) {
+				showMoreButton.style.display = 'block';
+			} else {
+				showMoreButton.style.display = 'none';
+			}
 		}
-		
-	  }, []); 
-	  
-	  
+	}, [contentPost]);
+
 	const items = [
 		{
 			key: '1',
@@ -55,11 +56,25 @@ function PostItem({ user, content, image, likes,index }) {
 				</div>
 			),
 		},
+		{
+			key: '2',
+			label: (
+				<div style={{ font: '15px' }} onClick={EditPost}>
+					{{ user } ? (
+						<div>
+							<EditOutlined style={{ color: 'red', fontSize: '15px' }} />{' '}
+							<span style={{ fontSize: '15px' }}>Chỉnh sửa bài đăng</span>
+						</div>
+					) : null}
+				</div>
+			),
+		},
 	];
 
 	const likeButtonStyle = isLiked ? { color: 'blue' } : {}; // Đổi màu của biểu tượng "like"
 	return (
 		<div className="post-item">
+			{isEditPost ?(<Editor cancel={EditPost} data={contentPost} editcontent={EditContentPost}> </Editor>) : null}
 			<div className="user-info">
 				<div className="avatarPost">
 					<Avatar src={user.avatar} />
@@ -78,10 +93,12 @@ function PostItem({ user, content, image, likes,index }) {
 					<Button style={{ color: 'black', backgroundColor: 'aliceblue', border: 'none' }}>...</Button>
 				</Dropdown>
 			</div>
-			<div className={"content-container content" + index}>
-				<div className="post-content" dangerouslySetInnerHTML={{ __html: content }} />
+			<div className={'content-container content' + index}>
+				<div className="post-content" dangerouslySetInnerHTML={{ __html: contentPost }} />
 
-				<button className={"show-more-button"}  id={"show" + index}>Xem thêm</button>
+				<button className={'show-more-button'} id={'show' + index}>
+					Xem thêm
+				</button>
 			</div>
 
 			<div className="file-post">

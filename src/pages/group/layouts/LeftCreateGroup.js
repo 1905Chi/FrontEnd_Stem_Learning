@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { url } from '../../../constants/Constant';
 import RefeshToken from '../../../api/RefeshToken';
+import Api from '../../../api/Api';
 export default function LeftCreateGroup() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
@@ -60,7 +61,7 @@ export default function LeftCreateGroup() {
 			groupType: values.policy,
 		};
 
-		axios
+		Api
 			.post(url + 'api/v1/groups', data, { headers })
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
@@ -79,21 +80,14 @@ export default function LeftCreateGroup() {
 				// Xử lý lỗi nếu có lỗi xảy ra
 				if (error.response) {
 					// lỗi khi access token hết hạn
-					const status = error.response.status;
-					if (status === 401) {
-						let a = RefeshToken();
-						if (a === 200) {
-							create(values);
-						} else  {
+					
 							// lỗi khi refresh token hết hạn
 							toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
 							setTimeout(() => {
 								localStorage.clear();
 								navigate('/login');
 							}, 5000);
-						}
-						// token không hợp lệ trả về mã lỗi
-					}
+					
 				} else if (error.request) {
 					// Lỗi không có phản hồi từ máy chủ
 					toast.error(error.request.data.message);

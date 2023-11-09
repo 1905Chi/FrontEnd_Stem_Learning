@@ -15,7 +15,7 @@ import { url } from '../../../constants/Constant';
 import Loading from '../../../components/Loading';
 import { GiCancel } from 'react-icons/gi';
 
-export default function Register(props) {
+export default function RegisterParent(props) {
 	const roles = ['STUDENT', 'TEACHER', 'PARENT'];
 	const navigate = useNavigate();
 	const [provinces, setProvinces] = useState([]);
@@ -145,7 +145,7 @@ export default function Register(props) {
 							flex: 10,
 						}}
 					>
-						<h2 style={{ flex: 8, textAlign: 'end' }}>Đăng ký tài khoản cho học sinh</h2>
+						<h2 style={{ flex: 8, textAlign: 'end' }}>Đăng ký tài khoản cho phụ huynh</h2>
 						<button
 							style={{ flex: 3, height: '72.5px', backgroundColor: 'aliceblue	', textAlign: 'end' }}
 							onClick={props.onCancel}
@@ -255,28 +255,7 @@ export default function Register(props) {
 									placeholder="Ngày tháng năm sinh"
 								/>
 							</Form.Item>
-							<Form.Item
-								className="form-item-register"
-								name="province"
-								rules={[{ required: true, message: 'Vui lòng chọn tỉnh thành!' }]}
-							>
-								<Select
-									showSearch
-									style={{ width: '180px' }}
-									placeholder="Tỉnh thành"
-									optionFilterProp="children"
-									onChange={handleChange}
-									filterOption={(input, option) =>
-										option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-									}
-								>
-									{provinces.map((province) => (
-										<Option value={province.id} key={province.id}>
-											{province.name}
-										</Option>
-									))}
-								</Select>
-							</Form.Item>
+							
 							<Form.Item
 								className="form-item-register"
 								name="district"
@@ -299,44 +278,8 @@ export default function Register(props) {
 									))}
 								</Select>
 							</Form.Item>
-							<Form.Item
-								name="school"
-								rules={[{ required: true, message: 'Vui lòng chọn trường học!' }]}
-								className="form-item-register"
-							>
-								<Select
-									showSearch
-									style={{ width: '180px' }}
-									placeholder="Trường học"
-									optionFilterProp="children"
-									onChange={handleChange}
-									filterOption={(input, option) =>
-										option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-									}
-								>
-									{schools.map((school) => (
-										<Option value={school.id} key={school.id}>
-											{school.name}
-										</Option>
-									))}
-								</Select>
-							</Form.Item>
-							<Form.Item
-								name="grade"
-								rules={[{ required: true, message: 'Vui lòng chọn khối lớp!' }]}
-								className="form-item-register"
-							>
-								<Select
-									showSearch
-									style={{ width: '180px' }}
-									placeholder="Khối lớp"
-									optionFilterProp="children"
-									onChange={handleChange}
-									filterOption={(input, option) =>
-										option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-									}
-								></Select>
-							</Form.Item>
+						
+						
 							<Form.Item
 								
 								name="gender"
@@ -371,141 +314,7 @@ export default function Register(props) {
 								</div>
 							</Form.Item>
 						</div>
-						<div
-							style={{ color: 'blue', backgroundColor: 'aliceblue', padding: '0' }}
-							onClick={RegisterForParent}
-						>
-							<h3>Thêm tài khoản phụ huynh</h3>
-						</div>
-						{isRegisterForParent ? (
-							<div className="information-profile">
-								<Form.Item
-									name="email-parent"
-									rules={[
-										{
-											type: 'email',
-											message: 'Email không hợp lệ!',
-										},
-										{
-											required: true,
-											message: 'Vui lòng nhập email 	!',
-										},
-									]}
-									className="form-item-register"
-								>
-									<Input placeholder="Email" style={{ width: '180px' }} />
-								</Form.Item>
-								<Form.Item
-									name="password-parent"
-									rules={[
-										{
-											required: true,
-											message: 'vui lòng nhập mật khẩu!',
-										},
-										{
-											min: 8,
-											message: 'Mật khẩu phải có ít nhất 8 kí tự',
-										},
-									]}
-									hasFeedback
-									className="form-item-register"
-								>
-									<Input.Password placeholder="Mật khẩu" style={{ width: '180px' }} />
-								</Form.Item>
-								<Form.Item
-									name="confirm-parent"
-									dependencies={['password']}
-									hasFeedback
-									rules={[
-										{
-											required: true,
-											message: 'Vui lòng xác nhận lại mật khẩu!',
-										},
-										({ getFieldValue }) => ({
-											validator(_, value) {
-												if (!value || getFieldValue('password') === value) {
-													return Promise.resolve();
-												}
-												return Promise.reject(new Error('Mật khẩu xác thực không đúng!'));
-											},
-										}),
-									]}
-									className="form-item-register"
-								>
-									<Input.Password placeholder="Nhập lại mật khẩu" style={{ width: '180px' }} />
-								</Form.Item>
-								<Form.Item
-									name="firstName-parent"
-									rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
-									className="form-item-register"
-								>
-									<Input placeholder="Tên" style={{ width: '180px' }} />
-								</Form.Item>
-								<Form.Item
-									name="lastName-parent"
-									rules={[{ required: true, message: 'Vui lòng nhập họ !' }]}
-									className="form-item-register"
-								>
-									<Input placeholder="Họ" style={{ width: '180px' }} />
-								</Form.Item>
-								<Form.Item
-									label="Gender"
-									name="gender-parent"
-									defaultValue="MALE"
-									rules={[
-										{
-											required: true,
-											message: 'Chọn giới tính',
-										},
-									]}
-									className="form-item-register"
-								>
-									<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
-										<Tooltip title="Nam">
-											<Radio.Button value="MALE">
-												<FcManager />
-											</Radio.Button>
-										</Tooltip>
-										<Tooltip title="Nữ">
-											<Radio.Button value="FEMALE">
-												<FcBusinesswoman />
-											</Radio.Button>
-										</Tooltip>
-										<Tooltip title="Khác">
-											<Radio.Button value="OTHER">
-												<AiFillQuestionCircle />
-											</Radio.Button>
-										</Tooltip>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									name="phone-parent"
-									className="form-item-register"
-									rules={[
-										{
-											required: true,
-											message: 'Vui lòng nhập số điện thoại!',
-											whitespace: true,
-										},
-
-										{
-											pattern: /^0\d{10,10}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
-											message: 'Số điện thoại không hợp lệ!',
-										},
-									]}
-								>
-									<Input placeholder="Số điện thoại" style={{ width: '180px' }} />
-								</Form.Item>
-								<Form.Item name="date_picker-parent" {...config} className="form-item-register">
-									<DatePicker
-										format="DD-MM-YYYY"
-										style={{ width: '180px' }}
-										placeholder="Ngày tháng năm sinh"
-									/>
-								</Form.Item>
-							</div>
-						) : null}
-
+						
 						<Form.Item>
 							<Button
 								type="primary"

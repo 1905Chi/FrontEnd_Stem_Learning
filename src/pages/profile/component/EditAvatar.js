@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
 import RefeshToken from '../../../../src/api/RefeshToken';
-
+import Api from '../../../../src/api/Api';
 export default function EditAvatar(props) {
 	const [AvatarPicture, setAvatarPicture] = useState(props.avatar);
 	const [selectedFile, setSelectedFile] = useState(null);
@@ -35,7 +35,7 @@ export default function EditAvatar(props) {
 		if (selectedFile) {
 			const formData = new FormData();
 			formData.append('avatar', selectedFile);
-			axios
+			Api
 				.put(url + 'api/v1/users/profile/avatar', formData, {
 					headers: {
 						Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -54,26 +54,15 @@ export default function EditAvatar(props) {
 				.catch((error) => {
 					if (error.response) {
 						// lỗi khi access token hết hạn
-						const status = error.response.status;
-						if (status === 401) {
-							let a = RefeshToken();
-							if (a === 200) {
-								Save();
-							} else if (a === 401) {
+						
 								// lỗi khi refresh token hết hạn
 								toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
 								setTimeout(() => {
 									localStorage.clear();
 									navigate('/login');
 								}, 5000);
-							}
-							// token không hợp lệ trả về mã lỗi
-							toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-							setTimeout(() => {
-								localStorage.clear();
-								navigate('/login');
-							}, 5000);
-						}
+							
+						
 					} else if (error.request) {
 						// Lỗi không có phản hồi từ máy chủ
 						toast.error(error.request.data.message);

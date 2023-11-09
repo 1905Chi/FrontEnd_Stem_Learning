@@ -10,7 +10,7 @@ import { Form, Input, Button, Radio, DatePicker, Spin, Tooltip } from 'antd';
 import { FcManager } from 'react-icons/fc';
 import { FcBusinesswoman } from 'react-icons/fc';
 import { AiFillQuestionCircle } from 'react-icons/ai';
-
+import Api from '../../../api/Api';
 import Loading from '../../../components/Loading';
 export default function EditProfile({ onCancel }) {
 
@@ -122,7 +122,7 @@ export default function EditProfile({ onCancel }) {
         }
 
         setLoading(true);
-		axios
+		Api
 			.put(url + 'api/v1/users/profile', data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công

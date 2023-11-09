@@ -7,9 +7,7 @@ export default function DefaultLayout({ Left, Right, children }) {
 	return (
 		<>
 			<div>
-				<Layout className="header">
-					<Header> </Header>
-				</Layout>
+				
 				<div className="content">
 					<div theme="light" className="sider-left">
 						{Left}
