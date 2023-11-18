@@ -1,0 +1,27 @@
+.class{
+    display: flex;
+flex-wrap:wrap;
+    justify-content: space-between;
+    margin-right: 15px;
+
+}
+.item-class{
+    display: flex;
+    width: 49%; /* Đặt chiều rộng của mỗi item */
+
+    margin-bottom: 10px; /* Tạo khoảng cách giữa các item */
+    box-sizing: border-box; /* Đảm bảo padding và border không làm tăng kích thước thực sự của phần tử */
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+
+}
+.item-class img{
+    width: 60%;
+    height: auto;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.info-class button {
+    width: 100%;
+    margin-bottom: 15px;
+}

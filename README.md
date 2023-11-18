@@ -3,6 +3,7 @@
 ## Thành viên:
 * Bùi Đặng Quốc Chí - 20110614
 * Trần Văn Kiệt - 20110665
+* Đoàn Quốc Bảo -
 ## Framework:
 * NextJs 
 ## Ngôn ngữ sử dụng:

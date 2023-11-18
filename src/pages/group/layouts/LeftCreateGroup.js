@@ -7,9 +7,7 @@ import './LeftCreateGroup.css';
 import { ToastContainer, toast } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { url } from '../../../constants/Constant';
-import RefeshToken from '../../../api/RefeshToken';
 import Api from '../../../api/Api';
 export default function LeftCreateGroup() {
 	const [loading, setLoading] = useState(false);
@@ -56,9 +54,11 @@ export default function LeftCreateGroup() {
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 		};
 		const data = {
-			groupName: values.nameGroup,
-			groupDescription: values.descriptionGroup,
-			groupType: values.policy,
+			name: values.nameGroup,
+			description: values.descriptionGroup,
+			typeName: "DISCUSSION",
+			accessibilityName: values.policy,
+			memberModeName:values.policy,			
 		};
 
 		Api
@@ -69,7 +69,7 @@ export default function LeftCreateGroup() {
 					setLoading(false);
 					toast.success('Tạo nhóm thành công');
 					setTimeout(() => {
-						navigate(`/groups/${response.data.result.groupId}`);
+						navigate(`/groups/${response.data.result.id}`);
 					}, 5000);
 				} else {
 					setLoading(false);
@@ -79,22 +79,14 @@ export default function LeftCreateGroup() {
 			.catch((error) => {
 				// Xử lý lỗi nếu có lỗi xảy ra
 				if (error.response) {
-					// lỗi khi access token hết hạn
-					
+					// lỗi khi access token hết hạn	
 							// lỗi khi refresh token hết hạn
-							toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-							setTimeout(() => {
-								localStorage.clear();
-								navigate('/login');
-							}, 5000);
+							toast.error(error.response.data.message);
 					
 				} else if (error.request) {
 					// Lỗi không có phản hồi từ máy chủ
 					toast.error(error.request.data.message);
-					setTimeout(() => {
-						localStorage.clear();
-						navigate('/login');
-					}, 5000);
+					
 				} else {
 					// Lỗi trong quá trình thiết lập yêu cầu
 					toast('Lỗi khi thiết lập yêu cầu.');

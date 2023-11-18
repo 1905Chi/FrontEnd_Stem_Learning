@@ -6,7 +6,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
-import RefeshToken from '../../../../src/api/RefeshToken';
 import Api from '../../../../src/api/Api';
 export default function EditAvatar(props) {
 	const [AvatarPicture, setAvatarPicture] = useState(props.avatar);
@@ -56,20 +55,14 @@ export default function EditAvatar(props) {
 						// lỗi khi access token hết hạn
 						
 								// lỗi khi refresh token hết hạn
-								toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-								setTimeout(() => {
-									localStorage.clear();
-									navigate('/login');
-								}, 5000);
+								toast.error(error.response.data.message);
+								
 							
 						
 					} else if (error.request) {
 						// Lỗi không có phản hồi từ máy chủ
 						toast.error(error.request.data.message);
-						setTimeout(() => {
-							localStorage.clear();
-							navigate('/login');
-						}, 5000);
+						
 					} else {
 						// Lỗi trong quá trình thiết lập yêu cầu
 						toast('Lỗi khi thiết lập yêu cầu.');

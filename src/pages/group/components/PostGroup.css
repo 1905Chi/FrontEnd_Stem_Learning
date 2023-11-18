@@ -1,0 +1,8 @@
+.post-group{
+    padding: 15px;
+    background-color: aliceblue;
+    width: 93%;
+    border-radius: 10px;
+    border-bottom: 10px solid #c4bebe;
+    border-right: 5px solid #c4bebe;
+}

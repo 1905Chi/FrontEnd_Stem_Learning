@@ -9,7 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999; /* Đảm bảo form nằm trên cả nội dung khác */
+  z-index: 800; /* Đảm bảo form nằm trên cả nội dung khác */
  overflow-y: scroll;
  overflow-x: scroll;
 }

@@ -1,0 +1,13 @@
+.MonHoc__item{
+    display: flex;
+    padding: 10px 0;
+  cursor: pointer;
+  height: 30px;
+}
+.MonHoc__item input {
+    width: 5%;
+    margin-right: 15px;
+}
+.MonHoc__item p{
+   margin: 0;
+}

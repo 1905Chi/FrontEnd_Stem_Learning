@@ -15,7 +15,7 @@ function Login() {
 	const notify = (string) => toast(string); // Hàm hiển thị thông báo
 	const [loading, setLoading] = useState(false); // Trạng thái loading
 	const register = () => {
-		navigate('/register');
+		navigate('/');
 	};
 
 	const onFinish = (values) => {
@@ -44,7 +44,7 @@ function Login() {
 							if (response.data.statusCode === 200) {
 								localStorage.setItem('user', JSON.stringify(response.data.result));
 								console.log(response.data.result);
-								window.location.href = '/';
+								window.location.href = '/home';
 							} else {
 								toast.error(response.data.message);
 							}

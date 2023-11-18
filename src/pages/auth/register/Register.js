@@ -16,44 +16,43 @@ import Loading from '../../../components/Loading';
 import { GiCancel } from 'react-icons/gi';
 
 export default function Register(props) {
-	const roles = ['STUDENT', 'TEACHER', 'PARENT'];
 	const navigate = useNavigate();
-	const [provinces, setProvinces] = useState([]);
-	const [districts, setDistricts] = useState([]);
-	const [schools, setSchools] = useState([]);
-	const [grade, setGrade] = useState([]);
+	const [provinces, setProvinces] = useState(['Quảng Nam', 'Đà Nẵng', 'Quảng Ngãi', 'Quảng Trị', 'Huế', 'Hà Nội']);
+	const [districts, setDistricts] = useState(['Hải Châu', 'Cẩm Lệ', 'Thanh Khê', 'Liên Chiểu', 'Ngũ Hành Sơn', 'Sơn Trà', 'Hòa Vang']);
+	const [schools, setSchools] = useState(['Trường THPT Nguyễn Khuyến', 'Trường THPT Nguyễn Hiền', 'Trường THPT Nguyễn Trãi', 'Trường THPT Nguyễn Du', 'Trường THPT Nguyễn Thị Minh Khai', 'Trường THPT Nguyễn Thị Định']);
+	const [grade, setGrade] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9','10', '11', '12']);
 	const [isRegisterForParent, setIsRegisterForParent] = useState(false);
 
-	useEffect(() => {
-		axios
-			.get(url + 'api/v1/locations/provinces')
-			.then((response) => {
-				setProvinces(response.data.data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	}, []);
-	const handleChangeProvince = (value) => {
-		axios
-			.get(url + `api/v1/locations/districts?provinceId=${value}`)
-			.then((response) => {
-				setDistricts(response.data.data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
-	const handleChangeDistrict = (value) => {
-		axios
-			.get(url + `api/v1/locations/schools?districtId=${value}`)
-			.then((response) => {
-				setSchools(response.data.data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
+	// useEffect(() => {
+	// 	axios
+	// 		.get(url + 'api/v1/locations/provinces')
+	// 		.then((response) => {
+	// 			setProvinces(response.data.data);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error);
+	// 		});
+	// }, []);
+	// const handleChangeProvince = (value) => {
+	// 	axios
+	// 		.get(url + `api/v1/locations/districts?provinceId=${value}`)
+	// 		.then((response) => {
+	// 			setDistricts(response.data.data);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error);
+	// 		});
+	// };
+	// const handleChangeDistrict = (value) => {
+	// 	axios
+	// 		.get(url + `api/v1/locations/schools?districtId=${value}`)
+	// 		.then((response) => {
+	// 			setSchools(response.data.data);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error);
+	// 		});
+	// };
 	const { Option } = Select;
 	const RegisterForParent = () => {
 		setIsRegisterForParent(!isRegisterForParent);
@@ -74,24 +73,39 @@ export default function Register(props) {
 	const [loading, setLoading] = useState(false); // Trạng thái loading
 	const handleNext = (values) => {
 		setLoading(true);
+
 		const data = {
-			email: values.email,
-			password: values.password,
-			role: values.roles,
-		};
+			student: {
+				email: values.email,
+				password: values.password,
+				firstName: values.firstName,
+				lastName: values.lastName,
+				gender: values.gender,
+				phone: values.phone,
+				dob: values.date_picker.format('DD-MM-YYYY'),
+				province: values.province,
+				district: values.district,
+				school: values.school,
+				grade: values.grade,
+
+			},
+			parent: {
+			}
+		}
+		
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 			},
 		};
 		axios
-			.post(url + 'api/v1/auth/register', data, config)
+			.post(url + 'api/v1/auth/register-student', data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
 					toast.success(response.data.message);
 					setTimeout(() => {
-						navigate('*');
+						navigate('/login');
 					}, 2000);
 				} else {
 					toast.error(response.data.message);
@@ -148,7 +162,7 @@ export default function Register(props) {
 						<h2 style={{ flex: 8, textAlign: 'end' }}>Đăng ký tài khoản cho học sinh</h2>
 						<button
 							style={{ flex: 3, height: '72.5px', backgroundColor: 'aliceblue	', textAlign: 'end' }}
-							onClick={props.onCancel}
+							onClick={props.cancelRegister}
 						>
 							<CloseOutlined style={{ color: 'black', fontSize: '30px' }}></CloseOutlined>
 						</button>
@@ -263,16 +277,13 @@ export default function Register(props) {
 								<Select
 									showSearch
 									style={{ width: '180px' }}
-									placeholder="Tỉnh thành"
-									optionFilterProp="children"
+									placeholder="Tỉnh thành"									
 									onChange={handleChange}
-									filterOption={(input, option) =>
-										option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-									}
+									
 								>
-									{provinces.map((province) => (
-										<Option value={province.id} key={province.id}>
-											{province.name}
+									{grade.map((grade) => (
+										<Option value={grade} key={grade} style={{color:'black'}}>
+											{grade}
 										</Option>
 									))}
 								</Select>
@@ -286,15 +297,13 @@ export default function Register(props) {
 									showSearch
 									style={{ width: '180px' }}
 									placeholder="Quận huyện"
-									optionFilterProp="children"
+									
 									onChange={handleChange}
-									filterOption={(input, option) =>
-										option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-									}
+									
 								>
-									{districts.map((district) => (
-										<Option value={district.id} key={district.id}>
-											{district.name}
+									{grade.map((grade) => (
+										<Option value={grade} key={grade} style={{color:'black'}}>
+											{grade}
 										</Option>
 									))}
 								</Select>
@@ -308,15 +317,13 @@ export default function Register(props) {
 									showSearch
 									style={{ width: '180px' }}
 									placeholder="Trường học"
-									optionFilterProp="children"
+									
 									onChange={handleChange}
-									filterOption={(input, option) =>
-										option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-									}
+									
 								>
-									{schools.map((school) => (
-										<Option value={school.id} key={school.id}>
-											{school.name}
+								{grade.map((grade) => (
+										<Option value={grade} key={grade} style={{color:'black'}}>
+											{grade}
 										</Option>
 									))}
 								</Select>
@@ -330,12 +337,17 @@ export default function Register(props) {
 									showSearch
 									style={{ width: '180px' }}
 									placeholder="Khối lớp"
-									optionFilterProp="children"
-									onChange={handleChange}
-									filterOption={(input, option) =>
-										option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-									}
-								></Select>
+									
+
+									
+									onChange={handleChange}									
+								>
+									{grade.map((grade) => (
+										<Option value={grade} key={grade} style={{color:'black'}}>
+											{grade}
+										</Option>
+									))}
+								</Select>
 							</Form.Item>
 							<Form.Item
 								

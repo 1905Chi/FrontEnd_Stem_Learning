@@ -1,9 +1,11 @@
-import React from 'react';
+import React ,{useState} from 'react';
 import { Galleria } from 'primereact/galleria';
 import './LandingPage.css';
 import { Button } from 'antd';
 import { Carousel } from 'primereact/carousel';
-
+import Register from '../auth/register/Register';
+import RegisterParent from '../auth/register/RegisterParent';
+import RegisterTeacher from '../auth/register/RegisterTeacher';
 const LandingPage = () => {
 	const images = [
 		{
@@ -106,6 +108,31 @@ const LandingPage = () => {
 			numScroll: 1,
 		},
 	];
+	const [isRegisterForParent, setIsRegisterForParent] = useState(false);
+	const [isRegisterForStudent, setIsRegisterForStudent] = useState(false);
+	const [isRegisterForTeacher, setIsRegisterForTeacher] = useState(false);
+	
+	const cancelRegister = () => {
+		setIsRegisterForParent(false);
+		setIsRegisterForStudent(false);
+		setIsRegisterForTeacher(false);
+	};
+	const registerForParent = () => {
+		setIsRegisterForParent(true);
+		setIsRegisterForStudent(false);
+		setIsRegisterForTeacher(false);
+	};
+	const registerForStudent = () => {
+		setIsRegisterForParent(false);
+		setIsRegisterForStudent(true);
+		setIsRegisterForTeacher(false);
+	};
+	const registerForTeacher = () => {
+		setIsRegisterForParent(false);
+		setIsRegisterForStudent(false);	
+		setIsRegisterForTeacher(true);
+	};
+
 	const studiesTemplate = (item) => {
 		return (
 			<div className="card">
@@ -155,9 +182,10 @@ const LandingPage = () => {
 							<h4>
 								Công cụ giúp giảm tải công việc, truyền thông nhanh chóng, hiểu học lực của học sinh
 							</h4>
-							<Button type="primary" href="/register">
+							<Button type="primary" onClick={registerForTeacher}>
 								ĐĂNG KÍ TÀI KHOẢN
 							</Button>
+							{ isRegisterForTeacher && <RegisterTeacher cancelRegister={cancelRegister} />}
 						</div>
 					</div>
 					<div className="card-led-register">
@@ -168,9 +196,10 @@ const LandingPage = () => {
 								Phương pháp mới giúp ôn tập kiến thức, tạo thói quen tự học và khai thác kiến thức trên
 								mạng
 							</h4>
-							<Button type="primary" href="/register">
+							<Button type="primary" onClick={registerForStudent}>
 								ĐĂNG KÍ TÀI KHOẢN
 							</Button>
+							{ isRegisterForStudent && <Register cancelRegister={cancelRegister} />}
 						</div>
 					</div>
 					<div className="card-led-register">
@@ -178,9 +207,10 @@ const LandingPage = () => {
 						<div className="card-register">
 							<h1 style={{ color: '#9c1616' }}>Phụ huynh</h1>
 							<h4>Phương tiện để có kế hoạch học tập cùng con, đồng cảm với ngành giáo dục </h4>
-							<Button type="primary" href="/register">
+							<Button type="primary" onClick={registerForParent}>
 								ĐĂNG KÍ TÀI KHOẢN
 							</Button>
+							{ isRegisterForParent && <RegisterParent cancelRegister={cancelRegister} />}
 						</div>
 					</div>
 				</div>

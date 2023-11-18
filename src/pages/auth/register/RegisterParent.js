@@ -22,7 +22,7 @@ export default function RegisterParent(props) {
 	const [districts, setDistricts] = useState([]);
 	const [schools, setSchools] = useState([]);
 	const [grade, setGrade] = useState([]);
-	const [isRegisterForParent, setIsRegisterForParent] = useState(false);
+	
 
 	useEffect(() => {
 		axios
@@ -55,9 +55,7 @@ export default function RegisterParent(props) {
 			});
 	};
 	const { Option } = Select;
-	const RegisterForParent = () => {
-		setIsRegisterForParent(!isRegisterForParent);
-	};
+	
 
 	const login = () => {
 		navigate('/login');
@@ -148,7 +146,7 @@ export default function RegisterParent(props) {
 						<h2 style={{ flex: 8, textAlign: 'end' }}>Đăng ký tài khoản cho phụ huynh</h2>
 						<button
 							style={{ flex: 3, height: '72.5px', backgroundColor: 'aliceblue	', textAlign: 'end' }}
-							onClick={props.onCancel}
+							onClick={props.cancelRegister}
 						>
 							<CloseOutlined style={{ color: 'black', fontSize: '30px' }}></CloseOutlined>
 						</button>

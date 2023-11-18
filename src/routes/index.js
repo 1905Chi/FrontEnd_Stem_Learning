@@ -17,22 +17,35 @@ import RightProfile from '../../src/pages/profile/layouts/RightProfile';
 import EditPost from '../pages/home/components/EditPost';
 import LandingPage from '../pages/landing/LandingPage';
 import RegisterParent from '../pages/auth/register/RegisterParent';
+import RegisterTeacher from '../pages/auth/register/RegisterTeacher';
+import LeftClass from '../pages/class/layouts/LeftClass';
+import Class from '../pages/class/Class';
+import LeftItemClass from '../pages/class/layouts/LeftItemClass';
+import RightClass from '../pages/class/layouts/RightClass';
+import MainClass from '../pages/class/itemclass/MainClass';
+import CreateQuiz from '../pages/class/exam/CreateQuiz ';
 const privateRoutes = [
 	{ path: '/home', component: Home, Left: Left, Right: Right },
 	{ path: '/groups', component: Home, Left: LeftsGroup, Right: Right },
 	{ path: '/groups/create', component: CreateGroup, Left: LeftCreateGroup, Right: Right },
 	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: Right },
 	{ path: '/profile', component: Profile, Left: Left, Right: RightProfile },
+	{ path: '/classes', component: Class, Left: LeftClass, Right: RightClass },
+	
 ];
 
+const privateRoutes2page = [
+	{ path: '/classes/:uuid', component: MainClass, Left: LeftItemClass },
+	{ path: '/classes/:uuid/exam/createquiz', component: CreateQuiz, Left: LeftItemClass },
+];
 const publicRoutes = [
 	{ path: '/login', component: Login },
-	{ path: '/register', component: RegisterParent },
+	{ path: '/register', component: RegisterTeacher },
 	{ path: '/forgot-password/', component: ForgotPassword },
 	{ path: '/forgot-password/:uuid', component: ForgotPassword },
 	{ path: '/verify/:uuid', component: Verify },
-	{ path: 'landing', component: LandingPage },
+	{ path: '/', component: LandingPage },
 ];
 
 const notFoundRoute = { path: '*', component: NotFound };
-export { privateRoutes, publicRoutes, notFoundRoute };
+export { privateRoutes, publicRoutes, notFoundRoute, privateRoutes2page };

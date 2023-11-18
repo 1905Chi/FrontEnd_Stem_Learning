@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
-import RefeshToken from '../../../../src/api/RefeshToken';
+
 import Api from '../../../../src/api/Api';
 export default function EditCover(props) {
 	const [CoverPicture, setCoverPicture] = useState(props.coverPhoto);

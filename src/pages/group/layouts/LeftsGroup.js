@@ -3,9 +3,7 @@ import { Input, Button } from 'antd';
 import './LeftsGroup.css';
 import { useNavigate } from 'react-router-dom';
 import LableGroup from '../components/LableGroup';
-import axios from 'axios';
 import { url } from '../../../constants/Constant';
-import RefeshToken from '../../../api/RefeshToken';
 import { ToastContainer, toast } from 'react-toastify';
 import anh_logo_1 from '../../../assets/images/anh_logo_1.jpg';
 import Loading from '../../../components/Loading';
@@ -35,36 +33,25 @@ const LeftsGroup = () => {
 			.get(url + 'api/v1/groups', { headers })
 			.then(async (response) => {
 				if (response.data.statusCode === 200) {
-					setMygroup(response.data.result.GROUP_ADMIN);
+					setMygroup(response.data.result.GROUP_OWNER);
 					setGroup(response.data.result.GROUP_MEMBER);
+					setGroup(...group, response.data.result.GROUP_ADMIN);
 				}
 			})
 			.catch(async (error) => {
 				if (error.response) {
 					// lỗi khi access token hết hạn
 					toast.error(error.request.data.message);
-					setTimeout(() => {
-						localStorage.removeItem('accessToken');
-						localStorage.removeItem('refreshToken');
-						navigate('/login');
-					}, 5000);
+					
 					
 				} else if (error.request) {
 					// Lỗi không có phản hồi từ máy chủ
 					toast.error(error.request.data.message);
-					setTimeout(() => {
-						localStorage.removeItem('accessToken');
-						localStorage.removeItem('refreshToken');
-						navigate('/login');
-					}, 5000);
+					
 				} else {
 					// Lỗi trong quá trình thiết lập yêu cầu
 					toast('Lỗi khi thiết lập yêu cầu.');
-					setTimeout(() => {
-						localStorage.removeItem('accessToken');
-						localStorage.removeItem('refreshToken');
-						navigate('/login');
-					}, 5000);
+					
 				}
 			})
 			.finally(() => {
@@ -106,11 +93,11 @@ const LeftsGroup = () => {
 					</div>
 					{mygroup.map((mygroup, index) => {
 						{
-							mygroup.groupImage === null
-								? (mygroup.groupImage = anh_logo_1)
-								: (mygroup.groupImage = mygroup.groupImage);
+							mygroup.avatarUrl === null
+								? (mygroup.avatarUrl = anh_logo_1)
+								: (mygroup.avatarUrl = mygroup.avatarUrl);
 						}
-						return <LableGroup key={index} image={mygroup.groupImage} name={mygroup.groupName} id={mygroup.groupId} />;
+						return <LableGroup key={index} image={mygroup.avatarUrl} name={mygroup.name} id={mygroup.id} />;
 					})}
 				</div>
 				<div className="your-group">
@@ -121,10 +108,10 @@ const LeftsGroup = () => {
 					{group.map((group, index) => {
 						{
 							group.groupImage === null
-								? (group.groupImage = anh_logo_1)
-								: (group.groupImage = group.groupImage);
+								? (group.avatarUrl = anh_logo_1)
+								: (group.avatarUrl = group.avatarUrl);
 						}
-						return <LableGroup key={index} image={group.groupImage} name={group.groupName} id={group.groupId} />;
+						return <LableGroup key={index} image={group.avatarUrl} name={group.name} id={group.id} />;
 					})}
 				</div>
 				<ToastContainer />

@@ -7,7 +7,7 @@ import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { MdBugReport } from 'react-icons/md';
 import CommentPost from './CommentPost';
 import { EditOutlined } from '@ant-design/icons';
-import InputWrite from './InputWrite';
+
 import Editor from './Editor';
 function PostItem({ user, content, likes, index }) {
 	const [isLiked, setIsLiked] = useState(false); // Trạng thái ban đầu là "không thích"
