@@ -1,0 +1,51 @@
+.Calendar-group{
+    margin: 15px;
+    border: 2px solid #e6e6e6;
+    border-radius: 15px;
+    margin-right: 26px;
+}
+.event-upcoming-main{
+    margin: 15px;
+    border: 2px solid #e6e6e6;
+    border-radius: 15px;
+    margin-right: 26px;
+}
+
+.header-envent-title{
+    display: flex;
+}
+.header-envent-title button{
+    background-color: white;
+    text-align: end;
+
+}
+.header-envent-title button:hover{
+    background-color: white;
+}
+.header-envent-title button h3{
+    width: 70%;
+}
+.form-create-event{
+    margin-left: 11px;
+}
+
+.overlay-event-create{
+    left:38%;
+}
+.form-create-event button{
+    margin: 15px;
+    border: 1px solid #e6e6e6;
+    width: 100%;
+
+}
+
+.event-upcoming__item{
+    border: 1px solid #e6e6e6;
+    border-radius: 15px;
+    padding-left: 15px;
+    display:flex;
+}
+.event-upcoming__item__title{
+   
+
+}

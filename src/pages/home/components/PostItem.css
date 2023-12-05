@@ -6,6 +6,7 @@
   border-radius: 15px;
   border-bottom: 10px solid #c4bebe;
 }
+
 .post-content{
   max-height: 500px;
 }
@@ -67,7 +68,7 @@
   position: relative;
 }
 .post-content{
-  margin: 0 0 90px 30px;
+  margin: 0 0 30px 30px;
 }
 
 .post-content img{
@@ -103,7 +104,9 @@
   font-weight: bold;
 }
 .file-post{
-  display: flex;
+  margin: 15px 0 15px 30px;
+  width: 90%;
+
 
 }
 .image-file{
@@ -123,6 +126,10 @@
   position: relative;
 }
 
+.content-container button :hover{
+  background-color: aliceblue;
+
+}
 
 .show-more.active {
   display: block;

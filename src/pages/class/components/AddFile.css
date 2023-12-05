@@ -45,8 +45,7 @@ overflow-y: auto;
 }
 
 .file-item {
-  background-color: antiquewhite;
-  border-radius: 5px;
+  
   padding: 10px;
-  margin:10px;
+
 }

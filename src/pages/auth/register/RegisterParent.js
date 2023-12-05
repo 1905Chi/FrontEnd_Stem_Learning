@@ -22,11 +22,10 @@ export default function RegisterParent(props) {
 	const [districts, setDistricts] = useState([]);
 	const [schools, setSchools] = useState([]);
 	const [grade, setGrade] = useState([]);
-	
 
 	useEffect(() => {
 		axios
-			.get(url + 'api/v1/locations/provinces')
+			.get(url + 'api/v1/addresses/provinces')
 			.then((response) => {
 				setProvinces(response.data.data);
 			})
@@ -36,7 +35,7 @@ export default function RegisterParent(props) {
 	}, []);
 	const handleChangeProvince = (value) => {
 		axios
-			.get(url + `api/v1/locations/districts?provinceId=${value}`)
+			.get(url + `api/v1/addresses/districtsByProvince?pId=${value}`)
 			.then((response) => {
 				setDistricts(response.data.data);
 			})
@@ -46,7 +45,7 @@ export default function RegisterParent(props) {
 	};
 	const handleChangeDistrict = (value) => {
 		axios
-			.get(url + `api/v1/locations/schools?districtId=${value}`)
+			.get(url + `api/v1/addresses/schoolsByDistrict?dId=${value}`)
 			.then((response) => {
 				setSchools(response.data.data);
 			})
@@ -55,7 +54,6 @@ export default function RegisterParent(props) {
 			});
 	};
 	const { Option } = Select;
-	
 
 	const login = () => {
 		navigate('/login');
@@ -89,7 +87,7 @@ export default function RegisterParent(props) {
 				if (response.data.statusCode === 200) {
 					toast.success(response.data.message);
 					setTimeout(() => {
-						navigate('*');
+						navigate('/login');
 					}, 2000);
 				} else {
 					toast.error(response.data.message);
@@ -253,7 +251,7 @@ export default function RegisterParent(props) {
 									placeholder="Ngày tháng năm sinh"
 								/>
 							</Form.Item>
-							
+
 							<Form.Item
 								className="form-item-register"
 								name="district"
@@ -276,10 +274,8 @@ export default function RegisterParent(props) {
 									))}
 								</Select>
 							</Form.Item>
-						
-						
+
 							<Form.Item
-								
 								name="gender"
 								defaultValue="MALE"
 								rules={[
@@ -291,28 +287,27 @@ export default function RegisterParent(props) {
 								className="form-item-register"
 							>
 								<div>
-									
-								<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
-									<Tooltip title="Nam">
-										<Radio.Button value="MALE">
-											<FcManager />
-										</Radio.Button>
-									</Tooltip>
-									<Tooltip title="Nữ">
-										<Radio.Button value="FEMALE">
-											<FcBusinesswoman />
-										</Radio.Button>
-									</Tooltip>
-									<Tooltip title="Khác">
-										<Radio.Button value="OTHER">
-											<AiFillQuestionCircle />
-										</Radio.Button>
-									</Tooltip>
-								</Radio.Group>
+									<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
+										<Tooltip title="Nam">
+											<Radio.Button value="MALE">
+												<FcManager />
+											</Radio.Button>
+										</Tooltip>
+										<Tooltip title="Nữ">
+											<Radio.Button value="FEMALE">
+												<FcBusinesswoman />
+											</Radio.Button>
+										</Tooltip>
+										<Tooltip title="Khác">
+											<Radio.Button value="OTHER">
+												<AiFillQuestionCircle />
+											</Radio.Button>
+										</Tooltip>
+									</Radio.Group>
 								</div>
 							</Form.Item>
 						</div>
-						
+
 						<Form.Item>
 							<Button
 								type="primary"

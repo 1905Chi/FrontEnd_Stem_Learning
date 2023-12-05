@@ -11,9 +11,7 @@ export default function CreateGroup() {
 		<div style={disabledStyle}>
             
 			<BannerGroup></BannerGroup>
-			<div >
-				<Post></Post>
-			</div>
+			
 		</div>
 	);
 }

@@ -87,6 +87,13 @@ export default function VerifyForm(props) {
 				<Loading></Loading>
 			) : null}
 			<div className="form-verify">
+				<div style={{width:'50%',maxWidth:'370px'}}>
+					<img
+						src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
+						alt="logo"
+						className="logo"
+					/>
+				</div>
 				<Form
 					name="normal_login"
 					className="verify-form"
@@ -95,11 +102,6 @@ export default function VerifyForm(props) {
 					}}
 					onFinish={onFinish}
 				>
-					<img
-						src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
-						alt="logo"
-						className="logo"
-					/>
 					<h2> Xác thực tài khoản </h2>
 					<h3 style={{ color: 'blue' }}>Thông tin cá nhân:</h3>
 					<div className="information-profile">
@@ -129,7 +131,7 @@ export default function VerifyForm(props) {
 								},
 
 								{
-									pattern: /^0\d{10,10}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
+									pattern: /^0\d{9,9}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
 									message: 'Số điện thoại không hợp lệ!',
 								},
 							]}
@@ -154,7 +156,6 @@ export default function VerifyForm(props) {
 								placeholder="Tỉnh thành"
 								optionFilterProp="children"
 								onChange={handleChange}
-								
 							>
 								{grade.map((grade) => (
 									<Option value={grade} key={grade} style={{ color: 'black' }}>
@@ -174,7 +175,6 @@ export default function VerifyForm(props) {
 								placeholder="Quận huyện"
 								optionFilterProp="children"
 								onChange={handleChange}
-								
 							>
 								{grade.map((grade) => (
 									<Option value={grade} key={grade} style={{ color: 'black' }}>
@@ -194,13 +194,12 @@ export default function VerifyForm(props) {
 								placeholder="Trường học"
 								optionFilterProp="children"
 								onChange={handleChange}
-								
 							>
 								{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{color:'black'}}>
-											{grade}
-										</Option>
-									))}
+									<Option value={grade} key={grade} style={{ color: 'black' }}>
+										{grade}
+									</Option>
+								))}
 							</Select>
 						</Form.Item>
 						<Form.Item
@@ -214,13 +213,12 @@ export default function VerifyForm(props) {
 								placeholder="Khối lớp"
 								optionFilterProp="children"
 								onChange={handleChange}
-								
 							>
 								{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{color:'black'}}>
-											{grade}
-										</Option>
-									))}
+									<Option value={grade} key={grade} style={{ color: 'black' }}>
+										{grade}
+									</Option>
+								))}
 							</Select>
 						</Form.Item>
 						<Form.Item

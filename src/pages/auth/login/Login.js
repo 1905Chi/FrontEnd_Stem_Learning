@@ -7,7 +7,10 @@ import axios from 'axios';
 import { url } from '../../../constants/Constant';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../components/Loading';
-
+import { useDispatch,useSelector } from 'react-redux';
+import { selectuser,selectselectuser} from '../../../redux/User';
+import { UseSelector } from 'react-redux/es/hooks/useSelector';
+//import { createJwtToken } from '../../../api/Jwt';
 import './Login.css';
 
 function Login() {
@@ -17,8 +20,8 @@ function Login() {
 	const register = () => {
 		navigate('/');
 	};
-
-	const onFinish = (values) => {
+	const dispatch = useDispatch();
+	const onFinish  =  (values) => {
 		// Thực hiện kiểm tra đăng nhập tại đây
 		setLoading(true);
 		const data = { email: values.email, password: values.password };
@@ -40,10 +43,11 @@ function Login() {
 							'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 						},
 					})
-						.then((response) => {
+						.then(async (response) => {
 							if (response.data.statusCode === 200) {
-								localStorage.setItem('user', JSON.stringify(response.data.result));
-								console.log(response.data.result);
+								 localStorage.setItem('user', JSON.stringify(response.data.result))
+								 dispatch(selectuser(response.data.result));	
+							//	localStorage.setItem('use',createJwtToken(response.data.result))			 
 								window.location.href = '/home';
 							} else {
 								toast.error(response.data.message);
@@ -95,13 +99,14 @@ function Login() {
 			}
 			<div className="body-login">
 				<div className="login-container">
-					<div style={{ overflow: 'hidden' }}>
+					<div style={{ overflow: 'hidden', width:'75%' }}>
 						<img
 							src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
 							alt="logo"
 							className="logo"
 						/>
 					</div>
+					<div style={{width:'75%'}}>
 					<h2> Đăng nhập </h2>
 					<Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
 						<Form.Item
@@ -147,6 +152,7 @@ function Login() {
 							</div>
 						</Form.Item>
 					</Form>
+					
 					<div className="login-footer">
 						<Link to="/forgot-password" style={{ textDecoration: 'none', color: 'blue' }}>
 							Quên mật khẩu ?{' '}
@@ -160,6 +166,8 @@ function Login() {
 								Đăng ký
 							</Button>
 						</div>
+						
+					</div>
 					</div>
 				</div>
 				<ToastContainer />

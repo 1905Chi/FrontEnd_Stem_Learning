@@ -1,0 +1,72 @@
+.document-group-title{
+    font-size: 20px;
+    font-weight: bold;
+    color: #1890ff;
+    display: flex;}
+    .document-group-title button{
+      background-color: white;
+      padding-left: 160px;
+    }
+    .document-group-title button:hover{
+      background-color:white;
+    }
+  
+    .document-group-title h4{
+      margin-left: 15px;
+    }
+  .document-group-content{
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+    margin:15px
+  }
+  
+  .document-group{
+border: 2px solid #e6e6e6;
+    margin-bottom: 30px;
+    margin-right: 15px;
+    border-radius: 15px;
+  
+  
+  }
+  .inforgroup{
+    margin-bottom: 15px;
+    border-bottom: 2px solid #1890ff;
+    margin-right: 15px;
+    
+  }
+  
+  .file-all{
+    position: fixed;
+    top:43px;
+    left:0;
+    width: 30%;
+    height: 100%;
+    z-index: 2;
+    background-color: white;
+    border: 3px solid #1890ff;
+    border-radius: 10px;
+    
+  
+  }
+  .document-group-content-allfile{
+    overflow: scroll;
+    height: 50vh;
+    border: 2px solid #e6e6e6;
+border-radius: 10px;
+
+
+
+  }
+  .search-file{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  .document-group-search{
+    border-bottom: 3px solid #e6e6e6;
+    border-radius: 10px;
+    margin-top: 15px;
+    margin-right: 15px;
+  }

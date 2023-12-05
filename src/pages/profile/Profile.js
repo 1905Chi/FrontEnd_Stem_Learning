@@ -8,22 +8,37 @@ import EditAvatar from './component/EditAvatar';
 import EditCover from './component/EditCover';
 import Post from '../home/components/Post';
 import PostItem from '../home/components/PostItem';
+import { json } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectOptionProfile } from '../../redux/Group';
+import { selectSelectedOptionProfile } from '../../redux/Group';
+import { BsGenderTrans } from 'react-icons/bs';
+import { CiLocationOn } from 'react-icons/ci';
+import { TbBuildingFactory } from 'react-icons/tb';
+import { AiFillPhone } from 'react-icons/ai';
+import { LiaBirthdayCakeSolid } from 'react-icons/lia';
 
 export default function Profile() {
 	const [isEdit, setIsEdit] = useState(false);
+
 	const [isEditAvatar, setIsEditAvatar] = useState(false);
 	const [isEditCoverPhoto, setIsEditCoverPhoto] = useState(false);
 	const [avatar, setAvatar] = useState();
 	const [coverPhoto, setCoverPhoto] = useState();
+	const dispatch = useDispatch();
+	const selectedOption = useSelector(selectSelectedOptionProfile);
+	console.log(selectedOption);
+	
 
 	useEffect(() => {
 		const profile = JSON.parse(localStorage.getItem('user'));
+		dispatch(selectOptionProfile('introduce'));
 		if (profile.avatarUrl) {
 			setAvatar(profile.avatarUrl);
 		} else {
 			setAvatar(anhlogo1);
 		}
-		if (profile.avatarUrl) {
+		if (profile.coverUrl) {
 			setCoverPhoto(profile.coverUrl);
 		} else {
 			setCoverPhoto(anhlogo1);
@@ -132,7 +147,7 @@ export default function Profile() {
 						<img src={coverPhoto} alt="Cover Photo" />
 					</div>
 					<button className="cover-picture__button" style={{ height: '40px' }} onClick={setEditCoverPhoto}>
-						<AiFillCamera style={{ fontSize: '30px', margin: '0 0 0 5px', color: 'white' }}></AiFillCamera>{' '}
+						<AiFillCamera style={{ fontSize: '30px', margin: '0 0 0 5px', color: 'white' }}></AiFillCamera>
 						<span style={{ fontSize: '15px', color: 'white', margin: '0 5px 0 0' }}>Chỉnh sửa ảnh bìa</span>
 					</button>
 				</div>
@@ -144,30 +159,125 @@ export default function Profile() {
 						<AiFillCamera style={{ fontSize: '30px', color: 'white' }}></AiFillCamera>
 					</button>
 					<div className="usename-button">
-						<span>Quốc Chí</span>
+						<span style={{ fontSize: '35px' }}>
+							{JSON.parse(localStorage.getItem('user')).firstName +
+								' ' +
+								JSON.parse(localStorage.getItem('user')).lastName}
+						</span>
 						<button className="edit-profile__button" style={{ height: '40px' }} onClick={setEditProfile}>
 							<BsPencilFill
 								style={{ fontSize: '30px', margin: '0 0 0 5px', color: 'white' }}
-							></BsPencilFill>{' '}
+							></BsPencilFill>
 							<span style={{ fontSize: '15px', color: 'white', margin: '0 5px 0 0' }}>
 								Chỉnh sửa thông tin cá nhân
 							</span>
 						</button>
 					</div>
 				</div>
-				<div style={{ margin: '125px 0 0 0' }}>
-					{post.map((post, index) => {
-						return (
-							<PostItem
-								key={index}
-								user={post.user}
-								content={post.content}
-								image={post.image}
-								likes={post.likes}
-							/>
-						);
-					})}
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'start',
+						position: 'relative',
+						top: '118px',
+						borderTop: '1px solid #e6e6e6',
+						borderBottom: '1px solid #e6e6e6',
+					}}
+					className="group-menu"
+				>
+					<button
+						style={{ margin: '0px', borderRadius: '0px', backgroundColor: 'white' }}
+						onClick={() => {
+							dispatch(selectOptionProfile('introduce'));
+						}}
+					>
+						
+						<h3>Giới thiệu</h3>
+					</button>
+					<button
+						style={{ margin: '0px', borderRadius: '0px', backgroundColor: 'white' }}
+						onClick={() => {
+							dispatch(selectOptionProfile('post'));
+						}}
+					>
+						
+						<h3>Bài Viết</h3>
+					</button>
+					<button
+						style={{ margin: '0px', borderRadius: '0px', backgroundColor: 'white' }}
+						onClick={() => {
+							dispatch(selectOptionProfile('member'));
+						}}
+					>
+						
+						<h3>Bạn bè</h3>
+					</button>
+					<button
+						style={{ margin: '0px', borderRadius: '0px', backgroundColor: 'white' }}
+						onClick={() => {
+							dispatch(selectOptionProfile('event'));
+						}}
+					>
+						<h3>Ảnh</h3>
+					</button>
 				</div>
+				{selectedOption === 'introduce' ? (
+					<div style={{ margin: '125px 0 0 0' }}>
+						<div className="introduce">
+							<h3>Giới thiệu</h3>
+							{JSON.parse(localStorage.getItem('user')).phone ? (
+								<div style={{ width: '100%', margin: '5px 0' }}>
+									<AiFillPhone className="icon-profile"></AiFillPhone>:
+									{JSON.parse(localStorage.getItem('user')).phone}
+								</div>
+							) : null}
+							{JSON.parse(localStorage.getItem('user')).date ? (
+								<div style={{ width: '100%', margin: '5px 0' }}>
+									<LiaBirthdayCakeSolid className="icon-profile"></LiaBirthdayCakeSolid>:
+									{JSON.parse(localStorage.getItem('user')).date}
+								</div>
+							) : null}
+
+							{JSON.parse(localStorage.getItem('user')).gender ? (
+								<div style={{ width: '100%', margin: '5px 0' }}>
+									<BsGenderTrans className="icon-profile"></BsGenderTrans>:
+									{JSON.parse(localStorage.getItem('user')).gender}
+								</div>
+							) : null}
+
+							{JSON.parse(localStorage.getItem('user')).workAt ? (
+								<div style={{ width: '100%', margin: '5px 0' }}>
+									<TbBuildingFactory className="icon-profile"></TbBuildingFactory>:
+									{JSON.parse(localStorage.getItem('user')).workAt}
+								</div>
+							) : null}
+							{JSON.parse(localStorage.getItem('user')).address ? (
+								<div style={{ width: '100%', margin: '5px 0' }}>
+									<CiLocationOn className="icon-profile"></CiLocationOn>:
+									{JSON.parse(localStorage.getItem('user')).address}
+								</div>
+							) : null}
+						</div>
+					</div>
+				) : (
+					''
+				)}
+
+				{selectedOption === 'post' ? (
+					<div style={{ margin: '125px 0 0 0' }}>
+						{post.map((post, index) => {
+							return (
+								<PostItem
+									key={index}
+									user={post.user}
+									content={post.content}
+									image={post.image}
+									likes={post.likes}
+								/>
+							);
+						})}
+					</div>
+				) : null}
 			</div>
 		</>
 	);

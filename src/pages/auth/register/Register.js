@@ -14,45 +14,58 @@ import './Register.css';
 import { url } from '../../../constants/Constant';
 import Loading from '../../../components/Loading';
 import { GiCancel } from 'react-icons/gi';
+import moment from 'moment';
 
 export default function Register(props) {
 	const navigate = useNavigate();
-	const [provinces, setProvinces] = useState(['Quảng Nam', 'Đà Nẵng', 'Quảng Ngãi', 'Quảng Trị', 'Huế', 'Hà Nội']);
-	const [districts, setDistricts] = useState(['Hải Châu', 'Cẩm Lệ', 'Thanh Khê', 'Liên Chiểu', 'Ngũ Hành Sơn', 'Sơn Trà', 'Hòa Vang']);
-	const [schools, setSchools] = useState(['Trường THPT Nguyễn Khuyến', 'Trường THPT Nguyễn Hiền', 'Trường THPT Nguyễn Trãi', 'Trường THPT Nguyễn Du', 'Trường THPT Nguyễn Thị Minh Khai', 'Trường THPT Nguyễn Thị Định']);
-	const [grade, setGrade] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9','10', '11', '12']);
+	const [provinces, setProvinces] = useState([]);
+	const [currentProvince, setCurrentProvince] = useState(1);
+	const [districts, setDistricts] = useState([]);
+	const [currentDistrict, setCurrentDistrict] = useState();
+	const [schools, setSchools] = useState([]);
+	const [grade, setGrade] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
 	const [isRegisterForParent, setIsRegisterForParent] = useState(false);
+	const [currentDate, setCurrentDate] = useState(moment());
 
-	// useEffect(() => {
-	// 	axios
-	// 		.get(url + 'api/v1/locations/provinces')
-	// 		.then((response) => {
-	// 			setProvinces(response.data.data);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
-	// }, []);
-	// const handleChangeProvince = (value) => {
-	// 	axios
-	// 		.get(url + `api/v1/locations/districts?provinceId=${value}`)
-	// 		.then((response) => {
-	// 			setDistricts(response.data.data);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
-	// };
-	// const handleChangeDistrict = (value) => {
-	// 	axios
-	// 		.get(url + `api/v1/locations/schools?districtId=${value}`)
-	// 		.then((response) => {
-	// 			setSchools(response.data.data);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
-	// };
+	// Hàm kiểm tra xem ngày có phải đã diễn ra hay không
+	const isDateDisabled = (date) => {
+		return date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
+	};
+	useEffect(() => {
+		handleProvince();
+	}, []);
+
+	const handleProvince = async () => {
+		await axios
+			.get(url + 'api/v1/addresses/provinces')
+			.then((response) => {
+				setProvinces(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	const handleChangeProvince = async (currentProvince) => {
+		await axios
+			.get(url + `api/v1/addresses/districtsByProvince?pId=${currentProvince}`)
+			.then((response) => {
+				setDistricts(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+	const handleChangeDistrict = (value) => {
+		axios
+			.get(url + `api/v1/addresses/schoolsByDistrict?dId=${value}`)
+			.then((response) => {
+				setSchools(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
 	const { Option } = Select;
 	const RegisterForParent = () => {
 		setIsRegisterForParent(!isRegisterForParent);
@@ -87,12 +100,10 @@ export default function Register(props) {
 				district: values.district,
 				school: values.school,
 				grade: values.grade,
-
 			},
-			parent: {
-			}
-		}
-		
+			parent: {},
+		};
+
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
@@ -255,7 +266,7 @@ export default function Register(props) {
 									},
 
 									{
-										pattern: /^0\d{10,10}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
+										pattern: /^0\d{9,9}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
 										message: 'Số điện thoại không hợp lệ!',
 									},
 								]}
@@ -267,6 +278,8 @@ export default function Register(props) {
 									format="DD-MM-YYYY"
 									style={{ width: '180px' }}
 									placeholder="Ngày tháng năm sinh"
+									onChange={(date) => setCurrentDate(date)}
+									disabledDate={isDateDisabled}
 								/>
 							</Form.Item>
 							<Form.Item
@@ -277,13 +290,16 @@ export default function Register(props) {
 								<Select
 									showSearch
 									style={{ width: '180px' }}
-									placeholder="Tỉnh thành"									
-									onChange={handleChange}
-									
+									placeholder="Tỉnh thành"
+									onChange={(value) => {
+										handleChangeProvince(value);
+										setSchools([]);
+										setDistricts([]);
+									}}
 								>
-									{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{color:'black'}}>
-											{grade}
+									{provinces.map((grade) => (
+										<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
+											{grade.name}
 										</Option>
 									))}
 								</Select>
@@ -297,13 +313,14 @@ export default function Register(props) {
 									showSearch
 									style={{ width: '180px' }}
 									placeholder="Quận huyện"
-									
-									onChange={handleChange}
-									
+									onChange={(value) => {
+										handleChangeDistrict(value);
+										setSchools([]);
+									}}
 								>
-									{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{color:'black'}}>
-											{grade}
+									{districts.map((grade) => (
+										<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
+											{grade.name}
 										</Option>
 									))}
 								</Select>
@@ -317,13 +334,11 @@ export default function Register(props) {
 									showSearch
 									style={{ width: '180px' }}
 									placeholder="Trường học"
-									
 									onChange={handleChange}
-									
 								>
-								{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{color:'black'}}>
-											{grade}
+									{schools.map((grade) => (
+										<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
+											{grade.name}
 										</Option>
 									))}
 								</Select>
@@ -337,20 +352,16 @@ export default function Register(props) {
 									showSearch
 									style={{ width: '180px' }}
 									placeholder="Khối lớp"
-									
-
-									
-									onChange={handleChange}									
+									onChange={handleChange}
 								>
 									{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{color:'black'}}>
+										<Option value={grade} key={grade} style={{ color: 'black' }}>
 											{grade}
 										</Option>
 									))}
 								</Select>
 							</Form.Item>
 							<Form.Item
-								
 								name="gender"
 								defaultValue="MALE"
 								rules={[
@@ -362,24 +373,23 @@ export default function Register(props) {
 								className="form-item-register"
 							>
 								<div>
-									
-								<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
-									<Tooltip title="Nam">
-										<Radio.Button value="MALE">
-											<FcManager />
-										</Radio.Button>
-									</Tooltip>
-									<Tooltip title="Nữ">
-										<Radio.Button value="FEMALE">
-											<FcBusinesswoman />
-										</Radio.Button>
-									</Tooltip>
-									<Tooltip title="Khác">
-										<Radio.Button value="OTHER">
-											<AiFillQuestionCircle />
-										</Radio.Button>
-									</Tooltip>
-								</Radio.Group>
+									<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
+										<Tooltip title="Nam">
+											<Radio.Button value="MALE">
+												<FcManager />
+											</Radio.Button>
+										</Tooltip>
+										<Tooltip title="Nữ">
+											<Radio.Button value="FEMALE">
+												<FcBusinesswoman />
+											</Radio.Button>
+										</Tooltip>
+										<Tooltip title="Khác">
+											<Radio.Button value="OTHER">
+												<AiFillQuestionCircle />
+											</Radio.Button>
+										</Tooltip>
+									</Radio.Group>
 								</div>
 							</Form.Item>
 						</div>
@@ -501,7 +511,7 @@ export default function Register(props) {
 										},
 
 										{
-											pattern: /^0\d{10,10}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
+											pattern: /^0\d{9,9}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
 											message: 'Số điện thoại không hợp lệ!',
 										},
 									]}
@@ -513,6 +523,8 @@ export default function Register(props) {
 										format="DD-MM-YYYY"
 										style={{ width: '180px' }}
 										placeholder="Ngày tháng năm sinh"
+										onChange={(date) => setCurrentDate(date)}
+										disabledDate={isDateDisabled}
 									/>
 								</Form.Item>
 							</div>

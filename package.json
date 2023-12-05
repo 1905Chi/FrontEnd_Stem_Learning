@@ -6,6 +6,7 @@
     "path": "path-browserify"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fullcalendar/daygrid": "^6.1.9",
@@ -19,7 +20,9 @@
     "@xmldom/xmldom": "^0.8.10",
     "antd": "^5.9.4",
     "axios": "^1.5.1",
+    "dayjs": "^1.11.10",
     "fullcalendar": "^6.1.9",
+    "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
     "pizzip": "^3.1.4",
     "primereact": "^10.0.9",

@@ -24,8 +24,63 @@ export default function Editor(props) {
 	const Save = (e) => {
 		
 		e.preventDefault();
-		if (props.editcontent != null) {
+		if(props.isQuiz){
 			props.editcontent(value);
+			props.cancel();
+			return ;
+		}
+
+		if(props.idPost){
+			const stringValue = value.toString();
+			console.log(stringValue);
+			const data = {
+				postId: props.idPost,
+				content: stringValue,
+				
+			}
+			const headers = {
+				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+				'Content-Type': 'multipart/form-data', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+			};
+			Api.post(url + 'api/v1/comments', data, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						console.log(response.data.message);
+						setValue('');
+					} else {
+						console.log(response.error);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+		else if (props.editcontent != null) {
+			props.editcontent(value);
+			const stringValue = value.toString();
+			
+			const data = {
+				content: stringValue,
+				postId: props.index,
+				postType:props.type,
+				mediaFiles:[],
+			};
+			const headers = {
+				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+				'Content-Type': 'multipart/form-data', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+			};
+			Api.put(url + 'api/v1/posts', data, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						console.log(response.data.result);
+					} else {
+						console.log(response.error);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+
 		} else {
 		
 			const stringValue = value.toString();
@@ -33,22 +88,23 @@ export default function Editor(props) {
 			const data = {
 				content: stringValue,
 				groupId: uuid,
-				postType:'ASK',
+				TypeCode:props.type,
+				mediaFiles:[],
 			};
 			const headers = {
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-				'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+				'Content-Type': 'multipart/form-data', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 			};
 			Api.post(url + 'api/v1/posts', data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						console.log(response.data.result);
 					} else {
-						console.log(response.data.result.message);
+						console.log(response.error);
 					}
 				})
 				.catch((error) => {
-					console.log(error.response.data.result.message);
+					console.log(error);
 				});
 
 		}
@@ -89,14 +145,14 @@ export default function Editor(props) {
 		<div
 			className="Editor"
 			style={{
-				position: 'fixed',
+				position: 'absolute',
 				width: '50%',
 				position: 'fixed',
 				zIndex: '150',
 				backgroundColor: 'aliceblue',
 				border: '1px solid',
-				top: '25%',
-				overFlow: 'scroll',
+				top:'25%',
+				overFlow: 'auto',
 			}}
 		>
 			<div
@@ -113,6 +169,7 @@ export default function Editor(props) {
 			</div>
 			<ReactQuill
 				ref={reactQuillRef}
+				style={{height:'50vh',overflow:'scroll',width:'100%'}}
 				theme="snow"
 				placeholder="Start writing..."
 				modules={{

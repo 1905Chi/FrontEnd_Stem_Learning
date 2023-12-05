@@ -45,9 +45,10 @@ export default function RegisterTeacher(props) {
 					toast.success(response.data.message);
 					setTimeout(() => {
 						navigate('/');
-					}, 2000);
+					}, 5000);
 				} else {
 					toast.error(response.data.message);
+				
 				}
 			})
 			.catch((error) => {
@@ -55,12 +56,14 @@ export default function RegisterTeacher(props) {
 				// Xử lý lỗi nếu có lỗi xảy ra
 				if (error.response) {
 					// Lỗi từ phía máy chủ
-					const status = error.response.status;
-					if (status === 503) {
+					
+					console.log(error.response.data.statusCode);
+					if (error.response.data.statusCode >= 500) {
 						// Xử lý lỗi 503 Service Unavailable
 						toast.error('Máy chủ hiện không khả dụng. Vui lòng thử lại sau.');
-					} else if (status === 404) {
-						toast.error('Không tìm thấy tài khoản này');
+					} else if (error.response.data.statusCode === 400) {
+						toast.error(error.response.data.message);
+						console.log(error.response.data.message);
 					} else {
 						toast.error(error.response.data.message);
 					}
@@ -73,7 +76,11 @@ export default function RegisterTeacher(props) {
 				}
 			})
 			.finally(() => {
+				setTimeout(() => {
+
 				setLoading(false);
+				props.cancelRegister();
+				} , 5000);
 			});
 
 		// Xử lý logic xác thực email ở đây (gửi email xác thực, kiểm tra địa chỉ email, vv.)
@@ -185,8 +192,9 @@ export default function RegisterTeacher(props) {
 							</Button>
 						</div>
 					</Form>
+					<ToastContainer/>
 				</div>
-				<ToastContainer />
+				
 			</div>
 		</>
 	);

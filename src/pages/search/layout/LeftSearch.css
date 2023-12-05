@@ -1,0 +1,36 @@
+.menu-item{
+    display: flex;
+}
+
+.header-left-search h1{
+    padding-bottom: 15px;
+    text-align: center;
+    border-bottom: 1px solid  #e6e6e6;
+}
+
+.menu-item{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    width: 95%;
+    background-color: white;
+    
+}
+.menu-item span{
+    font-size: 15px;
+    margin-left: 10px;
+    font-weight: 500;
+}
+.icon-menu{
+    color:#007bff;
+    font-size: 30px;
+}
+.menu-item :hover{
+    background-color: #e6e6e6;
+    border-radius: 10px;
+}
+
+.menu-item.active {
+    background-color: #e6e6e6; /* Đặt màu nền khi button được chọn */
+  }

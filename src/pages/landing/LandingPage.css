@@ -6,6 +6,7 @@
     background-image: url('../../../public/bg_2.jpg');
     background-size: cover;
     background-attachment: fixed; /* Để giữ ảnh nền cố định */
+    
     width: 100%;
 }
 .galleria-container {
@@ -45,7 +46,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 5rem 0 0 0;
+   /* padding: 5rem 0 0 0;*/
     gap: 5rem;
 }
 @keyframes colorChangeTeacher {
@@ -323,4 +324,8 @@ button:hover {
 }
 span {
     font-size: 1rem;
+    
+}
+.Button-register span{
+color: white;
 }

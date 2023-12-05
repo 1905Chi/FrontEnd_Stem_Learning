@@ -1,0 +1,98 @@
+
+  .cover-photo {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .cover-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .profile-picture {
+    width: 150px;
+    height: 150px;
+    border: 5px solid white;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    top: 250px;
+    left: 50px;
+    transform: translateX(50% );
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+  }
+  .profile-picture__button{
+    width: 40px;
+    border-top: 3px solid black;
+    border-radius: 50%;
+    background: #4d4b4b;
+    position: absolute;
+    top: 360px;
+    left: 210px;
+    transform: translateX(50% );
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+
+
+  }
+  .cover-picture__button{
+    width: 165px;
+    border-top: 3px solid black;
+   
+    background: #4d4b4b;
+    position: absolute;
+    top: 250px;
+    left: 450px;
+
+    transform: translateX(50% );
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+  }
+  .edit-profile__button{
+    width: 165px;
+    border-top: 3px solid black;
+   
+    background: #4d4b4b;
+    position: absolute;
+    top: 1px;
+    left: 137px;
+
+    transform: translateX(50% );
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+  }
+  .profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .usename-button{
+    position: absolute;
+    display: flex;
+    width: 55%;
+    justify-content: space-between;
+    margin-top: 10px;
+    right: 0;
+  }
+  .profile-picture__button{
+    height: 30px;
+    font-size: medium;
+  }
+  

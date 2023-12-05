@@ -6,7 +6,10 @@ import {Input } from 'antd';
 import './CommentPost.css';
 import {PiPaperPlaneRightFill} from 'react-icons/pi';
 import Editor from './Editor';
-export default function CommentPost({user}) {
+import Api from '../../../api/Api';
+import { url } from '../../../constants/Constant';
+import { toast, ToastContainer } from 'react-toastify';
+export default function CommentPost({user,idPost}) {
 
 	const [value, setValue] = useState('');
 	const [showEditor, setShowEditor] = useState(false);
@@ -26,6 +29,8 @@ const openEditor = () => {
 						data={value}
 						cancel={closeEditor}
 						editcontent={setValue}
+						idPost={idPost}
+						
 					/>
 				) : (
 					null
@@ -39,7 +44,7 @@ const openEditor = () => {
 				
 			
 			<div className="input-comment">
-				<Input placeholder="Viết bình luận" className="input-comment-self"  style={{width:'450px',margin:'10px 35px',borderRadius:'10px'}} onClick={openEditor}/>
+				<Input placeholder="Viết bình luận" className="input-comment-self"  style={{width:'450px',margin:'10px 35px',borderRadius:'15px'}} onClick={openEditor}/>
 				</div>
 		
 		</div>

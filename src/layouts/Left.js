@@ -1,6 +1,7 @@
 import { Button, Divider, List, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import UseTheme from './UseTheme';
+import { FaUserFriends } from "react-icons/fa";
 import './Left.css'
 import { useNavigate } from 'react-router-dom';
 import {
@@ -17,8 +18,8 @@ import {
 const Left = () =>{
     const { theme } = UseTheme();
 	const navigate = useNavigate();
-    const openReport = () => {
-        // openModal(<ReportModal />);
+    const openMessager = () => {
+		navigate('/messenger');
     };
 
 	//Đăng xuất
@@ -47,14 +48,16 @@ const Left = () =>{
 			href: '/settings',
 		},
 		{
-			title: 'Trợ giúp',
-			icon: FcCustomerSupport,
-			href: '/help',
+			title: 'Bạn bè',
+			icon: FaUserFriends,
+			onClick: () => {
+				navigate('/friends');
+			},
 		},
 		{
-			title: 'Báo lỗi',
+			title: 'Tin nhắn',
 			icon: FcFeedback,
-			onClick: openReport,
+			onClick: openMessager,
 		},
 		{
 			title: 'Giới thiệu',
@@ -91,7 +94,7 @@ const Left = () =>{
 
 	return (
         
-		<Space  className="sidebar" direction="vertical" style={{ overflow: 'auto',color: theme.foreground, background: theme.background }}>
+		<Space  className="sidebar" direction="vertical" style={{ color: theme.foreground, background: theme.background }}>
 			{lists.map((list, index) => (
 				<List
 					key={index}

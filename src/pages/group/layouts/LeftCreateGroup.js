@@ -9,9 +9,16 @@ import Loading from '../../../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { url } from '../../../constants/Constant';
 import Api from '../../../api/Api';
+import { selectGroup } from '../../../redux/GetItemGroup';
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+
 export default function LeftCreateGroup() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const location = useLocation();
+	const isClassesPath = location.pathname.includes('classes');
 	const options = [
 		{
 			value: 'Khang',
@@ -47,30 +54,55 @@ export default function LeftCreateGroup() {
 			);
 		}
 	};
+	const setNameGroup = (e) => {
+		dispatch(
+			selectGroup({
+				name: e.target.value,
+			})
+		);
+	};
 	const create = (values) => {
 		setLoading(true);
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 		};
-		const data = {
-			name: values.nameGroup,
-			description: values.descriptionGroup,
-			typeName: "DISCUSSION",
-			accessibilityName: values.policy,
-			memberModeName:values.policy,			
-		};
+		let data = {};
+		if (isClassesPath) {
+			data = {
+				name: values.nameGroup,
+				description: values.descriptionGroup,
+				typeName: 'CLASS',
+				accessibilityName: values.policy,
+				memberModeName: values.policy,
+				subject: values.subject,
+				grade: values.grade,
+			};
+		} else {
+			data = {
+				name: values.nameGroup,
+				description: values.descriptionGroup,
+				typeName: 'DISCUSSION',
+				accessibilityName: values.policy,
+				memberModeName: values.policy,
+			};
+		}
 
-		Api
-			.post(url + 'api/v1/groups', data, { headers })
+		Api.post(url + 'api/v1/groups', data, { headers })
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
 					setLoading(false);
-					toast.success('Tạo nhóm thành công');
-					setTimeout(() => {
-						navigate(`/groups/${response.data.result.id}`);
-					}, 5000);
+					toast.success(response.data.message);
+					if (isClassesPath) {
+						setTimeout(() => {
+							navigate(`/classes/${response.data.result.id}`);
+						}, 5000);
+					} else {
+						setTimeout(() => {
+							navigate(`/groups/${response.data.result.id}`);
+						}, 5000);
+					}
 				} else {
 					setLoading(false);
 					toast.error(response.data.message);
@@ -79,14 +111,12 @@ export default function LeftCreateGroup() {
 			.catch((error) => {
 				// Xử lý lỗi nếu có lỗi xảy ra
 				if (error.response) {
-					// lỗi khi access token hết hạn	
-							// lỗi khi refresh token hết hạn
-							toast.error(error.response.data.message);
-					
+					// lỗi khi access token hết hạn
+					// lỗi khi refresh token hết hạn
+					toast.error(error.response.data.message);
 				} else if (error.request) {
 					// Lỗi không có phản hồi từ máy chủ
 					toast.error(error.request.data.message);
-					
 				} else {
 					// Lỗi trong quá trình thiết lập yêu cầu
 					toast('Lỗi khi thiết lập yêu cầu.');
@@ -104,13 +134,25 @@ export default function LeftCreateGroup() {
 			) : null}
 			<div style={{ height: '100vh' }}>
 				<div className="header-left-create">
-					<h1 style={{ textAlign: 'start' }}>Tạo Nhóm</h1>
+					{isClassesPath ? (
+						<h1 style={{ textAlign: 'start' }}>Tạo Lớp</h1>
+					) : (
+						<h1 style={{ textAlign: 'start' }}>Tạo Nhóm Thảo Luận</h1>
+					)}
 				</div>
-				<div>
-					<LableGroup
-						image="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
-						name="Nhóm"
-					></LableGroup>
+				<div className="body-form">
+					{isClassesPath ? (
+						<LableGroup
+							image="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
+							name="Lớp"
+						></LableGroup>
+					) : (
+						<LableGroup
+							image="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
+							name="Nhóm"
+						></LableGroup>
+					)}
+
 					<Form name="creategroup" onFinish={create} scrollToFirstError>
 						<Form.Item
 							name="nameGroup"
@@ -121,8 +163,38 @@ export default function LeftCreateGroup() {
 								},
 							]}
 						>
-							<Input placeholder="Tên nhóm" />
+							<Input
+								placeholder="Tên nhóm"
+								onChange={setNameGroup}
+								style={{ width: '80%', marginLeft: '20px' }}
+							/>
 						</Form.Item>
+						{isClassesPath ? (
+							<Form.Item
+								name="subject"
+								rules={[
+									{
+										required: true,
+										message: 'Vui lòng nhập tên môn học',
+									},
+								]}
+							>
+								<Input placeholder="Môn học" style={{ width: '80%', marginLeft: '20px' }} />
+							</Form.Item>
+						) : null}
+						{isClassesPath ? (
+							<Form.Item
+								name="grade"
+								rules={[
+									{
+										required: true,
+										message: 'Vui lòng nhập khối học',
+									},
+								]}
+							>
+								<Input placeholder="Khối" style={{ width: '80%', marginLeft: '20px' }} />
+							</Form.Item>
+						) : null}
 						<Form.Item
 							name="descriptionGroup"
 							rules={[
@@ -131,7 +203,7 @@ export default function LeftCreateGroup() {
 								},
 							]}
 						>
-							<Input placeholder="Thông tin về nhóm" />
+							<Input placeholder="Mô tả ngắn " style={{ width: '80%', marginLeft: '20px' }} />
 						</Form.Item>
 						<Form.Item
 							name="policy"

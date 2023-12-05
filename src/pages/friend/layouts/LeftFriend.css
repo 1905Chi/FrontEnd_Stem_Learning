@@ -1,0 +1,99 @@
+.left-friend{
+position: relative;
+    border: 3px solid #e6e6e6;
+    border-radius: 10px;
+    margin: 10px;
+    height: 100vh;
+    overflow-y: scroll;
+}
+.left-friend h2{
+    text-align: start;
+    margin-left: 10px;
+}
+
+.option-friend button{
+   color: #007bff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+}
+.option-friend button:hover{
+    background-color: #007bff;
+    color: white
+
+}
+.option-friend {
+    width: 88%;
+    margin: 10px;
+    padding: 10px;
+    height:30px;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+}
+.option-friend:hover{
+    background-color: #007bff;
+    border-radius: 10px;
+}
+.option-friend span{
+    font-size: 20px;
+}
+.header-left-friend{
+    display: flex;
+    margin: 10px;
+}
+.back{
+   flex:1;
+   background-color: white;
+   width:23px;
+   text-align: start;
+
+}
+
+.header-left-friend h2{
+    text-align: start ;
+    margin-left: 10px;
+    flex:9;
+}
+
+.friend-request__item{
+    
+    margin:15px;
+    border-bottom: 2px solid #e6e6e6;   
+    border-radius: 15px;
+    background-color: aliceblue;
+    width: 90%;
+    height : auto;
+    display: flex;
+    
+}
+
+.list-friend-request{
+    display: flex;
+    flex-wrap: wrap;
+   
+    margin: 0 auto;
+    width: 100%;
+}
+.friend-request__item__button {
+    
+    margin: 10px;
+    flex:8;
+}
+.friend-request__item__button button{
+    height: 80%;
+    width: 45%;
+    margin-left: 0px;
+    border-radius: 5px;
+    margin-bottom: 5px
+}
+.friend-request__item p{
+    margin: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+.header-left-friend button:hover{
+    background-color: white;
+
+}

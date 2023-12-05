@@ -14,8 +14,8 @@ export default function DefaultLayout({ Left, Right, children }) {
 					</div>
 					<div className="content-main"> {children} </div>
 					<div theme="light" className="sider-right">
-						{' '}
-						{Right}{' '}
+						
+						{Right}
 					</div>
 				</div>
 			</div>

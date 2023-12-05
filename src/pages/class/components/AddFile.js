@@ -8,24 +8,30 @@ import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
 import Api from '../../../../src/api/Api';
 import LabelFile from '../../profile/component/LabelFile';
+import { useParams } from 'react-router-dom';
 export default function AddFile(props) {
-	
 	const [selectedFile, setSelectedFile] = useState([]);
 	const navigate = useNavigate();
-	
+	const {uuid} = useParams();
 
 	const handelfileSelect = (event) => {
 		// Xử lý khi người dùng chọn hình ảnh đại diện
-		const file = event.target.files[0];
-		if (file) {
+		const mediaFiles = event.target.files[0];
+		if (mediaFiles) {
 			const reader = new FileReader();
 
 			reader.onload = () => {
-				
-				setSelectedFile([...selectedFile,file]);
+				setSelectedFile([...selectedFile, mediaFiles]);
 			};
-			reader.readAsDataURL(file);
+			reader.readAsDataURL(mediaFiles);
 		}
+	};
+	const getFileExtension = (fileName) => {
+		const lastDotIndex = fileName.lastIndexOf('.');
+		if (lastDotIndex !== -1) {
+			return fileName.substring(lastDotIndex + 1);
+		}
+		return ''; // Trả về chuỗi rỗng nếu không tìm thấy dấu chấm
 	};
 
 	const openAvatarPictureDialog = () => {
@@ -34,46 +40,50 @@ export default function AddFile(props) {
 	const Save = () => {
 		if (selectedFile) {
 			const formData = new FormData();
-			formData.append('avatar', selectedFile);
-			Api
-				.put(url + 'api/v1/users/profile/avatar', formData, {
-					headers: {
-						Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-						'Content-Type': 'multipart/form-data',
-					},
-				})
+			for (let i = 0; i < selectedFile.length; i++) {
+				formData.append('mediaFiles', selectedFile[i]);
+			}
+			
+
+			formData.append('groupId', uuid);
+			
+			
+			formData.append('TypeCode', 'post');
+			formData.append('content', '');
+			const data = formData;
+			Api.post(url + 'api/v1/posts', data, {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+					'Content-Type': 'multipart/form-data',
+				},
+			})
 				.then((res) => {
-					if (res.data.statusCode === 200) {
-						toast.success(res.data.message);
-						localStorage.setItem('user', JSON.stringify(res.data.result));
-						props.changeAvatar(selectedFile);					
-					} else {
-						toast.error(res.data.message);
-					}
+					
+						if (res.data.statusCode === 200) {
+							toast.success('Thêm thành công');
+						} else {
+							toast.error(res.data.message);
+						}
+					
 				})
 				.catch((error) => {
 					if (error.response) {
 						// lỗi khi access token hết hạn
-						
-								// lỗi khi refresh token hết hạn
-								toast.error(error.response.data.message);
-								
-							
-						
+
+						// lỗi khi refresh token hết hạn
+						toast.error(error.response.data.message);
 					} else if (error.request) {
 						// Lỗi không có phản hồi từ máy chủ
 						toast.error(error.request.data.message);
-						
 					} else {
 						// Lỗi trong quá trình thiết lập yêu cầu
 						toast('Lỗi khi thiết lập yêu cầu.');
 					}
 				})
-				.finally(() => {props.onCancel();});
-		
-			
-		}else
-		{
+				.finally(() => {
+					props.onCancel();
+				});
+		} else {
 			toast.error('Vui lòng chọn file');
 		}
 	};
@@ -107,24 +117,21 @@ export default function AddFile(props) {
 							Thêm
 						</button>
 					</div>
-                    <div className="file-list">
-                        {selectedFile.map((item, index) => {
-                            return (
-                                <div className="file-item" key={index}>
-                                   
-                                    <p>{item.name}</p>
-                                    <p>{item.size}</p>
-                                    <p>{item.type}</p>
-                                    <GiCancel
-                                        style={{ color: 'black', fontSize: '20px' }}
-                                        onClick={() => {
-                                            setSelectedFile(selectedFile.filter((item, i) => i !== index));
-                                        }}
-                                    ></GiCancel>
-                                </div>
-                            );
-                        })}		
-                        </div>	
+					<div className="file-list">
+						{selectedFile.map((item, index) => {
+							return (
+								<div className="file-item" key={index}>
+									<LabelFile
+										type={getFileExtension(item.name)}
+										filename={item.name}
+										onDelete={() => {
+											setSelectedFile(selectedFile.filter((file, i) => i !== index));
+										}}
+									></LabelFile>
+								</div>
+							);
+						})}
+					</div>
 				</div>
 				<div>
 					<input

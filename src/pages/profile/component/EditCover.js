@@ -56,19 +56,13 @@ export default function EditCover(props) {
 						// lỗi khi access token hết hạn
 					
 							// token không hợp lệ trả về mã lỗi
-							toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-							setTimeout(() => {
-								localStorage.clear();
-								navigate('/login');
-							}, 5000);
+							toast.error(error.response.data.message);
+							
 						
 					} else if (error.request) {
 						// Lỗi không có phản hồi từ máy chủ
 						toast.error(error.request.data.message);
-						setTimeout(() => {
-							localStorage.clear();
-							navigate('/login');
-						}, 5000);
+						
 					} else {
 						// Lỗi trong quá trình thiết lập yêu cầu
 						toast('Lỗi khi thiết lập yêu cầu.');

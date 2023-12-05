@@ -24,19 +24,44 @@ import LeftItemClass from '../pages/class/layouts/LeftItemClass';
 import RightClass from '../pages/class/layouts/RightClass';
 import MainClass from '../pages/class/itemclass/MainClass';
 import CreateQuiz from '../pages/class/exam/CreateQuiz ';
+import RightItemGroup from '../pages/group/layouts/RightItemGroup';
+import LeftFriend from '../pages/friend/layouts/LeftFriend';
+import MainFriend from '../pages/friend/MainFriend';
+import  ProfileUser from '../pages/profile/ProfileUser/Profile';
+import ExamItem from '../pages/class/exam/ExamItem/ExamItem';
+import Submit from '../pages/class/exam/ExamItem/Submit';
+import LeftSubmit from '../pages/class/layouts/LeftSubmit';
+import LeftMessenger from '../pages/messenger/layouts/LeftMessenger';
+import RightMessenger from '../pages/messenger/layouts/RightMessenger';
+import Main from '../pages/messenger/main/Main';
+import MainSearch from '../pages/search/main/MainSearch';
+import LeftSearch from '../pages/search/layout/LeftSearch';
 const privateRoutes = [
 	{ path: '/home', component: Home, Left: Left, Right: Right },
-	{ path: '/groups', component: Home, Left: LeftsGroup, Right: Right },
-	{ path: '/groups/create', component: CreateGroup, Left: LeftCreateGroup, Right: Right },
-	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: Right },
-	{ path: '/profile', component: Profile, Left: Left, Right: RightProfile },
-	{ path: '/classes', component: Class, Left: LeftClass, Right: RightClass },
+	
+	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
+	{ path: '/classes/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
+	{ path: '/messenger', component: Main, Left: LeftMessenger, Right: RightMessenger },
+
+	
+
 	
 ];
 
 const privateRoutes2page = [
-	{ path: '/classes/:uuid', component: MainClass, Left: LeftItemClass },
+	
 	{ path: '/classes/:uuid/exam/createquiz', component: CreateQuiz, Left: LeftItemClass },
+	{ path: '/groups/create', component: CreateGroup, Left: LeftCreateGroup },
+	{ path: '/classes/create', component: CreateGroup, Left: LeftCreateGroup },
+	{path:'/friends',component:MainFriend,Left:LeftFriend},
+	{ path: '/profile', component: Profile, Left: Left },
+	{ path: '/profile/:uuid', component: ProfileUser, Left: Left },
+	{ path: '/classes/:uuid/exam/:id', component: ExamItem, Left: LeftItemClass },
+	{ path: '/exam/:id/submit/:submissionId', component: Submit, Left: LeftSubmit },
+	{ path: '/classes', component: Class, Left: RightClass  },
+	{ path: '/groups', component: Home, Left: LeftsGroup},
+	{ path: '/search', component: MainSearch, Left: LeftSearch},
+
 ];
 const publicRoutes = [
 	{ path: '/login', component: Login },

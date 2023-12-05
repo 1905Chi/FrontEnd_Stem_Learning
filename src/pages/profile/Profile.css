@@ -51,7 +51,7 @@
     background: #4d4b4b;
     position: absolute;
     top: 250px;
-    left: 450px;
+    left: 616px;
 
     transform: translateX(50% );
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -67,8 +67,8 @@
    
     background: #4d4b4b;
     position: absolute;
-    top: 1px;
-    left: 137px;
+    top: 63px;
+    left: 216px;
 
     transform: translateX(50% );
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);

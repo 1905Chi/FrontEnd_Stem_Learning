@@ -15,7 +15,7 @@ export default function App() {
 
 	return (
 		<BrowserRouter>
-			<Topbar />
+			
 			<div className="App">
 				<Routes>
 					{publicRoutes.map((route, index) => {
@@ -43,14 +43,19 @@ export default function App() {
 								path={route.path}
 								element={
 									isLogin ? (
+										<><Topbar />
 										<DefaultLayout setIsLogin={setIsLogin} Left={<Left />} Right={<Right />}>
 											<Page />
 										</DefaultLayout>
+										<Footer />
+										</>
 									) : (
+										<>
 										<Navigate
-											to="/login
+											to="/
                             "
 										/>
+										</>
 									)
 								}
 							/>
@@ -67,12 +72,15 @@ export default function App() {
 								path={route.path}
 								element={
 									isLogin ? (
+										<><Topbar/>
 										<DefaultLayoutTwoPage setIsLogin={setIsLogin} Left={<Left />}>
 											<Page />
 										</DefaultLayoutTwoPage>
+										<Footer />
+										</>
 									) : (
 										<Navigate
-											to="/login
+											to="/
                             "
 										/>
 									)
@@ -85,15 +93,18 @@ export default function App() {
 						key={notFoundRoute.path}
 						path={notFoundRoute.path}
 						element={
+							<><Topbar/>
 							<DefaultLayoutLogin>
 								<Page404 />
 							</DefaultLayoutLogin>
+							<Footer />
+							</>
 						}
 					/>
 					,
 				</Routes>
 			</div>
-			<Footer />
+			
 		</BrowserRouter>
 	);
 }

@@ -6,6 +6,8 @@ import { Carousel } from 'primereact/carousel';
 import Register from '../auth/register/Register';
 import RegisterParent from '../auth/register/RegisterParent';
 import RegisterTeacher from '../auth/register/RegisterTeacher';
+import Topbar from '../../components/Topbar';	
+import { useRef } from 'react';
 const LandingPage = () => {
 	const images = [
 		{
@@ -132,9 +134,17 @@ const LandingPage = () => {
 		setIsRegisterForStudent(false);	
 		setIsRegisterForTeacher(true);
 	};
-
+	const scrollToSection = () => {
+		// Check if the ref is available
+		if (scrollRef.current) {
+		  // Scroll to the section
+		  scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
+	  };
+	  const scrollRef = useRef(null);
 	const studiesTemplate = (item) => {
 		return (
+			
 			<div className="card">
 				<div className="card-image">
 					<img src={item.image} alt="landing-page" />
@@ -157,6 +167,7 @@ const LandingPage = () => {
 	};
 
 	return (
+		<><Topbar scrollToSection={scrollToSection}/>
 		<div className="landing-container">
 			<div className="galleria-container">
 				<Galleria
@@ -175,14 +186,14 @@ const LandingPage = () => {
 			<div className="register-container">
 				<h1>Bạn là ?</h1>
 				<div className="card-container">
-					<div className="card-led-register">
+					<div className="card-led-register" ref={scrollRef}>
 						<div className="item-image" style={{ animation: 'colorChangeTeacher 0.2s infinite' }} />
 						<div className="card-register">
 							<h1 style={{ color: '#4d868a' }}>Giáo viên</h1>
 							<h4>
 								Công cụ giúp giảm tải công việc, truyền thông nhanh chóng, hiểu học lực của học sinh
 							</h4>
-							<Button type="primary" onClick={registerForTeacher}>
+							<Button type="primary" onClick={registerForTeacher} className='Button-register'>
 								ĐĂNG KÍ TÀI KHOẢN
 							</Button>
 							{ isRegisterForTeacher && <RegisterTeacher cancelRegister={cancelRegister} />}
@@ -196,7 +207,7 @@ const LandingPage = () => {
 								Phương pháp mới giúp ôn tập kiến thức, tạo thói quen tự học và khai thác kiến thức trên
 								mạng
 							</h4>
-							<Button type="primary" onClick={registerForStudent}>
+							<Button type="primary" onClick={registerForStudent} className='Button-register'>
 								ĐĂNG KÍ TÀI KHOẢN
 							</Button>
 							{ isRegisterForStudent && <Register cancelRegister={cancelRegister} />}
@@ -207,7 +218,7 @@ const LandingPage = () => {
 						<div className="card-register">
 							<h1 style={{ color: '#9c1616' }}>Phụ huynh</h1>
 							<h4>Phương tiện để có kế hoạch học tập cùng con, đồng cảm với ngành giáo dục </h4>
-							<Button type="primary" onClick={registerForParent}>
+							<Button type="primary" onClick={registerForParent} className='Button-register'>
 								ĐĂNG KÍ TÀI KHOẢN
 							</Button>
 							{ isRegisterForParent && <RegisterParent cancelRegister={cancelRegister} />}
@@ -329,6 +340,7 @@ const LandingPage = () => {
 				</div>
 			</div>
 		</div>
+		</>
 	);
 };
 

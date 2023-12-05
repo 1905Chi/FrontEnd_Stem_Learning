@@ -42,4 +42,25 @@
   top: 0;
   left: 0;
 }
+.overlay-event-create{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  color: black;
 
+  z-index: 250;
+}
+.overlay-event-create label{
+  color: black;
+}
+.event-hover{
+  position: absolute;
+  width: 100%;
+  height: auto;
+  top:0;
+  background-color:black;
+
+  opacity: 0.5; /* Điều chỉnh độ mờ nếu cần */
+  z-index: 500;
+}

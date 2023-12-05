@@ -35,7 +35,7 @@ export default function Verify() {
 			.catch((error) => {
 				toast.error('Đường dẫn không đúng hoặc đã hết hạn.');
 				setTimeout(() => {
-					navigate('*');
+					navigate('/');
 				}, 3000);
 			})
 			.finally(() => {
