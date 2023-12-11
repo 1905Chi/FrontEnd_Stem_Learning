@@ -32,6 +32,8 @@
     border: 2px solid #c4bebe;
     margin-bottom: 10px;
     padding: 10px;
+    display: flex;
+    justify-content: space-around;
 }
 
 .exam-class__create button:hover{
@@ -39,4 +41,7 @@
 }
 .exam-class__item__content__item{
     text-align: center;
+}
+.infor-exam p{
+    margin: 0px;
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Checkbox, Radio, Button, Space } from 'antd';
+import { Form, Input, Checkbox, Radio, Button, Space , InputNumber} from 'antd';
 import { PlusOutlined, MinusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import Editor from '../../home/components/Editor';
@@ -30,8 +30,8 @@ const CreateQuiz = () => {
 			name: values.name,
 			description: values.description,
 			duration: Number(values.duration),
-			staredAt: values.staredAt.format('DD-MM-YYYY HH:mm:ss'),
-			endedAt: values.endedAt.format('DD-MM-YYYY HH:mm:ss'),
+			staredAt: values.staredAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
+			endedAt: values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
 			isEnabled: true,
 			level: values.level,
 			numberOfQuestion: Number(values.numberOfQuestion),
@@ -140,7 +140,7 @@ const CreateQuiz = () => {
 					<Input placeholder="Nhập mô tả bài kiểm tra" style={{ width: '60%' }} />
 				</Form.Item>
 				<Form.Item name="duration" rules={[{ required: true, message: 'Vui lòng nhập thời gian làm bài!' }]}>
-					<Input placeholder="Nhập thời gian làm bài" style={{ width: '60%' }} />
+					<InputNumber placeholder="Nhập thời gian làm bài ( Số phút)" style={{ width: '60%' }} />
 				</Form.Item>
 				<Form.Item name="level" rules={[{ required: true, message: 'Vui lòng nhập mức độ bài kiểm tra!' }]}>
 					<Select placeholder="Chọn mức độ bài kiểm tra" style={{ width: '60%' }}>
@@ -150,7 +150,7 @@ const CreateQuiz = () => {
 					</Select>
 				</Form.Item>
 				<Form.Item name="numberOfQuestion" rules={[{ required: true, message: 'Nhập số lượng câu hỏi mỗi bài kiểm tra' }]}>
-					<Input placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra" style={{ width: '60%' }} />
+					<InputNumber placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra" style={{ width: '60%' }} />
 				</Form.Item>
 						
 				<Form.Item name="staredAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian bắt đầu!' }]}>

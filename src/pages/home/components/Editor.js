@@ -1,8 +1,6 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
-
 import 'react-quill/dist/quill.snow.css';
-import { htmlToMarkdown, markdownToHtml } from './Parser';
 import uploadToCloudinary from './upload';
 import { GiCancel } from 'react-icons/gi';
 import Api from '../../../api/Api';
@@ -131,15 +129,16 @@ export default function Editor(props) {
 			console.log(stringValue);
 			const data = {
 				content: stringValue,
-				group_id: uuid,
-				type:props.type,
+				groupId: uuid,
+				typeName:props.type,
 				
 			};
 			const headers = {
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-				'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+				'Content-Type': 'multipart/form-data',
+
 			};
-			Api.post(url + 'post', data, { headers: headers })
+			Api.post(url + 'api/v1/posts', data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						console.log(response.data.post);
@@ -147,10 +146,12 @@ export default function Editor(props) {
 						
 					} else {
 						console.log(response.error);
+						toast.error('Đăng bài thất bại');
 					}
 				})
 				.catch((error) => {
 					console.log(error);
+					toast.error('Đăng bài thất bại');
 				})
 				.finally(()=>{
 					setIsLoading(false);

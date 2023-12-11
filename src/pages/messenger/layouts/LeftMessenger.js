@@ -12,20 +12,32 @@ export default function LeftMessenger() {
 	};
 	const listUser = [
 		{
-			avatar: { anh_logo_1 },
+			avatar:  anh_logo_1 ,
 			name: 'Nguyễn Văn A',
 		},
 		{
-			avatar: { anh_logo_1 },
+			avatar:  anh_logo_1 ,
 			name: 'Nguyễn Văn B',
 		},
 		{
-			avatar: { anh_logo_1 },
+			avatar:  anh_logo_1 ,
 			name: 'Nguyễn Văn C',
 		},
 		{
-			avatar: { anh_logo_1 },
+			avatar:  anh_logo_1 ,
 			name: 'Nguyễn Văn D',
+		},
+		{
+			avatar:  anh_logo_1 ,
+			name: 'Nguyễn Văn E',
+		},
+		{
+			avatar:  anh_logo_1 ,
+			name: 'Nguyễn Văn F',
+		},
+		{
+			avatar:  anh_logo_1 ,
+			name: 'Nguyễn Văn G',
 		},
 	];
 	const choonse = (item) => (e) => {
@@ -37,6 +49,21 @@ export default function LeftMessenger() {
 				<div className="leftMessenger__header__search">
 					<h2>Chats</h2>
 					<input type="text" placeholder="Tìm kiếm trên Messenger" />
+					<div className="user-active">
+						{listUser.map((item, index) => (
+							<div className='user-active-item'>
+								<div>
+									<Avatar
+										alt="avatar"
+										src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fxaydungso.vn%2Fbai-viet-khac%2Fthiet-ke-logo-truong-dai-hoc-su-pham-tphcm-sang-trong-va-chuyen-nghiep-vi-cb.html&psig=AOvVaw3mlzpD2wAhAEXSI4AEi3YJ&ust=1701797716612000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCIDk79So9oIDFQAAAAAdAAAAABAE"
+									></Avatar>
+								</div>
+								<div>
+									<strong>Nguyễn</strong>
+								</div>
+							</div>
+						))}
+					</div>
 				</div>
 				<div className="option-mess">
 					<button

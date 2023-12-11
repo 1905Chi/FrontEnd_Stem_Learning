@@ -38,7 +38,7 @@ const openEditor = () => {
 		
 		<div className="comment-component">
 			<div className="avatarPost-comment-self">
-				<Avatar src={user.avatar} className='user-profile-comment'  />
+				<Avatar src={user} className='user-profile-comment'  />
 			</div>
 			
 				

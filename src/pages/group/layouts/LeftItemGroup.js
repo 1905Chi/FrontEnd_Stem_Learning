@@ -117,7 +117,7 @@ export default function LeftItemGroup() {
 		Api.get(url + 'api/v1/posts?' + 'groupId=' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					dispatch(selectPostGroup(response.data.result.posts));
+					dispatch(selectPostGroup(response.data.result));
 				} else {
 					console.log(response.error);
 				}
@@ -164,7 +164,7 @@ export default function LeftItemGroup() {
 								<div style={{display: 'flex', marginLeft:'35px'}}>
 									<h4 style={{ textAlign: 'center' ,margin:'0px'}}>Nhóm :</h4>
 									<span style={{paddingLeft: '5px'}}>
-										{inforGroup && inforGroup.config.accessibility === 'PUBLIC'
+										{inforGroup && inforGroup.isPublic=== true
 											? 'Công Khai'
 											: 'Riêng tư'}
 									</span>

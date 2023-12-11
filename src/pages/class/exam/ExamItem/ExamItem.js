@@ -14,32 +14,32 @@ import { useDispatch } from 'react-redux';
 import { selectexam, selectselectexam } from '../../../../redux/Exam';
 export default function ExamItem(props) {
 	const { id } = useParams();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [examId, setExamId] = useState();
-	const user = useSelector(selectselectuser);
+	const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
 	const [isWithinTimeRange, setIsWithinTimeRange] = useState(false);
 
-const CreateSubmit = () => {
-        const headers = {
-            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-            'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
-        };
-        Api.post(url + 'api/v1/submissions/create?examId=' + id + '', { headers: headers })
-            .then((response) => {
-                if (response.data.statusCode === 200) {
-                    dispatch(selectsubmition(response.data.result));
-                    setTimeout(() => {
-                        navigate('/exam/' + id + '/submit/' + response.data.result.submissionId)
-                    }, 3000);            
-                } else {
-                    toast.error(response.data.message);
-                }
-            })
-            .catch((error) => {
-                toast.error(error.data.message);
-            });
-    };
+	const CreateSubmit = () => {
+		const headers = {
+			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+		};
+		Api.post(url + 'api/v1/submissions/create?examId=' + id + '', { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					dispatch(selectsubmition(response.data.result));
+					setTimeout(() => {
+						navigate('/exam/' + id + '/submit/' + response.data.result.submissionId);
+					}, 3000);
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error.data.message);
+			});
+	};
 	useEffect(() => {
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -50,14 +50,13 @@ const CreateSubmit = () => {
 				if (response.data.statusCode === 200) {
 					setExamId(response.data.result);
 					const startTime = new Date(examId.exam.staredAt).getTime();
-	
 
 					const endTime = new Date(examId.exam.endedAt).getTime();
-					
+
 					dispatch(selectexam(response.data.result));
 
 					const now = new Date();
-					
+
 					const nowTime =
 						now.getDate() +
 						'-' +
@@ -72,7 +71,6 @@ const CreateSubmit = () => {
 						now.getSeconds();
 
 					const nowDate = new Date(nowTime).getTime();
-				
 
 					if (nowDate >= startTime && nowDate <= endTime) {
 						setIsWithinTimeRange(true);
@@ -86,49 +84,58 @@ const CreateSubmit = () => {
 			.catch((error) => {
 				toast.error(error);
 			});
-	}, []);
+	}, [id]);
 	return (
-		<div>
+		<div className="exam-item-component">
 			{examId ? (
 				<div className="exam-item">
-					<div className="exam-item__title">
+					<div className="exam-item__header">
 						<h1>{examId.exam.name}</h1>
-						<p>Thời gian bắt đầu: {examId.exam.staredAt}</p>
-						<p>Thời gian kết thúc: {examId.exam.endedAt}</p>
 					</div>
-					<div className="exam-item__content">
-						<p>{examId.exam.description}</p>
-						<p>Thời gian làm bài: {examId.exam.duration} phút</p>
-					</div>
-					{examId && examId.submission === null && user.role === 'STUDENT' && isWithinTimeRange ? (
-						<div className="exam-item__button">
-							<button className="exam-item__button__start" onClick={CreateSubmit}>
-								Bắt đầu làm bài
-							</button>
+					<div className='exam-item-infor'>
+						<div className="exam-item__title">
+							<p>Thời gian bắt đầu: {examId.exam.staredAt}</p>
+							<p>Thời gian kết thúc: {examId.exam.endedAt}</p>
 						</div>
-					) : null}
-					{user.role === 'TEACHER' ? (
-						<div style={{ display: 'flex', justifyContent: 'center' }}>
+						<div className="exam-item__content">
+							<p>{examId.exam.description}</p>
+							<p>Thời gian làm bài: {examId.exam.duration} phút</p>
+						</div>
+						{examId && examId.submission === null && user.role === 'STUDENT' && isWithinTimeRange ? (
 							<div className="exam-item__button">
-								<button className="exam-item__button__start" onClick={() => {}}>
-									Xem bài làm
+								<button className="exam-item__button__start" onClick={CreateSubmit}>
+									Bắt đầu làm bài
 								</button>
 							</div>
+						) : null}
+						{user.role === 'TEACHER' ? (
+							<div>
+								<div style={{ display: 'flex', justifyContent: 'center' }}>
+									<div className="exam-item__button">
+										<button className="exam-item__button__start" onClick={() => {}}>
+											Xóa
+										</button>
+									</div>
+									<div className="exam-item__button">
+										<button className="exam-item__button__start" onClick={() => {}}>
+											Chỉnh sửa
+										</button>
+									</div>
+								</div>
+								<div></div>
+							</div>
+						) : null}
+						{user.role === 'STUDENT' &&
+						examId &&
+						examId.submission !== null &&
+						examId.submission.endedAt === null ? (
 							<div className="exam-item__button">
-								<button className="exam-item__button__start" onClick={() => {}}>
-									Chỉnh sửa
+								<button className="exam-item__button__start" onClick={CreateSubmit}>
+									Tiếp tục làm bài
 								</button>
 							</div>
-						</div>
-					) : null}
-					{user.role === 'STUDENT' && examId && examId.submission !== null  && examId.submission.endedAt === null? (
-						<div className="exam-item__button">
-							<button className="exam-item__button__start" onClick={CreateSubmit}>
-								Tiếp tục làm bài
-							</button>
-						</div>
-					) : null}
-                    
+						) : null}
+					</div>
 				</div>
 			) : null}
 			<ToastContainer />

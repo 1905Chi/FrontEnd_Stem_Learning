@@ -14,33 +14,33 @@ export default function PostGroup() {
 	console.log(postgroup);
 	const [post, setPost] = useState([]);
 
-	const fetchPostGroup = async () => {
-		const headers = {
-			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
-		};
-		Api.get(url + 'group/' + uuid + '/posts', { headers })
+	// const fetchPostGroup = async () => {
+	// 	const headers = {
+	// 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+	// 		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+	// 	};
+	// 	Api.get(url + 'group/' + uuid + '/posts', { headers })
 
-			.then(async (response) => {
-				if (response.data.statusCode === 200) {
-					console.log(response.data.postsWithAuthor);
-					setPost(response.data.postsWithAuthor);
-				}
-			})
-			.catch(async (error) => {
-				if (error.response) {
-					// lỗi khi access token hết hạn
-				} else if (error.request) {
-					// Lỗi không có phản hồi từ máy chủ
-				} else {
-					// Lỗi trong quá trình thiết lập yêu cầu
-				}
-			})
-			.finally(() => {});
-	};
-	useEffect(() => {
-		fetchPostGroup();
-	}, []);
+	// 		.then(async (response) => {
+	// 			if (response.data.statusCode === 200) {
+	// 				console.log(response.data.postsWithAuthor);
+	// 				setPost(response.data.postsWithAuthor);
+	// 			}
+	// 		})
+	// 		.catch(async (error) => {
+	// 			if (error.response) {
+	// 				// lỗi khi access token hết hạn
+	// 			} else if (error.request) {
+	// 				// Lỗi không có phản hồi từ máy chủ
+	// 			} else {
+	// 				// Lỗi trong quá trình thiết lập yêu cầu
+	// 			}
+	// 		})
+	// 		.finally(() => {});
+	// };
+	// useEffect(() => {
+	// 	fetchPostGroup();
+	// }, []);
 
 	const openEdttor = () => {
 		setOpen(!open);
@@ -53,23 +53,28 @@ export default function PostGroup() {
 				<h2 style={{ textAlign: 'start', margin: '15px', borderBottom: '3px solid', padding: '15px' }}>
 					Bài viết{' '}
 				</h2>
-				{open && <Editor cancel={openEdttor} type="post" />}
+				{open && <Editor cancel={openEdttor} type="POST" />}
 				<button className="question-group__button" onClick={openEdttor} cancel={openEdttor}>
 					Bài viết mới
 				</button>
 			</div>
 			<div className="post-group__list">
-				{post &&
-					post.map((item) => (
+				{postgroup &&
+					postgroup.posts.map((item) => (
+						
 						<PostItem
-							index={item.id}
-							content={item.content}
-							user={item.author}
-							likes={item.reactions}
-							liked={item.isLiked}
-							type={item.type}
-							refUrls={item.refUrls}
-							comment={item.commentsWithAuthor}
+							id={item.post.id}
+							authorId={item.post.authorId}
+							authorFirstName={item.post.authorFirstName}
+							authorLastName={item.post.authorLastName}
+							authorAvatar={item.post.authorAvatar}
+							content={item.post.content}
+							type={item.post.type}
+							refUrls={item.post.refUrls}
+							totalReactions={item.post.totalReactions}
+							totalComments={item.post.totalComments}
+							comments={item.post.comments}
+							reaction={item.reaction}
 						/>
 					))}
 			</div>

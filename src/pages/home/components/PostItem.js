@@ -12,14 +12,32 @@ import { url } from '../../../constants/Constant';
 import Editor from './Editor';
 import LabelFile from '../../profile/component/LabelFile';
 import { toast } from 'react-toastify';
-function PostItem({ user, content, likes, liked, index, type, refUrls, comment }) {
-	const [isLiked, setIsLiked] = useState(liked); // Trạng thái ban đầu là "không thích"
+function PostItem(props) {
+	console.log(props);
+	const [isLiked, setIsLiked] = useState(props.reaction !== null && props.reaction !== undefined ? true : false); // Trạng thái ban đầu là "không thích"
 	const [isEditPost, setisEditPost] = useState(false); // Trạng thái ban đầu là "không chỉnh sửa"
-	const [contentPost, setContentPost] = useState(content);
+	const [contentPost, setContentPost] = useState(props.content);
 	const [idComment, setIdComment] = useState(null);
 	const [responseComement, setResponseComement] = useState(false);
 	const [xemthem, setXemthem] = useState(false);
-
+	const [ListReaction, setListReaction] = useState([
+		{
+			key: '1',
+			label: (
+				<div style={{ font: '15px' }} onClick={handleLike}>
+					haha
+				</div>
+			),
+		},
+		{
+			key: '2',
+			label: (
+				<div style={{ font: '15px' }} onClick={handleLike}>
+					huhu
+				</div>
+			),
+		},
+	]);
 	function EditContentPost(value) {
 		setContentPost(value);
 	}
@@ -33,16 +51,16 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 		let data = {};
 		if (isLiked === false) {
 			data = {
-				post_id: index,
-				type: 'LIKE',
+				postId: props.id,
+				typeName: 'LIKE',
 			};
 		} else {
 			data = {
-				post_id: index,
-				type: 'DISLIKE',
+				postId: props.id,
+				typeName: 'DISLIKE',
 			};
 		}
-		Api.post(url + 'reaction', data, { headers: headers })
+		Api.put(url + 'api/v1/reactions', data, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					toast.success(response.data.message);
@@ -59,7 +77,7 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			conttentType: 'application/json',
 		};
-		Api.delete(url + 'api/v1/posts/' + index, { headers: headers })
+		Api.delete(url + 'api/v1/posts/' + props.id, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					console.log(response.data.result);
@@ -86,9 +104,9 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 		setXemthem(!xemthem);
 	}
 	useEffect(() => {
-		const contentContainer = document.querySelector('.content' + index);
-		const showMoreButton = document.querySelector('#show' + index);
-		const showLessButton = document.querySelector('#less' + index);
+		const contentContainer = document.querySelector('.content' + props.id);
+		const showMoreButton = document.querySelector('#show' + props.id);
+		const showLessButton = document.querySelector('#less' + props.id);
 		if (contentContainer && showMoreButton) {
 			if (contentContainer.scrollHeight > 500) {
 				showMoreButton.style.display = 'block';
@@ -102,9 +120,9 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 		}
 	}, [contentPost]);
 	const SeeMore = () => {
-		const contentContainer = document.querySelector('.content' + index);
-		const showMoreButton = document.querySelector('#show' + index);
-		const showLessButton = document.querySelector('#less' + index);
+		const contentContainer = document.querySelector('.content' + props.id);
+		const showMoreButton = document.querySelector('#show' + props.id);
+		const showLessButton = document.querySelector('#less' + props.id);
 		const post = document.querySelector('#post');
 
 		if (contentContainer && showMoreButton) {
@@ -118,9 +136,9 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 		setXemthem(true);
 	};
 	const SeeLess = () => {
-		const contentContainer = document.querySelector('.content' + index);
-		const showLessButton = document.querySelector('#less' + index);
-		const showMoreButton = document.querySelector('#show' + index);
+		const contentContainer = document.querySelector('.content' + props.id);
+		const showLessButton = document.querySelector('#less' + props.id);
+		const showMoreButton = document.querySelector('#show' + props.id);
 		const post = document.querySelector('#post');
 		if (contentContainer && showMoreButton) {
 			if (contentContainer.scrollHeight > 500) {
@@ -138,7 +156,7 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 			key: '1',
 			label: (
 				<div style={{ font: '15px' }} onClick={deletePost}>
-					{user.id === JSON.parse(localStorage.getItem('user')).id ? (
+					{props.authorId === JSON.parse(localStorage.getItem('user')).id ? (
 						<div>
 							<RiDeleteBin6Fill style={{ color: 'red', fontSize: '15px' }} />
 							<span style={{ fontSize: '15px' }}>Xóa bài đăng</span>
@@ -156,7 +174,7 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 			key: '2',
 			label: (
 				<div style={{ font: '15px' }} onClick={EditPost}>
-					{user.id === JSON.parse(localStorage.getItem('user')).id ? (
+					{props.authorId === JSON.parse(localStorage.getItem('user')).id ? (
 						<div>
 							<EditOutlined style={{ color: 'red', fontSize: '15px' }} />
 							<span style={{ fontSize: '15px' }}>Chỉnh sửa bài đăng</span>
@@ -175,8 +193,8 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 					cancel={EditPost}
 					data={contentPost}
 					editcontent={EditContentPost}
-					index={index}
-					type={type}
+					index={props.id}
+					type={props.type}
 				></Editor>
 			) : null}
 			{responseComement ? (
@@ -187,21 +205,21 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 			<div className="user-info">
 				<div className="avatarPost" style={{ flex: 1, marginTop: '15px' }}>
 					<Avatar
-						src={user.avatar_url}
+						src={props.authorAvatar}
 						onClick={() => {
-							window.location.href = '/profile/' + user.id;
+							window.location.href = '/profile/' + props.authorId;
 						}}
 					/>
 				</div>
 				<div style={{ display: 'flex', flexDirection: 'row', flex: 9 }}>
 					<a style={{ textDecoration: 'none', color: 'black' }}>
 						<p className="user-name" style={{ fontWeight: 'bold' }}>
-							{user.first_name + ' ' + user.last_name}
+							{props.authorFirstName + ' ' + props.authorLastName}
 						</p>
 					</a>
 					<p className="user-name" style={{ display: 'block' }}>
-						đã đăng {type === 'QUESTION' ? 'câu hỏi' : null} {type === 'POST' ? 'Bài viết' : null} trong
-						nhóm
+						đã đăng {props.type === 'QUESTION' ? 'Câu hỏi' : null}{' '}
+						{props.type === 'POST' ? 'Bài viết' : null} trong nhóm
 					</p>
 				</div>
 				<Dropdown
@@ -219,27 +237,41 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 					</Button>
 				</Dropdown>
 			</div>
-			<div className={'content-container content' + index}>
+			<div className={'content-container content' + props.id}>
 				<div className="post-content" dangerouslySetInnerHTML={{ __html: contentPost }} id="post" />
 
-				<button className={'show-more-button'} id={'show' + index} onClick={SeeMore}>
+				<button className={'show-more-button'} id={'show' + props.id} onClick={SeeMore}>
 					Xem thêm
 				</button>
-				<button className={'show-more-button'} id={'less' + index} onClick={SeeLess}>
+				<button className={'show-more-button'} id={'less' + props.id} onClick={SeeLess}>
 					Thu gọn
 				</button>
 			</div>
 
 			<div className="file-post">
-				{refUrls &&
-					refUrls.map((item, index) => {
+				{props.refUrls &&
+					props.refUrls.map((item, index) => {
 						const indexAfterNumbers = item.indexOf('_') + 1;
 						const truncatedFileName = item.slice(indexAfterNumbers);
 						return <LabelFile key={index} type={'docx'} filename={truncatedFileName} />;
 					})}
 			</div>
+			<div>
+				<Dropdown
+					menu={{
+						items,
+					}}
+					placement="bottomRight"
+					arrow={{
+						pointAtCenter: true,
+					}}
+				>
+					<Button style={{ backgroundColor: 'aliceblue', border: 'none' }}>
+						{props.totalReactions} likes
+					</Button>
+				</Dropdown>
+			</div>
 
-			<p className="likes-count">{likes ? likes : 0} likes</p>
 			<div className="post-actions">
 				<button
 					style={{
@@ -259,34 +291,34 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 						color: 'black',
 						background: 'none',
 					}}
+					onClick={openComment}
 				>
 					<BiCommentDetail />
 				</button>
-				<button style={{ fontSize: '22px', background: 'none', color: 'black' }}>
-					<BiSolidShare />
-				</button>
 			</div>
 
-			{comment && comment.length > 0 && xemthem === false ? (
+			{props.comments && props.comments.length > 0 && xemthem === false ? (
 				<div>
-					{comment && comment.length > 1 ? (
+					{props.comments && props.comments.length > 1 ? (
 						<button className="comment-count" onClick={SeeMoreComent}>
 							{' '}
-							Xem thêm {comment.length - 1} bình luận
+							Xem thêm {props.comments.length - 1} bình luận
 						</button>
 					) : null}
 					<div className="new-comment">
-						<Avatar src={comment[comment.length - 1].author.avatar_url} />
+						<Avatar src={props.comments[props.comments.length - 1].authorAvatar} />
 						<div style={{ flex: 8 }}>
 							<div className="content-comment">
 								<p className="user-name" style={{ fontWeight: 'bold' }}>
-									{comment[comment.length - 1].author.first_name +
+									{props.comments[props.comments.length - 1].authorFirstName +
 										' ' +
-										comment[comment.length - 1].author.last_name}
+										props.comments[props.comments.length - 1].authorLastName}
 								</p>
 								<div
 									className="comment-content"
-									dangerouslySetInnerHTML={{ __html: comment[comment.length - 1].content }}
+									dangerouslySetInnerHTML={{
+										__html: props.comments[props.comments.length - 1].content,
+									}}
 								/>
 							</div>
 							<div className="react-post">
@@ -298,26 +330,26 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 					</div>
 				</div>
 			) : null}
-			{comment && comment.length > 0 && xemthem === true ? (
+			{props.comments && props.comments.length > 0 && xemthem === true ? (
 				<div>
 					<button className="comment-count" onClick={SeeMoreComent}>
 						{' '}
 						Thu gọn
 					</button>
-					{comment.map((item, index) => (
+					{props.comments.map((item, index) => (
 						<div className="new-comment">
-							<Avatar src={comment[comment.length - 1 - index].author.avatar_url} />
+							<Avatar src={props.comments[props.comments.length - 1 - index].authorAvatar} />
 							<div style={{ flex: 8 }}>
 								<div className="content-comment">
 									<p className="user-name" style={{ fontWeight: 'bold' }}>
-										{comment[comment.length - 1 - index].author.first_name +
+										{props.comments[props.comments.length - 1 - index].authorFirstName +
 											' ' +
-											comment[comment.length - 1 - index].author.last_name}
+											props.comments[props.comments.length - 1 - index].authorLastName}
 									</p>
 									<div
 										className="comment-content"
 										dangerouslySetInnerHTML={{
-											__html: comment[comment.length - 1 - index].content,
+											__html: props.comments[props.comments.length - 1 - index].content,
 										}}
 									/>
 								</div>
@@ -330,7 +362,7 @@ function PostItem({ user, content, likes, liked, index, type, refUrls, comment }
 					))}
 				</div>
 			) : null}
-			<CommentPost user={user} idPost={index} />
+			<CommentPost user={props.authorAvatar} idPost={props.id} />
 		</div>
 	);
 }

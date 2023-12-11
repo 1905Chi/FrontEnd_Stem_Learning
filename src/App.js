@@ -4,7 +4,7 @@ import { useState } from 'react';
 import DefaultLayout from './layouts/DefaultLayout';
 import DefaultLayoutLogin from './layouts/DefaultLayoutLogin';
 import DefaultLayoutTwoPage from './layouts/DefaultLayoutTwoPage';
-import { publicRoutes, privateRoutes, notFoundRoute, privateRoutes2page } from './routes/index';
+import { publicRoutes, privateRoutes, notFoundRoute, privateRoutes2page ,private1page} from './routes/index';
 import { useEffect } from 'react';
 import Topbar from './components/Topbar';
 import Footer from './components/Footer';
@@ -12,6 +12,7 @@ import LandingPage from './pages/landing/LandingPage';
 
 export default function App() {
 	const [isLogin, setIsLogin] = useState(localStorage.getItem('accessToken') ? true : false);
+
 	const Page404 = notFoundRoute.component;
 
 	return (
@@ -48,7 +49,7 @@ export default function App() {
 										<DefaultLayout setIsLogin={setIsLogin} Left={<Left />} Right={<Right />}>
 											<Page />
 										</DefaultLayout>
-										<Footer />
+										
 										</>
 									) : (
 										<>
@@ -77,7 +78,7 @@ export default function App() {
 										<DefaultLayoutTwoPage setIsLogin={setIsLogin} Left={<Left />}>
 											<Page />
 										</DefaultLayoutTwoPage>
-										<Footer />
+										
 										</>
 									) : (
 										<Navigate
@@ -90,6 +91,32 @@ export default function App() {
 						);
 					})}
 					,
+					{private1page.map((route, index) => {
+						const Page = route.component;
+						
+
+						return (
+							<Route
+								key={index}
+								path={route.path}
+								element={
+									isLogin ? (
+										<><Topbar/>
+										<DefaultLayoutLogin setIsLogin={setIsLogin} >
+											<Page />
+										</DefaultLayoutLogin>
+										
+										</>
+									) : (
+										<Navigate
+											to="/
+                            "
+										/>
+									)
+								}
+							/>
+						);
+					})},
 					<Route
 						key={notFoundRoute.path}
 						path={notFoundRoute.path}

@@ -54,15 +54,18 @@ const privateRoutes2page = [
 	{ path: '/groups/create', component: CreateGroup, Left: LeftCreateGroup },
 	{ path: '/classes/create', component: CreateGroup, Left: LeftCreateGroup },
 	{path:'/friends',component:MainFriend,Left:LeftFriend},
-	{ path: '/profile', component: Profile, Left: Left },
 	{ path: '/profile/:uuid', component: ProfileUser, Left: Left },
-	{ path: '/classes/:uuid/exam/:id', component: ExamItem, Left: LeftItemClass },
+	
 	{ path: '/exam/:id/submit/:submissionId', component: Submit, Left: LeftSubmit },
 	{ path: '/classes', component: Class, Left: RightClass  },
 	{ path: '/groups', component: Home, Left: LeftsGroup},
 	{ path: '/search', component: MainSearch, Left: LeftSearch},
 
 ];
+const  private1page=[
+	{path:'/profile',component:Profile},
+	{ path: '/classes/:uuid/exam/:id', component: ExamItem},
+]
 const publicRoutes = [
 	{ path: '/login', component: Login },
 	{ path: '/register', component: RegisterTeacher },
@@ -73,4 +76,4 @@ const publicRoutes = [
 ];
 
 const notFoundRoute = { path: '*', component: NotFound };
-export { privateRoutes, publicRoutes, notFoundRoute, privateRoutes2page };
+export { privateRoutes, publicRoutes, notFoundRoute, privateRoutes2page ,private1page};

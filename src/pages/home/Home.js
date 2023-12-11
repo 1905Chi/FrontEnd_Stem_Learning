@@ -24,10 +24,10 @@ function Home() {
 			localStorage.removeItem('login');
 		}
 		dispatch(selectuser(JSON.parse(localStorage.getItem('user'))));
-		const headers = {
-			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
-		};
+		// const headers = {
+		// 	'Content-Type': 'application/json',
+		// 	Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
+		// };
 		// Api.get(url+`api/v1/posts/home-posts?page=${page}&size=${size}`, {headers:headers}).then((response) => {
 		//   if (response.data.statusCode === 200) {
 		//     setListpost(response.data.result);
@@ -40,7 +40,7 @@ function Home() {
 		// });
 	}, []);
 	useEffect(() => {
-		homePostss();
+		homePosts();
 	}, []);
 	const fetchData = () => {
 		// Tạo một Promise mới
@@ -85,8 +85,8 @@ function Home() {
 			};
 			const response = await Api.get(`home-posts`, { headers: headers });
 			if (response.data.statusCode === 200) {
-				setListpost(response.data.postsWithAuthor);
-				console.log('data', response.data.postsWithAuthor);
+				setListpost(response.data.result);
+				
 			} else {
 				console.log(response.error);
 			}

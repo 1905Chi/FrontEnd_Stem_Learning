@@ -12,10 +12,10 @@ export default function Class() {
 
 	const fetchClass = async () => {
 		try {
-			const response = await Api.get('class');
+			const response = await Api.get('api/v1/groups/suggested-classes');
 			console.log('Fetch class successfully: ', response);
 			if (response.data.statusCode === 200) {
-				setClassList(response.data.group);
+				setClassList(response.data.result);
 			}
 		} catch (error) {
 			console.log('Failed to fetch class list: ', error);

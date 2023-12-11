@@ -125,7 +125,7 @@ const Topbar = (props) => {
 				<div className="logo-topbar">
 					<img
 						alt="logo"
-						src="anhlogo.jpg"
+						src="https://res.cloudinary.com/djzwxw0ao/image/upload/v1696942528/uqbxidtwcdbqn8glt6we.jpg"
 						height="40"
 						className="mr-2"
 						onClick={() => {
