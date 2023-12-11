@@ -29,7 +29,7 @@ export default function DocumentGroup() {
 	};
 	const post =useSelector(selectSelectedPostGroup);
 	useEffect(() => {
-		if(post.length>0){
+		if(post && post.length>0){
 			post.map((item)=>{
 				if(item.post.refUrls && item.post.refUrls.length>0){
 					item.post.refUrls.map((item1)=>{

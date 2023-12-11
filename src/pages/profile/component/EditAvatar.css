@@ -25,11 +25,10 @@
 }
 .form-edit-Avatar{
 width: 50%;
-margin-top: 125px;
-height:  100vh;
+margin-top: 50px;
+height:  auto;
 background-color: white;
 border-radius: 10px;
-overflow-y: auto;
 
 
 }

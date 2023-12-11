@@ -75,8 +75,6 @@ export default function LeftCreateGroup() {
 				typeName: 'CLASS',
 				accessibilityName: values.policy,
 				memberModeName: values.policy,
-				subject: values.subject,
-				grade: values.grade,
 			};
 		} else {
 			data = {
@@ -88,7 +86,7 @@ export default function LeftCreateGroup() {
 			};
 		}
 
-		Api.post(url + 'api/v1/groups', data, { headers })
+		Api.post(url + 'group', data, { headers })
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {

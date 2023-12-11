@@ -8,10 +8,16 @@ import { GiCancel } from 'react-icons/gi';
 import Api from '../../../api/Api';
 import { useParams } from 'react-router-dom';
 import { url } from '../../../constants/Constant';
+import { useDispatch } from 'react-redux';
+import {editPostGroup} from '../../../redux/Group'
+import { toast, ToastContainer } from 'react-toastify';
+import Loading from '../../../components/Loading';
 export default function Editor(props) {
 	const [value, setValue] = useState(props.data || '');
 	const { uuid } = useParams();
 	const reactQuillRef = useRef(null);
+	const dispatch = useDispatch();
+	const [isLoading, setIsLoading] = useState(false);
 	const onChange = (content) => {	
 		setValue(content);
 		if (props.editcontent) {
@@ -22,19 +28,20 @@ export default function Editor(props) {
 		if (props.cancel) props.cancel();
 	};
 	const Save = (e) => {
-		
+		setIsLoading(true);
 		e.preventDefault();
 		if(props.isQuiz){
 			props.editcontent(value);
 			props.cancel();
 			return ;
 		}
-
-		if(props.idPost){
+		if(props.idComment)
+		{
 			const stringValue = value.toString();
 			console.log(stringValue);
+			setIsLoading(true);
 			const data = {
-				postId: props.idPost,
+				commentId: props.idComment,
 				content: stringValue,
 				
 			}
@@ -46,6 +53,7 @@ export default function Editor(props) {
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						console.log(response.data.message);
+						dispatch(editPostGroup(response.data.result));
 						setValue('');
 					} else {
 						console.log(response.error);
@@ -53,6 +61,39 @@ export default function Editor(props) {
 				})
 				.catch((error) => {
 					console.log(error);
+				})
+				.finally(()=>{
+					setIsLoading(false);
+				});
+				return ;
+		}
+
+		if(props.idPost){
+			const stringValue = value.toString();
+			console.log(stringValue);
+			setIsLoading(true);
+			const data = {
+				post_id: props.idPost,
+				content: stringValue,
+				
+			}
+			const headers = {
+				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+				'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+			};
+			Api.post(url + 'comment', data, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						toast.success('Bình luận thành công');
+					} else {
+						console.log(response.error);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				})
+				.finally(()=>{
+					setIsLoading(false);
 				});
 		}
 		else if (props.editcontent != null) {
@@ -79,6 +120,9 @@ export default function Editor(props) {
 				})
 				.catch((error) => {
 					console.log(error);
+				})
+				.finally(()=>{
+					setIsLoading(false);
 				});
 
 		} else {
@@ -87,24 +131,29 @@ export default function Editor(props) {
 			console.log(stringValue);
 			const data = {
 				content: stringValue,
-				groupId: uuid,
-				TypeCode:props.type,
-				mediaFiles:[],
+				group_id: uuid,
+				type:props.type,
+				
 			};
 			const headers = {
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-				'Content-Type': 'multipart/form-data', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+				'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 			};
-			Api.post(url + 'api/v1/posts', data, { headers: headers })
+			Api.post(url + 'post', data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						console.log(response.data.result);
+						console.log(response.data.post);
+						toast.success('Đăng bài thành công');
+						
 					} else {
 						console.log(response.error);
 					}
 				})
 				.catch((error) => {
 					console.log(error);
+				})
+				.finally(()=>{
+					setIsLoading(false);
 				});
 
 		}
@@ -155,6 +204,7 @@ export default function Editor(props) {
 				overFlow: 'auto',
 			}}
 		>
+			{isLoading && <Loading></Loading>}
 			<div
 				style={{
 					display: 'flex',

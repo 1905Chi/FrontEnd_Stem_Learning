@@ -47,7 +47,12 @@ export default function EditAvatar(props) {
 				.then((res) => {
 					if (res.data.statusCode === 200) {
 						toast.success(res.data.message);
-						localStorage.setItem('user', JSON.stringify(res.data.result));
+						var oldusser=localStorage.getItem('user');
+						oldusser=JSON.parse(oldusser);
+						
+						oldusser.avatarUrl=res.data.result;
+					
+						localStorage.setItem('user', JSON.stringify(oldusser));
 						dispatch(selectuser(res.data.result));
 						props.changeAvatar(selectedFile);					
 					} else {
@@ -56,13 +61,9 @@ export default function EditAvatar(props) {
 				})
 				.catch((error) => {
 					if (error.response) {
-						// lỗi khi access token hết hạn
-						
+						// lỗi khi access token hết hạn	
 								// lỗi khi refresh token hết hạn
-								toast.error(error.response.data.message);
-								
-							
-						
+								toast.error(error.response.data.message);		
 					} else if (error.request) {
 						// Lỗi không có phản hồi từ máy chủ
 						toast.error(error.request.data.message);

@@ -8,53 +8,65 @@ import { selectselectuser } from '../redux/User';
 import anh_logo_1 from '../../src/assets/images/anh_logo_1.jpg';
 import { Avatar } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { FaHistory } from "react-icons/fa";
+import { FaHistory } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
 import Api from '../api/Api';
+import { CiEdit } from "react-icons/ci";
+import { CgProfile } from "react-icons/cg";
+import { IoExitOutline } from "react-icons/io5";
+import EditProfile from '../pages/profile/component/EditProfile';
 const Topbar = (props) => {
 	const [activeIndex, setActiveIndex] = useState(1);
 	const location = useLocation();
 	const [search, setSearch] = useState(false);
 	const navigate = useNavigate();
-	const user = useSelector(selectselectuser);
+	const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
 	const [inputValue, setInputValue] = useState('');
 	const [historySearch,sethistorySearch] = useState(JSON.parse(localStorage.getItem('search')));
+	const [openMenu, setOpenMenu] = useState(false);
+	const [editprofile, setEditProfile] = useState(false);
+
+	const openEditProfile = () => {
+		toProfile();
+		
+		setEditProfile(!editprofile);
+	}
+	const cancel = () => {
+		setEditProfile(false);
+	};
 	useEffect(() => {
 		setSearch(false);
 	}, [location]);
-	console.log(historySearch);
 	const toProfile = () => {
-		navigate('/profile');
+		setOpenMenu(!openMenu);
 	};
 	const openSearch = () => {
 		setSearch(true);
-	}
+	};
 	const closeSearch = () => {
 		setSearch(false);
-	}
+	};
 
 	const handleKeyDown = (event) => {
 		if (event.key === 'Enter') {
-		  // Xử lý sự kiện khi nhấn phím Enter ở đây
-			let history= localStorage.getItem('search') 
-			if(history===null){
+			// Xử lý sự kiện khi nhấn phím Enter ở đây
+			let history = localStorage.getItem('search');
+			if (history === null) {
 				let arr = [];
 				arr.push(inputValue);
 				localStorage.setItem('search', JSON.stringify(arr));
 				sethistorySearch(arr);
-			}else{
+			} else {
 				let arr = JSON.parse(history);
-				
+
 				arr.push(inputValue);
 				localStorage.setItem('search', JSON.stringify(arr));
 				sethistorySearch(arr);
-
 			}
 			setSearch(false);
-			navigate('/search/?search='+inputValue);
-			
+			navigate('/search/?search=' + inputValue);
 		}
-	  };
+	};
 	const [isLogin, setIsLogin] = useState(localStorage.getItem('accessToken') ? true : false);
 
 	const searchUser = async (searchQuery) => {
@@ -111,10 +123,24 @@ const Topbar = (props) => {
 		return (
 			<div className="start-topbar">
 				<div className="logo-topbar">
-					<img alt="logo" src="anhlogo.jpg" height="40" className="mr-2"></img>
+					<img
+						alt="logo"
+						src="anhlogo.jpg"
+						height="40"
+						className="mr-2"
+						onClick={() => {
+							navigate('/home');
+						}}
+					></img>
 				</div>
 				<div className="search-topbar">
-					<InputText placeholder="Search" type="text" onClick={openSearch}  onChange={(e) => setInputValue(e.target.value)} onKeyDown={handleKeyDown} />
+					<InputText
+						placeholder="Search"
+						type="text"
+						onClick={openSearch}
+						onChange={(e) => setInputValue(e.target.value)}
+						onKeyDown={handleKeyDown}
+					/>
 				</div>
 			</div>
 		);
@@ -123,6 +149,7 @@ const Topbar = (props) => {
 	const end = () => {
 		return (
 			<div className="end-topbar">
+				
 				{!isLogin ? (
 					<div className="name-topbar">
 						<button className="login-topbar" onClick={() => navigate('/login')}>
@@ -144,34 +171,51 @@ const Topbar = (props) => {
 						</div>
 					)
 				) : null}
+
+				{openMenu === true ? (<div className='menu-option'>
+					<button className='menu-option-item' onClick={()=>{
+						navigate('/profile');
+					}}> <CgProfile className='iocon-pr'/> <span >Trang cá nhân</span></button>
+					<button className='menu-option-item' onClick={openEditProfile}><CiEdit className='iocon-pr'  /> <span>Chỉnh sửa thông tin cá nhân</span></button>
+					<button className='menu-option-item'><IoExitOutline className='iocon-pr' /><span>Đăng xuất</span></button>
+
+				</div>):null}
+
 			</div>
 		);
 	};
 
 	return (
 		<div className="topbar">
+			{editprofile === true? <EditProfile onCancel={cancel} /> : null}
 			{search ? (
 				<div className="search-topbar-menu-history">
-					<div className='header-menu-search'>
-						<button onClick={closeSearch}><ArrowLeftOutlined/></button>
+					<div className="header-menu-search">
+						<button onClick={closeSearch}>
+							<ArrowLeftOutlined />
+						</button>
 						<h3>Tìm kiếm gần đây</h3>
-						<button onClick={()=>{
-							localStorage.removeItem('search');
-							sethistorySearch([]);
-						}}>Xóa lịch sử</button>
+						<button
+							onClick={() => {
+								localStorage.removeItem('search');
+								sethistorySearch([]);
+							}}
+						>
+							Xóa lịch sử
+						</button>
 					</div>
 					<div>
-						{historySearch && historySearch.length>0 ?(
-							historySearch.map((item,index) => (
-								<button className='history-search-item' key={index}>
-									<FaHistory style={{paddingTop:'5px'}}/>
-									<p>{item}</p>
-								</button>
-							))	
-						):null }
+						{historySearch && historySearch.length > 0
+							? historySearch.map((item, index) => (
+									<button className="history-search-item" key={index}>
+										<FaHistory style={{ paddingTop: '5px' }} />
+										<p>{item}</p>
+									</button>
+							  ))
+							: null}
 					</div>
 				</div>
-				): null}
+			) : null}
 			<MegaMenu model={items} orientation="horizontal" start={start} end={end} />
 		</div>
 	);

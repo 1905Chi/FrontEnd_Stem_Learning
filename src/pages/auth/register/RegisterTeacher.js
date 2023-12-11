@@ -7,10 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import { url } from '../../../constants/Constant';
 import Loading from '../../../components/Loading';
-import "./Register.css"
+import './Register.css';
 
 export default function RegisterTeacher(props) {
-
 	const navigate = useNavigate();
 	const login = () => {
 		navigate('/login');
@@ -30,11 +29,11 @@ export default function RegisterTeacher(props) {
 		const data = {
 			email: values.email,
 			password: values.password,
-			
 		};
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
+				Accept: 'application/json',
 			},
 		};
 		axios
@@ -48,7 +47,6 @@ export default function RegisterTeacher(props) {
 					}, 5000);
 				} else {
 					toast.error(response.data.message);
-				
 				}
 			})
 			.catch((error) => {
@@ -56,7 +54,7 @@ export default function RegisterTeacher(props) {
 				// Xử lý lỗi nếu có lỗi xảy ra
 				if (error.response) {
 					// Lỗi từ phía máy chủ
-					
+
 					console.log(error.response.data.statusCode);
 					if (error.response.data.statusCode >= 500) {
 						// Xử lý lỗi 503 Service Unavailable
@@ -77,10 +75,9 @@ export default function RegisterTeacher(props) {
 			})
 			.finally(() => {
 				setTimeout(() => {
-
-				setLoading(false);
-				props.cancelRegister();
-				} , 5000);
+					setLoading(false);
+					props.cancelRegister();
+				}, 5000);
 			});
 
 		// Xử lý logic xác thực email ở đây (gửi email xác thực, kiểm tra địa chỉ email, vv.)
@@ -192,9 +189,8 @@ export default function RegisterTeacher(props) {
 							</Button>
 						</div>
 					</Form>
-					<ToastContainer/>
+					<ToastContainer />
 				</div>
-				
 			</div>
 		</>
 	);

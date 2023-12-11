@@ -5,7 +5,8 @@
 * Trần Văn Kiệt - 20110665
 * Đoàn Quốc Bảo -
 ## Framework:
-* NextJs 
+* Reactjs
+*  
 ## Ngôn ngữ sử dụng:
 * Ngôn ngữ chính: JavaScript
 ## Chức năng chính: 

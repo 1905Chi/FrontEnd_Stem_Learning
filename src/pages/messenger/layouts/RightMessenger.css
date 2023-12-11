@@ -1,0 +1,13 @@
+.Left-messenger{
+    margin-top: 35px;
+
+}
+
+.Left-messenger--left{
+    display: flex;
+    justify-content: center;
+}
+.name-user{
+    display:  flex;
+    justify-content: center;
+}

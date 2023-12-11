@@ -15,7 +15,7 @@ const dataFriend = createSlice({
       state.request = action.payload;
     },
     editFriendRequest: (state, action) => {
-      state.request = state.request.filter((item) => item.id !== action.payload);
+      state.request = state.request.filter((item) => item.id !== action.payload.id);
     },
     selectFriendOfFriend: (state, action) => {
       state.friendofFriend = action.payload;

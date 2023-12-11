@@ -45,7 +45,10 @@ export default function EditCover(props) {
 				.then((res) => {
 					if (res.data.statusCode === 200) {
 						toast.success(res.data.message);
-						localStorage.setItem('user', JSON.stringify(res.data.result));
+						var olduser=localStorage.getItem('user');
+						olduser=JSON.parse(olduser);
+						olduser.coverUrl=res.data.result;
+						localStorage.setItem('user', JSON.stringify(olduser));
 						props.changeCoverPhoto(selectedFile);					
 					} else {
 						toast.error(res.data.message);

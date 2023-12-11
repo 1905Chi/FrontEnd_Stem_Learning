@@ -9,6 +9,7 @@ const menuSlice = createSlice({
     selectedGrouOwner: null,
     selectedGroupMember: null,  
     selectedPostGroup: null,
+   
   },
   reducers: {
     selectOption: (state, action) => {
@@ -26,10 +27,23 @@ const menuSlice = createSlice({
     selectPostGroup: (state, action) => {
       state.selectedPostGroup = action.payload;
     },
+    editPostGroup: (state, action) => {
+      state.selectedPostGroup = state.selectedPostGroup.map((item) => {
+        if (item.post.id === action.payload.id) {
+          // Thay đổi nội dung của item
+          return {
+            ...item,
+            post: action.payload, // Sử dụng action.payload.post thay vì action.payload
+          };
+        }
+        return item; // Trả về item nguyên vẹn nếu không có sự thay đổi
+      });
+    },
+    
   },
 });
 
-export const { selectOption,selectOptionProfile ,selectGroupOwner,selectGroupMember,selectPostGroup} = menuSlice.actions;
+export const { selectOption,selectOptionProfile ,selectGroupOwner,selectGroupMember,selectPostGroup,editPostGroup} = menuSlice.actions;
 export const selectSelectedOption = (state) => state.menu.selectedOption;
 export const selectSelectedOptionProfile = (state) => state.menu.selectedOptionProfile;
 export const selectSelectedGroupOwner = (state) => state.menu.selectedGrouOwner;

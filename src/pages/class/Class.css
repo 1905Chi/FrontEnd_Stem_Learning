@@ -25,3 +25,13 @@ flex-wrap:wrap;
     width: 100%;
     margin-bottom: 15px;
 }
+#avatar-container{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+#avatar-container img{
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+}

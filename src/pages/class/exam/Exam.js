@@ -13,7 +13,7 @@ export default function Exam() {
         navigate('/classes/'+uuid+'/exam/createquiz');
     }
 	const listExam = useSelector(selectselectexam);
-	const user=useSelector(selectselectuser);
+	const user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
 	console.log(listExam);
 	console.log(user);
 	return (

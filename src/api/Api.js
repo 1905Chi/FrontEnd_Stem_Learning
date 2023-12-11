@@ -71,7 +71,7 @@ Api.interceptors.response.use(
 				} catch (error) {
 					// Xử lý lỗi khi gửi yêu cầu cập nhật token
 					console.error('Error refreshing token:', error);
-          const navigate = useNavigate();
+					const navigate = useNavigate();
 					navigate('/login');
 
 					// Xóa token và thực hiện các xử lý khác (ví dụ: đăng xuất người dùng)

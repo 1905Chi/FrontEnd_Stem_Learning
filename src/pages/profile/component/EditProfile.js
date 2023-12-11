@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './EditProfile.css';
 import anhlogo1 from '../../../assets/images/anh_logo_1.jpg';
 import { GiCancel } from 'react-icons/gi';
@@ -12,12 +12,20 @@ import { FcBusinesswoman } from 'react-icons/fc';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 import Api from '../../../api/Api';
 import Loading from '../../../components/Loading';
-export default function EditProfile({ onCancel }) {
+import { Tabs } from 'antd';
+import moment from 'moment';
+import { Select } from 'antd';
 
+export default function EditProfile({ onCancel }) {
 	const [editName, setEditName] = useState(false);
+	const [provinces, setProvinces] = useState([]);
+	const [districts, setDistricts] = useState([]);
+	const [schools, setSchools] = useState([]);
+	const [grade, setGrade] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
 	const [editLastName, setEditLastName] = useState(false);
 	const [editPhoneNumber, setEditPhoneNumber] = useState(false);
 	const [editBirthday, setEditBirthday] = useState(false);
+	const [currentDate, setCurrentDate] = useState(moment());
 	const [editGender, setEditGender] = useState(false);
 	const [editBio, setEditBio] = useState(false);
 	const [editWork, setEditWork] = useState(false);
@@ -25,89 +33,78 @@ export default function EditProfile({ onCancel }) {
 	const user = JSON.parse(localStorage.getItem('user'));
 	const [loading, setLoading] = useState(false); // Trạng thái loading
 	const setdEditName = () => {
-		setEditName(true);
+		setEditName(!editName);
 	};
 	const setdEditLastName = () => {
-		setEditLastName(true);
+		setEditLastName(!editLastName);
 	};
 	const setdEditPhoneNumber = () => {
-		setEditPhoneNumber(true);
+		setEditPhoneNumber(!editPhoneNumber);
 	};
 	const setdEditBirthday = () => {
-		setEditBirthday(true);
+		setEditBirthday(!editBirthday);
 	};
 	const setdEditGender = () => {
-		setEditGender(true);
+		setEditGender(!editGender);
 	};
 	const setdEditBio = () => {
-		setEditBio(true);
+		setEditBio(!editBio);
 	};
 	const setdEditWork = () => {
-		setEditWork(true);
+		setEditWork(!editWork);
 	};
 	const setdAdress = () => {
-		setEditaddress(true);
+		setEditaddress(!editaddress);
 	};
 	const [isSaving, setIsSaving] = useState(false);
-	console.log(isSaving)
+	console.log(isSaving);
 	const saveUpdate = (values) => {
-		if(values.firstname===undefined || values.firstname==="" || values.firstname===null){
-			values.firstname=user.firstName;
+		if (values.firstname === undefined || values.firstname === '' || values.firstname === null) {
+			values.firstname = user.firstName;
 		}
-		if(values.lastname===undefined || values.lastname==="" || values.lastname===null){
-			values.lastname=user.lastName;
+		if (values.lastname === undefined || values.lastname === '' || values.lastname === null) {
+			values.lastname = user.lastName;
 		}
-		if(values.phone===undefined || values.phone==="" || values.phone===null){
-			if(user.phone!==null && user.phone!==undefined){
-				values.phone=user.phone;
-			}
-			else values.phone="";
+		if (values.phone === undefined || values.phone === '' || values.phone === null) {
+			if (user.phone !== null && user.phone !== undefined) {
+				values.phone = user.phone;
+			} else values.phone = '';
 		}
-		if(values.dob===undefined || values.dob==="" || values.dob===null){
-			if(user.dob!==null && user.dob!==undefined){
-				values.dob=user.dob;
-			}
-			else values.dob="";
+		if (values.dob === undefined || values.dob === '' || values.dob === null) {
+			if (user.dob !== null && user.dob !== undefined) {
+				values.dob = user.dob;
+			} else values.dob = '';
 		}
-		if(values.gender === undefined || values.gender===""|| values===null)	{
-			if(user.gender !==null && user.gender!==undefined){
-			values.gender=user.gender
-			}
-			else values.gender="MALE";
+		if (values.gender === undefined || values.gender === '' || values === null) {
+			if (user.gender !== null && user.gender !== undefined) {
+				values.gender = user.gender;
+			} else values.gender = 'MALE';
 		}
-		if(values.about===undefined || values.about==="" || values.about===null){
-			if(user.about!==null && user.about!==undefined){
-				values.about=user.about;
-			}
-			else values.about="";
+		if (values.about === undefined || values.about === '' || values.about === null) {
+			if (user.about !== null && user.about !== undefined) {
+				values.about = user.about;
+			} else values.about = '';
 		}
-		if(values.workAt===undefined || values.workAt==="" || values.workAt===null){
-			if(user.workAt!==null && user.workAt!==undefined){
-				values.workAt=user.workAt;
-			}
-			else values.workAt="";
+		if (values.workAt === undefined || values.workAt === '' || values.workAt === null) {
+			if (user.workAt !== null && user.workAt !== undefined) {
+				values.workAt = user.workAt;
+			} else values.workAt = '';
 		}
-		if(values.adsress===undefined || values.adsress==="" || values.adsress===null){
-			if(user.address!==null && user.address!==undefined){
-				values.adsress=user.address;
-			}
-			else values.adsress="";
+		if (values.adsress === undefined || values.adsress === '' || values.adsress === null) {
+			if (user.address !== null && user.address !== undefined) {
+				values.adsress = user.address;
+			} else values.adsress = '';
 		}
-
 
 		const data = {
-			
 			firstName: values.firstname,
 			lastName: values.lastname,
 			phone: values.phone,
 			dob: values.dob.format('YYYY-MM-DD'),
-			gender:values.gender,
-			about:values.about,
-			workedAt:values.workAt,
-			address:values.adsress,
-
-
-
+			gender: values.gender,
+			about: values.about,
+			workedAt: values.workAt,
+			address: values.adsress,
 		};
 		console.log(data);
 		const config = {
@@ -116,14 +113,12 @@ export default function EditProfile({ onCancel }) {
 				'Content-Type': 'application/json',
 			},
 		};
-		if (isSaving===false) {
-           
-            return; // Không thực hiện yêu cầu axios
-        }
+		if (isSaving === false) {
+			return; // Không thực hiện yêu cầu axios
+		}
 
-        setLoading(true);
-		Api
-			.put(url + 'api/v1/users/profile', data, config)
+		setLoading(true);
+		Api.put(url + 'api/v1/users/profile', data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
@@ -133,7 +128,6 @@ export default function EditProfile({ onCancel }) {
 					}, 2000);
 				} else {
 					toast.error(response.data.message);
-
 				}
 			})
 			.catch((error) => {
@@ -161,204 +155,222 @@ export default function EditProfile({ onCancel }) {
 			.finally(() => {
 				setLoading(false);
 			});
-	}
+	};
+	const isDateDisabled = (date) => {
+		return date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
+	};
+	useEffect(() => {
+		handleProvince();
+	}, []);
 
-	return (
-		
-		<div className="edit-profile">
-			{loading ?// Nếu đang loading thì hiển thị component loading
-				<Loading></Loading>:null
-			}
-			<div className="form-edit-profile">
-				<div
-					style={{
-						display: 'flex',
-						borderBottom: '1px solid black',
-						justifyContent: 'space-between',
-						flex: 10,
-					}}
-				>
-					<h2 style={{ flex: 8, textAlign: 'end' }}>Chỉnh sửa trang cá nhân</h2>
-					<button
-						style={{ flex: 3, height: '72.5px', backgroundColor: 'white', textAlign: 'end' }}
-						onClick={onCancel}
+	const handleProvince = async () => {
+		await axios
+			.get(url + 'api/v1/addresses/provinces')
+			.then((response) => {
+				setProvinces(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	const handleChangeProvince = async (currentProvince) => {
+		await axios
+			.get(url + `api/v1/addresses/districtsByProvince?pId=${currentProvince}`)
+			.then((response) => {
+				setDistricts(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+	const handleChangeDistrict = (value) => {
+		axios
+			.get(url + `api/v1/addresses/schoolsByDistrict?dId=${value}`)
+			.then((response) => {
+				setSchools(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+	const { Option } = Select;
+	const saveUpdatePass = (values) => {
+		const data = {
+			oldPassword: values.oldPassword,
+			newPassword: values.newPassword,
+			reNewPassword: values.reNewPassword,
+		};
+		console.log(data);
+		const config = {
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+				'Content-Type': 'application/json',
+			},
+		};
+		if (isSaving === false) {
+			return; // Không thực hiện yêu cầu axios
+		}
+
+		setLoading(true);
+	};
+	const config = {
+		rules: [
+			{
+				type: 'object',
+				required: true,
+				message: 'Chọn ngày tháng năm sinh!',
+			},
+		],
+	};
+	const handleChange = (value) => {
+		console.log(`selected ${value}`);
+	};
+	const items = [
+		{
+			key: '1',
+			label: 'Cập nhật thông tin cá nhân',
+			children: (
+				<div className="information-profile">
+					<Form.Item
+						name="firstName"
+						label="Tên"
+						rules={[{ required: true, message: 'Vui lòng nhập tên của bạn!' }]}
+						className="form-item-register"
 					>
-						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
-					</button>
-				</div>
-				<Form onFinish={saveUpdate} scrollToFirstError>
-					<div className="ten">
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Tên:</h3>
-							{user.firstName ? <h4>{user.firstName}</h4> : null}
+						<Input placeholder="Tên" style={{ width: '180px' }}   defaultValue={user.firstName}/>
+					</Form.Item>
+					<Form.Item
+						name="lastName"
+						label="Họ và tên đệm"
+						rules={[{ required: true, message: 'Vui lòng nhập họ của bạn!' }]}
+						className="form-item-register"
+					>
+						<Input placeholder="Họ" style={{ width: '180px'  }} defaultValue={user.lastName} />
+					</Form.Item>
 
-							<button
-								style={{
-									textAlign: 'end',
-									margin: '0 10px 0 0',
-									color: 'blue',
-									backgroundColor: 'white',
-								}}
-								onClick={setdEditName}
-							>
-								Cập nhật
-							</button>
-						</div>
-					</div>
+					<Form.Item
+						name="phone"
+						label="Số điện thoại"
+						className="form-item-register"
+						rules={[
+							{
+								required: true,
+								message: 'Vui lòng nhập số điện thoại!',
+								whitespace: true,
+							},
 
-					{editName ? (
-						<Form.Item
-							name="firstname"
-														
-							rules={[
-								{
-									required: false,
-									message: 'Nhập tên!',
-									whitespace: true,
-								},
-							]}
-						>
-							<Input placeholder="Tên"  className="form-item"/>
-						</Form.Item>
-					) : null}
-
-					<div className="ten">
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Họ và tên đệm:</h3>
-							{user.lastName ? <h4>{user.lastName}</h4> : null}
-
-							<button
-								style={{
-									textAlign: 'end',
-									margin: '0 10px 0 0',
-									color: 'blue',
-									backgroundColor: 'white',
-								}}
-								onClick={setdEditLastName}
-							>
-								Cập nhật
-							</button>
-						</div>
-					</div>
-
-					{editLastName ? (
-						<Form.Item
+							{
+								pattern: /^0\d{9,9}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
+								message: 'Số điện thoại không hợp lệ!',
+							},
+						]}
+					>
+						<Input placeholder="Số điện thoại" style={{ width: '180px' }}  defaultValue={user.phone}/>
+					</Form.Item>
+					<Form.Item name="date_picker" {...config} className="form-item-register"
+					label='Ngày sinh'>
+						<DatePicker
+							format="DD-MM-YYYY"
+							style={{ width: '180px' }}
+							placeholder="Ngày tháng năm sinh"
+							onChange={(date) => setCurrentDate(date)}
+							disabledDate={isDateDisabled}
 							
-							name="lastname"
-							rules={[
-								{
-									required: false,
-									message: 'Nhập họ !',
-									whitespace: true,
-								},
-							]}
+						/>
+					</Form.Item>
+					<Form.Item
+						className="form-item-register"
+						label="Tỉnh thành"
+						name="province"
+						rules={[{ required: true, message: 'Vui lòng chọn tỉnh thành!' }]}
+					>
+						<Select
+							showSearch
+							style={{ width: '180px' }}
+							placeholder="Tỉnh thành"
+							onChange={(value) => {
+								handleChangeProvince(value);
+								setSchools([]);
+								setDistricts([]);
+							}}
+							defaultValue={user.province}
 						>
-							<Input className="form-item" placeholder="Họ và tên đệm" />
-						</Form.Item>
-					) : null}
-
-					<div className="ten">
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Số điện thoại:</h3>
-							{user.phone ? <h4>{user.phone}</h4> : null}
-							<button
-								style={{
-									textAlign: 'end',
-									margin: '0 10px 0 0',
-									color: 'blue',
-									backgroundColor: 'white',
-								}}
-								onClick={setdEditPhoneNumber}
-							>
-								Cập nhật
-							</button>
-						</div>
-					</div>
-
-					{editPhoneNumber ? (
-						<Form.Item
-							name="phone"
-							
-							rules={[
-								{
-									required: false,
-									message: 'Vui lòng nhập số điện thoại!',
-									whitespace: true,
-								},
-								{
-									pattern: /^0\d{9,10}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
-									message: 'Số điện thoại không hợp lệ!',
-								},
-							]}
+							{provinces.map((grade) => (
+								<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
+									{grade.name}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+					<Form.Item
+						className="form-item-register"
+						name="district"
+						label="Quận huyện"
+						rules={[{ required: true, message: 'Vui lòng chọn quận huyện!' }]}
+						
+					>
+						<Select
+							showSearch
+							style={{ width: '180px' }}
+							placeholder="Quận huyện"
+							onChange={(value) => {
+								handleChangeDistrict(value);
+								setSchools([]);
+							}}
+							defaultValue={user.district}
 						>
-							<Input className="form-item" placeholder="Số điện thoại" />
-						</Form.Item>
-					) : null}
-
-					<div className="ten">
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Ngày sinh:</h3>
-							{user.dob ? <h4>{user.dob}</h4> : null}
-							<button
-								style={{
-									textAlign: 'end',
-									margin: '0 10px 0 0',
-									color: 'blue',
-									backgroundColor: 'white',
-								}}
-								onClick={setdEditBirthday}
-							>
-								Cập nhật
-							</button>
-						</div>
-					</div>
-
-					{editBirthday ? (
-						<Form.Item
-							name="dob"
-							rules={[
-								{
-									type: 'object',
-									required: false,
-									message: 'Chọn ngày tháng năm sinh!',
-								},
-							]}
-							
-						>
-							<DatePicker format="DD-MM-YYYY" className="form-item" placeholder="Ngày tháng năm sinh" />
-						</Form.Item>
-					) : null}
-
-					<div className="ten">
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Giới tính:</h3>
-							{user.gender ? <h4>{user.gender}</h4> : null}
-							<button
-								style={{
-									textAlign: 'end',
-									margin: '0 10px 0 0',
-									color: 'blue',
-									backgroundColor: 'white',
-								}}
-								onClick={setdEditGender}
-							>
-								Cập nhật
-							</button>
-						</div>
-					</div>
-					{editGender ? (
-						<Form.Item
-							name="gender"
-							defaultValue="MALE"
-							rules={[
-								{
-									required: false,
-									message: 'Chọn giới tính',
-								},
-							]}
-							
-						>
-							<Radio.Group defaultValue="MALE" className="form-item">
+							{districts.map((grade) => (
+								<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
+									{grade.name}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+					<Form.Item
+						name="school"
+						label="Trường học"
+						rules={[{ required: true, message: 'Vui lòng chọn trường học!' }]}
+						className="form-item-register"
+					>
+						<Select showSearch style={{ width: '180px' }} placeholder="Trường học" onChange={handleChange}
+						defaultValue={user.school}>
+							{schools.map((grade) => (
+								<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
+									{grade.name}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+					<Form.Item
+						name="grade"
+						label="Khối lớp"
+						rules={[{ required: true, message: 'Vui lòng chọn khối lớp!' }]}
+						className="form-item-register"
+					>
+						<Select showSearch style={{ width: '180px' }} placeholder="Khối lớp" onChange={handleChange} 
+						defaultValue={user.grade}>
+							{grade.map((grade) => (
+								<Option value={grade} key={grade} style={{ color: 'black' }}>
+									{grade}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+					<Form.Item
+						name="gender"
+						label="Giới tính"
+						defaultValue={user.gender}
+						rules={[
+							{
+								required: true,
+								message: 'Chọn giới tính',
+							},
+						]}
+						className="form-item-register"
+					>
+						<div>
+							<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
 								<Tooltip title="Nam">
 									<Radio.Button value="MALE">
 										<FcManager />
@@ -375,85 +387,116 @@ export default function EditProfile({ onCancel }) {
 									</Radio.Button>
 								</Tooltip>
 							</Radio.Group>
-						</Form.Item>
-					) : null}
-
-					<div className="ten">
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Tiểu sử:</h3>
-							{user.about ? <h4>{user.about}</h4> : null}
-							<button
-								style={{
-									textAlign: 'end',
-									margin: '0 10px 0 0',
-									color: 'blue',
-									backgroundColor: 'white',
-								}}
-								onClick={setdEditBio}
-							>
-								Cập nhật
-							</button>
 						</div>
-					</div>
-					{editBio ? (
-						<Form.Item name="about"  >
-							<Input className="form-item" placeholder="Tiểu sử" />
-						</Form.Item>
-					) : null}
-
-					<div className="ten">
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Nơi làm việc:</h3>
-							{user.workAt ? <h4>{user.workAt}</h4> : null}
-							<button
-								style={{
-									textAlign: 'end',
-									margin: '0 10px 0 0',
-									color: 'blue',
-									backgroundColor: 'white',
-								}}
-								onClick={setdEditWork}
-							>
-								Cập nhật
-							</button>
-						</div>
-					</div>
-					{editWork ? (
-						<Form.Item name="workAt"  >
-							
-							<Input className="form-item" placeholder="Nơi làm việc" />
-						</Form.Item>
-					) : null}
-
-					<div className="ten">
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{ textAlign: 'center', margin: '0 0 0 10px' }}>Địa chỉ:</h3>
-							{user.address ? <h4>{user.address}</h4> : null}
-							<button
-								style={{
-									textAlign: 'end',
-									margin: '0 10px 0 0',
-									color: 'blue',
-									backgroundColor: 'white',
-								}}
-								onClick={setdAdress}
-							>
-								Cập nhật
-							</button>
-						</div>
-					</div>
-					{editaddress ? (
-						<Form.Item name="adsress"  >
-							<Input className="form-item" placeholder="Địa chỉ" />
-						</Form.Item>
-					) : null}
-
+					</Form.Item>
 					<Form.Item>
-						<Button type="primary" htmlType="submit" className="login-form-button" onClick={() => setIsSaving(true)}>
+						<Button type="primary" htmlType="submit" className="login-form-button">
 							Lưu
 						</Button>
 					</Form.Item>
-				</Form>
+				</div>
+			),
+		},
+		{
+			key: '2',
+			label: 'Đổi mật khẩu',
+			children: (
+				<div className="ten">
+					<div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+						<Form onFinish={saveUpdatePass} scrollToFirstError>
+							<Form.Item
+								name="oldpassword"
+								rules={[
+									{
+										required: true,
+										message: 'vui lòng nhập mật khẩu!',
+									},
+									{
+										min: 8,
+										message: 'Mật khẩu phải có ít nhất 8 kí tự',
+									},
+								]}
+								hasFeedback
+								className="form-item-register"
+							>
+								<Input.Password placeholder="Mật khẩu cũ" style={{ width: '180px' }} />
+							</Form.Item>
+
+							<Form.Item
+								name="newpassword"
+								rules={[
+									{
+										required: true,
+										message: 'vui lòng nhập mật khẩu!',
+									},
+									{
+										min: 8,
+										message: 'Mật khẩu phải có ít nhất 8 kí tự',
+									},
+								]}
+								hasFeedback
+								className="form-item-register"
+							>
+								<Input.Password placeholder="Mật khẩu" style={{ width: '180px' }} />
+							</Form.Item>
+							<Form.Item
+								name="confirm-newpassword"
+								dependencies={['password']}
+								hasFeedback
+								rules={[
+									{
+										required: true,
+										message: 'Vui lòng xác nhận lại mật khẩu!',
+									},
+									({ getFieldValue }) => ({
+										validator(_, value) {
+											if (!value || getFieldValue('newpassword') === value) {
+												return Promise.resolve();
+											}
+											return Promise.reject(new Error('Mật khẩu xác thực không đúng!'));
+										},
+									}),
+								]}
+								className="form-item-register"
+							>
+								<Input.Password placeholder="Nhập lại mật khẩu" style={{ width: '180px' }} />
+							</Form.Item>
+							<Form.Item>
+								<Button type="primary" htmlType="submit" className="login-form-button">
+									Lưu
+								</Button>
+							</Form.Item>
+						</Form>
+					</div>
+				</div>
+			),
+		},
+	];
+
+	return (
+		<div className="edit-profile">
+			{loading ? ( // Nếu đang loading thì hiển thị component loading
+				<Loading></Loading>
+			) : null}
+
+			<div className="form-edit-profile">
+				<div
+					style={{
+						display: 'flex',
+						borderBottom: '1px solid black',
+						justifyContent: 'space-between',
+						flex: 10,
+					}}
+				>
+					<h2 style={{ flex: 8, textAlign: 'end' }}>Chỉnh sửa thông cá nhân</h2>
+					<button
+						style={{ flex: 3, height: '72.5px', backgroundColor: 'white', textAlign: 'end' }}
+						onClick={onCancel}
+					>
+						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
+					</button>
+				</div>
+				<Tabs defaultActiveKey="1" items={items} centered indicatorSize={(origin) => origin - 16} />
 			</div>
 			<ToastContainer />
 		</div>

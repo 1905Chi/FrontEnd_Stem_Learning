@@ -2,6 +2,7 @@
   "name": "stem_frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "resolutions": {
     "path": "path-browserify"
   },
@@ -34,6 +35,7 @@
     "react-quill": "^2.0.0",
     "react-redux": "^8.1.3",
     "react-router-dom": "^6.16.0",
+    "@material-ui/core": "4.12.4",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.3",
     "rehype-parse": "^9.0.0",
@@ -41,6 +43,8 @@
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "remark-stringify": "^11.0.0",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },

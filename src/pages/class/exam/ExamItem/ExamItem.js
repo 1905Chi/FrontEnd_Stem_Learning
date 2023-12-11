@@ -31,15 +31,13 @@ const CreateSubmit = () => {
                     dispatch(selectsubmition(response.data.result));
                     setTimeout(() => {
                         navigate('/exam/' + id + '/submit/' + response.data.result.submissionId)
-                    }, 3000);
-                    
-                    
+                    }, 3000);            
                 } else {
                     toast.error(response.data.message);
                 }
             })
             .catch((error) => {
-                toast.error(error);
+                toast.error(error.data.message);
             });
     };
 	useEffect(() => {

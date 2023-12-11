@@ -9,3 +9,143 @@
     border-bottom: 1px solid #e4e6eb;
     padding-bottom: 15px;
 }
+
+.mainMessenger__header__info h3{
+    margin-top: 10px;
+    margin-left:10px ;
+
+}
+.mainMessenger__header{
+    position: fixed;
+    top: 85px;
+    width: 50%;
+    background-color: white;
+    z-index: 1000;
+}
+
+.mainMessenger__body{
+    position: absolute;
+    width: 100%;
+    top: 65px;
+    height: 425px;
+    overflow-y: scroll
+}
+
+.messenger-item{
+    display: flex;
+    height: fit-content;
+    position: relative;
+    max-width: 50%;
+    margin-bottom: 20px;
+  
+    
+}
+.messenger-item-sender{
+    display: flex;
+    
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+    max-width: 50%;
+    margin-bottom: 20px;
+    right: 0;
+}
+
+.mainMessenger__body__item__left{
+    position: relative;
+    flex: 1;
+}
+.mainMessenger__body__item__avartar-sender{
+    position: relative;
+    
+}
+.mainMessenger__body__item__right{
+    flex: 5;
+}
+.mainMessenger__body__item__sender{
+    flex: 5;
+    margin-right: 10px;
+}
+.mainMessenger__body__item__right p{
+    background-color: #e4e6eb;
+    padding: 15px 10px;
+    width: fit-content;
+    border-radius: 10px;
+    border: 1px solid #e4e6eb;
+    margin-top:0px ;
+    margin-bottom: 0px;
+}
+.mainMessenger__body__item__sender p{
+    background-color: #e4e6eb;
+    padding: 15px 10px;
+    border-radius: 10px;
+    border: 1px solid #e4e6eb;
+    margin-top:0px ;
+    margin-bottom: 0px;
+}
+.mainMessenger__body__item__right span{
+margin-left: 5px;
+}
+.mainMessenger__body__item__sender span{
+    margin-left: 5px;
+}
+
+.mainMessenger__footer{
+    height: 60px;
+    width: 52%;
+    padding-top: 5px;
+}
+.mainMessenger__body__item{
+    margin-left: 15px;
+}
+
+.avartar-mess{
+    position: absolute;
+    bottom: 0
+}
+.avartar-mess-sender{
+    position: absolute;
+    bottom: 0;
+    
+
+}
+.mainMessenger__footer{
+    display: flex       ;
+    position: fixed;
+    bottom: 0;
+    background-color: white;
+    border: 1px solid #e4e6eb;
+}
+.mainMessenger__footer__input{
+    width: 94%;
+    border-radius: 15px;
+    padding: 10px 0 0 10px
+
+}
+.mainMessenger__footer__input input{
+    width: 97%;
+    
+    
+    border-radius: 15px;
+
+}
+.icon-file {
+    margin-top: 10px;
+   padding-top: 5px;
+    font-size: 30px;
+    width: 10%;
+}
+
+.mainMessenger__footer__send{
+    width: 15%;
+    padding-top: 12px;
+    margin-right: 17px;
+
+}
+.mainMessenger__footer__send button{ 
+    width: 100%;
+    color: blue;
+    font-size: 20px;
+    background-color:  white;
+}
+.mess-sender{width: 92%; display: flex;justify-content: end}

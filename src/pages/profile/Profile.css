@@ -84,12 +84,12 @@
     object-fit: cover;
   }
   .usename-button{
-    position: absolute;
+    
     display: flex;
     width: 55%;
     justify-content: space-between;
     margin-top: 10px;
-    right: 0;
+    right: 83px;
   }
   .profile-picture__button{
     height: 30px;

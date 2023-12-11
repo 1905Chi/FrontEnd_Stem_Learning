@@ -63,7 +63,6 @@ export default function LeftItemGroup() {
 	};
 
 	useEffect(() => {
-		
 		Api.get(url + 'api/v1/groups/' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
@@ -126,7 +125,9 @@ export default function LeftItemGroup() {
 			.catch((error) => {
 				console.log(error);
 			})
-			.finally(() => {dispatch(selectOption('post'));});
+			.finally(() => {
+				dispatch(selectOption('post'));
+			});
 		if (isClassesPath) {
 			Api.get(url + 'api/v1/exams/group/' + uuid, { headers: headers })
 				.then((response) => {
@@ -160,23 +161,27 @@ export default function LeftItemGroup() {
 						<div className="header-item-group">
 							<LableGroup image={group.avatarUrl} name={group.name} />
 							{inforGroup ? (
-								<h4 style={{ textAlign: 'center' }}>
-									Nhóm :
-									<span>
+								<div style={{display: 'flex', marginLeft:'35px'}}>
+									<h4 style={{ textAlign: 'center' ,margin:'0px'}}>Nhóm :</h4>
+									<span style={{paddingLeft: '5px'}}>
 										{inforGroup && inforGroup.config.accessibility === 'PUBLIC'
 											? 'Công Khai'
 											: 'Riêng tư'}
 									</span>
-								</h4>
+								</div>
 							) : null}
 
 							{memberGroup && memberGroup.length > 0 ? (
-								<h4 style={{ textAlign: 'center' }}>
-									Thành viên: <span>{memberGroup && memberGroup.length}</span>
-								</h4>
+								<div style={{display:'flex', marginLeft:'35px'}}>
+									<h4 style={{ textAlign: 'center' ,margin:'0px'}}>Thành viên:</h4>
+									<span style={{paddingLeft: '5px'}}>{memberGroup && memberGroup.length}</span>
+								</div>
 							) : null}
 							{inforGroup && inforGroup.createdAt ? (
-								<h4 style={{ textAlign: 'center' }}>Ngày tạo: {convertDay(inforGroup.createdAt)}</h4>
+								<div style={{display:'flex', marginLeft:'35px'}}>
+								<h4 style={{ textAlign: 'center' ,margin:'0px'}}>Ngày tạo: </h4>
+								<span style={{ paddingLeft: '5px'}}>{convertDay(inforGroup && inforGroup.createdAt)}</span>
+								</div>
 							) : null}
 
 							<div className="button-add-member">

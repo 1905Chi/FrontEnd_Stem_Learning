@@ -164,14 +164,7 @@ export default function Profile() {
 								' ' +
 								JSON.parse(localStorage.getItem('user')).lastName}
 						</span>
-						<button className="edit-profile__button" style={{ height: '40px' }} onClick={setEditProfile}>
-							<BsPencilFill
-								style={{ fontSize: '30px', margin: '0 0 0 5px', color: 'white' }}
-							></BsPencilFill>
-							<span style={{ fontSize: '15px', color: 'white', margin: '0 5px 0 0' }}>
-								Chỉnh sửa thông tin cá nhân
-							</span>
-						</button>
+						
 					</div>
 				</div>
 				<div

@@ -8,6 +8,7 @@ import { publicRoutes, privateRoutes, notFoundRoute, privateRoutes2page } from '
 import { useEffect } from 'react';
 import Topbar from './components/Topbar';
 import Footer from './components/Footer';
+import LandingPage from './pages/landing/LandingPage';
 
 export default function App() {
 	const [isLogin, setIsLogin] = useState(localStorage.getItem('accessToken') ? true : false);
@@ -95,7 +96,7 @@ export default function App() {
 						element={
 							<><Topbar/>
 							<DefaultLayoutLogin>
-								<Page404 />
+								<LandingPage />
 							</DefaultLayoutLogin>
 							<Footer />
 							</>

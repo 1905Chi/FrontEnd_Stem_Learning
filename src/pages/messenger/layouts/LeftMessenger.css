@@ -38,3 +38,14 @@
 .leftMessenger__body{
     margin-top: 15px;
 }
+.option-mess {
+    display: flex  ;
+    margin-top: 15px;
+
+}
+.option-mess button{
+    margin-left: 0px;
+}
+.option-mess-item.selected {
+    background-color: rgb(112, 112, 165);
+}
