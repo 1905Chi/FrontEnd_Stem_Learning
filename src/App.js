@@ -93,8 +93,6 @@ export default function App() {
 					,
 					{private1page.map((route, index) => {
 						const Page = route.component;
-						
-
 						return (
 							<Route
 								key={index}

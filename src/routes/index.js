@@ -36,6 +36,8 @@ import RightMessenger from '../pages/messenger/layouts/RightMessenger';
 import Main from '../pages/messenger/main/Main';
 import MainSearch from '../pages/search/main/MainSearch';
 import LeftSearch from '../pages/search/layout/LeftSearch';
+import LeftEditExam from '../pages/class/layouts/LeftEditExam';
+import EditExam from '../pages/class/exam/ExamItem/EditExam';
 const privateRoutes = [
 	{ path: '/home', component: Home, Left: Left, Right: Right },
 	
@@ -55,6 +57,7 @@ const privateRoutes2page = [
 	{ path: '/classes/create', component: CreateGroup, Left: LeftCreateGroup },
 	{path:'/friends',component:MainFriend,Left:LeftFriend},
 	{ path: '/profile/:uuid', component: ProfileUser, Left: Left },
+	{ path: '/classes/:uuid/edit-exam/:id', component: EditExam, Left: LeftEditExam},
 	
 	{ path: '/exam/:id/submit/:submissionId', component: Submit, Left: LeftSubmit },
 	{ path: '/classes', component: Class, Left: RightClass  },

@@ -13,7 +13,7 @@ import { selectsubmition } from '../../../../redux/Exam';
 import { useDispatch } from 'react-redux';
 import { selectexam, selectselectexam } from '../../../../redux/Exam';
 export default function ExamItem(props) {
-	const { id } = useParams();
+	const { uuid,id } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [examId, setExamId] = useState();
@@ -117,7 +117,7 @@ export default function ExamItem(props) {
 										</button>
 									</div>
 									<div className="exam-item__button">
-										<button className="exam-item__button__start" onClick={() => {}}>
+										<button className="exam-item__button__start" onClick={() => { navigate('/classes/'+uuid+'/edit-exam/'+id)}}>
 											Chỉnh sửa
 										</button>
 									</div>

@@ -297,9 +297,9 @@ export default function Register(props) {
 										setDistricts([]);
 									}}
 								>
-									{provinces.map((grade) => (
-										<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
-											{grade.name}
+									{grade.map((grade) => (
+										<Option value={grade} key={grade} style={{ color: 'black' }}>
+											{grade}
 										</Option>
 									))}
 								</Select>
@@ -318,9 +318,9 @@ export default function Register(props) {
 										setSchools([]);
 									}}
 								>
-									{districts.map((grade) => (
-										<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
-											{grade.name}
+									{grade.map((grade) => (
+										<Option value={grade} key={grade} style={{ color: 'black' }}>
+											{grade}
 										</Option>
 									))}
 								</Select>
@@ -336,9 +336,9 @@ export default function Register(props) {
 									placeholder="Trường học"
 									onChange={handleChange}
 								>
-									{schools.map((grade) => (
-										<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
-											{grade.name}
+									{grade.map((grade) => (
+										<Option value={grade} key={grade} style={{ color: 'black' }}>
+											{grade}
 										</Option>
 									))}
 								</Select>

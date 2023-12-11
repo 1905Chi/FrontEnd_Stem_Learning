@@ -14,7 +14,7 @@ function Home() {
 	const [ispost, setIspost] = useState(false);
 	const dispatch = useDispatch();
 	const [listpost, setListpost] = useState([]);
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState(0);
 	const [size, setSize] = useState(30);
 
 	useEffect(() => {
