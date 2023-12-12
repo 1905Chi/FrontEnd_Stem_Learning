@@ -32,30 +32,7 @@ export default function EditProfile({ onCancel }) {
 	const [editaddress, setEditaddress] = useState(false);
 	const user = JSON.parse(localStorage.getItem('user'));
 	const [loading, setLoading] = useState(false); // Trạng thái loading
-	const setdEditName = () => {
-		setEditName(!editName);
-	};
-	const setdEditLastName = () => {
-		setEditLastName(!editLastName);
-	};
-	const setdEditPhoneNumber = () => {
-		setEditPhoneNumber(!editPhoneNumber);
-	};
-	const setdEditBirthday = () => {
-		setEditBirthday(!editBirthday);
-	};
-	const setdEditGender = () => {
-		setEditGender(!editGender);
-	};
-	const setdEditBio = () => {
-		setEditBio(!editBio);
-	};
-	const setdEditWork = () => {
-		setEditWork(!editWork);
-	};
-	const setdAdress = () => {
-		setEditaddress(!editaddress);
-	};
+	
 	const [isSaving, setIsSaving] = useState(false);
 	console.log(isSaving);
 	const saveUpdate = (values) => {

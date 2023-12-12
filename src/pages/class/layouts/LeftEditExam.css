@@ -1,0 +1,10 @@
+.infor-exam{
+    text-align: center  ;
+}
+
+.edit-infor-exam-button{
+    background-color: #eee;
+    font-size: large;
+    border-radius: 5px;
+    color: blue;
+}
