@@ -181,7 +181,7 @@ export default function Editor(props) {
 		input.onchange = async () => {
 			if (input !== null && input.files !== null) {
 				const file = input.files[0];
-				const url = await uploadToCloudinary(file);
+				const url = await uploadToCloudinary(file, uuid);
 				const quill = reactQuillRef.current;
 				if (quill) {
 					const range = quill.getEditorSelection();

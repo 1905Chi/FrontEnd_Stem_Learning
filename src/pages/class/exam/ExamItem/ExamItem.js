@@ -12,6 +12,7 @@ import { selectselectuser } from '../../../../redux/User';
 import { selectsubmition } from '../../../../redux/Exam';
 import { useDispatch } from 'react-redux';
 import { selectexam, selectselectexam } from '../../../../redux/Exam';
+import moment from 'moment';
 export default function ExamItem(props) {
 	const { uuid,id } = useParams();
 	const navigate = useNavigate();
@@ -21,25 +22,21 @@ export default function ExamItem(props) {
 	const [isWithinTimeRange, setIsWithinTimeRange] = useState(false);
 
 	const CreateSubmit = () => {
-		const headers = {
-			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
-		};
-		Api.post(url + 'api/v1/submissions/create?examId=' + id + '', { headers: headers })
-			.then((response) => {
-				if (response.data.statusCode === 200) {
-					dispatch(selectsubmition(response.data.result));
-					setTimeout(() => {
-						navigate('/exam/' + id + '/submit/' + response.data.result.submissionId);
-					}, 3000);
-				} else {
-					toast.error(response.data.message);
-				}
-			})
-			.catch((error) => {
-				toast.error(error.data.message);
-			});
+		localStorage.setItem('typesubmit', 'create');
+		setTimeout(() => {
+			navigate('/exam/' + id + '/submit');
+		}, 3000);
+		
 	};
+
+	const Continue = () => {
+		localStorage.setItem('typesubmit', 'continue');
+		localStorage.setItem('submissionId', examId.submission.id);
+		setTimeout(() => {
+			navigate('/exam/' + id + '/submit');
+		}, 3000);
+	}
+	
 	useEffect(() => {
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -85,6 +82,48 @@ export default function ExamItem(props) {
 				toast.error(error);
 			});
 	}, [id]);
+
+	const checkContinue = ( dateStart, dateEnd,duration) => {
+		const startTime =  moment(dateStart, "DD-MM-YYYY HH:mm:ss:SSSSSS").valueOf();
+		
+		const endTime =  moment(dateEnd, "DD-MM-YYYY HH:mm:ss:SSSSSS").valueOf();
+		
+		const now = new Date();
+		
+		const nowTime =
+			now.getDate() +
+			'-' +
+			(now.getMonth() + 1) +
+			'-' +
+			now.getFullYear() +
+			' ' +
+			now.getHours() +
+			':' +
+			now.getMinutes() +
+			':' +
+			now.getSeconds()
+			+':' +
+			'000000';
+
+		
+		const nowDate =  moment(nowTime, "DD-MM-YYYY HH:mm:ss:SSSSSS").valueOf();
+
+		
+			if (nowDate >= startTime && nowDate <= endTime) {
+				if(nowDate.diff(startTime,'minutes') > duration){
+					console.log(nowDate.diff(startTime,'minutes'));
+					return false;
+				}
+				else{
+					return true;
+				}
+				
+			} else {
+				return false;
+			}	
+		
+		
+	}
 	return (
 		<div className="exam-item-component">
 			{examId ? (
@@ -128,9 +167,10 @@ export default function ExamItem(props) {
 						{user.role === 'STUDENT' &&
 						examId &&
 						examId.submission !== null &&
-						examId.submission.endedAt === null ? (
+						examId.submission.endedAt === null &&
+						checkContinue(examId.submission.startedAt,examId.exam.endedAt,Number(examId.exam.duration))  ?(
 							<div className="exam-item__button">
-								<button className="exam-item__button__start" onClick={CreateSubmit}>
+								<button className="exam-item__button__start" onClick={Continue}>
 									Tiếp tục làm bài
 								</button>
 							</div>
@@ -138,6 +178,8 @@ export default function ExamItem(props) {
 					</div>
 				</div>
 			) : null}
+
+			
 			<ToastContainer />
 		</div>
 	);

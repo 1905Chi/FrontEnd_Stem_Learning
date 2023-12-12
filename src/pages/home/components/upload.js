@@ -1,9 +1,13 @@
 
 import Api from "./../../../api/Api"
-const uploadToCloudinary = async (file) => {
+import { useParams } from "react-router-dom";
+const uploadToCloudinary = async (file,uuid) => {
+ 
   try {
+ 
     const formData = new FormData();
     formData.append('mediaFiles', file);
+    formData.append('groupId', uuid);
 
     const token = localStorage.getItem('accessToken');
 

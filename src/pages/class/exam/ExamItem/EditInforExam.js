@@ -175,7 +175,7 @@ export default function EditInforExam(props) {
 							/>
 						) : null}
 						{isLoading ? <Loading /> : null}
-						<Form form={form} onFinish={onFinish} layout="vertical">
+						<Form form={form} onFinish={onFinish} layout="vertical" style={{marginLeft:'65px'}}>
                             <div style={{display:'flex', flexWrap:'wrap'}}>
 							<Form.Item
 								name="name"

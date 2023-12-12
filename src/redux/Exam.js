@@ -19,6 +19,16 @@ const dataExam = createSlice({
 		selectquestion: (state, action) => {
 			state.question = action.payload;
 		},
+		editquestion: (state, action) => {
+			state.question.forEach(element => {
+				if (element.id === action.payload.id) {
+					element.content = action.payload.content;
+					element.level=	action.payload.level;
+					element.typeCode=	action.payload.typeCode;				
+				}
+				
+			});
+		},
 		selectanswer: (state, action) => {
 			if (action.payload === null) {
 				state.answer = [];
@@ -36,7 +46,7 @@ const dataExam = createSlice({
 	},
 });
 
-export const { selectexam, selectsubmition, selectquestion, selectanswer } = dataExam.actions;
+export const { selectexam, selectsubmition, selectquestion, selectanswer,editquestion } = dataExam.actions;
 export const selectselectexam = (state) => state.exam.value;
 export const selectselectsubmition = (state) => state.exam.submition;
 export const selectselectquestion = (state) => state.exam.question;

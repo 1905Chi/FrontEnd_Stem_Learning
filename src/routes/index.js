@@ -59,7 +59,7 @@ const privateRoutes2page = [
 	{ path: '/profile/:uuid', component: ProfileUser, Left: Left },
 	{ path: '/classes/:uuid/edit-exam/:id', component: EditExam, Left: LeftEditExam},
 	
-	{ path: '/exam/:id/submit/:submissionId', component: Submit, Left: LeftSubmit },
+	{ path: '/exam/:id/submit', component: Submit, Left: LeftSubmit },
 	{ path: '/classes', component: Class, Left: RightClass  },
 	{ path: '/groups', component: Home, Left: LeftsGroup},
 	{ path: '/search', component: MainSearch, Left: LeftSearch},

@@ -418,7 +418,7 @@ export default function Register(props) {
 									<Input placeholder="Email" style={{ width: '180px' }} />
 								</Form.Item>
 								<Form.Item
-									name="password"
+									name="password-parent"
 									rules={[
 										{
 											required: true,

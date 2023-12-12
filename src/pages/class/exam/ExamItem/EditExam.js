@@ -7,6 +7,8 @@ import { selectquestion, selectanswer, selectselectquestion, selectselectanswer 
 import { url } from '../../../../constants/Constant';
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
+import { toast, ToastContainer } from 'react-toastify';
+import EditInforQuestion from './EditInforQuestion';
 import './EditExam.css';
 
 export default function EditExam() {
@@ -14,8 +16,16 @@ export default function EditExam() {
 	const listQuestion = useSelector(selectselectquestion);
 	//const listAnswer = useSelector(selectselectanswer);
 	const [loading, setloading] = useState(false);
+    const [isEditQuestion, setIsEditQuestion] = useState(false);
 	const dispatch = useDispatch();
-
+    const cancel = () => {
+        setIsEditQuestion(false);
+    }
+    const [question, setQuestion] = useState();
+    const openEditQuestion = (record) => {
+        setIsEditQuestion(true);
+        setQuestion(record);
+    }
 	useEffect(() => {
 		const fetchData = async () => {
 			setloading(true);
@@ -59,6 +69,69 @@ export default function EditExam() {
 		fetchData();
 	}, [dispatch, id]);
 
+    const deleteAnswer = (record) => {
+        setloading(true);
+        console.log('record',record)
+        console.log('id',record.id)
+       Api.delete(url + `api/v1/answers/${record.id}`, {
+            headers: {
+                Authorization: localStorage.getItem('accessToken'),
+                'Content-Type': 'application/json',
+            },
+        }).then((res) => {
+            if (res.data.statusCode === 200) {
+                toast.success('Xóa thành công', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3000,
+                });
+            } else {
+                toast.error('Xóa thất bại', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3000,
+                });
+            }
+            
+        }
+        ).catch((err) => {
+            console.log(err);
+        }).finally(() => {
+            setloading(false);
+            setTimeout(() => {
+                window.location.reload();  
+            }, 3000);
+            
+            
+        });
+
+        }
+    
+        const deleteQuestion = (record) => {
+            setloading(true);
+              Api.delete(url + `api/v1/questions/${record.id}`, {
+                headers: {
+                    Authorization: localStorage.getItem('accessToken'),
+                    'Content-Type': 'application/json',
+                },
+            }).then((res) => {
+                if (res.data.statusCode === 200) {
+                    toast.success('Xóa thành công', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                    });
+                }
+                else {
+                    toast.error('Xóa thất bại', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                    });
+                }
+            })
+                .catch((err) => {
+                    console.log(err);
+                }).finally(() => {
+                    setloading(false);
+                });
+        }
 	  const expandedRowRender = (record) => {
 	    const answerColumns = [
 	      {
@@ -90,7 +163,7 @@ export default function EditExam() {
             render: (text, record) => (
               <span>
                 <button style={{ marginRight: 16, color: 'blue', borderRadius:'5px' }}>Edit</button>
-                <button style={{backgroundColor:'red',color:'white', borderRadius:'5px'}}>Delete</button>
+                <button style={{backgroundColor:'red',color:'white', borderRadius:'5px'}} onClick={() => deleteAnswer(record)}>Delete</button>
               </span>
             ),
             width: '20%',
@@ -113,6 +186,7 @@ export default function EditExam() {
 			dataIndex: 'content',
 			key: 'content',
             width: '50%',
+            render: (content) => (<div dangerouslySetInnerHTML={{ __html: content}} />),
 		},
 		{
 			title: 'Mức độ ',
@@ -139,8 +213,8 @@ export default function EditExam() {
             key: 'action',
             render: (text, record) => (
               <span>
-                <button style={{ marginRight: 16, color: 'blue', borderRadius:'5px' }}><CiEdit/></button>
-                <button style={{backgroundColor:'red',color:'white', borderRadius:'5px'}}><MdDeleteForever/></button>
+                <button style={{ marginRight: 16, color: 'blue', borderRadius:'5px' }} onClick={()=> openEditQuestion(record)}><CiEdit/></button>
+                <button style={{backgroundColor:'red',color:'white', borderRadius:'5px'}} onClick={() => deleteQuestion(record)}><MdDeleteForever/></button>
               </span>
             ),
             width: '10%',
@@ -149,6 +223,9 @@ export default function EditExam() {
 
 	return (
 		<>
+        {loading && <div className="loading"></div>}
+        {isEditQuestion && <EditInforQuestion question={question} cancel={cancel}/> }
+        
         <h2 style={{textAlign:'center'}}>Danh sách câu hỏi</h2>
 			<Table
 				columns={columns}
@@ -160,6 +237,7 @@ export default function EditExam() {
 				dataSource={listQuestion}
 				size="middle"
 			/>
+            <ToastContainer />
 		</>
 	);
 }
