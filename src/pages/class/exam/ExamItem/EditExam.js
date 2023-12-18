@@ -316,7 +316,7 @@ export default function EditExam() {
 				columns={columns}
 				expandable={{
 					expandedRowRender,
-					defaultExpandedRowKeys: ['0'],
+					
 				}}
 				align="center"
 				dataSource={listQuestion}

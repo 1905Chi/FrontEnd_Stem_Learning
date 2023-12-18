@@ -14,7 +14,7 @@ import './Register.css';
 import { url } from '../../../constants/Constant';
 import Loading from '../../../components/Loading';
 import { GiCancel } from 'react-icons/gi';
-
+import moment from 'moment';
 export default function RegisterParent(props) {
 	const roles = ['STUDENT', 'TEACHER', 'PARENT'];
 	const navigate = useNavigate();
@@ -22,6 +22,7 @@ export default function RegisterParent(props) {
 	const [districts, setDistricts] = useState([]);
 	const [schools, setSchools] = useState([]);
 	const [grade, setGrade] = useState([]);
+	const [currentDate, setCurrentDate] = useState(moment());
 
 	useEffect(() => {
 		axios
@@ -33,6 +34,10 @@ export default function RegisterParent(props) {
 				console.log(error);
 			});
 	}, []);
+
+	const isDateDisabled = (date) => {
+		return date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
+	};
 	const handleChangeProvince = (value) => {
 		axios
 			.get(url + `api/v1/addresses/districtsByProvince?pId=${value}`)
@@ -73,6 +78,10 @@ export default function RegisterParent(props) {
 		const data = {
 			email: values.email,
 			password: values.password,
+			firstName: values.firstName,
+			lastName: values.lastName,
+			phone: values.phone,
+			dob: values.date_picker.format('YYYY-MM-DD'),
 			role: values.roles,
 		};
 		const config = {
@@ -81,7 +90,7 @@ export default function RegisterParent(props) {
 			},
 		};
 		axios
-			.post(url + 'api/v1/auth/register', data, config)
+			.post(url + 'api/v1/auth/register-parent', data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
@@ -249,10 +258,12 @@ export default function RegisterParent(props) {
 									format="DD-MM-YYYY"
 									style={{ width: '180px' }}
 									placeholder="Ngày tháng năm sinh"
+									onChange={(date) => setCurrentDate(date)}
+									disabledDate={isDateDisabled}
 								/>
 							</Form.Item>
 
-							<Form.Item
+							{/* <Form.Item
 								className="form-item-register"
 								name="district"
 								rules={[{ required: true, message: 'Vui lòng chọn quận huyện!' }]}
@@ -273,7 +284,7 @@ export default function RegisterParent(props) {
 										</Option>
 									))}
 								</Select>
-							</Form.Item>
+							</Form.Item> */}
 
 							<Form.Item
 								name="gender"

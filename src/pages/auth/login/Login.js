@@ -37,7 +37,9 @@ function Login() {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
 					//navigate("/");
-					localStorage.setItem('accessToken', response.data.result.accessToken);
+					console.log('sdjiasd',response.data.result);
+					localStorage.setItem('accessToken', response.data.result.refreshToken);
+					console.log('accessToken', response.data.result.accessToken);
 					localStorage.setItem('refreshToken', response.data.result.refreshToken);
 					localStorage.setItem('role', response.data.result.role);
 					localStorage.setItem('id', response.data.result.id);
@@ -59,7 +61,7 @@ function Login() {
 								localStorage.setItem('user', JSON.stringify(response.data.result));
 								dispatch(selectuser(response.data.result));
 								//	localStorage.setItem('use',createJwtToken(response.data.result))
-								window.location.href = '/home';
+								navigate('/home');
 							} else {
 								toast.error(response.data.message);
 							}

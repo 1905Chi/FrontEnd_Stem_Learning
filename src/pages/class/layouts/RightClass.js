@@ -24,7 +24,7 @@ const RightClass = () => {
 	const [loading, setLoading] = useState(false);
 	const [listClass, setListClass] = useState([]);
 	const [classJoin, setClassJoin] = useState([]);
-
+	const [listClassJoin, setListClassJoin] = useState();
 	const navigate = useNavigate();
 	const changeTheme = (value) => {
 		setTheme(value ? 'dark' : 'light');
@@ -33,13 +33,18 @@ const RightClass = () => {
 	const create = () => {
 		navigate('/classes/create');
 	};
-	const mygroup = useSelector(selectSelectedGroupOwner);
 
 	const dispatch = useDispatch();
 	const searchClass = (e) => {
-		console.log(e.target.value);
+		if (e.target.value === '') {
+			setClassJoin(mygroup);
+			return;
+		}
+		setListClassJoin(mygroup.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase())));
 	};
-	const role=JSON.parse(localStorage.getItem('user')).role;
+	const role = JSON.parse(localStorage.getItem('user')).role;
+	const mygroup = useSelector(selectSelectedGroupOwner);
+
 	useEffect(() => {
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -67,6 +72,7 @@ const RightClass = () => {
 					});
 
 					dispatch(selectGroupOwner(MYGROUP));
+					setListClassJoin(MYGROUP);
 				}
 			})
 			.catch(async (error) => {
@@ -107,7 +113,7 @@ const RightClass = () => {
 			<div
 				style={{
 					position: 'fixed',
-					top: '60px',
+					top: '74px',
 					zIndex: '700',
 					width: '25%',
 					backgroundColor: 'white',
@@ -129,29 +135,34 @@ const RightClass = () => {
 				</div>
 				{role && role === 'TEACHER' ? (
 					<div className="button-add" onClick={create}>
-						<Button type="primary" style={{ width: '100%', marginTop: '10px', height: '50px' , marginLeft: '0px'}}>
+						<Button
+							type="primary"
+							style={{ width: '100%', marginTop: '10px', height: '50px', marginLeft: '0px' }}
+						>
 							<span style={{ fontSize: '15px', fontWeight: '500' }}>+ Tạo Lớp </span>
 						</Button>
 					</div>
 				) : null}
 			</div>
-			<div style={{ margin: '190px 0 0 0' }}>
+			<div style={{ margin: '210px 0 0 0' }}>
 				<div className="your-group">
 					<div style={{ display: 'flex', justifyContent: 'space-around' }}>
 						<h4>Lớp học của bạn</h4>
 					</div>
-					{mygroup &&
-						mygroup.map((mygroup, index) => {
-							return (
-								<LableGroup
-									key={index}
-									image={mygroup.avatarUrl}
-									name={mygroup.name}
-									id={mygroup.id}
-									type={mygroup.type}
-								/>
-							);
-						})}
+					<div style={{ height: '30vh', overflowY: 'scroll' }}>
+						{listClassJoin &&
+							listClassJoin.map((mygroup, index) => {
+								return (
+									<LableGroup
+										key={index}
+										image={mygroup.avatarUrl}
+										name={mygroup.name}
+										id={mygroup.id}
+										type={mygroup.type}
+									/>
+								);
+							})}
+					</div>
 				</div>
 
 				<ToastContainer />

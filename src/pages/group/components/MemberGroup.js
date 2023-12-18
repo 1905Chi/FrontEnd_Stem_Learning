@@ -9,21 +9,29 @@ import Api from '../../../api/Api';
 import { toast,ToastContainer } from 'react-toastify';
 import { url } from '../../../constants/Constant';
 import { selectselectGroup } from '../../../redux/GetItemGroup';
-import { selectselectMemberGroup } from '../../../redux/MemberGroup';
+import { selectselectMemberGroup,editMemberRequest } from '../../../redux/MemberGroup';
 import { selectselectMemberGroupRequest } from '../../../redux/MemberGroup';
+import { useDispatch } from 'react-redux';
 export default function MemberGroup() {
+	const dispatch = useDispatch();
 	const inforGroup = useSelector(selectselectGroup);
 	const memberGroup = useSelector(selectselectMemberGroup);
 	const memberGroupRequest = useSelector(selectselectMemberGroupRequest);
 	const accept = (status,id) => () => {
+		let isAccept = false;
+		if (status === 'ACCEPT') {
+			isAccept = true;
+		}
+		const data={isAccept}
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 		};
-		Api.post(url + `api/v1/group-member-requests/${id}/response`, { stateCode:status}, { headers: headers })
+		Api.post(url + `api/v1/group-member-requests/${id}/response`, data, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					toast.success(response.data.message);
+					dispatch(editMemberRequest(id));
 				} else {
 					toast.error(response.data.message);
 				}
@@ -39,10 +47,11 @@ export default function MemberGroup() {
 	return (
 		<div>
 			<div className="member-group">
+				{memberGroupRequest && memberGroupRequest.length > 0 ? (
 				<div className="member-group-request">
 					<h3>Yêu cầu tham gia</h3>
 					
-						{memberGroupRequest && memberGroupRequest.map((item, index) => (
+						{  memberGroupRequest.map((item, index) => (
 							<div className="member-group-request__item" key={item.id}>
 							<div style={{ display: 'flex', flex: '1' }}>
 								<div className="member-group-request__item__avatar">
@@ -63,7 +72,8 @@ export default function MemberGroup() {
 						</div>
 					))
 							}
-				</div>
+				</div>):null}
+
 				<div className="member-group__header">
 					<h3>Thành viên</h3>
 					<div className="member-group__header__search">

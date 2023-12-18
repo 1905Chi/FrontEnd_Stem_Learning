@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { url } from '../../../constants/Constant';
 import { CiEdit } from "react-icons/ci";
 import EditInforExam from '../exam/ExamItem/EditInforExam';
+import { RiArrowGoBackLine } from "react-icons/ri";
 export default function LeftEditExam() {
     const { id } = useParams();
     const [exam, setExam] = useState();
@@ -30,6 +31,9 @@ export default function LeftEditExam() {
         setIsEdit(false);
     }
 	return(<div>
+        <div className='back-to-exam'>
+            <button className='back-to-exam-button' onClick={()=>{window.history.back()}}><RiArrowGoBackLine/> Quay lại</button>
+        </div>
         {exam && (
             <div className='infor-exam'>
                 <h1>Bài kiểm tra: {exam.name}</h1>

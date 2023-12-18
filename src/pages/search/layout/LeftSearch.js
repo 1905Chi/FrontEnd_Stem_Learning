@@ -11,12 +11,12 @@ import Api from '../../../api/Api';
 import { useHistory } from 'react-router-dom';
 import { url } from './../../../constants/Constant';
 import { useLocation } from 'react-router-dom';
-import {selectSearchpeople,selectclass,selectgroup,selectpost,selectSearch} from '../../../redux/Search';
+import { selectSearchpeople, selectclass, selectgroup, selectpost, selectSearch } from '../../../redux/Search';
 export default function LeftSearch() {
 	const dispatch = useDispatch();
 	const [selectedOption, setSelectedOption] = useState('all');
 	const location = useLocation();
-	
+
 	const searchParams = new URLSearchParams(location.search);
 	const searchValue = searchParams.get('search');
 	useEffect(() => {
@@ -25,45 +25,61 @@ export default function LeftSearch() {
 		Api.get(url + 'api/v1/posts/search?query=' + searchValue)
 			.then((res) => {
 				console.log(res.data);
-                dispatch(selectpost(res.data));
-
+				dispatch(selectpost(res.data));
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-        Api.get(url + 'api/v1/groups/search?type=CLASS&query=' + searchValue)
-            .then((res) => {
-                console.log(res.data);
-               dispatch(selectclass(res.data));
 
-            }
-            )
-            .catch((err) => {
-                console.log(err);
-            });
-        Api.get(url + 'api/v1/groups/search?type=GROUP&?query=' + searchValue)
-        .then((res) => {
-           
-           dispatch(selectgroup(res.data));
+		Api.get(url + 'api/v1/groups/search?type=CLASS&query=' + searchValue)
+			.then((res) => {
+				console.log(res.data);
 
-        }   
-        )
-        .catch((err) => {
-            console.log(err);
-        });
-        Api.get(url+'api/v1/users/search?query='+searchValue)
-        .then((res) => {
-            console.log(res.data);
-            dispatch(selectSearchpeople(res.data));
-        }
-        ).catch((err) => {
-            console.log(err);
-        });
+				dispatch(selectclass(res.data));
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+		Api.get(url + 'api/v1/groups/search?type=GROUP&?query=' + searchValue)
+			.then((res) => {
+				dispatch(selectgroup(res.data));
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+		
 
-
+			searchUsers(searchValue);
 	}, [location]);
-
-
+	const searchUsers = async (searchValue) => {
+		try {
+		  const usersResponse = await Api.get(url + 'api/v1/users/search?query=' + searchValue);
+		  
+		  const headers = {
+			'Content-Type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+		  };
+	  
+		  const validateFriendshipPromises = usersResponse.data.map(async (user) => {
+			try {
+			  const friendshipResponse = await Api.get(url + 'api/v1/friendships/validate?friendId=' + user.id, { headers });
+			  const isFriend = friendshipResponse.data.result === true ? 1 : 0; // 1 đã kết bạn , 0 chưa kết bạn
+			  return { ...user, isFriend };
+			} catch (err) {
+			  console.error(err);
+			  return { ...user, isFriend: 2 };// chưa đăng nhập
+			}
+		  });
+	  
+		  const updatedUsers = await Promise.all(validateFriendshipPromises);
+		dispatch(selectSearchpeople(updatedUsers));
+		} catch (error) {
+		  console.error(error);
+		}
+	  };
+	  
+	
+	  
 	const handleButtonClick = (option) => {
 		dispatch(selectOption(option));
 		setSelectedOption(option);

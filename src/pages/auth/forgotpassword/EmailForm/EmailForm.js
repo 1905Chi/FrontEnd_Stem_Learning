@@ -66,43 +66,45 @@ const EmailForm = () => {
 						alt="logo"
 						className="logo"
 					/>
-					<h2> Cấp lại mật khẩu </h2> <p> Bước 1: Nhập địa chỉ email để lấy lại mật khẩu</p>
-					<p> Hệ thống sẽ gửi link cấp lại mật khẩu cho bạn </p>
-					<Form name="Enter your email" onFinish={handleNext} scrollToFirstError>
-						<Form.Item
-							name="email"
-							label="E-mail"
-							rules={[
-								{
-									type: 'email',
-									message: 'Email không hợp lệ!',
-								},
-								{
-									required: true,
-									message: 'Vui lòng nhập email của bạn!',
-								},
-							]}
-						>
-							<Input />
-						</Form.Item>
-						<Form.Item>
-							<Button
-								type="primary"
-								style={{ width: '156px', background: 'gray', height: '50px' }}
-								onClick={huy}
+					<div className='forgot-pass'>
+						<h2> Cấp lại mật khẩu </h2> <p> Bước 1: Nhập địa chỉ email để lấy lại mật khẩu</p>
+						<p> Hệ thống sẽ gửi link cấp lại mật khẩu cho bạn </p>
+						<Form name="Enter your email" onFinish={handleNext} scrollToFirstError>
+							<Form.Item
+								name="email"
+								label="E-mail"
+								rules={[
+									{
+										type: 'email',
+										message: 'Email không hợp lệ!',
+									},
+									{
+										required: true,
+										message: 'Vui lòng nhập email của bạn!',
+									},
+								]}
 							>
-								Hủy
-							</Button>
-							<Button
-								type="primary"
-								htmlType="submit"
-								style={{ marginLeft: '15px', width: '156px', height: '50px' }}
-							>
-								Tiếp tục
-							</Button>
-						</Form.Item>
-						<ToastContainer />
-					</Form>
+								<Input />
+							</Form.Item>
+							<Form.Item>
+								<Button
+									type="primary"
+									style={{ width: '156px', background: 'gray', height: '50px' }}
+									onClick={huy}
+								>
+									Hủy
+								</Button>
+								<Button
+									type="primary"
+									htmlType="submit"
+									style={{ marginLeft: '15px', width: '156px', height: '50px' }}
+								>
+									Tiếp tục
+								</Button>
+							</Form.Item>
+							<ToastContainer />
+						</Form>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1,8 +1,6 @@
-import Header from './Header';
+
 import React from 'react';
-import { Layout } from 'antd';
 import './DefaultLayout.css';
-const { Sider, Content } = Layout;
 export default function DefaultLayout({ Left, Right, children }) {
 	return (
 		<>

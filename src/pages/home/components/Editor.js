@@ -202,6 +202,7 @@ export default function Editor(props) {
 				backgroundColor: 'aliceblue',
 				border: '1px solid',
 				top:'25%',
+				left:'25%',
 				overFlow: 'auto',
 			}}
 		>

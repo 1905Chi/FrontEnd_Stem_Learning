@@ -1,18 +1,35 @@
 import { useEffect, useState } from 'react';
 import Api from '../../api/Api';
 import anh_logo_1 from '../../assets/images/anh_logo_1.jpg';
+import {useLocation} from 'react-router-dom';
 import './Class.css';
 export default function Class() {
 	const [classList, setClassList] = useState([]);
 	const [avatarUrl, setAvatarUrl] = useState(anh_logo_1);
-
+	const location = useLocation();
 	useEffect(() => {
+		if(location.pathname.includes('classes')){
 		fetchClass();
-	}, []);
+		}
+		else if(location.pathname.includes('groups')){
+			fetchgroup();
+		}
+	}, [location]);
 
 	const fetchClass = async () => {
 		try {
 			const response = await Api.get('api/v1/groups/suggested-classes');
+			console.log('Fetch class successfully: ', response);
+			if (response.data.statusCode === 200) {
+				setClassList(response.data.result);
+			}
+		} catch (error) {
+			console.log('Failed to fetch class list: ', error);
+		}
+	};
+	const fetchgroup= async () => {
+		try {
+			const response = await Api.get('api/v1/groups/suggested-groups');
 			console.log('Fetch class successfully: ', response);
 			if (response.data.statusCode === 200) {
 				setClassList(response.data.result);
@@ -29,7 +46,12 @@ export default function Class() {
 			});
 			console.log('Join class successfully: ');
 			if (response.data.statusCode === 200) {
-				fetchClass();
+				if(location.pathname.includes('classes')){
+					fetchClass();
+				}
+				else if(location.pathname.includes('groups')){
+					fetchgroup();
+				}
 			}
 		} catch (error) {
 			console.log('Failed to join class: ', error);
@@ -39,22 +61,22 @@ export default function Class() {
 		<div className="class">
 			{classList.map((item) => (
 				<div className="item-class" key={item.id}>
-					<img src={item.class.avatar_url} alt="" />
+					<img src={item.group.avatarUrl} alt="" />
 					<div className="info-class">
-						<h3> {item.class.name} </h3>
-						<p> Khối: {item.class.grade} </p>
-						<p> Số thành viên: {item.class.memberCount}</p>
+						<h3> {item.group.name} </h3>
+						<p> Khối: {item.group.grade} </p>
+						<p> Số thành viên: {item.memberCount}</p>
 						<div id="avatar-container">
-							<img src={item.author.avatar_url} alt="" />
+							<img src={item.group.author.avatarUrl} alt="" />
 							<p>
-								{item.author.first_name} {item.author.last_name}
+								{item.group.author.firstName} {item.group.author.firstName}
 							</p>
 						</div>
-						{item.class.isMember === true ? (
+						{item.isMember === true ? (
 							<button
 								disabled={true}
 								onClick={() => {
-									handleJoinClass(item.id);
+									handleJoinClass(item.group.id);
 								}}
 							>
 								{' '}

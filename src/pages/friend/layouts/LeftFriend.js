@@ -20,7 +20,7 @@ import { selectFriendOfFriend } from '../../../redux/Friend';
 export default function LeftFriend() {
 	const dispatch = useDispatch();
 	const selectedOption = useSelector(selectSelectedOption);
-	const friendRequest = useSelector(selectselectFriendRequest);
+	const [friendRequest, setFriendRequest] = useState(null);
 	const [friendPending, setFriendPending] = useState([]);
 	const [friend, setFriend] = useState([]);
 	const [friendOfFriend, setFriendOfFriend] = useState([]);
@@ -32,7 +32,7 @@ export default function LeftFriend() {
 		fetchFriendRequest();
 		fetchFriend();
 		fetchFriendOfFriend();
-	}, []);
+	}, [selectOption]);
 
 	const fetchFriendRequest = async () => {
 		try {
@@ -41,9 +41,10 @@ export default function LeftFriend() {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 				};
-				const response = await Api.get(url + 'friend/pending', { headers: headers });
+				const response = await Api.get(url + 'api/v1/friendships/friend/pending', { headers: headers });
 				if (response.data.statusCode === 200) {
 					setFriendPending(response.data.friendWithAuthor);
+					console.log(response.data.friendWithAuthor);
 				}
 			}
 		} catch (err) {
@@ -58,7 +59,7 @@ export default function LeftFriend() {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 				};
-				const response = await Api.get(url + 'friend/accept', { headers: headers });
+				const response = await Api.get(url + 'api/v1/friendships/friend/accept', { headers: headers });
 				if (response.data.statusCode === 200) {
 					setFriend(response.data.friendWithAuthor);
 				}
@@ -74,7 +75,7 @@ export default function LeftFriend() {
 				'Content-Type': 'application/json',
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			};
-			const response = await Api.get(url + 'friend/suggestions', { headers: headers });
+			const response = await Api.get(url + 'api/v1/friendships/friends', { headers: headers });
 			if (response.data.statusCode === 200) {
 				setFriendOfFriend(response.data.friendWithAuthor);
 			}
@@ -82,6 +83,21 @@ export default function LeftFriend() {
 			console.log(err);
 		}
 	};
+
+	// const fetchFriendOfFriend = async (id) => {
+	// 	try {
+	// 		const headers = {
+	// 			'Content-Type': 'application/json',
+	// 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+	// 		};
+	// 		const response = await Api.get(url + 'api/v1/friendships/friend/suggestions', { headers: headers });
+	// 		if (response.data.statusCode === 200) {
+	// 			setFriendOfFriend(response.data.friendWithAuthor);
+	// 		}
+	// 	} catch (err) {
+	// 		console.log(err);
+	// 	}
+	// };
 
 	const callInformationUser = (id) => {
 		const headers = {
@@ -103,10 +119,13 @@ export default function LeftFriend() {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 			};
-			Api.put(url + 'api/v1/friend-requests/accept/' + id, { headers: headers })
+			const data = {
+				friend_id: id,
+			};
+			Api.post(url + 'api/v1/friendships/accept/friend', data, { headers: headers })
 				.then((res) => {
 					toast.success('Đã chấp nhận lời mời kết bạn');
-					dispatch(editFriendRequest(id));
+					// dispatch(editFriendRequest(id));
 					dispatch(selectOption('all'));
 				})
 				.catch((err) => {
@@ -118,11 +137,26 @@ export default function LeftFriend() {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 			};
-			Api.put(url + 'api/v1/friend-requests/reject/' + id, { headers: headers })
+			Api.post(url + 'api/v1/friendships/decline/friend', { friend_id: id }, { headers: headers })
 				.then((res) => {
 					toast.success('Đã xóa lời mời kết bạn');
-					dispatch(editFriendRequest(id));
-					dispatch(selectOption('all'));
+					// dispatch(editFriendRequest(id));
+					dispatch(selectOption('request_friend'));
+				})
+				.catch((err) => {
+					toast.error('Đã xảy ra lỗi');
+				});
+		}
+		if (status === 'REQUEST') {
+			const headers = {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+			};
+			Api.post(url + 'api/v1/friendships/friend', { userId: id }, { headers: headers })
+				.then((res) => {
+					toast.success('Đã gửi lời mời kết bạn');
+					// dispatch(editFriendRequest(id));
+					dispatch(selectOption('sent_request'));
 				})
 				.catch((err) => {
 					toast.error('Đã xảy ra lỗi');
@@ -138,6 +172,7 @@ export default function LeftFriend() {
 						className="option-friend"
 						onClick={() => {
 							dispatch(selectOption('all_friend'));
+							fetchFriend();
 						}}
 					>
 						<button className="btn-friend">
@@ -148,6 +183,7 @@ export default function LeftFriend() {
 					<div
 						className="option-friend"
 						onClick={() => {
+							fetchFriendRequest();
 							dispatch(selectOption('request_friend'));
 						}}
 					>
@@ -160,6 +196,7 @@ export default function LeftFriend() {
 						className="option-friend"
 						onClick={() => {
 							dispatch(selectOption('sent_request'));
+							fetchFriendOfFriend();
 						}}
 					>
 						<button className="btn-friend">
@@ -185,22 +222,25 @@ export default function LeftFriend() {
 					</div>
 					{friendPending &&
 						friendPending.map((item, index) => (
-							<div
-								className="friend-request__item"
-								key={item.id}
-								onClick={() => {
-									// dispatch(selectFriend(item.id));
-									// callInformationUser(item.id);
-								}}
-							>
+							<div className="friend-request__item" key={item.id}>
 								<div style={{ flex: '2', margin: '15px', marginTop: '18px' }}>
-									<div className="friend-request__item__avatar">
+									<div
+										className="friend-request__item__avatar"
+										onClick={() => {
+											dispatch(selectFriend(item.id));
+										}}
+									>
 										<Avatar src={item.avatar_url} alt="" />
 									</div>
 								</div>
 								<div className="friend-request__item__button">
-									<div className="friend-request__item__name">
-										<p>{item.first_name + ' ' + item.last_name}</p>
+									<div
+										className="friend-request__item__name"
+										onClick={() => {
+											dispatch(selectFriend(item.id));
+										}}
+									>
+										<p>{item.firstName + ' ' + item.lastName}</p>
 									</div>
 									<div style={{ textAlign: 'start' }}>
 										<button
@@ -234,24 +274,26 @@ export default function LeftFriend() {
 					</div>
 					{friend &&
 						friend.map((item, index) => (
-							<div
-								className="friend-request__item"
-								key={item.id}
-								onClick={() => {
-									dispatch(selectFriend(item.id));
-								}}
-							>
+							<div className="friend-request__item" key={item.id}>
 								<div style={{ margin: '15px', marginTop: '18px' }}>
-									<div className="friend-request__item__avatar">
+									<div
+										className="friend-request__item__avatar"
+										onClick={() => {
+											dispatch(selectFriend(item.id));
+										}}
+									>
 										<Avatar src={item.avatar_url} alt="" />
 									</div>
 								</div>
 								<div
 									className="friend-request__item__button"
 									style={{ textAlign: 'start', paddingTop: '10px' }}
+									onClick={() => {
+										dispatch(selectFriend(item.id));
+									}}
 								>
 									<div className="friend-request__item__name">
-										<p style={{ textAlign: 'start' }}>{item.first_name + ' ' + item.last_name}</p>
+										<p style={{ textAlign: 'start' }}>{item.firstName + ' ' + item.lastName}</p>
 									</div>
 								</div>
 							</div>
@@ -270,31 +312,35 @@ export default function LeftFriend() {
 						>
 							<ArrowLeftOutlined />
 						</button>
-						<h2>Lời mời kết bạn</h2>
+						<h2>Gợi ý kết bạn</h2>
 					</div>
 					{friendOfFriend &&
 						friendOfFriend.map((item, index) => (
-							<div
-								className="friend-request__item"
-								key={item.id}
-								onClick={() => {
-									dispatch(selectFriend(item.id));
-								}}
-							>
+							<div className="friend-request__item" key={item.id}>
 								<div style={{ flex: '2', margin: '15px', marginTop: '18px' }}>
-									<div className="friend-request__item__avatar">
+									<div
+										className="friend-request__item__avatar"
+										onClick={() => {
+											dispatch(selectFriend(item.id));
+										}}
+									>
 										<Avatar src={item.avartarUrl} alt="" />
 									</div>
 								</div>
 								<div className="friend-request__item__button">
-									<div className="friend-request__item__name">
+									<div
+										className="friend-request__item__name"
+										onClick={() => {
+											dispatch(selectFriend(item.id));
+										}}
+									>
 										<p>{item.firstName + ' ' + item.lastName}</p>
 									</div>
 									<div style={{ textAlign: 'start' }}>
 										<button
 											className="btn btn-primary"
 											style={{ backgroundColor: '#1677ff' }}
-											onClick={accept('ACCEPT', item.id)}
+											onClick={accept('REQUEST', item.id)}
 										>
 											Thêm bạn bè
 										</button>

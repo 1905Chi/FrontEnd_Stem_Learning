@@ -1,0 +1,58 @@
+#manage-subject-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+}
+#actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+#subject-manage-container {
+    height: auto;
+    width: 80%;
+}
+#add-subject-button {
+    width: auto;
+    height: 3rem;
+    background-color: #1890ff;
+}
+#add-subject-button:hover {
+    background-color: #40a9ff;
+}
+#button-edit {
+    width: 5rem;
+    height: auto;
+    background-color: rgb(215, 185, 128)
+}
+#button-edit:hover {
+    background-color: rgb(221, 200, 160);
+}
+#button-delete {
+    width: 5rem;
+    height: auto;
+    background-color: #f93e21;
+}
+#button-delete:hover {
+    background-color: #f96b5b;
+}
+
+
+
+
+
+
+
+
+
+
+
+.p-datatable .p-column-header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

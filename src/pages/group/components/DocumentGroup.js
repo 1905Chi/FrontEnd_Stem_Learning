@@ -27,16 +27,18 @@ export default function DocumentGroup() {
 		console.log('Selected Time: ', value);
 		console.log('Formatted Selected Time: ', dateString);
 	};
-	const post =useSelector(selectSelectedPostGroup);
+	const post =useSelector(selectSelectedPostGroup).posts;
+	
 	useEffect(() => {
 		if(post && post.length>0){
 			post.map((item)=>{
 				if(item.post.refUrls && item.post.refUrls.length>0){
-					item.post.refUrls.map((item1)=>{
+					item.post.refUrls.map((item1, index)=>{
 						const indexAfterNumbers = item1.indexOf('_') + 1;
 						const truncatedFileName = item1.slice(indexAfterNumbers);
 						var files={
 							type:'docx',
+							link:item1,
 							filename:truncatedFileName
 						}
 						setFile((file)=>{
@@ -63,8 +65,8 @@ export default function DocumentGroup() {
 					<button onClick={openAddFile} style={{padding:'0px'}}>Thêm tài liệu </button>
 				</div>
 				<div className="document-group-content">
-					{file && file.length > 0 ? (<LabelFile type={file[0].type} filename={file[0].filename}></LabelFile>):null}
-					{file && file.length > 1 ? (<LabelFile type={file[1].type} filename={file[1].filename}></LabelFile>):null}
+					{file && file.length > 0 ? (<LabelFile type={file[0].type} filename={file[0].filename} link={file[0].link}></LabelFile>):null}
+					{file && file.length > 1 ? (<LabelFile type={file[1].type} filename={file[1].filename} link={file[1].link}></LabelFile>):null}
 				</div>
 				{file && file.length > 2 ? (<div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
 					<button onClick={handleFile}>{isShowAllFile ? ('Thu gọn'): 'Xem thêm'}</button>
@@ -106,7 +108,7 @@ export default function DocumentGroup() {
 					</div>
 					<div className="document-group-content document-group-content-allfile">
 						{file.map((file, index) => {
-							return <LabelFile type={file.type} filename={file.filename}></LabelFile>;
+							return <LabelFile type={file.type} filename={file.filename} link={file.link}></LabelFile >;
 						})}
 					</div>
 					<div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}></div>

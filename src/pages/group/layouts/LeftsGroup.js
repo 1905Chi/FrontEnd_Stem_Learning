@@ -104,7 +104,7 @@ const LeftsGroup = () => {
 			<div
 				style={{
 					position: 'fixed',
-					top: '60px',
+					top: '74px',
 					zIndex: '700',
 					width: '25%',
 					backgroundColor: 'white',

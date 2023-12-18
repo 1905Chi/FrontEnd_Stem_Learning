@@ -4,7 +4,7 @@ import { useState } from 'react';
 import DefaultLayout from './layouts/DefaultLayout';
 import DefaultLayoutLogin from './layouts/DefaultLayoutLogin';
 import DefaultLayoutTwoPage from './layouts/DefaultLayoutTwoPage';
-import { publicRoutes, privateRoutes, notFoundRoute, privateRoutes2page ,private1page} from './routes/index';
+import { publicRoutes, privateRoutes, notFoundRoute, privateRoutes2page, private1page } from './routes/index';
 import { useEffect } from 'react';
 import Topbar from './components/Topbar';
 import Footer from './components/Footer';
@@ -17,7 +17,6 @@ export default function App() {
 
 	return (
 		<BrowserRouter>
-			
 			<div className="App">
 				<Routes>
 					{publicRoutes.map((route, index) => {
@@ -45,18 +44,18 @@ export default function App() {
 								path={route.path}
 								element={
 									isLogin ? (
-										<><Topbar />
-										<DefaultLayout setIsLogin={setIsLogin} Left={<Left />} Right={<Right />}>
-											<Page />
-										</DefaultLayout>
-										
+										<>
+											<Topbar />
+											<DefaultLayout setIsLogin={setIsLogin} Left={<Left />} Right={<Right />}>
+												<Page />
+											</DefaultLayout>
 										</>
 									) : (
 										<>
-										<Navigate
-											to="/
+											<Navigate
+												to="/
                             "
-										/>
+											/>
 										</>
 									)
 								}
@@ -74,11 +73,11 @@ export default function App() {
 								path={route.path}
 								element={
 									isLogin ? (
-										<><Topbar/>
-										<DefaultLayoutTwoPage setIsLogin={setIsLogin} Left={<Left />}>
-											<Page />
-										</DefaultLayoutTwoPage>
-										
+										<>
+											<Topbar />
+											<DefaultLayoutTwoPage setIsLogin={setIsLogin} Left={<Left />}>
+												<Page />
+											</DefaultLayoutTwoPage>
 										</>
 									) : (
 										<Navigate
@@ -99,11 +98,11 @@ export default function App() {
 								path={route.path}
 								element={
 									isLogin ? (
-										<><Topbar/>
-										<DefaultLayoutLogin setIsLogin={setIsLogin} >
-											<Page />
-										</DefaultLayoutLogin>
-										
+										<>
+											<Topbar />
+											<DefaultLayoutLogin setIsLogin={setIsLogin}>
+												<Page />
+											</DefaultLayoutLogin>
 										</>
 									) : (
 										<Navigate
@@ -114,23 +113,24 @@ export default function App() {
 								}
 							/>
 						);
-					})},
+					})}
+					,
 					<Route
 						key={notFoundRoute.path}
 						path={notFoundRoute.path}
 						element={
-							<><Topbar/>
-							<DefaultLayoutLogin>
-								<LandingPage />
-							</DefaultLayoutLogin>
-							<Footer />
+							<>
+								<Topbar />
+								<DefaultLayoutLogin>
+									<LandingPage />
+								</DefaultLayoutLogin>
+								<Footer />
 							</>
 						}
 					/>
 					,
 				</Routes>
 			</div>
-			
 		</BrowserRouter>
 	);
 }

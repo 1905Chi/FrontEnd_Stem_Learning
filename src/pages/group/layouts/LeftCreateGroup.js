@@ -75,6 +75,8 @@ export default function LeftCreateGroup() {
 				isClass: true,
 				isPublic: values.policy ==='PUBLIC'? true : false,
 				isAcceptAllRequest:  values.policy ==='PUBLIC'? true : false,
+				subject: values.subject,
+				grade: values.grade,
 			};
 		} else {
 			data = {

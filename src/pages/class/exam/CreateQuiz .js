@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Form, Input, Checkbox, Radio, Button, Space , InputNumber} from 'antd';
+import { Form, Input, Checkbox, Radio, Button, Space, InputNumber } from 'antd';
 import { PlusOutlined, MinusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import Editor from '../../home/components/Editor';
 import { useParams } from 'react-router-dom';
-import { toast,ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import Loading from '../../../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { Select } from 'antd';
-
+import { RiArrowGoBackLine } from 'react-icons/ri';
 const CreateQuiz = () => {
 	const [form] = Form.useForm();
 	const navigate = useNavigate();
@@ -30,7 +30,7 @@ const CreateQuiz = () => {
 			name: values.name,
 			description: values.description,
 			duration: Number(values.duration),
-			staredAt: values.staredAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
+			startedAt: values.startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
 			endedAt: values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
 			isEnabled: true,
 			level: values.level,
@@ -72,8 +72,11 @@ const CreateQuiz = () => {
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					toast.success('Tạo bài kiểm tra thành công !');
-					navigate('/classes/' + uuid);
+					setTimeout(()=>{
 
+					navigate('/classes/' + uuid)
+				}, 3000);
+				
 				}
 			})
 			.catch((error) => {
@@ -82,7 +85,6 @@ const CreateQuiz = () => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-
 
 		console.log(data);
 	};
@@ -119,7 +121,7 @@ const CreateQuiz = () => {
 	};
 
 	return (
-		<div>
+		<div className='create-quiz' >
 			{editingIndex >= 0 ? (
 				<Editor
 					data={value[editingIndex]}
@@ -128,8 +130,18 @@ const CreateQuiz = () => {
 					isQuiz={true}
 				/>
 			) : null}
-			{isLoading ? <Loading /> : null	}
-			<Form form={form} onFinish={onFinish} layout="vertical">
+			<div className="back-to-exam" style={{margin:'5rem 0 0 3rem'}}>
+				<button
+					className="back-to-exam-button"
+					onClick={() => {
+						window.history.back();
+					}}
+				>
+					<RiArrowGoBackLine /> Quay lại
+				</button>
+			</div>
+			{isLoading ? <Loading /> : null}
+			<Form form={form} onFinish={onFinish} layout="vertical" style={{textAlign:'center'}}>
 				<Form.Item name="name" rules={[{ required: true, message: 'Vui lòng nhập tên bài kiểm tra!' }]}>
 					<Input placeholder="Nhập tên bài kiểm tra" style={{ width: '60%' }} />
 				</Form.Item>
@@ -140,7 +152,7 @@ const CreateQuiz = () => {
 					<Input placeholder="Nhập mô tả bài kiểm tra" style={{ width: '60%' }} />
 				</Form.Item>
 				<Form.Item name="duration" rules={[{ required: true, message: 'Vui lòng nhập thời gian làm bài!' }]}>
-					<InputNumber placeholder="Nhập thời gian làm bài ( Số phút)" style={{ width: '60%' }} />
+					<InputNumber min ={1} placeholder="Nhập thời gian làm bài ( Số phút)" style={{ width: '60%' }} />
 				</Form.Item>
 				<Form.Item name="level" rules={[{ required: true, message: 'Vui lòng nhập mức độ bài kiểm tra!' }]}>
 					<Select placeholder="Chọn mức độ bài kiểm tra" style={{ width: '60%' }}>
@@ -149,24 +161,27 @@ const CreateQuiz = () => {
 						<Option value="Hard">Khó</Option>
 					</Select>
 				</Form.Item>
-				<Form.Item name="numberOfQuestion" rules={[{ required: true, message: 'Nhập số lượng câu hỏi mỗi bài kiểm tra' }]}>
-					<InputNumber placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra" style={{ width: '60%' }} />
+				<Form.Item
+					name="numberOfQuestion"
+					rules={[{ required: true, message: 'Nhập số lượng câu hỏi mỗi bài kiểm tra' }]}
+				>
+					<InputNumber min={1} placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra" style={{ width: '60%' }} />
 				</Form.Item>
-						
-				<Form.Item name="staredAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian bắt đầu!' }]}>
+
+				<Form.Item name="startedAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian bắt đầu!' }]}>
 					<DatePicker placeholder="Chọn thời gian bắt đầu" showTime />
 				</Form.Item>
 				<Form.Item name="endedAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian kết thúc!' }]}>
 					<DatePicker placeholder="Chọn thời gian kết thúc" showTime />
 				</Form.Item>
 
-				<Form.List name="questions">
+				<Form.List name="questions" style={{textAlign:'center'}}>
 					{(fields, { add, remove }) => (
 						<>
 							{fields.map(({ key, name, fieldKey, ...restField }, index) => (
 								<div
 									key={key}
-									style={{ marginBottom: 8, border: '1px solid black', paddingLeft: '15px' }}
+									style={{ marginBottom: 8, border: '1px solid black', paddingLeft: '15px',width:'50%', marginLeft:'25%' }}
 								>
 									<div
 										style={{

@@ -25,11 +25,16 @@ const dataSearch = createSlice({
     selectgroup: (state, action) => {
       state.group = action.payload;
     },
+    editSearchPeople: (state, action) => {
+      state.people = state.people.map((item) =>
+        item.id === action.payload.id ? { ...item, isFriend: action.payload.isFriend } : item
+      );
+    },
 
   },
 });
 
-export const { selectSearch, selectSearchpeople ,selectpost, selectclass,selectgroup} = dataSearch.actions;
+export const { selectSearch, selectSearchpeople ,selectpost, selectclass,selectgroup,editSearchPeople} = dataSearch.actions;
 export const selectselectSearch = (state) => state.Search.all;
 export const selectselectSearchpeople = (state) => state.Search.people;
 export const selectselectpost = (state) => state.Search.post;

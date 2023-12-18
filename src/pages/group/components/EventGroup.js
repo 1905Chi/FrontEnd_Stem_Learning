@@ -11,27 +11,26 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { MdDeleteForever } from 'react-icons/md';
 import { selectselectMemberGroup } from '../../../redux/MemberGroup';
+import { selectselectexam } from '../../../redux/Exam';
 import moment from 'moment';
 import 'moment/locale/vi'; // Chọn ngôn ngữ cho moment, ví dụ: tiếng Việt
 import { CiEdit } from 'react-icons/ci';
 import { useEffect } from 'react';
 import { selectselecteventGroup } from '../../../redux/EventGroup';
+import { Dialog } from 'primereact/dialog';
 export default function EventGroup() {
 	const [open, setOpen] = useState(false);
 	const [editEventData, setEditEventData] = useState(null);
 	const memberGroup = useSelector(selectselectMemberGroup);
 	const [role, setRole] = useState('GUEST');
-	
+
 	useEffect(() => {
-
-	memberGroup.map((member) => {
-		if (member.user.id === JSON.parse(localStorage.getItem('user')).id) {
-			setRole(member.role);
-		}
-	});
+		memberGroup.map((member) => {
+			if (member.user.id === JSON.parse(localStorage.getItem('user')).id) {
+				setRole(member.role);
+			}
+		});
 	}, []);
-	
-
 
 	const openEditEvent = (eventData) => {
 		setEditEventData(eventData);
@@ -41,7 +40,7 @@ export default function EventGroup() {
 	const event = useSelector(selectselecteventGroup);
 	const openCreateEvent = () => {
 		setEditEventData(null);
-		setOpen(!open);
+		setOpen(true);
 	};
 	const deleteEvent = (value) => {
 		const headers = {
@@ -109,43 +108,35 @@ export default function EventGroup() {
 					toast.error(error.message);
 				})
 				.finally(() => {
-					openCreateEvent();
+					setOpen();
 				});
 		}
 	};
 
 	return (
 		<div>
-			{open && (
-				<div className="overlay-event-create">
-					<div
-						style={{
-							display: 'flex',
-							borderBottom: '1px solid black',
-							justifyContent: 'space-between',
-							flex: 10,
-						}}
-					>
-						<h2 style={{ flex: 8, textAlign: 'center', color: 'black' }}>Tạo lịch biểu</h2>
-						<button
-							style={{ flex: 2, height: '72.5px', textAlign: 'end', backgroundColor: 'white' }}
-							onClick={openCreateEvent}
-						>
-							<CloseOutlined style={{ color: 'black', fontSize: '30px' }}></CloseOutlined>
-						</button>
-					</div>
-					<Form
-						name="create-event"
-						onFinish={createEvent}
-						scrollToFirstError
-						className="form-create-event"
-						initialValues={{
-							title: editEventData ? editEventData.name : '',
-							description: editEventData ? editEventData.description : '',
-							// start: editEventData ?	moment(editEventData.startedAt, 'DD-MM-YYYY HH:mm') : null,
-							// end: editEventData ? moment(editEventData.endedAt, 'DD-MM-YYYY HH:mm') : null,
-						}}
-					>
+			<Dialog
+				header={<div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>Sự kiện mới</div>}
+				visible={open}
+				style={{ width: '50vw', height: 'fit-content' }}
+				onHide={() => {
+					setOpen(false);
+				}}
+			>
+				<Form
+					name="create-event"
+					onFinish={createEvent}
+					scrollToFirstError
+					style={{height:'fit-content'}}
+					className="form-create-event"
+					initialValues={{
+						title: editEventData ? editEventData.name : '',
+						description: editEventData ? editEventData.description : '',
+						// start: editEventData ?	moment(editEventData.startedAt, 'DD-MM-YYYY HH:mm') : null,
+						// end: editEventData ? moment(editEventData.endedAt, 'DD-MM-YYYY HH:mm') : null,
+					}}
+				>
+					<div >
 						<Form.Item
 							name="title"
 							label="Tiêu đề"
@@ -195,21 +186,26 @@ export default function EventGroup() {
 						>
 							<DatePicker showTime format="DD/MM/YYYY HH:mm" />
 						</Form.Item>
-						<Form.Item>
-							<Button type="primary" htmlType="submit" style={{ width: '89%', marginRight: '8px' }}>
-								Lưu
-							</Button>
-						</Form.Item>
-					</Form>
-				</div>
-			)}
+					</div>
+					<Form.Item>
+						<Button
+							type="primary"
+							htmlType="submit"
+							style={{ width: '89%', marginRight: '8px', height: '45px', padding: '5px 0' }}
+						>
+							Lưu
+						</Button>
+					</Form.Item>
+				</Form>
+			</Dialog>
+
 			<div className="event-group">
 				<div className="Calendar-group">
 					<CalendarAntd />
 				</div>
 				<div className="event-upcoming-main">
 					<div className="header-envent-title">
-						<h3 style={{marginLeft:'22px'}}>Sự kiện sắp diễn ra</h3>
+						<h3 style={{ marginLeft: '22px' }}>Sự kiện sắp diễn ra</h3>
 						<button className="btn btn-primary" onClick={openCreateEvent}>
 							Thêm sự kiện
 						</button>
@@ -231,7 +227,7 @@ export default function EventGroup() {
 									<>
 										<button
 											style={{ fontSize: '30px', backgroundColor: 'white', color: 'red' }}
-											onClick={()=>deleteEvent(event)}
+											onClick={() => deleteEvent(event)}
 										>
 											<MdDeleteForever />
 										</button>

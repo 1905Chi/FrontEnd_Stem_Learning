@@ -17,10 +17,10 @@ import { CiLocationOn } from 'react-icons/ci';
 import { TbBuildingFactory } from 'react-icons/tb';
 import { AiFillPhone } from 'react-icons/ai';
 import { LiaBirthdayCakeSolid } from 'react-icons/lia';
-
+import { useNavigate } from 'react-router-dom';
 export default function Profile() {
 	const [isEdit, setIsEdit] = useState(false);
-
+	const navigate = useNavigate();
 	const [isEditAvatar, setIsEditAvatar] = useState(false);
 	const [isEditCoverPhoto, setIsEditCoverPhoto] = useState(false);
 	const [avatar, setAvatar] = useState();
@@ -28,8 +28,7 @@ export default function Profile() {
 	const dispatch = useDispatch();
 	const selectedOption = useSelector(selectSelectedOptionProfile);
 	console.log(selectedOption);
-	
-
+	const user = JSON.parse(localStorage.getItem('user'));
 	useEffect(() => {
 		const profile = JSON.parse(localStorage.getItem('user'));
 		dispatch(selectOptionProfile('introduce'));
@@ -71,65 +70,8 @@ export default function Profile() {
 		setIsEditCoverPhoto(false);
 	};
 
-	const anh = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwoon_hT7QiYmBsL0F9ydjogk-wzvXtwp0Ef_1M6E-Kw&s';
-	const post = [
-		{
-			user: {
-				name: 'John Doe',
-				avatar: anh,
-			},
-			content: `<p>This guide assumes that you are using the <a href="https://github.com/facebook/create-react-app">Create React App CLI</a> as your boilerplate and it goes through adjusting it to fit CKEditor&nbsp;5 needs. If you use your custom webpack setup, please read more about <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/alternative-setups/integrating-from-source-webpack.html">including CKEditor&nbsp;5 built from source</a>.</p><p>The configuration needs to be ejected to make it possible to customize the webpack configuration. In order to be able to build CKEditor&nbsp;5 from source, you need to tell webpack how to handle CKEditor&nbsp;5’s SVG and CSS files (by adding loaders configuration). Additionally, you need to exclude the CKEditor&nbsp;5 source from the existing loaders.</p><p>You can see all the changes described below in this example project: <a href="https://github.com/ckeditor/ckeditor5-react-example/">https://github.com/ckeditor/ckeditor5-react-example/</a>.</p><p>Create a sample application using create-react-app@3+ first:</p>
-      <p>npx create-react-app ckeditor5-react-example</p>
-      <p>&nbsp;</p><p>If you want to use TypeScript, choose the appropriate template:</p><p>npx create-react-app ckeditor5-react-example --template typescript
-      </p><p>&nbsp;</p><p>Then, move to your freshly created project:</p><p>cd ckeditor5-react-example
-      </p><p>&nbsp;</p><p>Now you can eject the configuration (you can find more information about ejecting <a href="https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject">here</a>):</p>
-      <p>This guide assumes that you are using the <a href="https://github.com/facebook/create-react-app">Create React App CLI</a> as your boilerplate and it goes through adjusting it to fit CKEditor&nbsp;5 needs. If you use your custom webpack setup, please read more about <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/alternative-setups/integrating-from-source-webpack.html">including CKEditor&nbsp;5 built from source</a>.</p><p>The configuration needs to be ejected to make it possible to customize the webpack configuration. In order to be able to build CKEditor&nbsp;5 from source, you need to tell webpack how to handle CKEditor&nbsp;5’s SVG and CSS files (by adding loaders configuration). Additionally, you need to exclude the CKEditor&nbsp;5 source from the existing loaders.</p><p>You can see all the changes described below in this example project: <a href="https://github.com/ckeditor/ckeditor5-react-example/">https://github.com/ckeditor/ckeditor5-react-example/</a>.</p><p>Create a sample application using create-react-app@3+ first:</p>
-      <p>npx create-react-app ckeditor5-react-example</p>
-      <p>&nbsp;</p><p>If you want to use TypeScript, choose the appropriate template:</p><p>npx create-react-app ckeditor5-react-example --template typescript
-      </p><p>&nbsp;</p><p>Then, move to your freshly created project:</p><p>cd ckeditor5-react-example
-      </p><p>&nbsp;</p><p>Now you can eject the configuration (you can find more information about ejecting <a href="https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject">here</a>):</p>`,
-			image: [anh, anh, anh, anh, anh],
-			likes: 42,
-		},
-		{
-			user: {
-				name: 'John Doe',
-				avatar: anh,
-			},
-			content: `<p>This guide assumes that you are using the <a href="https://github.com/facebook/create-react-app">Create React App CLI</a> as your boilerplate and it goes through adjusting it to fit CKEditor&nbsp;5 needs. If you use your custom webpack setup, please read more about <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/alternative-setups/integrating-from-source-webpack.html">including CKEditor&nbsp;5 built from source</a>.</p><p>The configuration needs to be ejected to make it possible to customize the webpack configuration. In order to be able to build CKEditor&nbsp;5 from source, you need to tell webpack how to handle CKEditor&nbsp;5’s SVG and CSS files (by adding loaders configuration). Additionally, you need to exclude the CKEditor&nbsp;5 source from the existing loaders.</p><p>You can see all the changes described below in this example project: <a href="https://github.com/ckeditor/ckeditor5-react-example/">https://github.com/ckeditor/ckeditor5-react-example/</a>.</p><p>Create a sample application using create-react-app@3+ first:</p>
-      <p>npx create-react-app ckeditor5-react-example</p>
-      <p>&nbsp;</p><p>If you want to use TypeScript, choose the appropriate template:</p><p>npx create-react-app ckeditor5-react-example --template typescript
-      </p><p>&nbsp;</p><p>Then, move to your freshly created project:</p><p>cd ckeditor5-react-example
-      </p><p>&nbsp;</p><p>Now you can eject the configuration (you can find more information about ejecting <a href="https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject">here</a>):</p>
-      <p>This guide assumes that you are using the <a href="https://github.com/facebook/create-react-app">Create React App CLI</a> as your boilerplate and it goes through adjusting it to fit CKEditor&nbsp;5 needs. If you use your custom webpack setup, please read more about <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/alternative-setups/integrating-from-source-webpack.html">including CKEditor&nbsp;5 built from source</a>.</p><p>The configuration needs to be ejected to make it possible to customize the webpack configuration. In order to be able to build CKEditor&nbsp;5 from source, you need to tell webpack how to handle CKEditor&nbsp;5’s SVG and CSS files (by adding loaders configuration). Additionally, you need to exclude the CKEditor&nbsp;5 source from the existing loaders.</p><p>You can see all the changes described below in this example project: <a href="https://github.com/ckeditor/ckeditor5-react-example/">https://github.com/ckeditor/ckeditor5-react-example/</a>.</p><p>Create a sample application using create-react-app@3+ first:</p>
-      <p>npx create-react-app ckeditor5-react-example</p>
-      <p>&nbsp;</p><p>If you want to use TypeScript, choose the appropriate template:</p><p>npx create-react-app ckeditor5-react-example --template typescript
-      </p><p>&nbsp;</p><p>Then, move to your freshly created project:</p><p>cd ckeditor5-react-example
-      </p><p>&nbsp;</p><p>Now you can eject the configuration (you can find more information about ejecting <a href="https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject">here</a>):</p>`,
-			image: [anh, anh, anh, anh, anh],
-			likes: 42,
-		},
-		{
-			user: {
-				name: 'John Doe',
-				avatar: anh,
-			},
-			content: `<p>This guide assumes that you are using the <a href="https://github.com/facebook/create-react-app">Create React App CLI</a> as your boilerplate and it goes through adjusting it to fit CKEditor&nbsp;5 needs. If you use your custom webpack setup, please read more about <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/alternative-setups/integrating-from-source-webpack.html">including CKEditor&nbsp;5 built from source</a>.</p><p>The configuration needs to be ejected to make it possible to customize the webpack configuration. In order to be able to build CKEditor&nbsp;5 from source, you need to tell webpack how to handle CKEditor&nbsp;5’s SVG and CSS files (by adding loaders configuration). Additionally, you need to exclude the CKEditor&nbsp;5 source from the existing loaders.</p><p>You can see all the changes described below in this example project: <a href="https://github.com/ckeditor/ckeditor5-react-example/">https://github.com/ckeditor/ckeditor5-react-example/</a>.</p><p>Create a sample application using create-react-app@3+ first:</p>
-      <p>npx create-react-app ckeditor5-react-example</p>
-      <p>&nbsp;</p><p>If you want to use TypeScript, choose the appropriate template:</p><p>npx create-react-app ckeditor5-react-example --template typescript
-      </p><p>&nbsp;</p><p>Then, move to your freshly created project:</p><p>cd ckeditor5-react-example
-      </p><p>&nbsp;</p><p>Now you can eject the configuration (you can find more information about ejecting <a href="https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject">here</a>):</p>
-      <p>This guide assumes that you are using the <a href="https://github.com/facebook/create-react-app">Create React App CLI</a> as your boilerplate and it goes through adjusting it to fit CKEditor&nbsp;5 needs. If you use your custom webpack setup, please read more about <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/alternative-setups/integrating-from-source-webpack.html">including CKEditor&nbsp;5 built from source</a>.</p><p>The configuration needs to be ejected to make it possible to customize the webpack configuration. In order to be able to build CKEditor&nbsp;5 from source, you need to tell webpack how to handle CKEditor&nbsp;5’s SVG and CSS files (by adding loaders configuration). Additionally, you need to exclude the CKEditor&nbsp;5 source from the existing loaders.</p><p>You can see all the changes described below in this example project: <a href="https://github.com/ckeditor/ckeditor5-react-example/">https://github.com/ckeditor/ckeditor5-react-example/</a>.</p><p>Create a sample application using create-react-app@3+ first:</p>
-      <p>npx create-react-app ckeditor5-react-example</p>
-      <p>&nbsp;</p><p>If you want to use TypeScript, choose the appropriate template:</p><p>npx create-react-app ckeditor5-react-example --template typescript
-      </p><p>&nbsp;</p><p>Then, move to your freshly created project:</p><p>cd ckeditor5-react-example
-      </p><p>&nbsp;</p><p>Now you can eject the configuration (you can find more information about ejecting <a href="https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject">here</a>):</p>`,
-			image: [anh, anh, anh, anh, anh],
-			likes: 42,
-		},
-	];
 	return (
-		<>
+		<div className='profile-self'>
 			{isEdit ? <EditProfile onCancel={cancel}></EditProfile> : null}
 			{isEditAvatar ? (
 				<EditAvatar onCancel={cancelFormAvatar} changeAvatar={changeAvatar} avatar={avatar}></EditAvatar>
@@ -164,7 +106,6 @@ export default function Profile() {
 								' ' +
 								JSON.parse(localStorage.getItem('user')).lastName}
 						</span>
-						
 					</div>
 				</div>
 				<div
@@ -177,77 +118,74 @@ export default function Profile() {
 						borderBottom: '1px solid #e6e6e6',
 					}}
 					className="group-menu"
-				>
-					<button
-						style={{ margin: '0px', borderRadius: '0px', backgroundColor: 'white' }}
-						onClick={() => {
-							dispatch(selectOptionProfile('introduce'));
-						}}
-					>
-						
-						<h3>Giới thiệu</h3>
-					</button>
-					<button
-						style={{ margin: '0px', borderRadius: '0px', backgroundColor: 'white' }}
-						onClick={() => {
-							dispatch(selectOptionProfile('post'));
-						}}
-					>
-						
-						<h3>Bài Viết</h3>
-					</button>
-					<button
-						style={{ margin: '0px', borderRadius: '0px', backgroundColor: 'white' }}
-						onClick={() => {
-							dispatch(selectOptionProfile('member'));
-						}}
-					>
-						
-						<h3>Bạn bè</h3>
-					</button>
-					<button
-						style={{ margin: '0px', borderRadius: '0px', backgroundColor: 'white' }}
-						onClick={() => {
-							dispatch(selectOptionProfile('event'));
-						}}
-					>
-						<h3>Ảnh</h3>
-					</button>
-				</div>
+				></div>
 				{selectedOption === 'introduce' ? (
-					<div style={{ margin: '125px 0 0 0' }}>
-						<div className="introduce">
-							<h3>Giới thiệu</h3>
-							{JSON.parse(localStorage.getItem('user')).phone ? (
+					<div className="introduce" style={{ justifyContent: 'center', display: 'flex' , marginTop:'8rem'}}>
+						<div style={{ textAlign: 'start' }}>
+							{user.phone ? (
 								<div style={{ width: '100%', margin: '5px 0' }}>
-									<AiFillPhone className="icon-profile"></AiFillPhone>:
-									{JSON.parse(localStorage.getItem('user')).phone}
+									<span style={{ fontWeight: 'bold' }}>
+										{' '}
+										Số điện thoại<AiFillPhone className="icon-profile"></AiFillPhone> :{' '}
+									</span>
+									{user.phone}
 								</div>
 							) : null}
-							{JSON.parse(localStorage.getItem('user')).date ? (
+							{user.dob ? (
 								<div style={{ width: '100%', margin: '5px 0' }}>
-									<LiaBirthdayCakeSolid className="icon-profile"></LiaBirthdayCakeSolid>:
-									{JSON.parse(localStorage.getItem('user')).date}
+									<span style={{ fontWeight: 'bold' }}>
+										Ngày sinh
+										<LiaBirthdayCakeSolid className="icon-profile"></LiaBirthdayCakeSolid> :{' '}
+									</span>
+									{user.dob}
 								</div>
 							) : null}
 
-							{JSON.parse(localStorage.getItem('user')).gender ? (
+							{user.gender ? (
 								<div style={{ width: '100%', margin: '5px 0' }}>
-									<BsGenderTrans className="icon-profile"></BsGenderTrans>:
-									{JSON.parse(localStorage.getItem('user')).gender}
+									<span style={{ fontWeight: 'bold' }}>
+										Giới tính<BsGenderTrans className="icon-profile"></BsGenderTrans> :{' '}
+									</span>
+									{user.gender}
 								</div>
 							) : null}
 
-							{JSON.parse(localStorage.getItem('user')).workAt ? (
+							{user.workAt ? (
 								<div style={{ width: '100%', margin: '5px 0' }}>
-									<TbBuildingFactory className="icon-profile"></TbBuildingFactory>:
-									{JSON.parse(localStorage.getItem('user')).workAt}
+									<span style={{ fontWeight: 'bold' }}>
+										{' '}
+										Nơi làm việc<TbBuildingFactory className="icon-profile"></TbBuildingFactory> :{' '}
+									</span>
+									{user.workAt}
 								</div>
 							) : null}
-							{JSON.parse(localStorage.getItem('user')).address ? (
+
+							<div style={{ width: '100%', margin: '5px 0' }}>
+								<span style={{ fontWeight: 'bold' }}>
+									{' '}
+									Địa chỉ<CiLocationOn className="icon-profile"></CiLocationOn> :
+									{user.province ? user.province : null}
+									{user.district ? user.district : null}
+								</span>
+							</div>
+
+							{user.parents ? (
 								<div style={{ width: '100%', margin: '5px 0' }}>
-									<CiLocationOn className="icon-profile"></CiLocationOn>:
-									{JSON.parse(localStorage.getItem('user')).address}
+									<span
+										style={{ fontWeight: 'bold' }}
+										onClick={() => {
+											navigate(`/profile/${user.parents[0].id}`);
+										}}
+									>
+										Phụ huynh: {`${user.parents[0].firstName} ${user.parents[0].lastName}`}
+									</span>
+								</div>
+							) : null}
+							{user.children !== null ? (
+								<div style={{ width: '100%', margin: '5px 0' }}>
+									<span style={{ fontWeight: 'bold' }}>
+										Con: {`${user.children[0].firstName} ${user.children[0].lastName}`}
+									</span>
 								</div>
 							) : null}
 						</div>
@@ -255,23 +193,7 @@ export default function Profile() {
 				) : (
 					''
 				)}
-
-				{selectedOption === 'post' ? (
-					<div style={{ margin: '125px 0 0 0' }}>
-						{post.map((post, index) => {
-							return (
-								<PostItem
-									key={index}
-									user={post.user}
-									content={post.content}
-									image={post.image}
-									likes={post.likes}
-								/>
-							);
-						})}
-					</div>
-				) : null}
 			</div>
-		</>
+		</div>
 	);
 }

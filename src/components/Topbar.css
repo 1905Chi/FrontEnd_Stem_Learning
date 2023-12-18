@@ -50,14 +50,14 @@
     border-radius: 2rem;
 }
 .p-megamenu-start {
-    width: 40%;
+    width: 35%;
     height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .p-megamenu-root-list {
-    width: 30%;
+    width: 45%;
     height: auto;
     display: flex;
     align-items: center;
@@ -95,7 +95,7 @@ span {
     color: black;
 }
 .p-megamenu-end {
-    width: 30%;
+    width: 20%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -143,6 +143,7 @@ span {
     background-color: white;
     width: 20%;
     margin-top: 15px;
+    right: 2%;
 }
 .iocon-pr {
     font-size: 25px;

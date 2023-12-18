@@ -253,7 +253,7 @@ function PostItem(props) {
 					props.refUrls.map((item, index) => {
 						const indexAfterNumbers = item.indexOf('_') + 1;
 						const truncatedFileName = item.slice(indexAfterNumbers);
-						return <LabelFile key={index} type={'docx'} filename={truncatedFileName} />;
+						return <LabelFile key={index} type={'docx'} filename={truncatedFileName} link={item} />;
 					})}
 			</div>
 			<div>

@@ -11,9 +11,9 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { FaHistory } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
 import Api from '../api/Api';
-import { CiEdit } from "react-icons/ci";
-import { CgProfile } from "react-icons/cg";
-import { IoExitOutline } from "react-icons/io5";
+import { CiEdit } from 'react-icons/ci';
+import { CgProfile } from 'react-icons/cg';
+import { IoExitOutline } from 'react-icons/io5';
 import EditProfile from '../pages/profile/component/EditProfile';
 const Topbar = (props) => {
 	const [activeIndex, setActiveIndex] = useState(1);
@@ -22,15 +22,117 @@ const Topbar = (props) => {
 	const navigate = useNavigate();
 	const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
 	const [inputValue, setInputValue] = useState('');
-	const [historySearch,sethistorySearch] = useState(JSON.parse(localStorage.getItem('search')));
+	const [historySearch, sethistorySearch] = useState(JSON.parse(localStorage.getItem('search')));
 	const [openMenu, setOpenMenu] = useState(false);
 	const [editprofile, setEditProfile] = useState(false);
+	const role = localStorage.getItem('role') ? localStorage.getItem('role') : null;
+	const [isLogin, setIsLogin] = useState(localStorage.getItem('accessToken') ? true : false);
+	const [items, setItems] = useState([]);
+
+	useEffect(() => {
+		if (role === 'ADMIN') {
+			setItems([
+				{
+					label: 'Trang chủ',
+					icon: 'pi pi-fw pi-home',
+					command: () => {
+						navigate('/home');
+					},
+				},
+				{
+					label: 'Nhóm',
+					icon: 'pi pi-fw pi-users',
+					command: () => {
+						navigate('/manage/groups');
+					},
+				},
+				{
+					label: 'Môn học',
+					icon: 'pi pi-fw pi-users',
+					command: () => {
+						navigate('/subjects');
+					},
+				},
+				{
+					label: 'Địa chỉ',
+					icon: 'pi pi-fw pi-users',
+					command: () => {
+						navigate('/addresses');
+					},
+				},
+				{
+					label: 'Người dùng',
+					icon: 'pi pi-fw pi-users',
+					command: () => {
+						navigate('/users');
+					},
+				},
+			]);
+		} else if (
+			role === undefined ||
+			role === null ||
+			role === 'TEACHER' ||
+			role === 'STUDENT' ||
+			role === 'PARENT' ||
+			user.role === 'TEACHER' ||
+			user.role === 'STUDENT' ||
+			user.role === 'PARENT'
+		) {
+			setItems([
+				{
+					label: 'Trang chủ',
+					icon: 'pi pi-fw pi-home',
+					command: () => {
+						navigate('/home');
+					},
+				},
+				{
+					label: 'Lớp học',
+					icon: 'pi pi-fw pi-users',
+					command: () => {
+						navigate('/classes');
+					},
+				},
+				{
+					label: 'Nhóm',
+					icon: 'pi pi-fw pi-users',
+					command: () => {
+						navigate('/groups');
+					},
+				},
+			]);
+		} else {
+			setItems([
+				{
+					label: 'Trang chủ',
+					icon: 'pi pi-fw pi-home',
+					command: () => {
+						navigate('/home');
+					},
+				},
+				{
+					label: 'Lớp học',
+					icon: 'pi pi-fw pi-users',
+					command: () => {
+						navigate('/classes');
+					},
+				},
+				{
+					label: 'Nhóm',
+					icon: 'pi pi-fw pi-users',
+					command: () => {
+						navigate('/groups');
+					},
+				},
+			]);
+		}
+	}, [role]);
 
 	const openEditProfile = () => {
 		toProfile();
-		
+
 		setEditProfile(!editprofile);
-	}
+	};
 	const cancel = () => {
 		setEditProfile(false);
 	};
@@ -67,7 +169,6 @@ const Topbar = (props) => {
 			navigate('/search/?search=' + inputValue);
 		}
 	};
-	const [isLogin, setIsLogin] = useState(localStorage.getItem('accessToken') ? true : false);
 
 	const searchUser = async (searchQuery) => {
 		try {
@@ -94,30 +195,6 @@ const Topbar = (props) => {
 			handleSearch();
 		}
 	};
-
-	const items = [
-		{
-			label: 'Trang chủ',
-			icon: 'pi pi-fw pi-home',
-			command: () => {
-				navigate('/home');
-			},
-		},
-		{
-			label: 'Lớp học',
-			icon: 'pi pi-fw pi-users',
-			command: () => {
-				navigate('/classes');
-			},
-		},
-		{
-			label: 'Nhóm',
-			icon: 'pi pi-fw pi-users',
-			command: () => {
-				navigate('/groups');
-			},
-		},
-	];
 
 	const start = () => {
 		return (
@@ -149,7 +226,6 @@ const Topbar = (props) => {
 	const end = () => {
 		return (
 			<div className="end-topbar">
-				
 				{!isLogin ? (
 					<div className="name-topbar">
 						<button className="login-topbar" onClick={() => navigate('/login')}>
@@ -172,22 +248,39 @@ const Topbar = (props) => {
 					)
 				) : null}
 
-				{openMenu === true ? (<div className='menu-option'>
-					<button className='menu-option-item' onClick={()=>{
-						navigate('/profile');
-					}}> <CgProfile className='iocon-pr'/> <span >Trang cá nhân</span></button>
-					<button className='menu-option-item' onClick={openEditProfile}><CiEdit className='iocon-pr'  /> <span>Chỉnh sửa thông tin cá nhân</span></button>
-					<button className='menu-option-item'><IoExitOutline className='iocon-pr' /><span>Đăng xuất</span></button>
-
-				</div>):null}
-
+				{openMenu === true ? (
+					<div className="menu-option">
+						<button
+							className="menu-option-item"
+							onClick={() => {
+								navigate('/profile');
+							}}
+						>
+							{' '}
+							<CgProfile className="iocon-pr" /> <span>Trang cá nhân</span>
+						</button>
+						<button className="menu-option-item" onClick={openEditProfile}>
+							<CiEdit className="iocon-pr" /> <span>Chỉnh sửa thông tin cá nhân</span>
+						</button>
+						<button
+							className="menu-option-item"
+							onClick={() => {
+								localStorage.clear();
+								navigate('/login');
+							}}
+						>
+							<IoExitOutline className="iocon-pr" />
+							<span>Đăng xuất</span>
+						</button>
+					</div>
+				) : null}
 			</div>
 		);
 	};
 
 	return (
 		<div className="topbar">
-			{editprofile === true? <EditProfile onCancel={cancel} /> : null}
+			{editprofile === true ? <EditProfile onCancel={cancel} /> : null}
 			{search ? (
 				<div className="search-topbar-menu-history">
 					<div className="header-menu-search">

@@ -7,7 +7,7 @@ import {selectselecteventGroup} from '../../../redux/EventGroup';
 export default function RightItemClass() {
 	const event = useSelector(selectselecteventGroup);
 	return (
-		<div>
+		<div className='right-class-group'>
 			<div className="Lich">
 				<CalendarAntd />
 			</div>

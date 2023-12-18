@@ -7,12 +7,14 @@ import dayLocaleData from 'dayjs/plugin/localeData';
 import { Col, Radio, Row, Select, Typography } from 'antd';
 import { useSelector } from 'react-redux';
 import { selectselecteventGroup } from './../redux/EventGroup';
+import { selectselectexam } from '../redux/Exam';
 import isBetween from 'dayjs/plugin/isBetween';
 dayjs.extend(dayLocaleData);
 dayjs.extend(isBetween);
 
 const CalendarAntd = () => {
 	const listEvent = useSelector(selectselecteventGroup);
+	const listExam = useSelector(selectselectexam);
 	const getListData = (value) => {
 		let listData = [];
 		const date = value.date();
@@ -35,7 +37,7 @@ const CalendarAntd = () => {
 				const dateEnd = item.endedAt;
 				const parts1 = dateEnd.split(/[- :]/);
 				const dateE = `${parts1[1]}-${parts1[0]}-${parts1[2]}`;
-				
+
 				if (formattedDate === dateS || formattedDate === dateE) {
 					listData = [...listData, item];
 				} else {
@@ -43,6 +45,29 @@ const CalendarAntd = () => {
 				}
 			});
 		}
+		if (listExam === null) {
+			return listData;
+		} else if(listExam.length > 0) {
+			listExam.map((item) => {
+				const dateStart = item.exam.startedAt;
+								// Tách các phần tử từ chuỗi
+				console.log(item)
+				const parts = dateStart.split(/[- :]/);
+
+				// Định dạng lại chuỗi ngày
+				const dateS = `${parts[1]}-${parts[0]}-${parts[2]}`;
+				const dateEnd = item.exam.endedAt;
+				const parts1 = dateEnd.split(/[- :]/);
+				const dateE = `${parts1[1]}-${parts1[0]}-${parts1[2]}`;
+
+				if (formattedDate === dateS || formattedDate === dateE) {
+					listData = [...listData, item];
+				} else {
+					console.log('khong co');
+				}
+			});
+		}
+
 		return listData;
 	};
 	const dateCellRender = (value) => {
@@ -82,93 +107,6 @@ const CalendarAntd = () => {
 
 	return (
 		<div style={{ position: 'relative' }}>
-			{/* {open && (
-				<div className="overlay-event-create">
-					<div
-						style={{
-							display: 'flex',
-							borderBottom: '1px solid black',
-							justifyContent: 'space-between',
-							flex: 10,
-						}}
-					>
-						<h2 style={{ flex: 8, textAlign: 'center', color: 'black' }}>Tạo lịch biểu</h2>
-						<button
-							style={{ flex: 3, height: '72.5px', textAlign: 'end', backgroundColor: 'white' }}
-							onClick={handleEventClose}
-						>
-							<CloseOutlined style={{ color: 'black', fontSize: '30px' }}></CloseOutlined>
-						</button>
-					</div>
-					<Form name="create-event" onFinish={createEvent} scrollToFirstError>
-						<Form.Item
-							name="title"
-							label="Tiêu đề"
-							style={{ marginTop: '20px' }}
-							rules={[
-								{
-									required: true,
-									message: 'Vui lòng nhập tiêu đề sự kiện!',
-								},
-							]}
-						>
-							<Input style={{ width: '250px' }} />
-						</Form.Item>
-						<Form.Item
-							name="description"
-							label="Mô tả"
-							rules={[
-								{
-									required: true,
-									message: 'Vui lòng nhập mô tả sự kiện!',
-								},
-							]}
-						>
-							<Input style={{ width: '250px' }} />
-						</Form.Item>
-						<Form.Item
-							name="start"
-							label="Thời gian bắt đầu"
-							rules={[
-								{
-									required: true,
-									message: 'Vui lòng chọn thời gian bắt đầu!',
-								},
-							]}
-						>
-							<DatePicker showTime format="DD/MM/YYYY HH:mm" />
-						</Form.Item>
-						<Form.Item
-							name="end"
-							label="Thời gian kết thúc"
-							rules={[
-								{
-									required: true,
-									message: 'Vui lòng chọn thời gian kết thúc!',
-								},
-							]}
-						>
-							<DatePicker showTime format="DD/MM/YYYY HH:mm" />
-						</Form.Item>
-						<Form.Item>
-							<Button type="primary" htmlType="submit">
-								Tạo
-							</Button>
-						</Form.Item>
-					</Form>
-				</div>
-			)} */}
-			{event.length > 0 && (
-				<div className="event-hover">
-					<ul>
-						{event.map((item) => (
-							<li key={item.id} style={{ color: 'yellow' }}>
-								<Badge status={item.name} text={item.description} style={{ color: 'white' }} />
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
 			<Calendar
 				cellRender={cellRender}
 				fullscreen={false}
@@ -211,6 +149,21 @@ const CalendarAntd = () => {
 							<Typography.Title level={4} style={{ margin: '8px' }}>
 								Lịch
 							</Typography.Title>
+							{event.length > 0 && (
+								<div className="event-hover">
+									<ul>
+										{event.map((item) => (
+											<li key={item.id} style={{ color: 'yellow' }}>
+												<Badge
+													status={item.name}
+													text={item.description}
+													style={{ color: 'white' }}
+												/>
+											</li>
+										))}
+									</ul>
+								</div>
+							)}
 							<Row gutter={8}>
 								<Col>
 									<Radio.Group
@@ -254,7 +207,6 @@ const CalendarAntd = () => {
 					);
 				}}
 			/>
-			
 		</div>
 	);
 };

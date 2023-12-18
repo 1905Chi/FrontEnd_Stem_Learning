@@ -9,11 +9,18 @@ import { toast, ToastContainer } from 'react-toastify';
 import Api from '../../../../src/api/Api';
 import LabelFile from '../../profile/component/LabelFile';
 import { useParams } from 'react-router-dom';
+import { Dialog } from 'primereact/dialog';
+import { selectOption, selectPostGroup } from '../../../redux/Group';
+import { useDispatch } from 'react-redux';
 export default function AddFile(props) {
 	const [selectedFile, setSelectedFile] = useState([]);
 	const navigate = useNavigate();
 	const {uuid} = useParams();
-
+	const dispatch = useDispatch();
+	const headers = {
+		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+		'Content-Type': 'multipart/form-data',
+	};
 	const handelfileSelect = (event) => {
 		// Xử lý khi người dùng chọn hình ảnh đại diện
 		const mediaFiles = event.target.files[0];
@@ -40,6 +47,7 @@ export default function AddFile(props) {
 	const Save = () => {
 		if (selectedFile) {
 			const formData = new FormData();
+			
 			for (let i = 0; i < selectedFile.length; i++) {
 				formData.append('mediaFiles', selectedFile[i]);
 			}
@@ -48,7 +56,7 @@ export default function AddFile(props) {
 			formData.append('groupId', uuid);
 			
 			
-			formData.append('TypeCode', 'post');
+			formData.append('typeName', 'POST');
 			formData.append('content', '');
 			const data = formData;
 			Api.post(url + 'api/v1/posts', data, {
@@ -61,6 +69,7 @@ export default function AddFile(props) {
 					
 						if (res.data.statusCode === 200) {
 							toast.success('Thêm thành công');
+							callPostGroup();
 						} else {
 							toast.error(res.data.message);
 						}
@@ -87,31 +96,39 @@ export default function AddFile(props) {
 			toast.error('Vui lòng chọn file');
 		}
 	};
-
+	const callPostGroup = () => {
+		Api.get(url + 'api/v1/posts?' + 'groupId=' + uuid, { headers: headers })
+		.then((response) => {
+			if (response.data.statusCode === 200) {
+				dispatch(selectPostGroup(response.data.result));
+			} else {
+				console.log(response.error);
+			}
+		})
+		.catch((error) => {
+			console.log(error);
+		})
+		.finally(() => {
+			dispatch(selectOption('post'));
+		});
+	}
+	const [visible, setVisible] = useState(true);
 	return (
-		<div className="add-file">
-			<div className="form-add-file">
-				<div
-					style={{
-						display: 'flex',
-						borderBottom: '1px solid black',
-						justifyContent: 'space-between',
-						flex: 10,
+		<>
+			<Dialog
+					header= {<h3 style={{ textAlign: 'center', margin: '0 0 0 10px' }}>Thêm tài liệu</h3>}
+					visible={visible}
+					style={{ width: '50vw' }}
+					onHide={() => {
+						setVisible(false)
+						props.onCancel();
 					}}
 				>
-					<h2 style={{ flex: 8, textAlign: 'end' }}>Thêm Tài liệu cho lớp học</h2>
-					<button
-						style={{ flex: 3, height: '72.5px', backgroundColor: 'white', textAlign: 'end' }}
-						onClick={props.onCancel}
-					>
-						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
-					</button>
-				</div>
 				<div className="file">
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Tài liệu học học</h3>
 						<button
-							style={{ textAlign: 'end', margin: '0 10px 0 0', color: 'blue', backgroundColor: 'white' }}
+							style={{ textAlign: 'end', margin: '0 10px 0 0', color: 'blue', backgroundColor: '#ffebcd' }}
 							onClick={openAvatarPictureDialog}
 						>
 							Thêm
@@ -145,8 +162,8 @@ export default function AddFile(props) {
 						Lưu
 					</button>
 				</div>
-			</div>
-			<ToastContainer />
-		</div>
+			</Dialog>
+						<ToastContainer />
+		</>
 	);
 }

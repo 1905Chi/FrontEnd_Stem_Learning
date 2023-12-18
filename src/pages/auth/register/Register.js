@@ -57,6 +57,7 @@ export default function Register(props) {
 			});
 	};
 	const handleChangeDistrict = (value) => {
+		console.log(`selected ${value}`);
 		axios
 			.get(url + `api/v1/addresses/schoolsByDistrict?dId=${value}`)
 			.then((response) => {
@@ -101,14 +102,24 @@ export default function Register(props) {
 				school: values.school,
 				grade: values.grade,
 			},
-			parent: {},
+			parent: {
+				email: values.email_parent ? values.email_parent : null,
+				password: values.password_parent ? values.password_parent : null,
+				firstName: values.firstname_parent ? values.firstname_parent : null,
+				lastName: values.lastName_parent ? values.lastName_parent : null,
+				gender: values.gender_parent ? values.gender_parent : null,
+				phone: values.phone_parent ? values.phone_parent : null,
+				dob: values.date_parent.format('DD-MM-YYYY') ? values.date_parent.format('DD-MM-YYYY') : null,
+			},
 		};
+		let datapatent;
 
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 			},
 		};
+
 		axios
 			.post(url + 'api/v1/auth/register-student', data, config)
 			.then((response) => {
@@ -297,9 +308,9 @@ export default function Register(props) {
 										setDistricts([]);
 									}}
 								>
-									{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{ color: 'black' }}>
-											{grade}
+									{provinces.map((grade) => (
+										<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+											{grade.name}
 										</Option>
 									))}
 								</Select>
@@ -318,9 +329,9 @@ export default function Register(props) {
 										setSchools([]);
 									}}
 								>
-									{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{ color: 'black' }}>
-											{grade}
+									{districts.map((grade) => (
+										<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+											{grade.name}
 										</Option>
 									))}
 								</Select>
@@ -336,9 +347,9 @@ export default function Register(props) {
 									placeholder="Trường học"
 									onChange={handleChange}
 								>
-									{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{ color: 'black' }}>
-											{grade}
+									{schools.map((grade) => (
+										<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+											{grade.name}
 										</Option>
 									))}
 								</Select>
@@ -402,7 +413,7 @@ export default function Register(props) {
 						{isRegisterForParent ? (
 							<div className="information-profile">
 								<Form.Item
-									name="email-parent"
+									name="email_parent"
 									rules={[
 										{
 											type: 'email',
@@ -418,7 +429,7 @@ export default function Register(props) {
 									<Input placeholder="Email" style={{ width: '180px' }} />
 								</Form.Item>
 								<Form.Item
-									name="password-parent"
+									name="password_parent"
 									rules={[
 										{
 											required: true,
@@ -445,7 +456,7 @@ export default function Register(props) {
 										},
 										({ getFieldValue }) => ({
 											validator(_, value) {
-												if (!value || getFieldValue('password') === value) {
+												if (!value || getFieldValue('password_parent') === value) {
 													return Promise.resolve();
 												}
 												return Promise.reject(new Error('Mật khẩu xác thực không đúng!'));
@@ -457,14 +468,14 @@ export default function Register(props) {
 									<Input.Password placeholder="Nhập lại mật khẩu" style={{ width: '180px' }} />
 								</Form.Item>
 								<Form.Item
-									name="firstName-parent"
+									name="firstname_parent"
 									rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
 									className="form-item-register"
 								>
 									<Input placeholder="Tên" style={{ width: '180px' }} />
 								</Form.Item>
 								<Form.Item
-									name="lastName-parent"
+									name="lastName_parent"
 									rules={[{ required: true, message: 'Vui lòng nhập họ !' }]}
 									className="form-item-register"
 								>
@@ -472,7 +483,7 @@ export default function Register(props) {
 								</Form.Item>
 								<Form.Item
 									label="Gender"
-									name="gender-parent"
+									name="gender_parent"
 									defaultValue="MALE"
 									rules={[
 										{
@@ -501,7 +512,7 @@ export default function Register(props) {
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									name="phone-parent"
+									name="phone_parent"
 									className="form-item-register"
 									rules={[
 										{
@@ -518,7 +529,7 @@ export default function Register(props) {
 								>
 									<Input placeholder="Số điện thoại" style={{ width: '180px' }} />
 								</Form.Item>
-								<Form.Item name="date_picker-parent" {...config} className="form-item-register">
+								<Form.Item name="date_parent" {...config} className="form-item-register">
 									<DatePicker
 										format="DD-MM-YYYY"
 										style={{ width: '180px' }}

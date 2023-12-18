@@ -4,7 +4,7 @@ import PDF_file_icon from '../../../assets/images/PDF_file_icon.svg.png';
 import ppt from '../../../assets/images/ppt.png';
 import other from '../../../assets/images/other.jpg';
 import { GiCancel } from 'react-icons/gi';
-export default function LabelFile({ type, filename, onDelete }) {
+export default function LabelFile({ type, filename, onDelete ,link}) {
 	return (
 		<div style={{ display: 'flex', backgroundColor: '#e8e7f0', borderRadius: '10px', margin: '15px 0 0 0' }}>
 			<div style={{ width: '50px' }}>
@@ -17,7 +17,7 @@ export default function LabelFile({ type, filename, onDelete }) {
 				{type === 'ppt'|| type==='pptx' ? <img src={ppt} alt="ppt" style={{ width: '50px', height: '100%' }} /> : null}
 				{type === 'other' ? <img src={other} alt="other" style={{ width: '50px', height: '100%' }} /> : null}
 			</div>
-			<a href="" style={{  textDecoration: 'none'}}>
+			<a href={link} style={{  textDecoration: 'none'}}>
 				<div style={{ margin: '0 0 0 15px', textAlign: 'start', flex: 6 }}>
 					<p style={{ margin: '5px 0 0 0' }}>{filename}</p>
 

@@ -50,8 +50,8 @@
    
     background: #4d4b4b;
     position: absolute;
-    top: 250px;
-    left: 616px;
+    top: 73%;
+    left: 75%;
 
     transform: translateX(50% );
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -95,4 +95,6 @@
     height: 30px;
     font-size: medium;
   }
-  
+  .profile-self{
+    margin: 5rem 5rem 0 5rem;
+  }
