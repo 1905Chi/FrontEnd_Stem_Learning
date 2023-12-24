@@ -1,13 +1,14 @@
 
 import Api from "./../../../api/Api"
 import { useParams } from "react-router-dom";
+import {url} from "../../../constants/Constant"
 const uploadToCloudinary = async (file,uuid) => {
  
   try {
  
     const formData = new FormData();
     formData.append('mediaFiles', file);
-    formData.append('groupId', uuid);
+    //formData.append('groupId', uuid);
 
     const token = localStorage.getItem('accessToken');
 
@@ -16,7 +17,7 @@ const uploadToCloudinary = async (file,uuid) => {
       'Content-Type': 'multipart/form-data',
     };
 
-    const response = await Api.post('http://localhost:8080/api/v1/files/posts', formData, { headers });
+    const response = await Api.post(url+'api/v1/files/upload-image', formData, { headers });
 
     if (response.status === 200) {
       const data = response.data;
@@ -29,7 +30,7 @@ const uploadToCloudinary = async (file,uuid) => {
     }
   } catch (error) {
     // Xử lý lỗi khác nếu cần.
-    console.error(error.message);
+    console.error(error);
     throw new Error('Failed to upload file');
   }
 };

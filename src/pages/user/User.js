@@ -5,7 +5,7 @@ import { Column } from 'primereact/column';
 import Api from '../../api/Api';
 import { url } from '../../constants/Constant';
 import { Dialog } from 'primereact/dialog';
-import { Form, Input, Button, Radio, Tooltip, DatePicker, Select } from 'antd';
+import { Form, Input, Button, Radio, Tooltip, DatePicker, Select,Pagination } from 'antd';
 import { FcManager } from 'react-icons/fc';
 import { FcBusinesswoman } from 'react-icons/fc';
 import { AiFillQuestionCircle } from 'react-icons/ai';
@@ -47,18 +47,19 @@ const User = () => {
 	};
 
 	useEffect(() => {
-		fetchUsers();
+		fetchUsers(0,10);
 	}, []);
 
-	const fetchUsers = async () => {
+	const fetchUsers = async (page,size) => {
 		try {
 			const headers = {
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 				'Content-Type': 'application/json',
 			};
-
+			let sizep= size ? size:  10;
+			let pageC = page ? page: 0;
 			const res = await Api.get(
-				url + `api/v1/users/admin/get-all-users?page=${page}&size=${size}&orderBy=${orderBy}&order=${order}`,
+				url + `api/v1/users/admin/get-all-users?page=${pageC}&size=${sizep}&orderBy=${orderBy}&order=${order}`,
 				{ headers }
 			);
 			console.log(res);
@@ -283,6 +284,14 @@ const User = () => {
 			</div>
 		);
 	};
+	const handlePaginationChange = (current, pageSize) => {
+		setPage(current - 1);
+		setSize(pageSize);
+		console.log(`Selected Page: ${current}, PageSize: ${pageSize}`);
+		fetchUsers(current - 1, pageSize);
+
+	}
+
 
 	return (
 		<div>
@@ -312,6 +321,14 @@ const User = () => {
 						<Column field="status" header="Status" sortable body={formatStatus} />
 						<Column header="Actions" body={ActionTemplate} />
 					</DataTable>
+					<Pagination
+						total={Number(totalElements)}
+						showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+						defaultPageSize={Number(size)}
+						defaultCurrent={1}
+						style={{marginTop:'15px', textAlign:'center'}}
+						onChange={handlePaginationChange}
+					/>
 				</div>
 				<Dialog
 					header="Lý do khóa tài khoản"
@@ -334,15 +351,17 @@ const User = () => {
 						</div>
 					</div>
 					<Button
-						label="Khóa tài khoản"
-						className="p-button-rounded p-button-success"
+						type="primary"
+						style={{ width: '10rem' , marginTop: '1rem'}}
 						onClick={() => {
 							handleBanUser(selectedUser);
 							setVisible(false);
 							setReason('');
 							setSelectedUser();
 						}}
-					/>
+					>
+						Khóa tài khoản
+					</Button>
 				</Dialog>
 
 				<Dialog

@@ -3,9 +3,21 @@ import React from 'react';
 import './RightItemGroup.css';
 import {useSelector} from 'react-redux';
 import {selectselecteventGroup} from '../../../redux/EventGroup';
+import { selectselectexam } from '../../../redux/Exam';
 
 export default function RightItemClass() {
 	const event = useSelector(selectselecteventGroup);
+	const exam= useSelector(selectselectexam);
+
+	// sự kiện sắp diễn ra
+
+	// const EventGroupComing = () => {
+	// 	let eventComing = [];
+	// 	event.map((event) => {
+			
+	// 	});
+	// }
+
 	return (
 		<div className='right-class-group'>
 			<div className="Lich">

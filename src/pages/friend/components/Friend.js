@@ -5,6 +5,8 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';  
 export default function Friend(){
     const friend = useSelector(selectselectFriend)
+    console.log(friend)
+    
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(selectFriend(null));

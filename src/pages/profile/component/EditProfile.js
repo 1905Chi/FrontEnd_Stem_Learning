@@ -45,7 +45,7 @@ export default function EditProfile({ onCancel }) {
 				firstName: values.firstname ? values.firstname : user.firstName,
 				lastName: values.lastname ? values.lastname : user.lastName,
 				phone: values.phone ? values.phone : user.phone,
-				dob: values.date_picker? values.date_picker.format('YYYY-MM-DD') : user.dob,
+				dob: values.date_picker ? values.date_picker.format('YYYY-MM-DD') : user.dob,
 				gender: values.gender ? values.gender : user.gender,
 			};
 		}
@@ -56,7 +56,7 @@ export default function EditProfile({ onCancel }) {
 				phone: values.phone ? values.phone : user.phone,
 				dob: values.date_picker ? values.date_picker.format('YYYY-MM-DD') : user.dob,
 				gender: values.gender ? values.gender : user.gender,
-				provinces: values.province ? provinceItem: user.province,
+				provinces: values.province ? provinceItem : user.province,
 				districts: values.district ? districtsItem : user.district,
 				schools: values.school ? schoolsItem : user.school,
 				grade: values.grade ? values.grade : user.grade,
@@ -141,8 +141,6 @@ export default function EditProfile({ onCancel }) {
 	};
 
 	const handleChangeProvince = async (currentProvince) => {
-		console.log(currentProvince);
-		console.log(provinces)
 		setprovicesItem(provinces.filter((item) => item.id === currentProvince)[0].name);
 		await axios
 			.get(url + `api/v1/addresses/districtsByProvince?pId=${currentProvince}`)
@@ -167,9 +165,9 @@ export default function EditProfile({ onCancel }) {
 	const { Option } = Select;
 	const saveUpdatePass = (values) => {
 		const data = {
-			oldPassword: values.oldPassword,
-			newPassword: values.newPassword,
-			reNewPassword: values.reNewPassword,
+			oldPassword: values.oldpassword,
+			newPassword: values.newpassword,
+			confirmPassword: values.confirm_password,
 		};
 		console.log(data);
 		const config = {
@@ -178,11 +176,21 @@ export default function EditProfile({ onCancel }) {
 				'Content-Type': 'application/json',
 			},
 		};
-		if (isSaving === false) {
-			return; // Không thực hiện yêu cầu axios
-		}
+		// if (isSaving === false) {
+		// 	return; // Không thực hiện yêu cầu axios
+		// }
 
-		setLoading(true);
+		Api.put(url + 'api/v1/users/change-password', data, config).then((response) => {
+			// Xử lý kết quả sau khi gửi thành công
+			if (response.data.statusCode === 200) {
+				toast.success(response.data.message);
+				setTimeout(() => {
+					onCancel();
+				}, 2000);
+			} else {
+				toast.error(response.data.message);
+			}
+		});
 	};
 	const config = {
 		rules: [
@@ -250,7 +258,7 @@ export default function EditProfile({ onCancel }) {
 							/>
 						</Form.Item>
 						{user.role === 'STUDENT' || user.role === 'TEACHER' ? (
-							<div className='stu-tea'>
+							<div className="stu-tea">
 								<Form.Item
 									className="form-item-register"
 									label="Tỉnh"
@@ -261,7 +269,6 @@ export default function EditProfile({ onCancel }) {
 										showSearch
 										style={{ width: '180px' }}
 										placeholder="Tỉnh"
-										
 										onChange={(value) => {
 											handleChangeProvince(value);
 											setSchools([]);
@@ -270,8 +277,13 @@ export default function EditProfile({ onCancel }) {
 										defaultValue={user.province}
 									>
 										{provinces.map((grade) => (
-											<Option value={grade.id} key={grade.id} id={grade.name} style={{ color: 'black' }}>
-												{grade.name} 
+											<Option
+												value={grade.id}
+												key={grade.id}
+												id={grade.name}
+												style={{ color: 'black' }}
+											>
+												{grade.name}
 											</Option>
 										))}
 									</Select>
@@ -447,7 +459,7 @@ export default function EditProfile({ onCancel }) {
 								<Input.Password placeholder="Mật khẩu" style={{ width: '180px' }} />
 							</Form.Item>
 							<Form.Item
-								name="confirm-newpassword"
+								name="confirm_password"
 								dependencies={['password']}
 								hasFeedback
 								rules={[

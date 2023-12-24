@@ -2,6 +2,7 @@ import axios from 'axios';
 import { url } from './../constants/Constant';
 import { useNavigate } from 'react-router-dom';
 
+
 const Api = axios.create({
 	baseURL: url,
 });
@@ -25,11 +26,12 @@ const handleTokenRefreshError = (error) => {
 	// Xử lý lỗi khi cập nhật token không thành công
 	console.error('Error refreshing token:', error);
 
-	//navigate('/login');
+	
 
 	// Xóa token và thực hiện các xử lý khác (ví dụ: đăng xuất người dùng)
 	localStorage.removeItem('accessToken');
 	localStorage.removeItem('refreshToken');
+	window.history.push('/login');
 };
 
 // Thêm interceptor để xử lý lỗi token hết hạn và cập nhật token
@@ -40,7 +42,7 @@ Api.interceptors.response.use(
 
 	async (error) => {
 		const originalRequest = error.config;
-
+		
 		if (error.response.status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
 
@@ -73,12 +75,10 @@ Api.interceptors.response.use(
 				} catch (error) {
 					// Xử lý lỗi khi gửi yêu cầu cập nhật token
 					console.error('Error refreshing token:', error);
-					const navigate = useNavigate();
-					navigate('/login');
-
 					// Xóa token và thực hiện các xử lý khác (ví dụ: đăng xuất người dùng)
 					localStorage.removeItem('accessToken');
 					localStorage.removeItem('refreshToken');
+					window.history.push('/login');
 				}
 			} else {
 				// Xử lý lỗi khi không có refreshToken

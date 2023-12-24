@@ -57,7 +57,7 @@ export default function Exam() {
 				<h2 style={{ textAlign: 'start', margin: '15px', borderBottom: '3px solid', padding: '15px', flex: 7 }}>
 					Bài kiểm tra
 				</h2>
-				{user && user.role === 'TEACHER' ? (
+				{user && user.role === 'TEACHER'|| localStorage.getItem('role')==='TEACHER'  ? (
 					<div className="exam-class__create">
 						<button className="exam-class__button" onClick={openEdttor}>
 							+

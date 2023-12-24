@@ -32,11 +32,11 @@ export default function EditInforExam(props) {
 			name: values.name ? values.name : props.name,
 			description: values.description ? values.description : props.description,
 			duration: Number(values.duration) ? Number(values.duration) : props.duration,
-			staredAt: values.staredAt ? values.staredAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS') : props.staredAt+':000000' ,
+			startedAt: values.startedAt ? values.startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS') : props.startedAt+':000000' ,
 			endedAt: values.endedAt ? values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS') : props.endedAt +':000000',
 			isEnabled: true,
 			level: values.level ? values.level : props.level,
-			numberOfQuestion: Number(values.numberOfQuestion) ? Number(values.numberOfQuestion) : props.numberOfQuestion,
+			numberOfQuestion: values.numberOfQuestion ? Number(values.numberOfQuestion) : props.numberOfQuestion,
 			maxScore: 100,
 			questions: [],
 		};
@@ -77,7 +77,8 @@ export default function EditInforExam(props) {
 		Api.put(url + 'api/v1/exams/' +id, data, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					toast.success('Cập kiểm tra thành công !');           
+					toast.success('Cập kiểm tra thành công !');   
+					props.CallApiExam();        
 				}
 			})
 			.catch((error) => {
@@ -164,7 +165,7 @@ export default function EditInforExam(props) {
 						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
 					</button>
 				</div>
-				<div className="body-form-edit-exam">
+				<div className="body-form-edit-exam" style={{maxHeight:'60vh', overflowY:'scroll'}}>
 					<div>
 						{editingIndex >= 0 ? (
 							<Editor
@@ -175,7 +176,9 @@ export default function EditInforExam(props) {
 							/>
 						) : null}
 						{isLoading ? <Loading /> : null}
-						<Form form={form} onFinish={onFinish} layout="vertical" style={{marginLeft:'65px'}}>
+						<Form form={form} 
+						
+						onFinish={onFinish} layout="vertical" style={{marginLeft:'65px'}} >
                             <div style={{display:'flex', flexWrap:'wrap'}}>
 							<Form.Item
 								name="name"
@@ -225,7 +228,7 @@ export default function EditInforExam(props) {
 							</Form.Item>
 
 							<Form.Item
-								name="staredAt"
+								name="startedAt"
 								rules={[{ required: false, message: 'Vui lòng nhập thời gian bắt đầu!' }]}
                                 style={{width:'45%'}}
 							>

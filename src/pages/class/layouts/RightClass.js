@@ -25,6 +25,7 @@ const RightClass = () => {
 	const [listClass, setListClass] = useState([]);
 	const [classJoin, setClassJoin] = useState([]);
 	const [listClassJoin, setListClassJoin] = useState();
+	const [mygroup, setMygroup] = useState([]);
 	const navigate = useNavigate();
 	const changeTheme = (value) => {
 		setTheme(value ? 'dark' : 'light');
@@ -37,42 +38,44 @@ const RightClass = () => {
 	const dispatch = useDispatch();
 	const searchClass = (e) => {
 		if (e.target.value === '') {
-			setClassJoin(mygroup);
+			setListClassJoin(mygroup);
 			return;
 		}
 		setListClassJoin(mygroup.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase())));
 	};
 	const role = JSON.parse(localStorage.getItem('user')).role;
-	const mygroup = useSelector(selectSelectedGroupOwner);
+	
 
 	useEffect(() => {
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 		};
-		Api.get(url + 'api/v1/groups', { headers })
+		Api.get(url + 'api/v1/groups/myClasses', { headers })
+				// Api.get(url + 'api/v1/groups/', { headers })
 			.then(async (response) => {
 				if (response.data.statusCode === 200) {
-					let MYGROUP = [];
+					// let MYGROUP = [];
 
-					response.data.result.GROUP_OWNER.map((item) => {
-						if (item.isClass) {
-							MYGROUP = [...MYGROUP, item];
-						}
-					});
-					response.data.result.GROUP_ADMIN.map((item) => {
-						if (item.isClass) {
-							MYGROUP = [...MYGROUP, item];
-						}
-					});
-					response.data.result.GROUP_MEMBER.map((item) => {
-						if (item.isClass) {
-							MYGROUP = [...MYGROUP, item];
-						}
-					});
+					// response.data.result.GROUP_OWNER.map((item) => {
+					// 	if (item.isClass) {
+					// 		MYGROUP = [...MYGROUP, item];
+					// 	}
+					// });
+					// response.data.result.GROUP_ADMIN.map((item) => {
+					// 	if (item.isClass) {
+					// 		MYGROUP = [...MYGROUP, item];
+					// 	}
+					// });
+					// response.data.result.GROUP_MEMBER.map((item) => {
+					// 	if (item.isClass) {
+					// 		MYGROUP = [...MYGROUP, item];
+					// 	}
+					// });
 
-					dispatch(selectGroupOwner(MYGROUP));
-					setListClassJoin(MYGROUP);
+					// dispatch(selectGroupOwner(MYGROUP));
+					setListClassJoin(response.data.result);
+					setMygroup(response.data.result);
 				}
 			})
 			.catch(async (error) => {
@@ -110,62 +113,66 @@ const RightClass = () => {
 
 	return (
 		<>
-			<div
-				style={{
-					position: 'fixed',
-					top: '74px',
-					zIndex: '700',
-					width: '25%',
-					backgroundColor: 'white',
-					marginLeft: '15px',
-				}}
-			>
-				{loading ? ( // Nếu đang loading thì hiển thị component loading
-					<Loading Loading={loading}></Loading>
-				) : null}
-				<div className="header-left" style={{}}>
-					<h1 style={{ textAlign: 'center' }}>Lớp</h1>
+			<div>
+				<div
+					style={{
+						position: 'fixed',
+						top: '76px',
+						zIndex: '700',
+						width: '24.5%',
+						backgroundColor: 'white',
+					}}
+				>
+					{loading ? ( // Nếu đang loading thì hiển thị component loading
+						<Loading Loading={loading}></Loading>
+					) : null}
+					<div className="header-left" style={{}}>
+						<h1 style={{ textAlign: 'center', marginTop:'0' }}>Lớp</h1>
 
-					<Search
-						theme={theme}
-						placeholder="Tìm kiếm Lớp"
-						onChange={searchClass}
-						style={{ textAlign: 'center' }}
-					/>
+						<Search
+							theme={theme}
+							placeholder="Tìm kiếm Lớp"
+							onChange={searchClass}
+							style={{ textAlign: 'center', marginLeft:'1rem' }}
+						/>
+					</div>
 				</div>
-				{role && role === 'TEACHER' ? (
+				
+				<div style={{ margin: '20vh 0px 0px 0px' }}>
+				{(role && role === 'TEACHER') || localStorage.getItem('role') === 'TEACHER' ? (
 					<div className="button-add" onClick={create}>
 						<Button
 							type="primary"
-							style={{ width: '100%', marginTop: '10px', height: '50px', marginLeft: '0px' }}
+							style={{ width: '100%', marginTop: '10vh', height: '50px', marginLeft: '0px' }}
 						>
 							<span style={{ fontSize: '15px', fontWeight: '500' }}>+ Tạo Lớp </span>
 						</Button>
 					</div>
 				) : null}
-			</div>
-			<div style={{ margin: '210px 0 0 0' }}>
-				<div className="your-group">
-					<div style={{ display: 'flex', justifyContent: 'space-around' }}>
-						<h4>Lớp học của bạn</h4>
+					<div className="your-group">
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<h3 style={{textAlign:'center', width:'100%', color: '#2424a5'}}>Lớp học của bạn</h3>
+						</div>
+						<div style={{ height: '30vh', overflowY: 'scroll' }}>
+							{listClassJoin &&
+								listClassJoin.map((mygroup, index) => {
+									return (
+										<div style={{marginRight:'1rem'}}>
+										<LableGroup
+											key={index}
+											image={mygroup.avatarUrl}
+											name={mygroup.name}
+											id={mygroup.id}
+											type={true}
+										/>
+										</div>
+									);
+								})}
+						</div>
 					</div>
-					<div style={{ height: '30vh', overflowY: 'scroll' }}>
-						{listClassJoin &&
-							listClassJoin.map((mygroup, index) => {
-								return (
-									<LableGroup
-										key={index}
-										image={mygroup.avatarUrl}
-										name={mygroup.name}
-										id={mygroup.id}
-										type={mygroup.type}
-									/>
-								);
-							})}
-					</div>
-				</div>
 
-				<ToastContainer />
+					<ToastContainer />
+				</div>
 			</div>
 		</>
 	);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
-import { Table, Space, Collapse } from 'antd';
+import { Table, Space, Collapse, Skeleton } from 'antd';
 import { Pagination } from 'antd';
 import './Address.css';
 import { url } from '../../constants/Constant';
@@ -19,29 +19,33 @@ const items = [
 const Address = () => {
 	const [listdata, setListdata] = useState([]);
 	const [page, setPage] = useState(0);
-	const [pageSize, setPageSize] = useState(1);
+	const [pageSize, setPageSize] = useState(5);
 	const [totalElemet, setTotalElemet] = useState(0);
 	const [totalpage, setTotalpage] = useState(0);
 	useEffect(() => {
-		fetchData();
+		fetchData(0,5);
 	}, []);
-	const fetchData = async () => {
+	const fetchData = async (page,size) => {
 		const header = {
 			Authorization: localStorage.getItem('accessToken'),
 			'Content-Type': 'application/json',
 		};
 		try {
-			const response = await Api.get(url + `api/v1/addresses/admin/provinces?page=${page}&size=${pageSize}`, {
+			page = page || 0;
+			size = size || 5;
+			const response = await Api.get(url + `api/v1/addresses/admin/provinces?page=${page}&size=${size}`, {
 				headers: header,
 			});
-			const provinces = response.data.result.provinces;
-			setTotalElemet(response.data.result.totalElements);
 
-			console.log('totalpage', totalpage);
-			console.log('totalElemet', totalElemet);
+			const provinces = response.data.result.provinces;
+
+			setTotalElemet(response.data.result.totalElements);
+			setTotalpage(response.data.result.totalPages);
+
+
 			if (provinces && provinces.length > 0) {
 				const provincesWithDistricts = await Promise.all(
-					provinces.map(async (province) => {
+					provinces.map(async (province, index) => {
 						const districtsResponse = await Api.get(
 							url + `api/v1/addresses/admin/districtsByProvince?pId=${province.id}`,
 							{ headers: header }
@@ -50,28 +54,34 @@ const Address = () => {
 						try {
 							if (districtsData && districtsData.length > 0) {
 								const districts = await Promise.all(
-									districtsData.map(async (district) => {
+									districtsData.map(async (district, index) => {
 										const schoolsResponse = await Api.get(
 											url + `api/v1/addresses/admin/schoolsByDistrict?dId=${district.id}`,
 											{ headers: header }
 										);
 										const schoolsData = schoolsResponse.data.result;
-										const schools = schoolsData.map((school) => ({
+										const schools = schoolsData.map((school, index) => ({
 											...school,
-											key: school.id.toString(), // Sử dụng id của trường làm key
+											key: index, // Sử dụng id của trường làm key
 										}));
 
 										return {
 											...district,
-											key: district.id.toString(), // Sử dụng id của huyện làm key
+											key: index, // Sử dụng id của huyện làm key
 											schools: schools,
 										};
 									})
 								);
 								return {
 									...province,
-									key: province.id.toString(), // Sử dụng id của tỉnh làm key
+									key: index, // Sử dụng id của tỉnh làm key
 									districts: districts,
+								};
+							} else {
+								return {
+									...province,
+									key: index, // Sử dụng id của tỉnh làm key
+									districts: [],
 								};
 							}
 						} catch (error) {
@@ -208,32 +218,41 @@ const Address = () => {
 
 	const handlePaginationChange = (current, pageSize) => {
 		// Xử lý sự kiện khi chuyển trang
+
+		setPage(current - 1);
+		setPageSize(pageSize);
+		fetchData(current - 1, pageSize);
 		console.log(`Selected Page: ${current}, PageSize: ${pageSize}`);
 	};
 
 	return (
 		<div className="manager-address-admin">
 			<h1 style={{ textAlign: 'center' }}>Danh sách các tỉnh, huyện, trường</h1>
-			<Table
-				columns={columns}
-				expandable={{
-					expandedRowRender,
-				}}
-				dataSource={listdata}
-				size="middle"
-				pagination={false}
-				style={{ width: '90%', marginLeft: '5rem' }}
-				align="center"
-			/>
-			<Pagination
-				total={Number(totalElemet)}
-				showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-				defaultPageSize={Number(pageSize)}
-				defaultCurrent={1}
-				onChange={handlePaginationChange}
-			/>
+			{listdata && listdata.length > 0 ? (
+				<div style={{width:'100%'}}>
+					<Table
+						columns={columns}
+						expandable={{
+							expandedRowRender,
+						}}
+						dataSource={listdata}
+						size="middle"
+						pagination={false}
+						style={{ width: '90%', marginLeft: '5rem' }}
+						align="center"
+					/>
+					<Pagination
+						total={Number(totalElemet)}
+						showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+						defaultPageSize={Number(pageSize)}
+						defaultCurrent={1}
+						onChange={handlePaginationChange}
+					/>
+				</div>
+			) : (
+				null
+			)}
 		</div>
 	);
 };
-
 export default Address;

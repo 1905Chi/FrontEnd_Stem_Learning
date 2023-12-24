@@ -11,13 +11,13 @@ export default function MainFriend() {
 		console.log(selectedOption);
 	}, [selectedOption]);
 	return (
-		<>
-			<div>
+		
+			<div style={{width:'72vw', marginLeft:'50px'}}>
 				
 				{selectedOption === 'all_friend' ? <Friend /> : null}
 				{selectedOption === 'request_friend' ? <RequestFriend /> : null}
 				{selectedOption === 'sent_request' ? <SuggestFriend /> : null}
 			</div>
-		</>
+		
 	);
 }

@@ -13,27 +13,15 @@ import { url } from '../../../../constants/Constant';
 export default function VerifyForm(props) {
 	const { uuid } = useParams();
 	const navigate = useNavigate();
-	const { Option } = Select;
-	const [provinces, setProvinces] = useState(['Quảng Nam', 'Đà Nẵng', 'Quảng Ngãi', 'Quảng Trị', 'Huế', 'Hà Nội']);
-	const [districts, setDistricts] = useState([
-		'Hải Châu',
-		'Cẩm Lệ',
-		'Thanh Khê',
-		'Liên Chiểu',
-		'Ngũ Hành Sơn',
-		'Sơn Trà',
-		'Hòa Vang',
-	]);
-	const [schools, setSchools] = useState([
-		'Trường THPT Nguyễn Khuyến',
-		'Trường THPT Nguyễn Hiền',
-		'Trường THPT Nguyễn Trãi',
-		'Trường THPT Nguyễn Du',
-		'Trường THPT Nguyễn Thị Minh Khai',
-		'Trường THPT Nguyễn Thị Định',
-	]);
+	const [provinces, setProvinces] = useState([]);
+	const [districts, setDistricts] = useState([]);
+	const [schools, setSchools] = useState([]);
 	const [grade, setGrade] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
 	const [loading, setLoading] = useState(false); // Trạng thái loading
+	const [provinceItem, setprovicesItem] = useState({}); // Thông tin người dùng
+	const [districtsItem, setdistrictsItem] = useState({}); // Thông tin người dùng
+	const [subjects, setSubjects] = useState([]);
+
 	const config = {
 		rules: [
 			{
@@ -58,8 +46,13 @@ export default function VerifyForm(props) {
 			firstName: values.firstName,
 			lastName: values.lastName,
 			phone: values.phone,
-			dob: values.date_picker.format('YYYY-MM-DD'),
+			dob: values.date_picker.format('MM-DD-YYYY'),
 			gender: values.gender,
+			province: provinceItem,
+			district: districtsItem,
+			school: values.school,
+			grade: values.grade,
+			subjects: [values.subject],
 		};
 		axios
 			.post(url + `api/v1/auth/verify?token=${uuid}`, data, config)
@@ -81,13 +74,65 @@ export default function VerifyForm(props) {
 				setLoading(false);
 			});
 	};
+	useEffect(() => {
+		handleProvince();
+		callSubject();
+	}, []);
+
+	const handleProvince = async () => {
+		await axios
+			.get(url + 'api/v1/addresses/provinces')
+			.then((response) => {
+				setProvinces(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	const callSubject = async () => {
+		await axios
+			.get(url + 'api/v1/subjects')
+			.then((response) => {
+				setSubjects(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	const handleChangeProvince = async (currentProvince) => {
+		setprovicesItem(provinces.filter((item) => item.id === currentProvince)[0].name);
+
+		await axios
+			.get(url + `api/v1/addresses/districtsByProvince?pId=${currentProvince}`)
+			.then((response) => {
+				setDistricts(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+	const handleChangeDistrict = (value) => {
+		setdistrictsItem(districts.filter((item) => item.id === value)[0].name);
+		console.log(`selected ${value}`);
+		axios
+			.get(url + `api/v1/addresses/schoolsByDistrict?dId=${value}`)
+			.then((response) => {
+				setSchools(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+	const { Option } = Select;
 	return (
 		<div className="body-verify">
 			{loading ? ( // Nếu đang loading thì hiển thị component loading
 				<Loading></Loading>
 			) : null}
 			<div className="form-verify">
-				<div style={{width:'50%',maxWidth:'370px'}}>
+				<div style={{ width: '50%', maxWidth: '370px' }}>
 					<img
 						src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
 						alt="logo"
@@ -154,12 +199,15 @@ export default function VerifyForm(props) {
 								showSearch
 								style={{ width: '180px' }}
 								placeholder="Tỉnh thành"
-								optionFilterProp="children"
-								onChange={handleChange}
+								onChange={(value) => {
+									handleChangeProvince(value);
+									setSchools([]);
+									setDistricts([]);
+								}}
 							>
-								{grade.map((grade) => (
-									<Option value={grade} key={grade} style={{ color: 'black' }}>
-										{grade}
+								{provinces.map((grade) => (
+									<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
+										{grade.name}
 									</Option>
 								))}
 							</Select>
@@ -173,12 +221,14 @@ export default function VerifyForm(props) {
 								showSearch
 								style={{ width: '180px' }}
 								placeholder="Quận huyện"
-								optionFilterProp="children"
-								onChange={handleChange}
+								onChange={(value) => {
+									handleChangeDistrict(value);
+									setSchools([]);
+								}}
 							>
-								{grade.map((grade) => (
-									<Option value={grade} key={grade} style={{ color: 'black' }}>
-										{grade}
+								{districts.map((grade) => (
+									<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
+										{grade.name}
 									</Option>
 								))}
 							</Select>
@@ -192,12 +242,11 @@ export default function VerifyForm(props) {
 								showSearch
 								style={{ width: '180px' }}
 								placeholder="Trường học"
-								optionFilterProp="children"
 								onChange={handleChange}
 							>
-								{grade.map((grade) => (
-									<Option value={grade} key={grade} style={{ color: 'black' }}>
-										{grade}
+								{schools.map((grade) => (
+									<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+										{grade.name}
 									</Option>
 								))}
 							</Select>
@@ -221,6 +270,28 @@ export default function VerifyForm(props) {
 								))}
 							</Select>
 						</Form.Item>
+						{subjects !== null && subjects.length > 0 && subjects !== undefined ? (
+							<Form.Item
+								name="subject"
+								rules={[{ required: true, message: 'Vui lòng chọn môn học!' }]}
+								className="form-item-register"
+							>
+								<Select
+									showSearch
+									style={{ width: '180px' }}
+									placeholder="Môn học"
+									optionFilterProp="children"
+								>
+									{subjects &&
+										
+										subjects.map((grade) => (
+											<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+												{grade.name}
+											</Option>
+										))}
+								</Select>
+							</Form.Item>
+						) : null}
 						<Form.Item
 							name="gender"
 							defaultValue="MALE"

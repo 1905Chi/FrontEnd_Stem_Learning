@@ -60,9 +60,15 @@ export default function LeftItemGroup() {
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					toast.success(response.data.message);
-				} else {
+				} 
+				else if(response.data.statusCode === 201){
+					toast.success(response.data.message);
+					window.location.reload();
+				}
+				else {
 					toast.error(response.data.message);
 				}
+
 			})
 			.catch((error) => {
 				toast.error(error);
@@ -508,7 +514,7 @@ export default function LeftItemGroup() {
 					</div>
 				)}
 
-				<ToastContainer />
+				<ToastContainer style={{zIndex:'1000'}} />
 			</div>
 		</>
 	);

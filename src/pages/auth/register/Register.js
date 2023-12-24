@@ -4,29 +4,27 @@ import axios from 'axios';
 import { FcManager } from 'react-icons/fc';
 import { FcBusinesswoman } from 'react-icons/fc';
 import { useState, useEffect } from 'react';
-import { PiStudentBold } from 'react-icons/pi';
-import { RiParentLine } from 'react-icons/ri';
+
 import { AiFillQuestionCircle } from 'react-icons/ai';
-import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
+
 import { CloseOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import { url } from '../../../constants/Constant';
 import Loading from '../../../components/Loading';
-import { GiCancel } from 'react-icons/gi';
 import moment from 'moment';
 
 export default function Register(props) {
 	const navigate = useNavigate();
 	const [provinces, setProvinces] = useState([]);
-	const [currentProvince, setCurrentProvince] = useState(1);
 	const [districts, setDistricts] = useState([]);
-	const [currentDistrict, setCurrentDistrict] = useState();
+
 	const [schools, setSchools] = useState([]);
 	const [grade, setGrade] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
 	const [isRegisterForParent, setIsRegisterForParent] = useState(false);
 	const [currentDate, setCurrentDate] = useState(moment());
-
+	const [provinceItem, setprovicesItem] = useState(); // Thông tin người dùng
+	const [districtsItem, setdistrictsItem] = useState(); // Thông tin người dùng
 	// Hàm kiểm tra xem ngày có phải đã diễn ra hay không
 	const isDateDisabled = (date) => {
 		return date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
@@ -47,6 +45,8 @@ export default function Register(props) {
 	};
 
 	const handleChangeProvince = async (currentProvince) => {
+		setprovicesItem(provinces.filter((item) => item.id === currentProvince)[0].name);
+
 		await axios
 			.get(url + `api/v1/addresses/districtsByProvince?pId=${currentProvince}`)
 			.then((response) => {
@@ -57,6 +57,7 @@ export default function Register(props) {
 			});
 	};
 	const handleChangeDistrict = (value) => {
+		setdistrictsItem(districts.filter((item) => item.id === value)[0].name);
 		console.log(`selected ${value}`);
 		axios
 			.get(url + `api/v1/addresses/schoolsByDistrict?dId=${value}`)
@@ -96,9 +97,9 @@ export default function Register(props) {
 				lastName: values.lastName,
 				gender: values.gender,
 				phone: values.phone,
-				dob: values.date_picker.format('DD-MM-YYYY'),
-				province: values.province,
-				district: values.district,
+				dob: values.date_picker.format('MM-DD-YYYY'),
+				province: provinceItem,
+				district: districtsItem,
 				school: values.school,
 				grade: values.grade,
 			},
@@ -109,10 +110,9 @@ export default function Register(props) {
 				lastName: values.lastName_parent ? values.lastName_parent : null,
 				gender: values.gender_parent ? values.gender_parent : null,
 				phone: values.phone_parent ? values.phone_parent : null,
-				dob: values.date_parent.format('DD-MM-YYYY') ? values.date_parent.format('DD-MM-YYYY') : null,
+				dob: values.date_parent ? values.date_parent.format('MM-DD-YYYY') : null,
 			},
 		};
-		let datapatent;
 
 		const config = {
 			headers: {
@@ -124,7 +124,7 @@ export default function Register(props) {
 			.post(url + 'api/v1/auth/register-student', data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
-				if (response.data.statusCode === 200) {
+				if (response.data.statusCode === 201 || response.data.statusCode === 200) {
 					toast.success(response.data.message);
 					setTimeout(() => {
 						navigate('/login');
@@ -309,7 +309,7 @@ export default function Register(props) {
 									}}
 								>
 									{provinces.map((grade) => (
-										<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+										<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
 											{grade.name}
 										</Option>
 									))}
@@ -330,7 +330,7 @@ export default function Register(props) {
 									}}
 								>
 									{districts.map((grade) => (
-										<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+										<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
 											{grade.name}
 										</Option>
 									))}

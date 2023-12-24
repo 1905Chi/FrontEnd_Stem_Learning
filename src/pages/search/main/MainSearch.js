@@ -6,7 +6,7 @@ import {
 	selectselectgroup,
 	selectselectpost,
 	selectselectSearchpeople,
-    editSearchPeople
+	editSearchPeople,
 } from '../../../redux/Search';
 import PostItem from '../../home/components/PostItem';
 import './MainSearch.css';
@@ -15,13 +15,21 @@ import { Avatar } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
 import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
+import { useNavigate } from 'react-router-dom';
+import { Empty } from 'antd';
 export default function MainSearch() {
+	const navigate = useNavigate();
 	const selectedOption = useSelector(selectSelectedOption);
+	
 	const dispatch = useDispatch();
 	const post = useSelector(selectselectpost);
+	
 	const group = useSelector(selectselectgroup);
+	
 	const classs = useSelector(selectselectclass);
+	
 	const people = useSelector(selectselectSearchpeople);
+	
 	const user = JSON.parse(localStorage.getItem('user'));
 	const Requestfriend = async (id) => {
 		const headers = {
@@ -36,7 +44,7 @@ export default function MainSearch() {
 				},
 				{ Headers: headers }
 			).then((res) => {
-                dispatch(editSearchPeople({ id: id, isFriend: -1 }));
+				dispatch(editSearchPeople({ id: id, isFriend: -1 }));
 				toast.success('Gửi lời mời kết bạn thành công');
 			});
 		} catch (err) {
@@ -69,20 +77,26 @@ export default function MainSearch() {
 	//             console.log(err);
 	//         }
 	//     }
-	const requestParent	= async (id) => {
-		Api.post(url+'api/v1/relationships/'+id,  {
+	const requestParent = async (id) => {
+		Api.post(url + 'api/v1/relationships' , {studentId:id}, {
 			'Content-Type': 'application/json',
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 		})
-		.then((res) => {
-			toast.success('Đã gửi lời mời');
-		})
-		.catch((err) => {
-			toast.error('Đã xảy ra lỗi');
-		});
-	}
+			.then((res) => {
+				toast.success('Đã gửi yêu cầu ');
+			})
+			.catch((err) => {
+				toast.error('Đã xảy ra lỗi');
+			});
+	};
 	return (
-		<div className="search-main">
+		<div
+			className="search-main"
+			style={{
+				
+				marginLeft: '50px',
+			}}
+		>
 			{selectedOption === 'all' && (
 				<div>
 					{post && post.length > 0 && (
@@ -92,8 +106,13 @@ export default function MainSearch() {
 								<PostItem
 									index={item.id}
 									content={item.content}
-									user={item.author}
+									authorId={item.authorId}
+									authorAvatar={item.authorAvatar}
 									likes={item.reactions}
+									authorFirstName={item.authorFirstName}
+									authorLastName={item.authorLastName}
+									totalReactions={item.totalReactions}
+									totalComments={item.totalComments}
 									type={item.type}
 									refUrls={item.refUrls}
 								/>
@@ -104,7 +123,7 @@ export default function MainSearch() {
 						<div>
 							<h1>Nhóm</h1>
 							{group.map((item, index) => (
-								<LableGroup name={item.name} image={item.avatarUrl} id={item.id} type={item.subject} />
+								<LableGroup infor={item} type={item.isClass} />
 							))}
 						</div>
 					)}
@@ -112,7 +131,7 @@ export default function MainSearch() {
 						<div>
 							<h1>Lớp</h1>
 							{classs.map((item, index) => (
-								<LableGroup name={item.name} image={item.avatarUrl} id={item.id} type={item.subject} />
+								<LableGroup infor={item} type={item.isClass} />
 							))}
 						</div>
 					)}
@@ -127,17 +146,19 @@ export default function MainSearch() {
 										{item.isFriend === 1 ? (
 											<button
 												onClick={() => {
-													navigator('/profile/' + item.id);
+													navigate('/profile/' + item.id);
 												}}
 											>
 												Trang cá nhân{' '}
 											</button>
 										) : item.isFriend === 0 ? (
-											<button onClick={() => Requestfriend(item.id)}>
-												Thêm bạn 
-											</button>
+											<button onClick={() => Requestfriend(item.id)}>Thêm bạn</button>
 										) : item.isFriend === -1 ? (
 											<button>Đã gửi lời mời</button>
+										) : null}
+										{(item.role === 'STUDENT' && ( user.role === 'PARENT' || user.role==='TEACHER')) ||
+										(item.role === 'STUDENT' && (localStorage.getItem('role') === 'PARENT')  || localStorage.getItem('role')==='TEACHER')? (
+											<button onClick={() => requestParent(item.id)}>Phụ huynh- học sinh</button>
 										) : null}
 									</div>
 								))}
@@ -147,21 +168,26 @@ export default function MainSearch() {
 			)}
 			{selectedOption === 'post' && (
 				<div>
-					{post && post.length > 0 && (
+					{post && post.length > 0 ? (
 						<div>
 							<h1>Bài viết</h1>
 							{post.map((item, index) => (
 								<PostItem
-									index={item.id}
-									content={item.content}
-									user={item.author}
-									likes={item.reactions}
-									type={item.type}
-									refUrls={item.refUrls}
-								/>
+								index={item.id}
+								content={item.content}
+								authorId={item.authorId}
+								authorAvatar={item.authorAvatar}
+								likes={item.reactions}
+								authorFirstName={item.authorFirstName}
+								authorLastName={item.authorLastName}
+								totalReactions={item.totalReactions}
+								totalComments={item.totalComments}
+								type={item.type}
+								refUrls={item.refUrls}
+							/>
 							))}
-						</div>
-					)}
+						</div>): <div> <h1><Empty/></h1></div>
+					}
 				</div>
 			)}
 			{selectedOption === 'people' && (
@@ -177,25 +203,26 @@ export default function MainSearch() {
 										{item.isFriend === 1 ? (
 											<button
 												onClick={() => {
-													navigator('/profile/' + item.id);
+													navigate('/profile/' + item.id);
 												}}
 											>
 												Trang cá nhân{' '}
 											</button>
 										) : item.isFriend === 0 ? (
-											<button onClick={() => Requestfriend(item.id)}>
-												Thêm bạn 
-											</button>
+											<button onClick={() => Requestfriend(item.id)}>Thêm bạn</button>
 										) : item.isFriend === -1 ? (
 											<button>Đã gửi lời mời</button>
 										) : null}
-										{item.role==='STUDENT' && user.role==='PARENT' ? <button onClick={() => requestParent(item.id)}>phụ huynh- học sinh</button>: null}
+										{(item.role === 'STUDENT' && ( user.role === 'PARENT' || user.role==='TEACHER')) ||
+										(item.role === 'STUDENT' && (localStorage.getItem('role') === 'PARENT')  || localStorage.getItem('role')==='TEACHER')? (
+											<button onClick={() => requestParent(item.id)}>phụ huynh- học sinh</button>
+										) : null}
 									</div>
 								))}
 						</div>
 					) : (
 						<div>
-							<h1>Không có kết quả</h1>
+							<h1><Empty/></h1>
 						</div>
 					)}
 				</div>
@@ -207,12 +234,12 @@ export default function MainSearch() {
 						<div>
 							<h1>Lớp</h1>
 							{classs.map((item, index) => (
-								<LableGroup name={item.name} image={item.avatarUrl} id={item.id} type={item.subject} />
+								<LableGroup infor={item} type={item.isClass}/>
 							))}
 						</div>
 					) : (
 						<div>
-							<h1>Không có kết quả</h1>
+							<h1><Empty/></h1>
 						</div>
 					)}
 				</div>
@@ -223,17 +250,17 @@ export default function MainSearch() {
 						<div>
 							<h1>Nhóm</h1>
 							{group.map((item, index) => (
-								<LableGroup name={item.name} image={item.avatarUrl} id={item.id} type={item.subject} />
+								<LableGroup infor={item} type={item.isClass} />
 							))}
 						</div>
 					) : (
 						<div>
-							<h1>Không có kết quả</h1>
+							<h1><Empty/></h1>
 						</div>
 					)}
 				</div>
 			)}
-            <ToastContainer />
+			<ToastContainer />
 		</div>
 	);
 }

@@ -7,8 +7,10 @@ import AddFile from '../../class/components/AddFile';
 import { selectSelectedPostGroup } from '../../../redux/Group';
 import { useSelector } from 'react-redux';
 import './Document.css';
+import Loading from '../../../components/Loading';
 export default function DocumentGroup() {
 	const [isShowAllFile, setIsShowAllFile] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const { Option } = Select;
 	const { Search } = Input;
     const { RangePicker } = DatePicker;
@@ -56,9 +58,9 @@ export default function DocumentGroup() {
 		</div>
 	);
 	return (
-		<div>
+		<div style={{backgroundColor:'white', border:'1px solid e6e6e6', paddingTop:'15px'}}>
 			{isopenAddFile ? <AddFile onCancel={openAddFile}></AddFile> : null}
-			
+			{loading ? <Loading></Loading> : null}
 			<div className="document-group">
 				<div className="document-group-title">
 					<h4 style={{flex:7}}>Tài liệu</h4>

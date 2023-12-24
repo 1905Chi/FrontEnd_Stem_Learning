@@ -6,42 +6,136 @@
   z-index: 100;
 }
 
-.content {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  min-height: 100vh;
-  
+
+.sider-left,
+.sider-right,
+.content-main {
+  position: fixed;
+  top: 5rem;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 1;
 }
 
 .sider-left {
-  position: relative; 
-  top:65px;
-  flex: 2.3;
-  padding-left: 15px;
-  overflow-y: auto; /* Cho phép thanh cuộn dọc cho cả hai phần */
-  max-height: calc(100vh );
+  left: 0;
+  width: 20%;
+}
+.content-main {
+  left: 22rem; /* Độ rộng của .sider-left */
+  right: 22rem; /* Độ rộng của .sider-right */
+  width: auto; /* Có thể thay đổi độ rộng theo nhu cầu */
+}
+.content-main-1 {
+  left: 22rem; /* Độ rộng của .sider-left */
+  width: auto; /* Có thể thay đổi độ rộng theo nhu cầu */
+  position: fixed;
+  top: 5rem;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 1;
+}
+.content-main-2 {
+  right: 12rem; /* Độ rộng của .sider-right */
+  width: auto; /* Có thể thay đổi độ rộng theo nhu cầu */
+  position: fixed;
+  top: 5rem;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 1;
+}
 
+
+/* ///////////////////////////////////////////// */
+
+/* DefaultLayout.css */
+.content-main-child
+{
+  width: 70%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Ngăn chặn trình duyệt cuộn toàn bộ trang */
+}
+
+.layout-container {
+  display: flex;
+  height: 100vh; /* Sử dụng chiều cao 100% của viewport */
+}
+
+.header {
+  flex: 0 0 auto; /* Header không co giãn và không thay đổi kích thước */
+
+}
+
+.sider-left {
+  flex: 0 0 25vw; /* Sider trái có chiều rộng cố định */
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung vượt quá chiều cao */
+ 
+
+}
+
+.content {
+  flex: 1; /* Content sẽ co giãn để điền vào phần còn lại của layout */
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung vượt quá chiều cao */
+  padding: 24px;
+  
 }
 
 .sider-right {
-  position: relative; 
-  top:65px;
-  flex:2.3;
-  overflow-y: auto; /* Cho phép thanh cuộn dọc cho cả hai phần */
-  max-height: calc(100vh );
-}
-
-
-
-
-.content-main{
-
-  position: relative  ; 
-  margin: 25px 15px 0 15px;
-  top:65px;
-  flex: 5.4; 
-  overflow-y: auto; /* Cho phép thanh cuộn dọc cho cả hai phần */
-  max-height: calc(100vh );
+  flex: 0 0 25vw; /* Sider phải có chiều rộng cố định */
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung vượt quá chiều cao */
+  margin-top: 5rem;
  
 }
+
+.footer {
+  flex: 0 0 auto; /* Footer không co giãn và không thay đổi kích thước */
+  background-color: #f0f2f5; /* Màu nền của Footer */
+  text-align: center;
+  padding: 10px;
+}
+
+.ant-layout-sider .ant-layout-sider-dark{
+  background-color: white;
+}
+
+.body-web{
+  margin-top: 5%;
+}
+.left-web{
+
+  height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.right-web{
+  height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: fixed;
+  right: 0;
+  top: 5rem;
+  margin-right: 2%;
+  width: 25%;
+}
+
+.main-web-content{
+ 
+  width: 60%  ;
+  margin-left: 3.5%;
+  
+  
+}
+.main-web{
+  overflow-y: auto  ;
+  height: 84vh  ;
+  margin-top: 1%;
+
+}
+
+.left-web-content{
+  margin-left: 2%;
+}
+

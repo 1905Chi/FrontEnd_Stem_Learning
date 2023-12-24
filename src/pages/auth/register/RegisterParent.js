@@ -4,61 +4,25 @@ import axios from 'axios';
 import { FcManager } from 'react-icons/fc';
 import { FcBusinesswoman } from 'react-icons/fc';
 import { useState, useEffect } from 'react';
-import { PiStudentBold } from 'react-icons/pi';
-import { RiParentLine } from 'react-icons/ri';
 import { AiFillQuestionCircle } from 'react-icons/ai';
-import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { CloseOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import { url } from '../../../constants/Constant';
 import Loading from '../../../components/Loading';
-import { GiCancel } from 'react-icons/gi';
 import moment from 'moment';
 export default function RegisterParent(props) {
 	const roles = ['STUDENT', 'TEACHER', 'PARENT'];
 	const navigate = useNavigate();
-	const [provinces, setProvinces] = useState([]);
-	const [districts, setDistricts] = useState([]);
-	const [schools, setSchools] = useState([]);
-	const [grade, setGrade] = useState([]);
-	const [currentDate, setCurrentDate] = useState(moment());
 
 	useEffect(() => {
-		axios
-			.get(url + 'api/v1/addresses/provinces')
-			.then((response) => {
-				setProvinces(response.data.data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		
 	}, []);
 
 	const isDateDisabled = (date) => {
 		return date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
 	};
-	const handleChangeProvince = (value) => {
-		axios
-			.get(url + `api/v1/addresses/districtsByProvince?pId=${value}`)
-			.then((response) => {
-				setDistricts(response.data.data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
-	const handleChangeDistrict = (value) => {
-		axios
-			.get(url + `api/v1/addresses/schoolsByDistrict?dId=${value}`)
-			.then((response) => {
-				setSchools(response.data.data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
-	const { Option } = Select;
+	
 
 	const login = () => {
 		navigate('/login');
@@ -81,7 +45,7 @@ export default function RegisterParent(props) {
 			firstName: values.firstName,
 			lastName: values.lastName,
 			phone: values.phone,
-			dob: values.date_picker.format('YYYY-MM-DD'),
+			dob: values.date_picker.format('MM-DD-YYYY'),
 			role: values.roles,
 		};
 		const config = {
@@ -93,7 +57,7 @@ export default function RegisterParent(props) {
 			.post(url + 'api/v1/auth/register-parent', data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
-				if (response.data.statusCode === 200) {
+				if (response.data.statusCode === 200 || response.data.statusCode === 201) {
 					toast.success(response.data.message);
 					setTimeout(() => {
 						navigate('/login');
@@ -258,7 +222,6 @@ export default function RegisterParent(props) {
 									format="DD-MM-YYYY"
 									style={{ width: '180px' }}
 									placeholder="Ngày tháng năm sinh"
-									onChange={(date) => setCurrentDate(date)}
 									disabledDate={isDateDisabled}
 								/>
 							</Form.Item>

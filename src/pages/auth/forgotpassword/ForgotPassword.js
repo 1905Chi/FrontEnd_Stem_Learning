@@ -17,7 +17,7 @@ export default function ForgotPassword() {
 		if (uuid && uuid.length > 0) {
 			setLoading(true);
 			axios
-				.get(url + `api/auth/reset-password?token=${uuid}`)
+				.get(url + `api/v1/dauth/reset-password?token=${uuid}`)
 				.then((response) => {
 					// Xử lý kết quả sau khi gửi thành công
 					if (response.data.statusCode === 200) {

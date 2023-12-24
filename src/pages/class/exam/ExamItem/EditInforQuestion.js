@@ -40,7 +40,7 @@ export default function EditInforQuestion(props) {
             if( values.answers !== undefined){
                 answers = values.answers.map((item, index) => ({
                     content: item.answer,
-                    isCorrect: item.isCorrect,
+                    isCorrect: item.isCorrect ? true : false,
                     
                 }));
             }
@@ -55,6 +55,7 @@ export default function EditInforQuestion(props) {
 					if (response.data.statusCode === 200) {
 						toast.success('Cập nhật thành công !');
                         dispatch(editquestion(response.data.result))
+						props.fetchData()
 					}
 				})
 				.catch((error) => {
@@ -62,12 +63,14 @@ export default function EditInforQuestion(props) {
             
 				});
 			if (answers.length > 0) {
+				console.log('answers', answers);
 				answers.forEach((item, index) => {
 					Api.post(url + 'api/v1/answers/create?qId=' + props.question.id, item, { headers: headers })
 						.then((response) => {
 							if (response.data.statusCode === 200) {
                                 
 								toast.success('Thêm câu trả lời thành công !');
+								props.fetchData();
                                 
 							}
 						})
@@ -87,7 +90,6 @@ export default function EditInforQuestion(props) {
 			setTimeout(() => {
 				setIsLoading(false);
 				props.cancel();
-                window.location.reload();
 			}, 3000);
 		}
 	};
@@ -130,9 +132,9 @@ export default function EditInforQuestion(props) {
 						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
 					</button>
 				</div>
-				<div className="body-form-edit-exam">
+				<div className="body-form-edit-exam" style={{overflowY:'scroll', maxHeight:'50vh'}}>
 					<div>
-						{editingIndex ? (
+						{editingIndex ? (	
 							<Editor
 								data={value}
 								editcontent={handleEditorChange}

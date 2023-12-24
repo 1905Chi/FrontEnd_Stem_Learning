@@ -262,7 +262,7 @@ export default function LeftCreateGroup() {
 								))}
 							</Select>
 						</Form.Item> */}
-						<Form.Item style={{ position: 'fixed', bottom: '0', width: '285px', margin: '0 15px 0 0' }}>
+						<Form.Item style={{  width: '80%', margin: '15px' }}>
 							<Button type="primary" htmlType="submit" style={{ width: '100%', height: '45px' }}>
 								Tạo
 							</Button>

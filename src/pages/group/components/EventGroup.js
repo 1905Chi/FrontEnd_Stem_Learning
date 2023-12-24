@@ -17,12 +17,16 @@ import 'moment/locale/vi'; // Chọn ngôn ngữ cho moment, ví dụ: tiếng V
 import { CiEdit } from 'react-icons/ci';
 import { useEffect } from 'react';
 import { selectselecteventGroup } from '../../../redux/EventGroup';
+import { useDispatch } from 'react-redux';
+import { selecteventGroup } from '../../../redux/EventGroup';
+
 import { Dialog } from 'primereact/dialog';
 export default function EventGroup() {
 	const [open, setOpen] = useState(false);
 	const [editEventData, setEditEventData] = useState(null);
 	const memberGroup = useSelector(selectselectMemberGroup);
 	const [role, setRole] = useState('GUEST');
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		memberGroup.map((member) => {
@@ -42,6 +46,8 @@ export default function EventGroup() {
 		setEditEventData(null);
 		setOpen(true);
 	};
+
+	
 	const deleteEvent = (value) => {
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -51,6 +57,7 @@ export default function EventGroup() {
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					toast.success('Xóa sự kiện thành công');
+					CallApiEvent();
 				}
 			})
 			.catch((error) => {
@@ -77,6 +84,7 @@ export default function EventGroup() {
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						toast.success('Chỉnh sửa sự kiện thành công');
+						CallApiEvent();
 					} else {
 						toast.error(response.data.message);
 					}
@@ -99,19 +107,39 @@ export default function EventGroup() {
 			Api.post(url + 'api/v1/events', data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						toast.success('Tạo sự kiện thành công');
+						toast.success('Tạo sự kiện thành công !');
+						console.log(response.data.result);
+						CallApiEvent();
 					} else {
 						toast.error(response.data.message);
 					}
 				})
 				.catch((error) => {
 					toast.error(error.message);
-				})
+				})	
+
 				.finally(() => {
-					setOpen();
-				});
+					setOpen(false);
+				});			
 		}
 	};
+	const CallApiEvent = () => {
+		const headers = {
+			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+			conttentType: 'application/json',
+		};
+		Api.get(url + 'api/v1/events?groupId=' + uuid, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					dispatch(selecteventGroup(response.data.result));
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			});
+	}
 
 	return (
 		<div>
@@ -203,15 +231,17 @@ export default function EventGroup() {
 				<div className="Calendar-group">
 					<CalendarAntd />
 				</div>
-				<div className="event-upcoming-main">
+				<div className="event-upcoming-main" >
 					<div className="header-envent-title">
 						<h3 style={{ marginLeft: '22px' }}>Sự kiện sắp diễn ra</h3>
-						<button className="btn btn-primary" onClick={openCreateEvent}>
+						
+						<button className="btn btn-primary" onClick={openCreateEvent}  style={{backgroundColor:'#f4f6fa'}}>
 							Thêm sự kiện
 						</button>
+					
 					</div>
 					{event.map((event, index) => (
-						<div className="event-upcoming__item">
+						<div className="event-upcoming__item" style={{backgroundColor:'white'}}>
 							<div style={{ flex: 7 }}>
 								<div className="event-upcoming__item__title">
 									<p>Sự kiện: {event.name}</p>
@@ -223,20 +253,24 @@ export default function EventGroup() {
 								</div>
 							</div>
 							<div style={{ flex: 3 }}>
-								{role === 'GROUP_ADMIN' || role === 'GROUP_OWNER' ? (
+								{role === 'GROUP_ADMIN' || role === 'GROUP_OWNER' || event.author.id=== JSON.parse(localStorage.getItem('user')).id ? (
 									<>
+										{role === 'GROUP_ADMIN' || role === 'GROUP_OWNER' ? (
 										<button
 											style={{ fontSize: '30px', backgroundColor: 'white', color: 'red' }}
 											onClick={() => deleteEvent(event)}
 										>
 											<MdDeleteForever />
 										</button>
+										) : null}
+										{event.author.id=== JSON.parse(localStorage.getItem('user')).id ? (
 										<button
 											style={{ fontSize: '30px', backgroundColor: 'white', color: 'green' }}
 											onClick={() => openEditEvent(event)}
 										>
 											<CiEdit />
-										</button>
+										</button>)
+										: null}
 									</>
 								) : null}
 							</div>

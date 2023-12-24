@@ -12,8 +12,10 @@ import { useParams } from 'react-router-dom';
 import { Dialog } from 'primereact/dialog';
 import { selectOption, selectPostGroup } from '../../../redux/Group';
 import { useDispatch } from 'react-redux';
+import Loading from '../../../components/Loading';
 export default function AddFile(props) {
 	const [selectedFile, setSelectedFile] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const {uuid} = useParams();
 	const dispatch = useDispatch();
@@ -48,6 +50,7 @@ export default function AddFile(props) {
 		if (selectedFile) {
 			const formData = new FormData();
 			
+			
 			for (let i = 0; i < selectedFile.length; i++) {
 				formData.append('mediaFiles', selectedFile[i]);
 			}
@@ -59,7 +62,9 @@ export default function AddFile(props) {
 			formData.append('typeName', 'POST');
 			formData.append('content', '');
 			const data = formData;
+			setLoading(true);
 			Api.post(url + 'api/v1/posts', data, {
+				
 				headers: {
 					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 					'Content-Type': 'multipart/form-data',
@@ -91,6 +96,7 @@ export default function AddFile(props) {
 				})
 				.finally(() => {
 					props.onCancel();
+					setLoading(false);
 				});
 		} else {
 			toast.error('Vui lòng chọn file');
@@ -115,6 +121,7 @@ export default function AddFile(props) {
 	const [visible, setVisible] = useState(true);
 	return (
 		<>
+		{loading ? <Loading></Loading> : null}
 			<Dialog
 					header= {<h3 style={{ textAlign: 'center', margin: '0 0 0 10px' }}>Thêm tài liệu</h3>}
 					visible={visible}

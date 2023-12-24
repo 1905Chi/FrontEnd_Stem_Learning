@@ -58,9 +58,8 @@
   position: absolute;
   width: 100%;
   height: auto;
-  top:0;
+  top:50%;
   background-color:black;
-
-  opacity: 0.5; /* Điều chỉnh độ mờ nếu cần */
+  
   z-index: 500;
 }

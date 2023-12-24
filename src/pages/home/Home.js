@@ -6,6 +6,7 @@ import { selectselectuser, selectuser } from '../../redux/User';
 import Api from '../../api/Api';
 import { url } from '../../constants/Constant';
 import { Skeleton } from 'antd';
+import { selectPostHome } from '../../redux/Group';
 //import { verifyJwtToken } from '../../api/Jwt';
 function Home() {
 	const [ispost, setIspost] = useState(false);
@@ -35,6 +36,7 @@ function Home() {
 		// }).catch((error) => {
 		//   console.log(error);
 		// });
+		dispatch(selectPostHome(homePosts));
 	}, []);
 	useEffect(() => {
 		homePosts();
@@ -83,7 +85,6 @@ function Home() {
 			const response = await Api.get(`home-posts`, { headers: headers });
 			if (response.data.statusCode === 200) {
 				setListpost(response.data.result);
-				
 			} else {
 				console.log(response.error);
 			}
@@ -116,28 +117,32 @@ function Home() {
 	return (
 		<>
 			<div className="home-page">
-				{listpost ===null   ? <Skeleton active /> : null}
-				{listpost !==null && listpost.length >0 &&  listpost.map((post, index) => {
-					return (
-						<PostItem
-							key={index}
-							id={post.post.id}
-							authorId={post.post.authorId}
-							authorFirstName={post.post.authorFirstName}
-							authorLastName={post.post.authorLastName}
-							authorAvatar={post.post.authorAvatar}
-							type={post.post.type}
-							refUrls={post.post.refUrls}
-							totalReactions={post.post.totalReactions}
-							totalComments={post.post.totalComments}
-							createdAt={post.post.createdAt}
-							updatedAt={post.post.updatedAt}
-							content={post.post.content}
-							comments={post.post.comments}
-							reaction={post.reaction}
-						/>
-					);
-				})}
+				{listpost === null ? <Skeleton active /> : null}
+				{listpost !== null &&
+					listpost.length > 0 &&
+					listpost.map((post, index) => {
+						
+						return (
+							<PostItem
+								key={index}
+								id={post.post.id}
+								authorId={post.post.authorId}
+								authorFirstName={post.post.authorFirstName}
+								authorLastName={post.post.authorLastName}
+								authorAvatar={post.post.authorAvatar}
+								type={post.post.type}
+								refUrls={post.post.refUrls}
+								totalReactions={post.post.totalReactions}
+								totalComments={post.post.totalComments}
+								createdAt={post.post.createdAt}
+								updatedAt={post.post.updatedAt}
+								content={post.post.content}
+								comments={post.post.comments}
+								reaction={post.reaction}
+								homePosts={homePosts}
+							/>
+						);
+					})}
 				<ToastContainer />
 			</div>
 		</>

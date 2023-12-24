@@ -71,7 +71,7 @@ export default function Profile() {
 	};
 
 	return (
-		<div className='profile-self'>
+		<div className="profile-self">
 			{isEdit ? <EditProfile onCancel={cancel}></EditProfile> : null}
 			{isEditAvatar ? (
 				<EditAvatar onCancel={cancelFormAvatar} changeAvatar={changeAvatar} avatar={avatar}></EditAvatar>
@@ -88,16 +88,16 @@ export default function Profile() {
 					<div className="cover-photo">
 						<img src={coverPhoto} alt="Cover Photo" />
 					</div>
-					<button className="cover-picture__button" style={{ height: '40px' }} onClick={setEditCoverPhoto}>
+					<button className="cover-picture-self__button" style={{ height: '40px' }} onClick={setEditCoverPhoto}>
 						<AiFillCamera style={{ fontSize: '30px', margin: '0 0 0 5px', color: 'white' }}></AiFillCamera>
 						<span style={{ fontSize: '15px', color: 'white', margin: '0 5px 0 0' }}>Chỉnh sửa ảnh bìa</span>
 					</button>
 				</div>
-				<div>
-					<div className="profile-picture">
+				<div style={{position:'relative'}}>
+					<div className="profile-picture-self">
 						<img src={avatar} alt="Profile Picture" />
 					</div>
-					<button className="profile-picture__button" style={{ height: '40px' }} onClick={setEditAvatar}>
+					<button className="profile-picture-self__button" style={{ height: '40px' }} onClick={setEditAvatar}>
 						<AiFillCamera style={{ fontSize: '30px', color: 'white' }}></AiFillCamera>
 					</button>
 					<div className="usename-button">
@@ -108,19 +108,9 @@ export default function Profile() {
 						</span>
 					</div>
 				</div>
-				<div
-					style={{
-						display: 'flex',
-						justifyContent: 'start',
-						position: 'relative',
-						top: '118px',
-						borderTop: '1px solid #e6e6e6',
-						borderBottom: '1px solid #e6e6e6',
-					}}
-					className="group-menu"
-				></div>
+				
 				{selectedOption === 'introduce' ? (
-					<div className="introduce" style={{ justifyContent: 'center', display: 'flex' , marginTop:'8rem'}}>
+					<div className="introduce" style={{ justifyContent: 'center', display: 'flex', marginTop: '8rem' }}>
 						<div style={{ textAlign: 'start' }}>
 							{user.phone ? (
 								<div style={{ width: '100%', margin: '5px 0' }}>
@@ -169,7 +159,7 @@ export default function Profile() {
 								</span>
 							</div>
 
-							{user.parents ? (
+							{user.parents !== null ? (
 								<div style={{ width: '100%', margin: '5px 0' }}>
 									<span
 										style={{ fontWeight: 'bold' }}
@@ -177,7 +167,8 @@ export default function Profile() {
 											navigate(`/profile/${user.parents[0].id}`);
 										}}
 									>
-										Phụ huynh: {`${user.parents[0].firstName} ${user.parents[0].lastName}`}
+										Phụ huynh:
+										{`${user.parents[0].firstName} ${user.parents[0].lastName}`}
 									</span>
 								</div>
 							) : null}

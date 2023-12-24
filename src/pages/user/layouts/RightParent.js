@@ -33,7 +33,7 @@ export default function RightParent() {
 								<div style={{display:'flex'}} onClick={()=>{navigate(`/profile/${child.id}`)}}>
 									<div style={{ flex: '2', margin: '15px', marginTop: '18px' }}>
 										<div className="friend-request__item__avatar">
-											<Avatar src={child.avartarUrl} alt="" />
+											<Avatar src={child.avatarUrl} alt="" />
 										</div>
 									</div>
 									<div className="friend-request__item__button">

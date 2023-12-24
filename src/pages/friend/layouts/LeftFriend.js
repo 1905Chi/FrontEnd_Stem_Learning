@@ -17,6 +17,7 @@ import { selectFriendRequest } from '../../../redux/Friend';
 import { Avatar } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
 import { selectFriendOfFriend } from '../../../redux/Friend';
+import {Empty} from 'antd'
 export default function LeftFriend() {
 	const dispatch = useDispatch();
 	const selectedOption = useSelector(selectSelectedOption);
@@ -41,10 +42,22 @@ export default function LeftFriend() {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 				};
-				const response = await Api.get(url + 'api/v1/friendships/friend/pending', { headers: headers });
+				const response = await Api.get(url + 'api/v1/users/friend-requests', { headers: headers });
 				if (response.data.statusCode === 200) {
-					setFriendPending(response.data.friendWithAuthor);
-					console.log(response.data.friendWithAuthor);
+					let data=[]
+					console.log(response.data.result)
+					 response.data.result.forEach((element) => {
+						if (element.status === 'PENDING'){
+							const friend= friendPending
+							friend.push(element)
+						setFriendPending(friend);
+						
+						data=data.push(element)
+
+						}
+					});
+					console.log(data)				
+					
 				}
 			}
 		} catch (err) {
@@ -59,9 +72,9 @@ export default function LeftFriend() {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 				};
-				const response = await Api.get(url + 'api/v1/friendships/friend/accept', { headers: headers });
+				const response = await Api.get(url + 'api/v1/users/friends', { headers: headers });
 				if (response.data.statusCode === 200) {
-					setFriend(response.data.friendWithAuthor);
+					setFriend(response.data.result);
 				}
 			}
 		} catch (err) {
@@ -75,9 +88,9 @@ export default function LeftFriend() {
 				'Content-Type': 'application/json',
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			};
-			const response = await Api.get(url + 'api/v1/friendships/friends', { headers: headers });
+			const response = await Api.get(url + 'api/v1/users/friend-suggestions', { headers: headers });
 			if (response.data.statusCode === 200) {
-				setFriendOfFriend(response.data.friendWithAuthor);
+				setFriendOfFriend(response.data.result);
 			}
 		} catch (err) {
 			console.log(err);
@@ -122,10 +135,12 @@ export default function LeftFriend() {
 			const data = {
 				friend_id: id,
 			};
-			Api.post(url + 'api/v1/friendships/accept/friend', data, { headers: headers })
+			Api.put(url + `api/v1/friend-requests/accept/${id}`, { headers: headers })
 				.then((res) => {
 					toast.success('Đã chấp nhận lời mời kết bạn');
+					fetchFriendRequest();
 					// dispatch(editFriendRequest(id));
+
 					dispatch(selectOption('all'));
 				})
 				.catch((err) => {
@@ -137,10 +152,10 @@ export default function LeftFriend() {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 			};
-			Api.post(url + 'api/v1/friendships/decline/friend', { friend_id: id }, { headers: headers })
+			Api.put(url + `api/v1/friend-requests/reject/${id}`, { headers: headers })
 				.then((res) => {
 					toast.success('Đã xóa lời mời kết bạn');
-					// dispatch(editFriendRequest(id));
+					fetchFriendRequest();
 					dispatch(selectOption('request_friend'));
 				})
 				.catch((err) => {
@@ -152,14 +167,14 @@ export default function LeftFriend() {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 			};
-			Api.post(url + 'api/v1/friendships/friend', { userId: id }, { headers: headers })
+			Api.post(url + 'api/v1/friend-requests', { userId: id }, { headers: headers })
 				.then((res) => {
 					toast.success('Đã gửi lời mời kết bạn');
-					// dispatch(editFriendRequest(id));
+					fetchFriendOfFriend()
 					dispatch(selectOption('sent_request'));
 				})
 				.catch((err) => {
-					toast.error('Đã xảy ra lỗi');
+					toast.error(err.data.message);
 				});
 		}
 	};
@@ -220,27 +235,27 @@ export default function LeftFriend() {
 						</button>
 						<h2>Lời mời kết bạn</h2>
 					</div>
-					{friendPending &&
-						friendPending.map((item, index) => (
+					{friendPending && friendPending.length>0  ?
+						(friendPending.map((item, index) => (
 							<div className="friend-request__item" key={item.id}>
 								<div style={{ flex: '2', margin: '15px', marginTop: '18px' }}>
 									<div
 										className="friend-request__item__avatar"
 										onClick={() => {
-											dispatch(selectFriend(item.id));
+											dispatch(selectFriend(item.sender.id));
 										}}
 									>
-										<Avatar src={item.avatar_url} alt="" />
+										<Avatar src={item.sender.avatarUrl} alt="" />
 									</div>
 								</div>
 								<div className="friend-request__item__button">
 									<div
 										className="friend-request__item__name"
 										onClick={() => {
-											dispatch(selectFriend(item.id));
+											dispatch(selectFriend(item.sender.id));
 										}}
 									>
-										<p>{item.firstName + ' ' + item.lastName}</p>
+										<p>{item.sender.firstName + ' ' + item.sender.lastName}</p>
 									</div>
 									<div style={{ textAlign: 'start' }}>
 										<button
@@ -256,7 +271,7 @@ export default function LeftFriend() {
 									</div>
 								</div>
 							</div>
-						))}
+						))) : <Empty style={{marginTop:'20px'}} description="Không có lời mời kết bạn nào"/>}
 				</div>
 			) : null}
 			{selectedOption === 'all_friend' ? (
@@ -272,7 +287,7 @@ export default function LeftFriend() {
 						</button>
 						<h2>Tất cả bạn bè</h2>
 					</div>
-					{friend &&
+					{friend && friend.length>0 ? (
 						friend.map((item, index) => (
 							<div className="friend-request__item" key={item.id}>
 								<div style={{ margin: '15px', marginTop: '18px' }}>
@@ -297,7 +312,7 @@ export default function LeftFriend() {
 									</div>
 								</div>
 							</div>
-						))}
+						))): <Empty style={{marginTop:'20px'}} description="Không có bạn bè nào"/>}
 				</div>
 			) : null}
 
@@ -314,7 +329,7 @@ export default function LeftFriend() {
 						</button>
 						<h2>Gợi ý kết bạn</h2>
 					</div>
-					{friendOfFriend &&
+					{friendOfFriend && friendOfFriend.length>0 ? (
 						friendOfFriend.map((item, index) => (
 							<div className="friend-request__item" key={item.id}>
 								<div style={{ flex: '2', margin: '15px', marginTop: '18px' }}>
@@ -350,7 +365,7 @@ export default function LeftFriend() {
 									</div>
 								</div>
 							</div>
-						))}
+						))):<Empty style={{marginTop:'20px'}} description="Không có gợi ý kết bạn nào"/>}
 				</div>
 			) : null}
 			<ToastContainer />

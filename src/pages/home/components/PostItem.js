@@ -12,14 +12,25 @@ import { url } from '../../../constants/Constant';
 import Editor from './Editor';
 import LabelFile from '../../profile/component/LabelFile';
 import { toast } from 'react-toastify';
+import {ueseSelector, useSelector} from 'react-redux'
+import {selectselctPostHome} from '../../../redux/Group'
 function PostItem(props) {
-	console.log(props);
-	const [isLiked, setIsLiked] = useState(props.reaction !== null && props.reaction !== undefined ? true : false); // Trạng thái ban đầu là "không thích"
+	
+	const [myReaction, setMyReaction] = useState(props.reaction);
+	const [isLiked, setIsLiked] = useState(
+		props.reaction !== null &&
+			props.reaction !== undefined &&
+			(props.reaction === 'LIKE' || props.reaction.type === 'LIKE')
+			? true
+			: false
+	); // Trạng thái ban đầu là "không thích"
 	const [isEditPost, setisEditPost] = useState(false); // Trạng thái ban đầu là "không chỉnh sửa"
 	const [contentPost, setContentPost] = useState(props.content);
 	const [idComment, setIdComment] = useState(null);
 	const [responseComement, setResponseComement] = useState(false);
 	const [xemthem, setXemthem] = useState(false);
+	const [countReaction, setCountReaction] = useState(props.totalReactions);
+
 	const [ListReaction, setListReaction] = useState([
 		{
 			key: '1',
@@ -43,34 +54,56 @@ function PostItem(props) {
 	}
 
 	function handleLike() {
-		setIsLiked(!isLiked); // Đảo ngược trạng thái khi nút "like" được nhấn
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			conttentType: 'application/json',
 		};
-		let data = {};
-		if (isLiked === false) {
-			data = {
-				postId: props.id,
-				typeName: 'LIKE',
-			};
+		let data = {
+			postId: props.id,
+			typeName: 'LIKE',
+		};
+		// if (isLiked === false) {
+		// 	data = {
+		// 		postId: props.id,
+		// 		typeName: 'LIKE',
+		// 	};
+		// } else {
+		// 	data = {
+		// 		postId: props.id,
+		// 		typeName: 'DISLIKE',
+		// 	};
+		// }
+		if (myReaction) {
+			Api.delete(url + `api/v1/reactions/${myReaction.id}`, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						toast.success(response.data.message);
+						setCountReaction(response.data.result.count);
+						setMyReaction(null);
+					} else {
+						console.log(response.error);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		} else {
-			data = {
-				postId: props.id,
-				typeName: 'DISLIKE',
-			};
+			Api.put(url + 'api/v1/reactions', data, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						toast.success(response.data.message);
+						setCountReaction(response.data.result.count);
+						setMyReaction(response.data.result.reaction);
+						
+					} else {
+						console.log(response.error);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		}
-		Api.put(url + 'api/v1/reactions', data, { headers: headers })
-			.then((response) => {
-				if (response.data.statusCode === 200) {
-					toast.success(response.data.message);
-				} else {
-					console.log(response.error);
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		setIsLiked(!isLiked); // Đảo ngược trạng thái khi nút "like" được nhấn
 	}
 	const deletePost = () => {
 		const headers = {
@@ -81,6 +114,11 @@ function PostItem(props) {
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					console.log(response.data.result);
+					if(props.homePosts)
+					{
+						props.homePosts();
+					}
+					
 				} else {
 					console.log(response.error);
 				}
@@ -195,11 +233,13 @@ function PostItem(props) {
 					editcontent={EditContentPost}
 					index={props.id}
 					type={props.type}
+					homePosts={props.homePosts}
+					
 				></Editor>
 			) : null}
 			{responseComement ? (
-				<Editor cancel={openComment} idComment={idComment}>
-					{' '}
+				<Editor cancel={openComment} idComment={idComment} homePosts={props.homePosts}>
+					
 				</Editor>
 			) : null}
 			<div className="user-info">
@@ -218,9 +258,12 @@ function PostItem(props) {
 						</p>
 					</a>
 					<p className="user-name" style={{ display: 'block' }}>
-						đã đăng {props.type === 'QUESTION' ? 'Câu hỏi' : null}{' '}
-						{props.type === 'POST' ? 'Bài viết' : null} trong nhóm
+						đã đăng {props.type === 'QUESTION' ? 'Câu hỏi ' : null}
+						{props.type === 'POST' && props.content!== null && props.content !== undefined  && props.content!=='' ? 'bài viết ' : null} 
+						{props.type === 'POST' && props.content === '' ?  'tài liệu ': null}
+						trong nhóm
 					</p>
+
 				</div>
 				<Dropdown
 					menu={{
@@ -232,7 +275,7 @@ function PostItem(props) {
 					}}
 					style={{ border: 'none', flex: 1 }}
 				>
-					<Button style={{ color: 'black', backgroundColor: 'aliceblue', border: 'none', textAlign: 'end' }}>
+					<Button style={{ color: 'black', backgroundColor: 'white', border: 'none', textAlign: 'end' }}>
 						...
 					</Button>
 				</Dropdown>
@@ -249,12 +292,17 @@ function PostItem(props) {
 			</div>
 
 			<div className="file-post">
-				{props.refUrls &&
-					props.refUrls.map((item, index) => {
-						const indexAfterNumbers = item.indexOf('_') + 1;
-						const truncatedFileName = item.slice(indexAfterNumbers);
-						return <LabelFile key={index} type={'docx'} filename={truncatedFileName} link={item} />;
-					})}
+				{props?.refUrls && props.refUrls.length > 0 && props.refUrls !== null
+					? props.refUrls.map((item, index) => {
+							if (item !== null) {
+								console.log('item', item);
+								const indexAfterNumbers = item.indexOf('_') + 1;
+								const truncatedFileName = item.slice(indexAfterNumbers);
+								return <LabelFile key={index} type={'docx'} filename={truncatedFileName} link={item} />;
+							}
+							return null;
+					  })
+					: null}
 			</div>
 			<div>
 				<Dropdown
@@ -266,9 +314,7 @@ function PostItem(props) {
 						pointAtCenter: true,
 					}}
 				>
-					<Button style={{ backgroundColor: 'aliceblue', border: 'none' }}>
-						{props.totalReactions} likes
-					</Button>
+					<Button style={{ backgroundColor: 'white', border: 'none' }}>{countReaction} likes</Button>
 				</Dropdown>
 			</div>
 
@@ -301,7 +347,7 @@ function PostItem(props) {
 				<div>
 					{props.comments && props.comments.length > 1 ? (
 						<button className="comment-count" onClick={SeeMoreComent}>
-							{' '}
+							
 							Xem thêm {props.comments.length - 1} bình luận
 						</button>
 					) : null}
@@ -333,7 +379,7 @@ function PostItem(props) {
 			{props.comments && props.comments.length > 0 && xemthem === true ? (
 				<div>
 					<button className="comment-count" onClick={SeeMoreComent}>
-						{' '}
+						
 						Thu gọn
 					</button>
 					{props.comments.map((item, index) => (
@@ -362,7 +408,9 @@ function PostItem(props) {
 					))}
 				</div>
 			) : null}
-			<CommentPost user={props.authorAvatar} idPost={props.id} />
+			<div style={{width:'75%'}}>
+			<CommentPost user={props.authorAvatar} idPost={props.id}  homePosts={props.homePosts}/>
+			</div>
 		</div>
 	);
 }

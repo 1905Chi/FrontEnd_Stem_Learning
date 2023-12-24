@@ -31,9 +31,7 @@ import ProfileUser from '../pages/profile/ProfileUser/Profile';
 import ExamItem from '../pages/class/exam/ExamItem/ExamItem';
 import Submit from '../pages/class/exam/ExamItem/Submit';
 import LeftSubmit from '../pages/class/layouts/LeftSubmit';
-import LeftMessenger from '../pages/messenger/layouts/LeftMessenger';
-import RightMessenger from '../pages/messenger/layouts/RightMessenger';
-import Main from '../pages/messenger/main/Main';
+
 import MainSearch from '../pages/search/main/MainSearch';
 import LeftSearch from '../pages/search/layout/LeftSearch';
 import LeftEditExam from '../pages/class/layouts/LeftEditExam';
@@ -45,12 +43,13 @@ import ManageGroup from '../pages/manageGroup/ManageGroup';
 import Parent from  '../pages/user/Parent'
 import RightParent from '../pages/user/layouts/RightParent';
 
+import Meessage from '../pages/messenger/Message';
 const privateRoutes = [
 	{ path: '/home', component: Home, Left: Left, Right: Right },
 
 	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
 	{ path: '/classes/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
-	{ path: '/messenger', component: Main, Left: LeftMessenger, Right: RightMessenger },
+	
 	{ path: '/parent', component: Parent, Left: Left ,Right:RightParent},
 
 ];
@@ -70,15 +69,19 @@ const privateRoutes2page = [
 	
 
 ];
+
 const private1page = [
 	{ path: '/classes/:uuid/exam/createquiz', component: CreateQuiz },
 	{ path: '/profile', component: Profile },
+	{ path: '/profile/:uuid', component: ProfileUser },
 	{ path: '/classes/:uuid/exam/:id', component: ExamItem },
 	{ path: '/users', component: User, Left: Left, Right: Right },
 	{ path: '/subjects', component: Subject, Left: Left },
 	{ path: '/addresses', component: Address, Left: Left },
 	{ path: '/manage/groups', component: ManageGroup },
-	{ path: '/profile/:uuid', component: ProfileUser },
+	{ path: '/messenger/u/:userId', component: Meessage},
+	{ path: '/messenger/g/:chatRoomId', component: Meessage},
+	{ path: '/messenger', component: Meessage},
 ];
 const publicRoutes = [
 	{ path: '/login', component: Login },

@@ -1,7 +1,7 @@
 
   .cover-photo {
     width: 100%;
-    height: 300px;
+    height: 50vh;
     overflow: hidden;
     position: relative;
   }
@@ -12,28 +12,28 @@
     object-fit: cover;
   }
   
-  .profile-picture {
+  .profile-picture-self {
     width: 150px;
     height: 150px;
     border: 5px solid white;
     border-radius: 50%;
     background: #fff;
-    position: absolute;
-    top: 250px;
+    position: fixed;
+    top: 40%;
     left: 50px;
     transform: translateX(50% );
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     display: flex;
   }
-  .profile-picture__button{
+  .profile-picture-self__button{
     width: 40px;
     border-top: 3px solid black;
     border-radius: 50%;
     background: #4d4b4b;
     position: absolute;
-    top: 360px;
-    left: 210px;
+    top: 8vh;
+    left: 9vw;
     transform: translateX(50% );
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     overflow: hidden;
@@ -50,7 +50,7 @@
    
     background: #4d4b4b;
     position: absolute;
-    top: 73%;
+    top: 41%;
     left: 75%;
 
     transform: translateX(50% );
@@ -78,7 +78,7 @@
     text-align: center;
     align-items: center;
   }
-  .profile-picture img {
+  .profile-picture-self img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -91,7 +91,7 @@
     margin-top: 10px;
     right: 83px;
   }
-  .profile-picture__button{
+  .profile-picture-self__button{
     height: 30px;
     font-size: medium;
   }

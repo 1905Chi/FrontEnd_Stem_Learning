@@ -3,9 +3,11 @@ import {Avatar, Table} from 'antd'
 import { useState, useEffect } from 'react';
 import Api from '../../api/Api';
 import { url } from '../../constants/Constant';
+import { useNavigate } from 'react-router-dom';
 
 export default function Parent() {
     const [listChild, setListChild] = useState();
+    const navigate = useNavigate();
     const columns = [
         {
             title:'Số thứ tự',
@@ -64,6 +66,15 @@ export default function Parent() {
         })
         
     };
+    const ReviewTest = (record) => {
+      localStorage.setItem('typesubmit', 'review');
+      localStorage.setItem('StartAt', record.startedAt);
+      localStorage.setItem('submissionId', record.id);
+      
+      setTimeout(() => {
+        navigate('/exam/' + record.id + '/submit');
+      }, 1000);
+    }
     const expandedRowRender = (record) => {
         const columns = [
             {title:'Số thứ tự', dataIndex:'key', key:'key', render: (key) => Number(key) + 1,},
@@ -77,7 +88,7 @@ export default function Parent() {
             key: 'action',
             render: (text, record) => (
               <div>
-              <button>
+              <button  onClick={() => ReviewTest(record)}> 
                   Xem bài nộp
                   </button>
               </div>

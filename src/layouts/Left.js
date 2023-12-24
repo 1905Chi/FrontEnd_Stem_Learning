@@ -39,7 +39,7 @@ export default function Left  () {
 			icon: FcSportsMode,
 			onClick: logoutHandler,
 		},
-		user.role === 'PARENT' ? {
+		user.role === 'PARENT' || localStorage.getItem('role')==='PARENT' || user.role==='TEACHER'? {
 			title: 'Phụ huynh - Học sinh',
 			icon: FcCustomerSupport,
 			onClick: () => {
@@ -101,7 +101,7 @@ export default function Left  () {
 
 	return (
         
-		<Space  className="sidebar" direction="vertical" style={{ color: theme.foreground, background: theme.background }}>
+		<Space  className="sidebar" direction="vertical" style={{ color: theme.foreground, background: theme.background , width:'100%'}}>
 			{lists.map((list, index) => (
 				<List
 					key={index}

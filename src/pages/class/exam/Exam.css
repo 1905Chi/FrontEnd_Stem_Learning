@@ -1,7 +1,7 @@
 .exam-class{
     padding: 15px;
-    background-color: aliceblue;
-    width: 91%;
+    background-color: white;
+    width: 90%;
     border-radius: 10px;
     border-bottom: 5px solid #c4bebe;
     border-right: 5px solid #c4bebe;
@@ -12,7 +12,7 @@
 .exam-class__button{
     padding-top: 25px;
     font-size: 44px;
-    background-color: aliceblue;
+    background-color: white;
 }
 .exam-class__list{
     margin:15px 15px 0 15px;

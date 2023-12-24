@@ -19,7 +19,6 @@ export default function Submit() {
 	const navigate = useNavigate();
 	const { Countdown } = Statistic;
 	const { id } = useParams();
-	const [time, setTime] = useState(0);
 	const [targetTime, setTargetTime] = useState();
 	const [loading, setloading] = useState(false);
 	const [iscreate, setiscreate] = useState(false);
@@ -159,7 +158,7 @@ export default function Submit() {
 								userAnswerArray = item.userAnswer.split(',');
 								listAnserchonsed = [...listAnserchonsed, { id: item.id, answer: item.userAnswer }];
 							}
-							
+
 							return {
 								...item,
 								correctAnswer: correctAnswerArray,
@@ -169,7 +168,7 @@ export default function Submit() {
 						setsubmissionDetailId(newdata);
 						dispatch(selectexam(newdata));
 						dispatch(selectquestionChoose(listAnserchonsed));
-					
+
 						console.log(newdata);
 					} else {
 						toast.error(response.data.message);
@@ -250,83 +249,91 @@ export default function Submit() {
 	};
 
 	return (
-		<div className="submit-sipn">
-			{submition === null || (!submition && typesubmit !== 'review') ? (
-				<Skeleton active /> ? (
-					typesubmit === 'create' || typesubmit === 'continue'
-				) : (
-					<div>
-						<Countdown title="Thời gian còn lại" value={Date.now() + targetTime} onFinish={onFinish} />
-						{loading ? <Loading /> : null}
-						{submition &&
-							submition.questions.length > 0 &&
-							submition.questions.map((question , index) => (
-								<div key={question.submissionDetailId} className="item-question">
-									<div >
-									<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index+1}: </strong>
+		<div className="submit-sipn" style={{width:'72vw'}}>
+			{submition === null && typesubmit !== 'review' ? (
+				<Skeleton active />
+			) : (	typesubmit === 'create' || typesubmit === 'continue' ? (
+				<div>
+					<Countdown title="Thời gian còn lại" value={Date.now() + targetTime} onFinish={onFinish} />
+					{loading ? <Loading /> : null}
+					{submition &&
+						submition.questions.length > 0 &&
+						submition.questions.map((question, index) => (
+							<div key={question.submissionDetailId} className="item-question">
+								<div>
+									<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 									<div
 										className="quest-content"
 										dangerouslySetInnerHTML={{ __html: question.content }}
+										style={{marginTop:'15px'}}
+
 									/>
-
-									</div>
-									
-									<div>
-										{question.answers.map((answer, index) => (
-											<label key={index}>
-												{question.typeCode === 'multiple_choice' ? (
-													<input
-														type="checkbox"
-														name={`question_${question.submissionDetailId}`}
-														defaultChecked={answer.checked ? true : false}
-														style={{ width: '15px', height: '15px', marginRight: '10px' }}
-														onChange={() =>
-															handleRadioChange(
-																question.submissionDetailId,
-																answer.answer,
-																question.typeCode
-															)
-														}
-													/>
-												) : (
-													<input
-														type="radio"
-														name={`question_${question.submissionDetailId}`}
-														defaultChecked={answer.checked ? true : false}
-														style={{ width: '15px', height: '15px', marginRight: '10px' }}
-														onChange={() =>
-															handleRadioChange(
-																question.submissionDetailId,
-																answer.answer,
-																question.typeCode
-															)
-														}
-													/>
-												)}
-
-												{answer.answer}
-											</label>
-										))}
-									</div>
 								</div>
-							))}
-						<button onClick={onFinish}>Submit</button>
-					</div>
-				)
-			) : (
+
+								<div>
+									{question.answers.map((answer, index) => (
+										<label key={index}>
+											{question.typeCode === 'multiple_choice' ? (
+												<input
+													type="checkbox"
+													name={`question_${question.submissionDetailId}`}
+													defaultChecked={answer.checked ? true : false}
+													style={{ width: '15px', height: '15px', marginRight: '10px' }}
+													onChange={() =>
+														handleRadioChange(
+															question.submissionDetailId,
+															answer.answer,
+															question.typeCode
+														)
+													}
+												/>
+											) : (
+												<input
+													type="radio"
+													name={`question_${question.submissionDetailId}`}
+													defaultChecked={answer.checked ? true : false}
+													style={{ width: '15px', height: '15px', marginRight: '10px' }}
+													onChange={() =>
+														handleRadioChange(
+															question.submissionDetailId,
+															answer.answer,
+															question.typeCode
+														)
+													}
+												/>
+											)}
+
+											{answer.answer}
+										</label>
+									))}
+								</div>
+							</div>
+						))}
+					<button onClick={onFinish}>Submit</button>
+				</div>
+			) : null
+			)}
+
+			{typesubmit === 'review' ? (
 				<div>
 					{submissionDetailId && submissionDetailId.length > 0 ? (
 						<div>
 							<h4>Kết quả làm bài của bạn</h4>
-							{submissionDetailId.map((item ,index) => (
+							{submissionDetailId.map((item, index) => (
 								<div
-									style={{ backgroundColor: 'aliceblue', marginBottom: '15px', paddingLeft: '15px' , paddingBottom:'15px'}}
+									style={{
+										backgroundColor: 'aliceblue',
+										marginBottom: '15px',
+										paddingLeft: '15px',
+										paddingBottom: '15px',
+									}}
 								>
 									<div style={{ display: 'flex' }}>
-										<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index+1}: </strong>
+										<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 										<div
 											className="quest-content"
 											dangerouslySetInnerHTML={{ __html: item.question }}
+											style={{marginTop:'15px'}}
 										/>
 									</div>
 									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
@@ -355,7 +362,8 @@ export default function Submit() {
 						</div>
 					) : null}
 				</div>
-			)}
+			) : null}
+
 			<ToastContainer />
 		</div>
 	);

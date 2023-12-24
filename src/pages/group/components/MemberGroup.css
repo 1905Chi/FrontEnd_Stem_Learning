@@ -3,7 +3,7 @@
     margin:15px;
     border-bottom: 2px solid #e6e6e6;   
     border-radius: 15px;
-    background-color: aliceblue;
+    background-color: white;
     width: 95%;
 
 
@@ -58,9 +58,9 @@ margin: 15px;
 .member-group__item{
     display: flex;
     margin:15px;
-    border-bottom: 2px solid #e6e6e6;   
+    border-bottom: 4px solid #e6e6e6;   
     border-radius: 15px;
-    background-color: aliceblue;
+    background-color: white;
 }
 .member-group__item__avatar{
     margin: 15px;

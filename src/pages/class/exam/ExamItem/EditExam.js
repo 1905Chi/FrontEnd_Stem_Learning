@@ -15,65 +15,72 @@ import { Checkbox } from 'antd';
 
 export default function EditExam() {
 	const { id } = useParams();
-	const listQuestion = useSelector(selectselectquestion);
+	const [listQuestion,SetlistQuestion]= useState();
 	//const listAnswer = useSelector(selectselectanswer);
 	const [loading, setloading] = useState(false);
 	const [isEditQuestion, setIsEditQuestion] = useState(false);
 	const [isEditAnswer, setIsEditAnswer] = useState(false);
+	const [isCorrect, setIsCorrect] = useState(false);
 	const dispatch = useDispatch();
 	const cancel = () => {
 		setIsEditQuestion(false);
 	};
+
+	const [newAswer, setNewAnswer] = useState();
 	const [question, setQuestion] = useState();
 	const [answer, setAnswer] = useState();
 	const openEditQuestion = (record) => {
 		setIsEditQuestion(true);
 		setQuestion(record);
 	};
+	const header = {
+		Authorization: localStorage.getItem('accessToken'),
+		'Content-Type': 'application/json',
+	};
 	useEffect(() => {
-		const fetchData = async () => {
-			setloading(true);
-			const header = {
-				Authorization: localStorage.getItem('accessToken'),
-				'Content-Type': 'application/json',
-			};
 
-			try {
-				const questionsResponse = await Api.get(url + `api/v1/questions/exam?examId=${id}`, {
-					headers: header,
-				});
-				const questionsData = questionsResponse.data.result;
-
-				const questionsPromises = questionsData.map(async (question, index) => {
-					const answersResponse = await Api.get(url + `api/v1/questions/${question.id}`, { headers: header });
-					const answersData = answersResponse.data.result.answers;
-
-					const answers = answersData.map((answer, answerIndex) => ({
-						...answer,
-						key: answerIndex.toString(),
-					}));
-
-					return {
-						...question,
-						key: index.toString(),
-						answers: answers,
-					};
-				});
-
-				const questions = await Promise.all(questionsPromises);
-
-				dispatch(selectquestion(questions));
-			} catch (error) {
-				console.log(error);
-			} finally {
-				setloading(false);
-			}
-		};
 
 		fetchData();
 	}, [dispatch, id]);
 
+	const fetchData = async () => {
+		setloading(true);
+		
+
+		try {
+			const questionsResponse = await Api.get(url + `api/v1/questions/exam?examId=${id}`, {
+				headers: header,
+			});
+			const questionsData = questionsResponse.data.result;
+
+			const questionsPromises = questionsData.map(async (question, index) => {
+				const answersResponse = await Api.get(url + `api/v1/questions/${question.id}`, { headers: header });
+				const answersData = answersResponse.data.result.answers;
+
+				const answers = answersData.map((answer, answerIndex) => ({
+					...answer,
+					key: answerIndex.toString(),
+				}));
+
+				return {
+					...question,
+					key: index.toString(),
+					answers: answers,
+				};
+			});
+
+			const questions = await Promise.all(questionsPromises);
+
+			SetlistQuestion(questions)
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setloading(false);
+		}
+	};
+
 	const deleteAnswer = (record) => {
+
 		setloading(true);
 		console.log('record', record);
 		console.log('id', record.id);
@@ -89,6 +96,7 @@ export default function EditExam() {
 						position: toast.POSITION.TOP_RIGHT,
 						autoClose: 3000,
 					});
+					fetchData();
 				} else {
 					toast.error('Xóa thất bại', {
 						position: toast.POSITION.TOP_RIGHT,
@@ -101,9 +109,6 @@ export default function EditExam() {
 			})
 			.finally(() => {
 				setloading(false);
-				setTimeout(() => {
-					window.location.reload();
-				}, 3000);
 			});
 	};
 
@@ -112,6 +117,7 @@ export default function EditExam() {
 		setIsEditAnswer(true);
 	};
 
+	
 	const deleteQuestion = (record) => {
 		setloading(true);
 		Api.delete(url + `api/v1/questions/${record.id}`, {
@@ -126,6 +132,7 @@ export default function EditExam() {
 						position: toast.POSITION.TOP_RIGHT,
 						autoClose: 3000,
 					});
+					fetchData();
 				} else {
 					toast.error('Xóa thất bại', {
 						position: toast.POSITION.TOP_RIGHT,
@@ -193,7 +200,44 @@ export default function EditExam() {
 
 		return <Table columns={answerColumns} dataSource={record.answers} pagination={false} />;
 	};
-
+	const UpdateAnswer = () => {
+		setloading(true);
+		Api.put(
+			url + `api/v1/answers/${answer.id}`,
+			{
+				content: newAswer ? newAswer : answer.content,
+				isCorrect: isCorrect ? isCorrect : answer.isCorrect,
+			},
+			{
+				headers: {
+					Authorization: localStorage.getItem('accessToken'),
+					'Content-Type': 'application/json',
+				},
+			}
+		)
+			.then((res) => {
+				if (res.data.statusCode === 200) {
+					toast.success('Cập nhật thành công', {
+						position: toast.POSITION.TOP_RIGHT,
+						autoClose: 3000,
+					});
+					fetchData();
+					
+				} else {
+					toast.error('Cập nhật thất bại', {
+						position: toast.POSITION.TOP_RIGHT,
+						autoClose: 3000,
+					});
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {
+				setloading(false);
+				setIsEditAnswer(false);
+			});
+	};
 	const columns = [
 		{
 			title: 'Thứ tự',
@@ -262,11 +306,15 @@ export default function EditExam() {
 			width: '10%',
 		},
 	];
+	const UpdateContent = (e) => {
+		setNewAnswer(e.target.value);
+	}
+
 
 	return (
 		<>
 			{loading && <div className="loading"></div>}
-			{isEditQuestion && <EditInforQuestion question={question} cancel={cancel} />}
+			{isEditQuestion && <EditInforQuestion question={question} cancel={cancel} fetchData={fetchData} />}
 			{isEditAnswer && (
 				<div className="edit-answer-exam">
 					<div className="form-edit-answer-exam" style={{ width: '50%' }}>
@@ -289,9 +337,9 @@ export default function EditExam() {
 							</button>
 						</div>
 						<div style={{ display: 'flex', padding: 'px' }}>
-							<input defaultValue={answer.content} style={{ width: '50%' }} />
+							<input defaultValue={answer.content} style={{ width: '50%' }} onChange= {UpdateContent} />
 							<label style={{ paddingTop: '10px', margin: '0 20px' }}>Đáp án đúng</label>{' '}
-							{answer.isCorrect ? <Checkbox defaultChecked> </Checkbox> : <Checkbox> </Checkbox>}
+							{answer.isCorrect ? <Checkbox defaultChecked > </Checkbox> : <Checkbox > </Checkbox>}
 						</div>
 						<div style={{ textAlign: 'center' }}>
 							<button
@@ -303,6 +351,9 @@ export default function EditExam() {
 									height: '50px',
 									margin: '20px 0 15px 0',
 								}}
+								onClick={() => {
+									UpdateAnswer();
+								}	}
 							>
 								Lưu
 							</button>

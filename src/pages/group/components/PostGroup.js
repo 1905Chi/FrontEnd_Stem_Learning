@@ -11,7 +11,7 @@ import { selectSelectedPostGroup } from '../../../redux/Group';
 export default function PostGroup() {
 	const [open, setOpen] = useState(false);
 	const postgroup = useSelector(selectSelectedPostGroup);
-	console.log(postgroup);
+	
 	const [post, setPost] = useState([]);
 
 	// const fetchPostGroup = async () => {
@@ -50,12 +50,12 @@ export default function PostGroup() {
 	return (
 		<div>
 			<div className="post-group">
-				<h2 style={{ textAlign: 'start', margin: '15px', borderBottom: '3px solid', padding: '15px' }}>
-					Bài viết{' '}
+				<h2 style={{ textAlign: 'center', margin: '15px', borderBottom: '3px solid', padding: '15px' }}>
+					Bài viết
 				</h2>
 				{open && <Editor cancel={openEdttor} type="POST" />}
 				<button className="question-group__button" onClick={openEdttor} cancel={openEdttor}>
-					Bài viết mới
+					<strong>Bài viết mới</strong>
 				</button>
 			</div>
 			<div className="post-group__list">

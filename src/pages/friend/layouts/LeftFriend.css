@@ -4,6 +4,7 @@ position: relative;
     border-radius: 10px;
     margin: 10px;
     height: 100vh;
+    width: 100%;
     overflow-y: scroll;
 }
 .left-friend h2{
@@ -24,7 +25,7 @@ position: relative;
 
 }
 .option-friend {
-    width: 88%;
+    width: 83%;
     margin: 10px;
     padding: 10px;
     height:30px;
@@ -62,7 +63,7 @@ position: relative;
     border-bottom: 2px solid #e6e6e6;   
     border-radius: 15px;
     background-color: aliceblue;
-    width: 90%;
+    width: 100%;
     height : auto;
     display: flex;
     
@@ -91,7 +92,7 @@ position: relative;
     margin: 10px;
     font-size: 20px;
     font-weight: bold;
-    text-align: center;
+    text-align: start;
 }
 .header-left-friend button:hover{
     background-color: white;

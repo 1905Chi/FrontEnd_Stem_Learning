@@ -1,4 +1,4 @@
-import { Form, Input, Button, Radio, Tooltip, DatePicker, Select } from 'antd';
+import { Form, Input, Button,  } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -40,7 +40,7 @@ export default function RegisterTeacher(props) {
 			.post(url + 'api/v1/auth/register-teacher', data, config)
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
-				if (response.data.statusCode === 200) {
+				if (response.data.statusCode === 200 || response.data.statusCode === 201) {
 					toast.success(response.data.message);
 					setTimeout(() => {
 						navigate('/');
@@ -82,9 +82,6 @@ export default function RegisterTeacher(props) {
 
 		// Xử lý logic xác thực email ở đây (gửi email xác thực, kiểm tra địa chỉ email, vv.)
 		console.log(values);
-	};
-	const handleChange = (value) => {
-		console.log(`selected ${value}`);
 	};
 
 	return (

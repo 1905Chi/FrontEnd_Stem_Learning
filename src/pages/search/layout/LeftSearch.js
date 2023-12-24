@@ -21,17 +21,18 @@ export default function LeftSearch() {
 	const searchValue = searchParams.get('search');
 	useEffect(() => {
 		dispatch(selectOption('all'));
-
+	/// bài viết
 		Api.get(url + 'api/v1/posts/search?query=' + searchValue)
 			.then((res) => {
-				console.log(res.data);
+				
 				dispatch(selectpost(res.data));
+				console.log(res.data);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-
-		Api.get(url + 'api/v1/groups/search?type=CLASS&query=' + searchValue)
+		// lớp học
+		Api.get(url + 'api/v1/groups/search?isClass=1&query=' + searchValue)
 			.then((res) => {
 				console.log(res.data);
 
@@ -40,46 +41,46 @@ export default function LeftSearch() {
 			.catch((err) => {
 				console.log(err);
 			});
-		Api.get(url + 'api/v1/groups/search?type=GROUP&?query=' + searchValue)
+		// nhóm
+		Api.get(url + 'api/v1/groups/search?isClass=0&?query=' + searchValue)
 			.then((res) => {
 				dispatch(selectgroup(res.data));
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-		
 
-			searchUsers(searchValue);
+		searchUsers(searchValue);
 	}, [location]);
 	const searchUsers = async (searchValue) => {
 		try {
-		  const usersResponse = await Api.get(url + 'api/v1/users/search?query=' + searchValue);
-		  
-		  const headers = {
-			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-		  };
-	  
-		  const validateFriendshipPromises = usersResponse.data.map(async (user) => {
-			try {
-			  const friendshipResponse = await Api.get(url + 'api/v1/friendships/validate?friendId=' + user.id, { headers });
-			  const isFriend = friendshipResponse.data.result === true ? 1 : 0; // 1 đã kết bạn , 0 chưa kết bạn
-			  return { ...user, isFriend };
-			} catch (err) {
-			  console.error(err);
-			  return { ...user, isFriend: 2 };// chưa đăng nhập
-			}
-		  });
-	  
-		  const updatedUsers = await Promise.all(validateFriendshipPromises);
-		dispatch(selectSearchpeople(updatedUsers));
+			const usersResponse = await Api.get(url + 'api/v1/users/search?query=' + searchValue);
+
+			const headers = {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+			};
+
+			const validateFriendshipPromises = usersResponse.data.map(async (user) => {
+				try {
+					const friendshipResponse = await Api.get(url + 'api/v1/friendships/validate?friendId=' + user.id, {
+						headers,
+					});
+					const isFriend = friendshipResponse.data.result === true ? 1 : 0; // 1 đã kết bạn , 0 chưa kết bạn
+					return { ...user, isFriend };
+				} catch (err) {
+					console.error(err);
+					return { ...user, isFriend: 2 }; // chưa đăng nhập
+				}
+			});
+
+			const updatedUsers = await Promise.all(validateFriendshipPromises);
+			dispatch(selectSearchpeople(updatedUsers));
 		} catch (error) {
-		  console.error(error);
+			console.error(error);
 		}
-	  };
-	  
-	
-	  
+	};
+
 	const handleButtonClick = (option) => {
 		dispatch(selectOption(option));
 		setSelectedOption(option);

@@ -17,6 +17,10 @@ const ManageGroup = () => {
 	const [totalElemet, setTotalElemet] = useState(0);
 	const [totalpage, setTotalpage] = useState(0);
 	const [activeIndex, setActiveIndex] = useState(0);
+	const [keyGroup, setKeyGroup] = useState(0);
+	const [keyClass, setKeyClass] = useState(0);
+	const [keyMember, setKeyMember] = useState(0);
+
 
 	useEffect(() => {
 		fetchGroup();
@@ -28,7 +32,11 @@ const ManageGroup = () => {
 		try {
 			const response = await Api.get(url + 'api/v1/groups/admin/get-all-groups');
 			if (response.status === 200) {
-				setGroup(response.data.result.groups);
+				let data = response.data.result.groups;
+				data.forEach((item,index) => {
+					item.key = index + 1;
+				});
+				setGroup(data);
 			}
 		} catch (error) {
 			console.log(error);
@@ -39,7 +47,12 @@ const ManageGroup = () => {
 		try {
 			const response = await Api.get(url + 'api/v1/groups/admin/get-all-classes');
 			if (response.status === 200) {
-				setClassGroup(response.data.result.groups);
+				let data = response.data.result.groups;
+				data.forEach((item,index) => {
+					item.key = index + 1;
+				});
+
+				setClassGroup(data);
 			}
 		} catch (error) {
 			console.log(error);
@@ -61,7 +74,11 @@ const ManageGroup = () => {
 		try {
 			const response = await Api.get(url + `api/v1/group-members/admin/get-group-members`);
 			if (response.status === 200) {
-				setGroupMember(response.data.result.groupMembers);
+				let data= response.data.result.groupMembers;
+				data.forEach((item,index) => {
+					item.key = index + 1;
+				});
+				setGroupMember(data);
 			}
 		} catch (error) {
 			console.log(error);
@@ -73,14 +90,14 @@ const ManageGroup = () => {
 			<div id="avatar-name-container">
 				<img
 					src={
-						rowData.user.avatar_url
-							? rowData.user.avatar_url
+						rowData.user.avatarUrl
+							? rowData.user.avatarUrl
 							: 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
 					}
 					alt={rowData.user.name}
 					className="rounded-full w-12 h-12"
 				/>
-				<span>{rowData.user.first_name + ' ' + rowData.user.last_name}</span>
+				<span>{rowData.user.firstName + ' ' + rowData.user.lastName}</span>
 			</div>
 		);
 	};
@@ -95,8 +112,8 @@ const ManageGroup = () => {
 			<div id="avatar-name-container">
 				<img
 					src={
-						rowData.group.avatar_url
-							? rowData.group.avatar_url
+						rowData.group.avatarUrl
+							? rowData.group.avatarUrl
 							: 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
 					}
 					alt={rowData.group.name}
@@ -156,9 +173,12 @@ const ManageGroup = () => {
 	const columnsMemberGroup = [
 		{
 			title: 'Thứ tự',
-			dataIndex: 'id',
-			key: 'id',
-			render: (key) => Number(key) + 1,
+			dataIndex: 'key',
+			key: 'key',
+			render: (key) =>{
+				return Number(key) ;
+				
+			} ,
 			width: '5%',
 		},
 		{
@@ -170,14 +190,14 @@ const ManageGroup = () => {
 					<div id="avatar-name-container">
 						<img
 							src={
-								user.avatar_url
-									? user.avatar_url
+								user.avatarUrl
+									? user.avatarUrl
 									: 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
 							}
-							alt={user.first_name + ' ' + user.last_name}
+							alt={user.firstName + ' ' + user.lastName}
 							className="rounded-full w-12 h-12"
 						/>
-						<span>{user.first_name + ' ' + user.last_name}</span>
+						<span>{user.firstName + ' ' + user.lastName}</span>
 					</div>
 				);
 			},
@@ -190,28 +210,28 @@ const ManageGroup = () => {
 			render: (user) => user.email,
 			width: '20%',
 		},
-		{
-			title: 'Nhóm tham gia',
-			dataIndex: 'group',
-			key: 'group',
-			render: (group) => {
-				return (
-					<div id="avatar-name-container">
-						<img
-							src={
-								group.avatar_url
-									? group.avatar_url
-									: 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
-							}
-							alt={group.name}
-							className="rounded-full w-12 h-12"
-						/>
-						<span>{group.name}</span>
-					</div>
-				);
-			},
-			width: '20%',
-		},
+		// {
+		// 	title: 'Nhóm tham gia',
+		// 	dataIndex: 'group',
+		// 	key: 'group',
+		// 	render: (group) => {
+		// 		return (
+		// 			<div id="avatar-name-container">
+		// 				<img
+		// 					src={
+		// 						group.avatarUrl
+		// 							? group.avatarUrl
+		// 							: 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
+		// 					}
+		// 					alt={group.name}
+		// 					className="rounded-full w-12 h-12"
+		// 				/>
+		// 				<span>{group.name}</span>
+		// 			</div>
+		// 		);
+		// 	},
+		// 	width: '20%',
+		// },
 		{
 			title: 'Vai trò',
 			dataIndex: 'role',
@@ -248,10 +268,8 @@ const ManageGroup = () => {
 			dataIndex: 'key',
 			key: 'key',
 			render: (key) => {
-				if (key === null || key === undefined) {
-					return 1;
-				}
-				return Number(key) + 1;
+				return Number(key) ;
+				
 			},
 			width: '5%',
 		},
@@ -318,10 +336,7 @@ const ManageGroup = () => {
 			dataIndex: 'key',
 			key: 'key',
 			render: (key) => {
-				if (key === null || key === undefined) {
-					return 1;
-				}
-				return Number(key) + 1;
+				return Number(key) ;
 			},
 			width: '5%',
 		},
@@ -412,14 +427,14 @@ const ManageGroup = () => {
 						<div id="avatar-name-container">
 							<img
 								src={
-									user.avatar_url
-										? user.avatar_url
+									user.avatarUrl
+										? user.avatarUrl
 										: 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
 								}
-								alt={user.first_name + ' ' + user.last_name}
+								alt={user.firstName + ' ' + user.lastName}
 								className="rounded-full w-12 h-12"
 							/>
-							<span>{user.first_name + ' ' + user.last_name}</span>
+							<span>{user.firstName + ' ' + user.lastName}</span>
 						</div>
 					);
 				},

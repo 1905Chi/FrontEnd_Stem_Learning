@@ -41,15 +41,18 @@ const Subject = () => {
 
 	const fetchDetailSubject = async (id) => {
 		try {
-			const response = await Api.get(url + `api/v1/subjects/admin/get-subject/${id}`);
-			if (response.data.statusCode === 200) {
-				setDefaultValues({
-					code: response.data.result.code,
-					name: response.data.result.name,
-					description: response.data.result.description,
-				});
-				setVisibleEdit(true);
-			}
+			// const response = await Api.get(url + `api/v1/subjects/admin/get-subject/${id}`);
+			// if (response.data.statusCode === 200) {
+			// 	setDefaultValues({
+			// 		code: response.data.result.code,
+			// 		name: response.data.result.name,
+			// 		description: response.data.result.description,
+			// 	});
+			// 	setVisibleEdit(true);
+			// }
+
+		setDefaultValues(subject.filter((item) => item.id === id)[0]);
+		setVisibleEdit(true);
 		} catch (error) {
 			console.log(error);
 		}
@@ -105,7 +108,7 @@ const Subject = () => {
 		return (
 			<div id="actions">
 				<Button
-					id='button-edit'
+					id="button-edit"
 					onClick={() => {
 						setSubjectId(rowData.id);
 						fetchDetailSubject(rowData.id);
@@ -114,7 +117,7 @@ const Subject = () => {
 					Edit
 				</Button>
 				<Button
-					id='button-delete'
+					id="button-delete"
 					onClick={() => {
 						handleDelete(rowData.id);
 					}}
@@ -154,7 +157,7 @@ const Subject = () => {
 						description: defaultValues.description,
 					}}
 				>
-					<h3 style={{ color: 'blue' }}>Thông tin tài khoản:</h3>
+					<h3 style={{ color: 'blue' }}>Thông tin môn học:</h3>
 					<div className="information-account">
 						<Form.Item
 							name="code"
@@ -225,7 +228,7 @@ const Subject = () => {
 						description: defaultValues.description,
 					}}
 				>
-					<h3 style={{ color: 'blue' }}>Thông tin tài khoản:</h3>
+					<h3 style={{ color: 'blue' }}>Thông tin môn học:</h3>
 					<div className="information-account">
 						<Form.Item
 							name="code"
@@ -279,7 +282,7 @@ const Subject = () => {
 					<Input placeholder="Mã môn học" defaultValue={defaultValues.code} />
 				</div> */}
 			</Dialog>
-			<h1 style={{ textAlign: 'center' }}>Danh sách người dùng</h1>
+			<h1 style={{ textAlign: 'center' }}>Danh sách môn học</h1>
 			<div id="subject-manage-container">
 				<Button
 					id="add-subject-button"

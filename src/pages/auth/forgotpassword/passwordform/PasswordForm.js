@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from "react";
+import React, {useState} from "react";
 import { Form, Input, Button ,Spin} from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "./PasswordForm.css";
@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../../../../components/Loading";
 const PasswordForm = (props) => {
   const [loading, setLoading] = useState(false); 
-  const [uuidChecked, setUuidChecked] = useState(false);
   const navigate = useNavigate();
 
   

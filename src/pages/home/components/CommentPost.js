@@ -9,7 +9,7 @@ import Editor from './Editor';
 import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
-export default function CommentPost({user,idPost}) {
+export default function CommentPost({user,idPost, homePosts}) {
 
 	const [value, setValue] = useState('');
 	const [showEditor, setShowEditor] = useState(false);
@@ -30,6 +30,7 @@ const openEditor = () => {
 						cancel={closeEditor}
 						editcontent={setValue}
 						idPost={idPost}
+						homePosts={homePosts}
 						
 					/>
 				) : (
@@ -44,7 +45,7 @@ const openEditor = () => {
 				
 			
 			<div className="input-comment">
-				<Input placeholder="Viết bình luận" className="input-comment-self"  style={{width:'450px',margin:'10px 35px',borderRadius:'15px'}} onClick={openEditor}/>
+				<Input placeholder="Viết bình luận" className="input-comment-self"  style={{width:'100%',margin:'10px 35px',borderRadius:'15px'}} onClick={openEditor}/>
 				</div>
 		
 		</div>

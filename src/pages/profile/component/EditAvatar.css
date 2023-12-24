@@ -4,7 +4,7 @@
     border-radius: 50%;
     background: #fff;
     position: relative;
-    transform: translateX(180% );
+    transform: translateX(100% );
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     display: flex;
