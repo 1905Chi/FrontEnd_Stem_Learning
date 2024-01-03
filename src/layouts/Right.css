@@ -1,0 +1,26 @@
+.friend-request__title h3 ::after{
+    content: "";
+    position: absolute;
+    top: 15%;
+    width: 47%;
+    height: 1px;
+    background-color: black;
+    left: 50%;
+}
+
+.invite-group  :hover{
+    background-color: #f0f2f5;
+   
+
+}
+.invite-group{
+   
+    border: 1px solid #e6e6e6;
+    padding-bottom: 5%;
+    border-radius: 10%;
+}
+
+.invite-request__item{
+    display: flex;
+    
+}

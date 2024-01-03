@@ -3,8 +3,10 @@
 ## Thành viên:
 * Bùi Đặng Quốc Chí - 20110614
 * Trần Văn Kiệt - 20110665
+
 ## Thư viện chính:
 * Reactjs
+
 ## Ngôn ngữ sử dụng:
 * Ngôn ngữ chính: JavaScript
 ## Chức năng chính: 

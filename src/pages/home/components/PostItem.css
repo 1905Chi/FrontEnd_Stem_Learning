@@ -1,15 +1,25 @@
 .post-item {
   margin-bottom: 10px;
   margin-top: 20px;
-  background-color: aliceblue;
+  margin-right: 15px;
+  background-color: white;
+  border-radius: 15px;
+  border: 1px solid #c2bebe;
+  border-bottom: 10px solid #c2bebe;
+
 }
 
+.post-content{
+  max-height: 500px;
+}
 .user-info {
   display: flex;
+  margin: 15px 0 0 15px;
 }
 
 .user-name {
   flex: 7;
+  margin:25px 0 0 5px;
 }
 
 .post-actions-icon {
@@ -22,6 +32,10 @@
 .post-actions {
   display: flex;
   justify-content: space-around;
+  border-top: 0.1px solid #ddd0d0;
+  border-bottom: 0.1px solid #ddd0d0;
+  width: 90%;
+  margin: 0 30px;
 }
 
 .like-button {
@@ -42,4 +56,158 @@
   margin-right: 8px;
   color: white;
   /* Màu biểu tượng thích trắng */
+}
+
+.post-image{
+  width: 40%;
+  height: 40vh;
+  margin:0 5px
+}
+
+
+.image-post{
+  margin: 0 0 0 60px;
+  position: relative;
+}
+.post-content{
+  margin: 0 0 30px 30px;
+}
+
+.post-content img{
+  width: 80%;
+  height: 100%;
+}
+
+.avatarPost{
+  margin:5px
+}
+.ant-avatar {
+  width: 50px;
+  height: 50px;
+}
+.overlay {
+  position: absolute;
+  bottom: 4px;
+  right: 113px;
+  background-color: rgba(0, 0, 0, 0.7); /* Màu nền của lớp overlay */
+  color: #fff; /* Màu chữ trắng */
+ display: flex;
+ justify-content: center;
+ text-align: center;
+  width: 40%;
+  height: 40vh;
+  z-index: 2; /* Đảm bảo lớp overlay hiển thị trên ảnh */
+}
+
+.overlay-content{
+  text-align: center;
+  padding:90px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.file-post{
+  margin: 15px 0 15px 30px;
+  width: 90%;
+
+
+}
+.image-file{
+  flex:2;
+}
+
+.name-file{
+  flex:8;
+}
+.likes-count{
+  margin: 0 0 10px 30px;
+}
+
+.content-container {
+
+  overflow: hidden;
+  position: relative;
+}
+
+.content-container button :hover{
+  background-color: aliceblue;
+
+}
+
+.show-more.active {
+  display: block;
+}
+
+.show-more-button {
+ 
+  background-color: aliceblue;
+  color: #007bff;
+  cursor: pointer;
+  position: absolute;
+text-align: center;
+  bottom: 0;
+  padding: 5px;
+  width: 100%;
+  margin: 8px 0 0 0;
+
+}
+
+
+.show-more-button.active {
+  display: block;
+}
+.show-more-button :hover{
+  background-color: aliceblue;
+}
+
+
+.new-comment{
+  display: flex;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+.content-comment p{
+  margin-top: 0px;
+  margin-left: 0px;
+ 
+}
+
+.content-comment{
+  margin-left: 15px;
+  background-color: #eaeaf9;
+  border: 1px  solid #c4bebe;
+  border-radius: 15px;
+  width: fit-content;
+  padding-right: 15px;
+  max-width: 70%;
+  padding-left: 10px;
+  padding-top: 10px;
+  overflow-wrap: anywhere;
+}
+
+.react-post{
+  display: flex;
+    width: fit-content;
+    margin-left: 10px;
+
+}
+.react-post button {
+  background-color: aliceblue;
+  
+}
+.react-post button:hover {
+  background-color: aliceblue;
+
+  
+}
+
+.comment-count{
+  margin-left: 15px;
+  background-color: aliceblue;
+}
+.comment-count:hover{
+  background-color: aliceblue;
+}
+.comment-content img {
+  width: 100%;
+  height: auto;
 }

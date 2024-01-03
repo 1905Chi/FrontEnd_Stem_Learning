@@ -1,0 +1,88 @@
+.member-group-request__item{
+    display: flex;
+    margin:15px;
+    border-bottom: 2px solid #e6e6e6;   
+    border-radius: 15px;
+    background-color: white;
+    width: 95%;
+
+
+    
+}
+.member-group-request{
+    margin:15px;
+    border: 2px solid #e6e6e6;
+   
+    border-radius: 15px;
+
+}
+.member-group__header{
+    margin:15px;
+    border: 2px solid #e6e6e6;
+   
+    border-radius: 15px;
+}
+.member-group-request h3{
+    margin:15px;
+    border-bottom: 2px solid black;
+}
+.member-group__header h3{
+    margin:15px;
+    border-bottom: 2px solid black;
+}
+.member-group__header__search{
+    display: flex;
+    width: 80%;
+    margin: 60px;
+    margin-bottom: 15px;
+}
+.member-group-request__item__avatar{
+margin: 15px;
+}
+
+.member-group-request__item__name{
+    margin-top: 10px;
+
+}
+
+.member-group-request__item__button{
+    
+    text-align: end;
+    flex: auto;
+
+}
+.member-group__header__search input{
+    border-radius: 15px
+
+}
+.member-group__item{
+    display: flex;
+    margin:15px;
+    border-bottom: 4px solid #e6e6e6;   
+    border-radius: 15px;
+    background-color: white;
+}
+.member-group__item__avatar{
+    margin: 15px;
+}
+.member-group__item__name{
+    margin-top: 10px;
+    display: flex;
+}
+.member-group-request__item__name p{
+    text-align: start;
+}
+.member-group__item__name__role{
+    margin-top: 15px;
+    margin-left: 15px;
+}
+.member-group-request__item__button{
+    flex: 8;
+}
+.member-group-request__item__button button{
+    height: 80%;
+    width: 35%;
+    margin-left: 0px;
+    border-radius: 5px;
+    margin-bottom: 5px
+}

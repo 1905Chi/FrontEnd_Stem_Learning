@@ -1,0 +1,331 @@
+.landing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../../../public/bg_2.jpg');
+    background-size: cover;
+    background-attachment: fixed; /* Để giữ ảnh nền cố định */
+    
+    width: 100%;
+}
+.galleria-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+.register-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    background-image: url("../../../public/bg_1.png");
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+.card-container {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0 0 5rem 0;
+}
+.card-led-register {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   /* padding: 5rem 0 0 0;*/
+    gap: 5rem;
+}
+@keyframes colorChangeTeacher {
+    0% { background-color: #4d868a; }
+}
+@keyframes colorChangeStudent {
+    0% { background-color: #7e4d8a; }
+}
+@keyframes colorChangeParent {
+    0% { background-color: #9c1616; }
+}
+.item-image {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 1rem;
+}
+.card-register {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    border:#dadada solid 1px;
+    border-radius: 1rem;
+    padding: 5rem 0 3rem 0;
+}
+.card-register h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem;
+    color: #9c1616;
+}
+.card-register h4 {
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 1rem;
+    padding-bottom: 5rem;
+}
+
+.info-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+.info-header-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.info-header-content {
+    width: 35rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.info-header-content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem;
+}
+.info-header-content h4 {
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 1rem;
+}
+.info-header-image {
+    width: 25rem;
+    height: 25rem;
+}
+.info-header-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+.info-body-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.info-body-content-class {
+    width: 25rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2rem;
+}
+.info-body-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+
+}
+.info-body-content h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 1rem;
+}
+.info-body-content h4 {
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 1rem;
+}
+.info-body-image {
+    width: 35rem;
+    height: 35rem;
+}
+.info-body-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+.content-oustanding-container {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.content-oustanding {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.content-oustanding h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 1rem;
+}
+.content-oustanding h4 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 1rem;
+}
+/* card */
+.card {
+    width: 95%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    background-color: #ffffff;
+    border:#dadada solid 1px;
+    gap: 1rem;
+    border-radius: 1rem;
+}
+.card-image {
+    width: 15rem;
+    height: 15rem;
+}
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+.card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+.card-content-footer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+
+}
+.card-content-footer span {
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 1rem;
+}
+.custom-carousel {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+.p-carousel-items-content {
+    overflow: hidden;
+    width: 95%;
+    height: 100%;
+    margin-bottom: 2rem;
+}
+.content-partner-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    background-color: white;
+}
+.partner-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+}
+.partner-image {
+    width: 15rem;
+    height: 15rem;
+}
+.partner-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+
+
+
+
+
+button {
+    background-color: #eeeeee;
+    color: #000000;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    text-align: center;
+    max-width: 100%;
+    flex: auto;
+    height: auto;
+    margin: 0 0.5rem 0 0.5rem;
+}
+button:hover {
+    background-color: #dadada;
+}
+span {
+    font-size: 1rem;
+    
+}
+.Button-register span{
+color: white;
+}

@@ -1,0 +1,35 @@
+.labelItem{
+    display: flex;
+    margin: 0 0 10px 20px;
+    flex:10;
+    background-color: white;
+    color:black;
+    width: 90%;
+}
+.labelItem:hover{
+    background-color: #ccc;
+    cursor: pointer;
+}
+.image-group{
+
+    border-radius: 15%;
+    flex:2;
+    border: 0.5px solid #ccc;
+    margin-right: 5px;
+    width: 80%;
+}
+.img-gr{
+    min-height: 20%;
+    max-height: 20%;
+    width: 92%;
+    min-width: 25%;
+    /* height: 100%; */
+    max-width: 93%;
+    
+}
+.name-group{
+    flex:8;
+    font-size: 1rem;
+    margin-top: 4%;
+}
+

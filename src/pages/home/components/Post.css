@@ -1,5 +1,15 @@
 .postbutton {
+    background-color: #007bff;
+    color: #fff;  
+    border: none;
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
     width: 100%;
+    flex: auto;
+    height: 50px;
+    margin: 10px;
 }
 
 .anhluachon {
@@ -11,4 +21,43 @@
 
 .post {
     background-color: aliceblue;
+    border-radius: 10px;
+    width: 98%;
+    height: auto;
+ 
 }
+
+.ant-select-selection-item{
+    font-size: 15px;
+}
+.file-post-choonse{
+    width: 100%;
+
+
+}
+.image-container {
+    margin-bottom: 10px;
+    margin-right: 5px;
+    position: relative;
+   
+  }
+
+  .file-container {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: none;
+    
+    color: black;
+    padding: 0px 0px;
+    border-radius: 5px;
+    height: 18px;
+    width: 20px;
+    cursor: pointer;
+    font-size: 100px;
+  }

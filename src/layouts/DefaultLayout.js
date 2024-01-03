@@ -1,26 +1,54 @@
-import Header from "./Header";
-import Left from "./Left";
-import React from "react";
-import { Layout } from "antd";
-import "./DefaultLayout.css";
-const { Sider, Content } = Layout;
-export default function DefaultLayout({ children }) {
-  return (
-    <>
-      <Layout className="header">
-        <Header> </Header>{" "}
-      </Layout>{" "}
-      <Layout className="content">
-        <Sider width="20%" theme="light">
-          {" "}
-          <Left> </Left>{" "}
-        </Sider>{" "}
-        <Content style={{ margin: "16px", flex: 5 }}> {children} </Content>{" "}
-        <Sider width="20%" theme="light">
-          {" "}
-          {/* Đặt nội dung thanh right ở đây */}{" "}
-        </Sider>{" "}
-      </Layout>{" "}
-    </>
-  );
+import './DefaultLayout.css';
+import Topbar from '../components/Topbar';
+import React from 'react';
+import {
+	AppstoreOutlined,
+	BarChartOutlined,
+	CloudOutlined,
+	ShopOutlined,
+	TeamOutlined,
+	UploadOutlined,
+	UserOutlined,
+	VideoCameraOutlined,
+} from '@ant-design/icons';
+import { Layout, Menu, theme } from 'antd';
+import { Col, Row } from 'antd';
+const { Header, Content, Footer, Sider } = Layout;
+const items = [
+	UserOutlined,
+	VideoCameraOutlined,
+	UploadOutlined,
+	BarChartOutlined,
+	CloudOutlined,
+	AppstoreOutlined,
+	TeamOutlined,
+	ShopOutlined,
+].map((icon, index) => ({
+	key: String(index + 1),
+	icon: React.createElement(icon),
+	label: `nav ${index + 1}`,
+}));
+export default function DefaultLayout({ Left, Right, children }) {
+	const {
+		token: { colorBgContainer, borderRadiusLG },
+	} = theme.useToken();
+	return (
+		<>
+			<div style={{backgroundColor:'rgb(244 246 250)'}}>
+				<div className="header" style={{ background: colorBgContainer }}>
+					<Topbar />
+				</div>
+				<Row className="body-web">
+					<Col span={5} className="left-web">
+						<div className="left-web-content">{Left}</div>
+					</Col>
+					<Col span={19} className="main-web">
+						<div className="main-web-content">{children}</div>
+					</Col>
+				</Row>
+				<div className="right-web">{Right}</div>
+
+			</div>
+		</>
+	);
 }

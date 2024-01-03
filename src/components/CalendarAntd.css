@@ -1,0 +1,65 @@
+.events {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .events .ant-badge-status {
+    top: 50%;
+  transform: translateY(-50%);
+  }
+  .notes-month {
+    font-size: 28px;
+    text-align: center;
+  }
+  .notes-month section {
+    font-size: 28px;
+  }
+  /* ./CalendarAntd.css */
+
+/* Đảm bảo rằng định dạng ngày không bị thay đổi */
+
+
+/* Đặt Badge ở giữa ngày */
+.events .ant-badge-status-dot {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ./CalendarAntd.css */
+
+/* Thêm style cho các ngày có sự kiện */
+.events.has-event {
+  background-color: red;
+}
+
+/* Style cho đánh dấu ngày có sự kiện */
+.event-day {
+  width: 100%;
+  height: 100%;
+  background-color: red;
+  opacity: 0.5; /* Điều chỉnh độ mờ nếu cần */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.overlay-event-create{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  color: black;
+
+  z-index: 250;
+}
+.overlay-event-create label{
+  color: black;
+}
+.event-hover{
+  position: absolute;
+  width: 100%;
+  height: auto;
+  top:50%;
+  background-color:black;
+  
+  z-index: 500;
+}
