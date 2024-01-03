@@ -18,10 +18,10 @@
     border: 5px solid white;
     border-radius: 50%;
     background: #fff;
-    position: fixed;
-    top: 40%;
+    position: absolute;
+    top: 50%;
     left: 50px;
-    transform: translateX(50% );
+    transform: translateY(-40%);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     display: flex;
@@ -32,9 +32,9 @@
     border-radius: 50%;
     background: #4d4b4b;
     position: absolute;
-    top: 8vh;
-    left: 9vw;
-    transform: translateX(50% );
+    top: 12vh;
+    
+    
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     display: flex;
@@ -44,7 +44,7 @@
 
 
   }
-  .cover-picture__button{
+  .cover-picture-self__button{
     width: 165px;
     border-top: 3px solid black;
    
@@ -83,11 +83,12 @@
     height: 100%;
     object-fit: cover;
   }
-  .usename-button{
+  .usename-button-self{
     
     display: flex;
     width: 55%;
-    justify-content: space-between;
+    justify-content: center;
+    position: absolute;
     margin-top: 10px;
     right: 83px;
   }

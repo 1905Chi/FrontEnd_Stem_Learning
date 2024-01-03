@@ -45,14 +45,35 @@ export default function ExamItem(props) {
 	};
 	const ReviewExam = (record) => {
 		localStorage.setItem('typesubmit', 'review');
-		console.log(record);	
+		console.log(record);
 		console.log(examId);
-		localStorage.setItem('StartAt', examId.submission? examId.submission.startedAt : record.startedAt);
+		localStorage.setItem('StartAt', examId.submission ? examId.submission.startedAt : record.startedAt);
 		localStorage.setItem('submissionId', examId.submission ? examId.submission.id : record.id);
 		localStorage.setItem('duration', examId.exam.duration);
 		setTimeout(() => {
 			navigate('/exam/' + id + '/submit');
 		}, 1000);
+	};
+	const deleteExam = () => {
+		const headers = {
+			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+		};
+		Api.delete(url + 'api/v1/exams/' + id, { headers: headers })
+
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success('Xóa thành công');
+					setTimeout(() => {
+						navigate('/classes/' + uuid);
+					}, 1000);
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			});
 	};
 
 	useEffect(() => {
@@ -74,15 +95,40 @@ export default function ExamItem(props) {
 					const endTime = moment(response.data.result.exam.endedAt, 'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
 					const now = new Date();
 					if (response.data.result.submission !== null) {
-						setconverArray([
-							{
-								key: 0,
-								startedAt: response.data.result.submission.startedAt,
-								endedAt: response.data.result.submission.endedAt === null ? response.data.result.submission.startedAt : response.data.result.submission.endedAt,
-								closeAt: response.data.result.exam.endedAt,
-								score: response.data.result.submission.score,
-							},
-						]);
+						let data=response.data.result.submission
+						let correct = 0;
+						let totalquestion = 0;
+						Api.get(url + 'api/v1/submission-details/detail/' + response.data.result.submission.id, {
+							headers: headers,
+						})
+							.then((response) => {
+								if (response.data.statusCode === 200) {
+									totalquestion = response.data.result.submissionDetail.length;
+									response.data.result.submissionDetail.forEach(element => {
+										if (element.score === 1) {
+											correct++;
+										}
+									});
+									console.log(`${correct}/${totalquestion}`);
+									setconverArray(() => [
+										{
+										  key: 0,
+										  startedAt: data.startedAt,
+										  endedAt:
+											data.endedAt === null
+											  ? data.startedAt
+											  : data.endedAt,
+										  closeAt: data.endedAt,
+										  score: data.score,
+										  correct: `${correct}/${totalquestion}`,
+										},
+										// Giữ nguyên các phần tử cũ 
+									  ]);
+								}
+							})
+							.catch((error) => {
+								toast.error(error);
+							});
 					}
 
 					const nowTime =
@@ -212,11 +258,9 @@ export default function ExamItem(props) {
 		},
 		{
 			title: 'Học sinh',
-			dataIndex: 'firstName'+'lastName',
-			key: 'firstName' + ' ' + 'lastName',
-			render: (firstName, lastName) =>(
-				<span>{firstName + ' ' + lastName}</span>
-			)
+			
+			key: 'firstName',
+			render: (record) => <span>{record.firstName + ' ' + record.lastName}</span>,
 		},
 		{
 			title: 'Điểm',
@@ -239,7 +283,7 @@ export default function ExamItem(props) {
 			key: 'action',
 			render: (text, record) => (
 				<span>
-					<button className="exam-item__button__start" onClick={()=>ReviewExam(record)}>
+					<button className="exam-item__button__start" onClick={() => ReviewExam(record)}>
 						Xem
 					</button>
 				</span>
@@ -259,6 +303,11 @@ export default function ExamItem(props) {
 			key: 'endedAt',
 		},
 		{
+			title: 'Số câu đúng',
+			dataIndex: 'correct',
+			key: 'correct',
+		},
+		{
 			title: 'Điểm',
 			dataIndex: 'score',
 			key: 'score',
@@ -267,16 +316,16 @@ export default function ExamItem(props) {
 			title: 'Action',
 			dataIndex: 'closeAt',
 			key: 'closeAt',
-			render: (closeAt) => (	
-			checkClose(closeAt) 
-				?
-				<span>
-					<button className="exam-item__button__start" onClick={ReviewExam}>
-						Xem lại bài làm{' '}
-					</button>
-				</span>
-				: <span>{closeAt}</span>
-			),
+			render: (closeAt) =>
+				checkClose(closeAt) ? (
+					<span>
+						<button className="exam-item__button__start" onClick={ReviewExam}>
+							Xem lại bài làm{' '}
+						</button>
+					</span>
+				) : (
+					<span>{closeAt}</span>
+				),
 		},
 	];
 
@@ -299,18 +348,21 @@ export default function ExamItem(props) {
 							<p>{examId.exam.description}</p>
 							<p>Thời gian làm bài: {examId.exam.duration} phút</p>
 						</div>
-						{examId && examId.submission === null &&( user.role === 'STUDENT' || localStorage.getItem('role')==='STUDENT' ) && isWithinTimeRange ? (
+						{examId &&
+						examId.submission === null &&
+						(user.role === 'STUDENT' || localStorage.getItem('role') === 'STUDENT') &&
+						isWithinTimeRange ? (
 							<div className="exam-item__button">
 								<button className="exam-item__button__start" onClick={CreateSubmit}>
 									Bắt đầu làm bài
 								</button>
 							</div>
 						) : null}
-						{user.role === 'TEACHER' || localStorage.getItem('role')==='TEACHER' ? (
+						{user.role === 'TEACHER' || localStorage.getItem('role') === 'TEACHER' ? (
 							<div>
 								<div style={{ display: 'flex', justifyContent: 'center' }}>
 									<div className="exam-item__button">
-										<button className="exam-item__button__start" onClick={() => {}}>
+										<button className="exam-item__button__start" onClick={() => {deleteExam()}}>
 											Xóa
 										</button>
 									</div>
@@ -328,7 +380,7 @@ export default function ExamItem(props) {
 								<div></div>
 							</div>
 						) : null}
-						{(user.role === 'STUDENT' || localStorage.getItem('role')==='STUDENT') &&
+						{(user.role === 'STUDENT' || localStorage.getItem('role') === 'STUDENT') &&
 						examId &&
 						examId.submission !== null &&
 						examId.submission.endedAt === null &&
@@ -343,7 +395,7 @@ export default function ExamItem(props) {
 								</button>
 							</div>
 						) : null}
-						{(user.role === 'STUDENT' || localStorage.getItem('role')==='STUDENT') &&
+						{(user.role === 'STUDENT' || localStorage.getItem('role') === 'STUDENT') &&
 						examId &&
 						examId.submission !== null ? (
 							<div className="exam-item__button">
@@ -356,7 +408,7 @@ export default function ExamItem(props) {
 								/>
 							</div>
 						) : null}
-						{(user.role === 'TEACHER' || localStorage.getItem('role')==='TEACHER') ? (
+						{user.role === 'TEACHER' || localStorage.getItem('role') === 'TEACHER' ? (
 							<div style={{ textAlign: 'center' }}>
 								<h3>Danh sách bài làm</h3>
 

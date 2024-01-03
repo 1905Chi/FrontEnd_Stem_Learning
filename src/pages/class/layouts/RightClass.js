@@ -143,7 +143,7 @@ const RightClass = () => {
 					<div className="button-add" onClick={create}>
 						<Button
 							type="primary"
-							style={{ width: '100%', marginTop: '10vh', height: '50px', marginLeft: '0px' }}
+							style={{ width: '100%', marginTop: '0', height: '50px', marginLeft: '0px' }}
 						>
 							<span style={{ fontSize: '15px', fontWeight: '500' }}>+ Tạo Lớp </span>
 						</Button>
@@ -153,7 +153,7 @@ const RightClass = () => {
 						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 							<h3 style={{textAlign:'center', width:'100%', color: '#2424a5'}}>Lớp học của bạn</h3>
 						</div>
-						<div style={{ height: '30vh', overflowY: 'scroll' }}>
+						<div style={{ height: '52vh', overflowY: 'scroll' }}>
 							{listClassJoin &&
 								listClassJoin.map((mygroup, index) => {
 									return (

@@ -264,7 +264,7 @@ export default function EditInforExam(props) {
 													onClick={() => handleEditQuestion(index)}
 												>
 													<lable> Câu hỏi: </lable>
-													<div dangerouslySetInnerHTML={{ __html: value[index] }} />
+													<div dangerouslySetInnerHTML={{ __html: value[index] }} className='question-content-edit' />
 												</div>
 
 												<Form.Item name={[name, 'answerType']} valuePropName="checked">

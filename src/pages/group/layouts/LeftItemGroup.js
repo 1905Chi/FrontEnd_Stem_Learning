@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LableGroup from './../components/LableGroup';
-import { Button, Checkbox } from 'antd';
+import { Button, Checkbox, Dropdown } from 'antd';
 import './LeftItemGroup.css';
 import { BsFillCalendar2WeekFill } from 'react-icons/bs';
 import { InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
@@ -27,12 +27,15 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaSignsPost } from 'react-icons/fa6';
 import { MdGroups2 } from 'react-icons/md';
-import { Skeleton, Avatar } from 'antd';
+import { Skeleton, Avatar, Input } from 'antd';
 import { Dialog } from 'primereact/dialog';
 import moment from 'moment';
 import { selectFriendInvite, editSelectFriendInvite, selectselectFriendInvite } from '../../../redux/Friend';
 import anh_logo_1 from './../../../assets/images/anh_logo_1.jpg';
 import Loading from '../../../components/Loading';
+import { Edit } from '@material-ui/icons';
+import { MdDriveFileRenameOutline } from "react-icons/md";
+import { CiCamera } from "react-icons/ci";
 export default function LeftItemGroup() {
 	const { theme } = UseTheme();
 	const [inforGroup, setInforGroup] = useState(null);
@@ -51,6 +54,10 @@ export default function LeftItemGroup() {
 	const selectedOption = useSelector(selectSelectedOption);
 	const [listFriendSearch, setListFriendSearch] = useState([...listfriend]);
 	const listfriendSelected = useSelector(selectselectFriendInvite);
+	const [newName, setNewName] = useState('');
+	const [openEditName, setOpenEditName] = useState(false);
+	const [newDescription, setNewDescription] = useState('');
+	const [openChangeAvatar, setOpenChangeAvatar] = useState(false);
 	const headers = {
 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
@@ -60,15 +67,12 @@ export default function LeftItemGroup() {
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					toast.success(response.data.message);
-				} 
-				else if(response.data.statusCode === 201){
+				} else if (response.data.statusCode === 201) {
 					toast.success(response.data.message);
 					window.location.reload();
-				}
-				else {
+				} else {
 					toast.error(response.data.message);
 				}
-
 			})
 			.catch((error) => {
 				toast.error(error);
@@ -84,13 +88,13 @@ export default function LeftItemGroup() {
 				}
 			});
 	};
-
-	useEffect(() => {
+	const getGroup = () => {
 		Api.get(url + 'api/v1/groups/' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					if (response.data.result.user) {
 						setRole(response.data.result.user.role);
+						localStorage.setItem('roleGroup', response.data.result.user.role);
 					}
 
 					setGroup(response.data.result.group);
@@ -122,6 +126,9 @@ export default function LeftItemGroup() {
 					}, 2000);
 				}
 			});
+	};
+	useEffect(() => {
+		getGroup();
 		Api.get(url + 'api/v1/group-members?groupId=' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
@@ -273,6 +280,92 @@ export default function LeftItemGroup() {
 			setVisible(false);
 		}
 	};
+	const items = [
+		{
+			key:'1',
+			label:(<div style={{display:'flex',alignItems:'center'}} onClick={()=>{setOpenEditName(true)}}><MdDriveFileRenameOutline style={{marginRight:'10px'}}/>Đổi thông tin nhóm</div>),
+			
+		},
+		{
+			key:'2',
+			label: (<div style={{display:'flex',alignItems:'center'}} onClick={()=>{setOpenChangeAvatar(true)}}><CiCamera style={{marginRight:'10px'}}/>Đổi ảnh đại diện</div>),
+			
+			
+		},
+	];
+	const EditNameGroup = () => {
+		setLoading(true);
+		Api.put(
+			url + 'api/v1/groups/' + uuid + '/updateDetail',
+			{
+				name: newName,
+				description: newDescription,
+			},
+			{ headers: headers }
+		)
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success(response.data.message);
+					setOpenEditName(false);
+
+					setNewName('');
+					setNewDescription('');
+					window.location.reload();
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	};
+	const [AvartarPicture, setAvartarPicture] = useState(group.avatarUrl);
+	const [selectedFile, setSelectedFile] = useState(null);
+	const openAvatarPictureDialog = () => {
+		document.getElementById('AvartarPictureInput').click();
+	};
+	const handleAvatarPictureChange = (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				setAvartarPicture(reader.result);
+				setSelectedFile(file);
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+	const UpdateAvatar = () => {
+		const headers = {
+			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+			'Content-Type': 'multipart/form-data',
+		};
+		setLoading(true);
+		let data = new FormData();
+		data.append('mediaFile', selectedFile);
+		Api.put(url + 'api/v1/groups/' + uuid + '/updateAvatar', data, {
+			headers: headers,
+		})
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success(response.data.message);
+					setAvartarPicture(response.data.result);
+					setSelectedFile(null);
+					window.location.reload();
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	};
 	return (
 		<>
 			{loading ? <Loading /> : null}
@@ -350,6 +443,107 @@ export default function LeftItemGroup() {
 					</button>
 				</div>
 			</Dialog>
+			<Dialog
+				header= {<div style={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5em" }}>Đổi thông tin</div>}
+				visible={openEditName}
+				style={{ width: '50vw' }}
+				onHide={() => {
+					setOpenEditName(false);
+					setNewName('');
+					setNewDescription('');
+				}}
+			>
+				<div className="p-fluid">
+					<div className="p-field" style={{textAlign:'center'}}>
+						<div style={{display:'flex', marginTop:'2rem'}}>
+						<label >Tên nhóm</label>
+						<Input
+							value={newName}
+							label="Tên nhóm"
+							onChange={(e) => {
+								setNewName(e.target.value);
+							}}
+							placeholder={group.name}
+							style={{ marginBottom: '1rem' , width:'80%', marginLeft:'1.2rem'}}
+						/>
+						</div>
+						<div style={{display:'flex'}}>
+						<label htmlFor="description">Mô tả</label>
+						<Input
+							value={newDescription}
+							label="Mô tả"
+							onChange={(e) => {
+								setNewDescription(e.target.value);
+							}}
+							placeholder={group.description}
+							style={{ marginBottom: '1rem', width:'80%' , marginLeft:'3rem'}}
+						/>
+						</div>
+					</div>
+				</div>
+				<Button
+					type="primary"
+					style={{ width: '10rem', marginTop: '1rem' }}
+					onClick={() => {
+						EditNameGroup();
+					}}
+				>
+					Lưu
+				</Button>
+			</Dialog>
+
+			<Dialog
+				header= {<div style={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5em" }}>Đổi ảnh đại diện</div>}
+				visible={openChangeAvatar}
+				style={{ width: '50vw' }}
+				onHide={() => {
+					setOpenChangeAvatar(false);
+				}}
+			>
+				<div className="p-fluid">
+					<div className="p-field">
+						<div className="anhdaidien">
+							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+								<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Ảnh bìa</h3>
+								<button
+									style={{
+										textAlign: 'end',
+										margin: '0 10px 0 0',
+										color: 'blue',
+										backgroundColor:'blanchedalmond'
+									}}
+									onClick={openAvatarPictureDialog}
+								>
+									Thêm
+								</button>
+							</div>
+							<div className="Cover-picture-edit">
+								<img src={AvartarPicture} alt="Cover Picture" />
+							</div>
+						</div>
+						<div>
+							<input
+								style={{ display: 'none' }}
+								type="file"
+								accept="image/*"
+								onChange={handleAvatarPictureChange}
+								id="AvartarPictureInput"
+							/>
+						
+						</div>
+					</div>
+				</div>
+				<Button
+					type="primary"
+					style={{ width: '10rem', marginTop: '1rem' }}
+					onClick={() => {
+						UpdateAvatar();
+					}}
+				>
+					Lưu
+				</Button>
+			</Dialog>
+
 			<div style={{ position: 'relative', borderRight: '0.2px solid black', top: '45px' }}>
 				{memberGroup === null || inforGroup === null ? (
 					<Skeleton />
@@ -495,16 +689,22 @@ export default function LeftItemGroup() {
 												<AiOutlineUsergroupAdd className="icon-option-group" size={20} />
 												<span className="option-label-group">Quản lý thành viên</span>
 											</div>
-											<div
-												className={`custom-option-group ${
-													selectedOption === 'manager-group' ? 'active' : ''
-												}`}
-												onClick={() => {
-													dispatch(selectOption('manager-group'));
-												}}
-											>
-												<HiInformationCircle className="icon-option-group" size={20} />
-												<span className="option-label-group">Quản lý nhóm</span>
+											<div>
+												<Dropdown
+													menu={{
+														items,
+													}}
+													placement="TopRight"
+													arrow={{
+														pointAtCenter: true,
+													}}
+													style={{ border: 'none', flex: 1 }}
+												>
+													<button style={{backgroundColor:'white', width:'94%',textAlign:'start'}}>
+														<HiInformationCircle className="icon-option-group" size={20}  />
+														<span className="option-label-group">Quản lý nhóm</span>
+													</button>
+												</Dropdown>
 											</div>
 										</div>
 									) : null}
@@ -514,7 +714,7 @@ export default function LeftItemGroup() {
 					</div>
 				)}
 
-				<ToastContainer style={{zIndex:'1000'}} />
+				<ToastContainer style={{ zIndex: '1000' }} />
 			</div>
 		</>
 	);

@@ -63,7 +63,11 @@ const ManageGroup = () => {
 		try {
 			const response = await Api.get(url + `api/v1/group-members/admin/get-group-members?groupId=${groupId}`);
 			if (response.status === 200) {
-				setGroupMember(response.data.result.groupMembers);
+				let data= response.data.result.groupMembers
+				data.forEach((item,index) => {
+					item.key = index + 1;
+				});
+				setGroupMember(data);
 			}
 		} catch (error) {
 			console.log(error);
@@ -249,17 +253,8 @@ const ManageGroup = () => {
 				return 'Không xác định';
 			},
 			width: '10%',
-		},
-		{
-			title: 'Ngày tham gia',
-			dataIndex: 'createdAt',
-			key: 'createdAt',
-			render: (createdAt) => {
-				const d = new Date(createdAt);
-				return d.toLocaleDateString();
-			},
-			width: '10%',
-		},
+		}
+		
 	];
 
 	const columns = [

@@ -64,7 +64,11 @@ const User = () => {
 			);
 			console.log(res);
 			if (res.data.statusCode === 200) {
-				setUsers(res.data.result.users);
+				let data=res.data.result.users;
+				data.forEach((item, index) => {
+					item.key = index;
+				}	);
+				setUsers(data);
 				setTotalElements(res.data.result.totalElements);
 				setTotalPages(res.data.result.totalPages);
 			}
@@ -239,7 +243,7 @@ const User = () => {
 	const formatId = (rowData) => {
 		return (
 			<div id="column-container">
-				<span>{rowData.id}</span>
+				<span>{Number(rowData.key)+1}</span>
 			</div>
 		);
 	};
@@ -308,18 +312,18 @@ const User = () => {
 						Thêm người dùng
 					</Button>
 					<DataTable value={users} tableStyle={{ minWidth: '60rem' }}>
-						<Column field="id" header="ID" sortable body={formatId} />
-						<Column field="name" header="Name" sortable body={AvatarFullNameTemplate} />
-						<Column field="dob" header="Date of birth" sortable body={formatDob} />
+						<Column field="id" header="STT" sortable body={formatId} />
+						<Column field="name" header="Họ và tên" sortable body={AvatarFullNameTemplate} />
+						<Column field="dob" header="Ngày sinh" sortable body={formatDob} />
 						<Column field="email" header="Email" sortable body={formatEmail} />
-						<Column field="phone" header="Phone" sortable body={formatPhone} />
-						<Column field="gender" header="Gender" sortable body={formatGender} />
+						<Column field="phone" header="Số điện thoại" sortable body={formatPhone} />
+						<Column field="gender" header="Giới tính" sortable body={formatGender} />
 						{/* <Column field="province" header="Province" sortable body={formatProvince} />
 						<Column field="district" header="District" sortable body={formatDistrict} />
 						<Column field="school" header="School" sortable body={formatSchool} /> */}
-						<Column field="grade" header="Grade" sortable body={formatGrade} />
-						<Column field="status" header="Status" sortable body={formatStatus} />
-						<Column header="Actions" body={ActionTemplate} />
+						<Column field="grade" header="Khối" sortable body={formatGrade} />
+						<Column field="status" header="Trạng thái" sortable body={formatStatus} />
+						<Column header="Hành động" body={ActionTemplate} />
 					</DataTable>
 					<Pagination
 						total={Number(totalElements)}

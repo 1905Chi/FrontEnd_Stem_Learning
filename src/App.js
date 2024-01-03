@@ -4,7 +4,14 @@ import { useState } from 'react';
 import DefaultLayout from './layouts/DefaultLayout';
 import DefaultLayoutLogin from './layouts/DefaultLayoutLogin';
 import DefaultLayoutTwoPage from './layouts/DefaultLayoutTwoPage';
-import { publicRoutes, privateRoutes, notFoundRoute, privateRoutes2page ,private1page} from './routes/index';
+import {
+	publicRoutes,
+	privateRoutes,
+	notFoundRoute,
+	privateRoutes2page,
+	private1page,
+	publicRoutes2,
+} from './routes/index';
 import { useEffect, useRef } from 'react';
 import Topbar from './components/Topbar';
 import Footer from './components/Footer';
@@ -13,21 +20,21 @@ import { useWebSocket } from './context/WebSocketContext';
 
 export default function App() {
 	const [isLogin, setIsLogin] = useState(localStorage.getItem('accessToken') ? true : false);
-    const currentUser = JSON.parse(localStorage.getItem('user'));
+	const currentUser = JSON.parse(localStorage.getItem('user'));
 	const isComponentUnmounted = useRef(false);
 	const { connectWebSocket, disconnectWebSocket, notification } = useWebSocket();
 	// if (isLogin) {
 	// 	window.addEventListener('beforeunload', async function (event) {
 	// 		// Hủy bỏ sự kiện ngăn chặn đóng trang
 	// 		event.preventDefault();
-	
+
 	// 		// Gọi hàm disconnectWebSocket(currentUser) và đợi nó hoàn thành
 	// 		await disconnectWebSocket(currentUser);
-	
+
 	// 		// Thực hiện đóng trang
 	// 		const confirmationMessage = 'Bạn có chắc muốn rời khỏi trang?';
 	// 		event.returnValue = confirmationMessage;
-	
+
 	// 		return confirmationMessage;
 	// 	});
 	// }
@@ -47,7 +54,6 @@ export default function App() {
 
 	return (
 		<BrowserRouter>
-			
 			<div className="App">
 				<Routes>
 					{publicRoutes.map((route, index) => {
@@ -76,17 +82,16 @@ export default function App() {
 								element={
 									isLogin ? (
 										<>
-										<DefaultLayout setIsLogin={setIsLogin} Left={<Left />} Right={<Right />}>
-											<Page />
-										</DefaultLayout>
-										
+											<DefaultLayout setIsLogin={setIsLogin} Left={<Left />} Right={<Right />}>
+												<Page />
+											</DefaultLayout>
 										</>
 									) : (
 										<>
-										<Navigate
-											to="/
+											<Navigate
+												to="/
                             "
-										/>
+											/>
 										</>
 									)
 								}
@@ -105,10 +110,9 @@ export default function App() {
 								element={
 									isLogin ? (
 										<>
-										<DefaultLayoutTwoPage setIsLogin={setIsLogin} Left={<Left />}>
-											<Page />
-										</DefaultLayoutTwoPage>
-										
+											<DefaultLayoutTwoPage setIsLogin={setIsLogin} Left={<Left />}>
+												<Page />
+											</DefaultLayoutTwoPage>
 										</>
 									) : (
 										<Navigate
@@ -116,6 +120,25 @@ export default function App() {
                             "
 										/>
 									)
+								}
+							/>
+						);
+					})}
+					,
+					{publicRoutes2.map((route, index) => {
+						const Page = route.component;
+						const Left = route.Left;
+
+						return (
+							<Route
+								key={index}
+								path={route.path}
+								element={
+									<>
+										<DefaultLayoutTwoPage setIsLogin={setIsLogin} Left={<Left />}>
+											<Page />
+										</DefaultLayoutTwoPage>
+									</>
 								}
 							/>
 						);
@@ -129,11 +152,11 @@ export default function App() {
 								path={route.path}
 								element={
 									isLogin ? (
-										<><Topbar/>
-										<DefaultLayoutLogin setIsLogin={setIsLogin} >
-											<Page />
-										</DefaultLayoutLogin>
-										
+										<>
+											<Topbar />
+											<DefaultLayoutLogin setIsLogin={setIsLogin}>
+												<Page />
+											</DefaultLayoutLogin>
 										</>
 									) : (
 										<Navigate
@@ -144,23 +167,24 @@ export default function App() {
 								}
 							/>
 						);
-					})},
+					})}
+					,
 					<Route
 						key={notFoundRoute.path}
 						path={notFoundRoute.path}
 						element={
-							<><Topbar/>
-							<DefaultLayoutLogin>
-								<LandingPage />
-							</DefaultLayoutLogin>
-							<Footer />
+							<>
+								<Topbar />
+								<DefaultLayoutLogin>
+									<LandingPage />
+								</DefaultLayoutLogin>
+								<Footer />
 							</>
 						}
 					/>
 					,
 				</Routes>
 			</div>
-			
 		</BrowserRouter>
 	);
 }

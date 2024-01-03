@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './PostItem.css'; // Import tệp CSS
 import { useState } from 'react';
-import { Avatar, Button, Dropdown } from 'antd';
+import { Avatar, Button, Dropdown,Popconfirm  } from 'antd';
 import { BiCommentDetail, BiSolidShare, BiLike } from 'react-icons/bi';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { MdBugReport } from 'react-icons/md';
@@ -12,10 +12,14 @@ import { url } from '../../../constants/Constant';
 import Editor from './Editor';
 import LabelFile from '../../profile/component/LabelFile';
 import { toast } from 'react-toastify';
-import {ueseSelector, useSelector} from 'react-redux'
-import {selectselctPostHome} from '../../../redux/Group'
+import {ueseSelector, useDispatch} from 'react-redux'
+import {selectselctPostHome, deleteRaction} from '../../../redux/Group'
+import { deletequestionChoose } from '../../../redux/Exam';
+import { useNavigate } from 'react-router-dom';
 function PostItem(props) {
-	
+	const navigate = useNavigate();
+	console.log(props)
+	const dispatch = useDispatch()
 	const [myReaction, setMyReaction] = useState(props.reaction);
 	const [isLiked, setIsLiked] = useState(
 		props.reaction !== null &&
@@ -25,12 +29,14 @@ function PostItem(props) {
 			: false
 	); // Trạng thái ban đầu là "không thích"
 	const [isEditPost, setisEditPost] = useState(false); // Trạng thái ban đầu là "không chỉnh sửa"
-	const [contentPost, setContentPost] = useState(props.content);
+	const [contentPost, setContentPost] = useState(null);
+	console.log("contentPost",props.content)
 	const [idComment, setIdComment] = useState(null);
 	const [responseComement, setResponseComement] = useState(false);
 	const [xemthem, setXemthem] = useState(false);
-	const [countReaction, setCountReaction] = useState(props.totalReactions);
-
+	const [countReaction, setCountReaction] = useState(null);
+	const [open, setOpen] = useState(false);
+	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [ListReaction, setListReaction] = useState([
 		{
 			key: '1',
@@ -54,31 +60,40 @@ function PostItem(props) {
 	}
 
 	function handleLike() {
+		if(localStorage.getItem('user')===null )
+		{
+			toast.error('Bạn cần đăng nhập để thực hiện chức năng này');
+			return;
+		}
+		else if(props.id === null || props.id === undefined)
+		{	
+			toast.error('Không thể thực hiện chức năng này bên ngoài nhóm/lớp');
+			return;
+
+		}
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			conttentType: 'application/json',
 		};
-		let data = {
-			postId: props.id,
-			typeName: 'LIKE',
-		};
-		// if (isLiked === false) {
-		// 	data = {
-		// 		postId: props.id,
-		// 		typeName: 'LIKE',
-		// 	};
-		// } else {
-		// 	data = {
-		// 		postId: props.id,
-		// 		typeName: 'DISLIKE',
-		// 	};
-		// }
+		let data
+		if (isLiked === false) {
+			data = {
+				postId: props.id,
+				typeName: 'LIKE',
+			};
+		} else {
+			data = {
+				postId: props.id,
+				typeName: 'DISLIKE',
+			};
+		}
 		if (myReaction) {
-			Api.delete(url + `api/v1/reactions/${myReaction.id}`, { headers: headers })
+			Api.put(url + `api/v1/reactions` , data,{ headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						toast.success(response.data.message);
 						setCountReaction(response.data.result.count);
+						props.callBackApi()
 						setMyReaction(null);
 					} else {
 						console.log(response.error);
@@ -94,6 +109,7 @@ function PostItem(props) {
 						toast.success(response.data.message);
 						setCountReaction(response.data.result.count);
 						setMyReaction(response.data.result.reaction);
+						props.callBackApi()
 						
 					} else {
 						console.log(response.error);
@@ -105,7 +121,9 @@ function PostItem(props) {
 		}
 		setIsLiked(!isLiked); // Đảo ngược trạng thái khi nút "like" được nhấn
 	}
+
 	const deletePost = () => {
+		setConfirmLoading(true);
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			conttentType: 'application/json',
@@ -113,7 +131,11 @@ function PostItem(props) {
 		Api.delete(url + 'api/v1/posts/' + props.id, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					console.log(response.data.result);
+					toast.success(response.data.message);
+					setConfirmLoading(false);
+					setOpen(false)
+
+					props.callBackApi()
 					if(props.homePosts)
 					{
 						props.homePosts();
@@ -132,6 +154,16 @@ function PostItem(props) {
 		setisEditPost(!isEditPost); //
 	}
 	function openComment() {
+		if(localStorage.getItem('user')===null)
+		{
+			toast.error('Bạn cần đăng nhập để thực hiện chức năng này');
+			return;
+		}
+		if(props.id === null || props.id === undefined)
+		{
+			toast.error('Không thể thực hiện chức năng này bên ngoài nhóm/lớp');
+			return;
+		}
 		setResponseComement(!responseComement);
 	}
 	function repComent(id) {
@@ -156,7 +188,17 @@ function PostItem(props) {
 				showLessButton.style.display = 'none';
 			}
 		}
-	}, [contentPost]);
+		if (props.content !== null && props.content !== undefined) {
+			setContentPost(props.content);
+		}
+		if (props.reaction !== null && props.reaction !== undefined) {
+			setMyReaction(props.reaction);
+		}
+		if (props.totalReactions !== null && props.totalReactions !== undefined) {
+			setCountReaction(props.totalReactions);
+		}
+		
+	}, [props.content ]);
 	const SeeMore = () => {
 		const contentContainer = document.querySelector('.content' + props.id);
 		const showMoreButton = document.querySelector('#show' + props.id);
@@ -188,17 +230,26 @@ function PostItem(props) {
 		}
 		setXemthem(false);
 	};
-
+	const handleOpenConfirm = () => {
+		setOpen(true);
+	  };
+	
+	  const handleCancel = () => {
+		setOpen(false);
+	  };
 	const items = [
 		{
 			key: '1',
 			label: (
-				<div style={{ font: '15px' }} onClick={deletePost}>
-					{props.authorId === JSON.parse(localStorage.getItem('user')).id ? (
-						<div>
-							<RiDeleteBin6Fill style={{ color: 'red', fontSize: '15px' }} />
+				<div style={{ font: '15px' }}>
+					{JSON.parse(localStorage.getItem('user')) && props.authorId === JSON.parse(localStorage.getItem('user')).id ? (
+						
+						<div onClick={deletePost}>
+							<RiDeleteBin6Fill style={{ color: 'red', fontSize: '15px' }}  />
 							<span style={{ fontSize: '15px' }}>Xóa bài đăng</span>
 						</div>
+					 
+						
 					) : (
 						<div>
 							<MdBugReport style={{ color: 'red' }} />
@@ -212,7 +263,7 @@ function PostItem(props) {
 			key: '2',
 			label: (
 				<div style={{ font: '15px' }} onClick={EditPost}>
-					{props.authorId === JSON.parse(localStorage.getItem('user')).id ? (
+					{JSON.parse(localStorage.getItem('user')) && props.authorId === JSON.parse(localStorage.getItem('user')).id ? (
 						<div>
 							<EditOutlined style={{ color: 'red', fontSize: '15px' }} />
 							<span style={{ fontSize: '15px' }}>Chỉnh sửa bài đăng</span>
@@ -222,7 +273,33 @@ function PostItem(props) {
 			),
 		},
 	];
+	const getTypes = (filename) => {
+		const parts = filename.split('.');
 
+		// Lấy phần mở rộng của tệp từ phần tử cuối cùng của mảng
+		const fileExtension = parts[parts.length - 1];
+
+		// Chuyển đổi phần mở rộng thành chữ thường để so sánh dễ dàng hơn
+		const lowerCaseExtension = fileExtension.toLowerCase();
+
+		// Kiểm tra loại file và trả về kết quả tương ứng
+		console.log(lowerCaseExtension);
+		switch (lowerCaseExtension) {
+			case 'pdf':
+				return 'pdf';
+			case 'docx':
+				return 'docx';
+			// Thêm các loại file khác nếu cần thiết
+			case 'doc':
+				return 'doc';
+			case 'ppt':
+				return 'ppt';
+			case 'pptx':
+				return 'pptx';
+			default:
+				return 'other';
+		}
+	};
 	const likeButtonStyle = isLiked ? { color: 'blue' } : {}; // Đổi màu của biểu tượng "like"
 	return (
 		<div className="post-item">
@@ -247,7 +324,12 @@ function PostItem(props) {
 					<Avatar
 						src={props.authorAvatar}
 						onClick={() => {
-							window.location.href = '/profile/' + props.authorId;
+							if(localStorage.getItem('user')===null)
+							{
+								toast.error('Bạn cần đăng nhập để xem thông tin người dùng này');
+								return;
+							}
+							  navigate('/profile/' + props.authorId);
 						}}
 					/>
 				</div>
@@ -295,27 +377,21 @@ function PostItem(props) {
 				{props?.refUrls && props.refUrls.length > 0 && props.refUrls !== null
 					? props.refUrls.map((item, index) => {
 							if (item !== null) {
-								console.log('item', item);
+								
 								const indexAfterNumbers = item.indexOf('_') + 1;
 								const truncatedFileName = item.slice(indexAfterNumbers);
-								return <LabelFile key={index} type={'docx'} filename={truncatedFileName} link={item} />;
+								console.log(truncatedFileName)
+								console.log(getTypes(truncatedFileName))
+								return <LabelFile key={index} type={getTypes(truncatedFileName)} filename={truncatedFileName} link={item} />;
 							}
 							return null;
 					  })
 					: null}
 			</div>
 			<div>
-				<Dropdown
-					menu={{
-						items,
-					}}
-					placement="bottomRight"
-					arrow={{
-						pointAtCenter: true,
-					}}
-				>
+				
 					<Button style={{ backgroundColor: 'white', border: 'none' }}>{countReaction} likes</Button>
-				</Dropdown>
+				
 			</div>
 
 			<div className="post-actions">
@@ -356,21 +432,21 @@ function PostItem(props) {
 						<div style={{ flex: 8 }}>
 							<div className="content-comment">
 								<p className="user-name" style={{ fontWeight: 'bold' }}>
-									{props.comments[props.comments.length - 1].authorFirstName +
+									{props.comments[0].authorFirstName +
 										' ' +
-										props.comments[props.comments.length - 1].authorLastName}
+										props.comments[0].authorLastName}
 								</p>
 								<div
 									className="comment-content"
 									dangerouslySetInnerHTML={{
-										__html: props.comments[props.comments.length - 1].content,
+										__html: props.comments[0].content,
 									}}
 								/>
 							</div>
 							<div className="react-post">
-								<button>Thích</button>
-								{/* //	<button onClick={repComent(comment[comment.length-1].content )}>Phản hồi</button> */}
-								<button>Phản hồi</button>
+								{/* <button>Thích</button>
+								
+								<button>Phản hồi</button> */}
 							</div>
 						</div>
 					</div>
@@ -384,25 +460,25 @@ function PostItem(props) {
 					</button>
 					{props.comments.map((item, index) => (
 						<div className="new-comment">
-							<Avatar src={props.comments[props.comments.length - 1 - index].authorAvatar} />
+							<Avatar src={props.comments[index].authorAvatar} />
 							<div style={{ flex: 8 }}>
 								<div className="content-comment">
 									<p className="user-name" style={{ fontWeight: 'bold' }}>
-										{props.comments[props.comments.length - 1 - index].authorFirstName +
+										{props.comments[index].authorFirstName +
 											' ' +
-											props.comments[props.comments.length - 1 - index].authorLastName}
+											props.comments[index].authorLastName}
 									</p>
 									<div
 										className="comment-content"
 										dangerouslySetInnerHTML={{
-											__html: props.comments[props.comments.length - 1 - index].content,
+											__html: props.comments[index].content,
 										}}
 									/>
 								</div>
-								<div className="react-post">
+								{/* <div className="react-post">
 									<button>Thích</button>
 									<button>Phản hồi</button>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					))}

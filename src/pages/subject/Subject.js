@@ -32,7 +32,11 @@ const Subject = () => {
 				url + `api/v1/subjects/admin/get-all-subjects?page=${page}&size=${size}&order=${order}&sortBy=${sortBy}`
 			);
 			if (response.data.statusCode === 200) {
-				setSubject(response.data.result.subjects);
+				let data = response.data.result.subjects;
+				data.forEach((item, index) => {
+					item.key=index;
+				});
+				setSubject(data)
 			}
 		} catch (error) {
 			console.log(error);
@@ -141,7 +145,7 @@ const Subject = () => {
 	};
 
 	const formatId = (rowData) => {
-		return <div id="column-container">{rowData.id}</div>;
+		return <div id="column-container">{Number(rowData.key)+1}</div>;
 	};
 
 	return (
@@ -294,13 +298,13 @@ const Subject = () => {
 					Thêm môn học
 				</Button>
 				<DataTable value={subject} tableStyle={{ minWidth: '60rem', marginTop: '2rem' }}>
-					<Column field="id" header="ID" sortable body={formatId} />
-					<Column field="code" header="Code" sortable body={formatCode} />
-					<Column field="name" header="Name" sortable body={formatName} />
-					<Column field="description" header="Description" sortable body={formatDescription} />
-					<Column field="createdAt" header="Join at" sortable body={formatDate} />
-					<Column field="updatedAt" header="Update at" sortable body={formatDate} />
-					<Column field="action" header="Action" body={actionBodyTemplate} />
+					<Column field="id" header="STT" sortable body={formatId} />
+					<Column field="code" header="Mã môn" sortable body={formatCode} />
+					<Column field="name" header="Tên môn" sortable body={formatName} />
+					<Column field="description" header="Miêu tả" sortable body={formatDescription} />
+					<Column field="createdAt" header="Ngày tạo" sortable body={formatDate} />
+					<Column field="updatedAt" header="Ngày chỉnh sửa" sortable body={formatDate} />
+					<Column field="action" header="Hành động" body={actionBodyTemplate} />
 				</DataTable>
 			</div>
 		</div>

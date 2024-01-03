@@ -16,6 +16,9 @@
   overflow-y: auto;
 
 }
+.question-content-edit img{
+    width: 80%;
+}
 .form-edit-infor-exam{
 width: 75%;
 margin-top: 15px;

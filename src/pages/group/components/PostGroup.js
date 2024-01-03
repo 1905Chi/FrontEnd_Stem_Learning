@@ -6,13 +6,14 @@ import { useState } from 'react';
 import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import PostItem from './../../home/components/PostItem';
-import { useSelector } from 'react-redux';
-import { selectSelectedPostGroup } from '../../../redux/Group';
+import { useSelector,useDispatch } from 'react-redux';
+import { selectSelectedPostGroup , selectPostGroup} from '../../../redux/Group';
 export default function PostGroup() {
 	const [open, setOpen] = useState(false);
 	const postgroup = useSelector(selectSelectedPostGroup);
-	
+	console.log(postgroup);
 	const [post, setPost] = useState([]);
+	const dispatch = useDispatch();
 
 	// const fetchPostGroup = async () => {
 	// 	const headers = {
@@ -46,6 +47,25 @@ export default function PostGroup() {
 		setOpen(!open);
 	};
 	const { uuid } = useParams();
+	const headers = {
+		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+	};
+
+	const callBackApi = () => {
+		Api.get(url + 'api/v1/posts?' + 'groupId=' + uuid, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					dispatch(selectPostGroup(response.data.result));
+				} else {
+					console.log(response.error);
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+		}
+
 
 	return (
 		<div>
@@ -75,6 +95,7 @@ export default function PostGroup() {
 							totalComments={item.post.totalComments}
 							comments={item.post.comments}
 							reaction={item.reaction}
+							callBackApi={callBackApi}
 						/>
 					))}
 			</div>

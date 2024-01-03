@@ -2,12 +2,18 @@ import './LableGroup.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import anh_logo_1 from '../../../assets/images/anh_logo_1.jpg';
+import {ToastContainer,toast} from 'react-toastify';
 
 export default function LableGroup({ image, name, id, type, infor }) {
 	const navigate = useNavigate();
 	const location = useLocation();
 
 	const linktogroup = (id) => {
+		if(localStorage.getItem('user') === null){
+			toast.error('Bạn cần đăng nhập để xem thêm được thông tin');
+			return;
+		}
+
 		if (type === true ) {
 			navigate(`/classes/${id}`);
 		} else {
@@ -40,6 +46,7 @@ export default function LableGroup({ image, name, id, type, infor }) {
 					</div>
 				</button>
 			)}
+			<ToastContainer/>
 		</div>
 	);
 }

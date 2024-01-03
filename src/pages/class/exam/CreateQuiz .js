@@ -10,7 +10,9 @@ import { url } from '../../../constants/Constant';
 import Loading from '../../../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { Select } from 'antd';
+import './CreateQuiz.css';
 import { RiArrowGoBackLine } from 'react-icons/ri';
+import moment from 'moment';
 const CreateQuiz = () => {
 	const [form] = Form.useForm();
 	const navigate = useNavigate();
@@ -20,10 +22,15 @@ const CreateQuiz = () => {
 	const { uuid } = useParams();
 	const [value, setValue] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [currentDate, setCurrentDate] = useState(moment());
+	const isDateDisabled = (date) => {
+		return !date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
+	};
 	const onFinish = (values) => {
 		console.log('Received values:', values);
 		console.log('Answer types:', answerTypes);
 		console.log('content ', value);
+		
 		setIsLoading(true);
 		const data = {
 			groupId: uuid,
@@ -35,7 +42,7 @@ const CreateQuiz = () => {
 			isEnabled: true,
 			level: values.level,
 			numberOfQuestion: Number(values.numberOfQuestion),
-			maxScore: 100,
+			maxScore: values.maxScore,
 			questions: [],
 		};
 		value.map((item, index) => {
@@ -72,11 +79,9 @@ const CreateQuiz = () => {
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					toast.success('Tạo bài kiểm tra thành công !');
-					setTimeout(()=>{
-
-					navigate('/classes/' + uuid)
-				}, 3000);
-				
+					setTimeout(() => {
+						navigate('/classes/' + uuid);
+					}, 3000);
 				}
 			})
 			.catch((error) => {
@@ -120,8 +125,30 @@ const CreateQuiz = () => {
 		console.log(editingIndex);
 	};
 
+	const validateEndTime = (_, value) => {
+		const { startedAt, duration, endedAt } = form.getFieldsValue();
+		
+		
+		const startTime = moment(startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
+		console.log('start',startTime);
+		
+		
+		const endTime = moment(endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),'DD-MM-YYYY HH:mm:ss:SSSSSS' ).valueOf();
+		console.log('end',endTime);
+		
+		
+		console.log(duration);
+		console.log(duration*60000+ startTime)
+	
+		if (endTime <(startTime+duration*60000)) {
+		  return Promise.reject(new Error(`Thời gian kết thúc phải sau ít nhất 1 khoảng thời gian ${duration} phút.`));
+		}
+	
+		return Promise.resolve();
+	  };
+
 	return (
-		<div className='create-quiz' >
+		<div className="create-quiz">
 			{editingIndex >= 0 ? (
 				<Editor
 					data={value[editingIndex]}
@@ -130,7 +157,7 @@ const CreateQuiz = () => {
 					isQuiz={true}
 				/>
 			) : null}
-			<div className="back-to-exam" style={{margin:'5rem 0 0 3rem'}}>
+			<div className="back-to-exam" style={{ margin: '5rem 0 0 3rem' }}>
 				<button
 					className="back-to-exam-button"
 					onClick={() => {
@@ -141,7 +168,9 @@ const CreateQuiz = () => {
 				</button>
 			</div>
 			{isLoading ? <Loading /> : null}
-			<Form form={form} onFinish={onFinish} layout="vertical" style={{textAlign:'center'}}>
+
+			<Form form={form} onFinish={onFinish} layout="vertical" style={{ textAlign: 'center' }}>
+				<h1 style={{ textAlign: 'center' }}>Tạo bài kiểm tra</h1>
 				<Form.Item name="name" rules={[{ required: true, message: 'Vui lòng nhập tên bài kiểm tra!' }]}>
 					<Input placeholder="Nhập tên bài kiểm tra" style={{ width: '60%' }} />
 				</Form.Item>
@@ -152,10 +181,21 @@ const CreateQuiz = () => {
 					<Input placeholder="Nhập mô tả bài kiểm tra" style={{ width: '60%' }} />
 				</Form.Item>
 				<Form.Item name="duration" rules={[{ required: true, message: 'Vui lòng nhập thời gian làm bài!' }]}>
-					<InputNumber min ={1} placeholder="Nhập thời gian làm bài ( Số phút)" style={{ width: '60%' }} />
+					<InputNumber
+						min={15}
+						placeholder="Nhập thời gian làm bài ( Số phút)"
+						style={{ width: '60%', border: '1px solid black' }}
+					/>
+				</Form.Item>
+				<Form.Item name="maxScore" rules={[{ required: true, message: 'Vui lòng nhập điểm số tối đa của bài kiểm tra!' }]}>
+					<InputNumber
+						min={1}
+						placeholder="Nhập điểm tối đa"
+						style={{ width: '60%', border: '1px solid black' }}
+					/>
 				</Form.Item>
 				<Form.Item name="level" rules={[{ required: true, message: 'Vui lòng nhập mức độ bài kiểm tra!' }]}>
-					<Select placeholder="Chọn mức độ bài kiểm tra" style={{ width: '60%' }}>
+					<Select placeholder="Chọn mức độ bài kiểm tra" style={{ width: '60%', border: '1px solid black' }}>
 						<Option value="Easy">Dễ</Option>
 						<Option value="Medium">Trung bình</Option>
 						<Option value="Hard">Khó</Option>
@@ -165,23 +205,33 @@ const CreateQuiz = () => {
 					name="numberOfQuestion"
 					rules={[{ required: true, message: 'Nhập số lượng câu hỏi mỗi bài kiểm tra' }]}
 				>
-					<InputNumber min={1} placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra" style={{ width: '60%' }} />
+					<InputNumber
+						min={1}
+						placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra"
+						style={{ width: '60%', border: '1px solid black' }}
+					/>
 				</Form.Item>
 
 				<Form.Item name="startedAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian bắt đầu!' }]}>
-					<DatePicker placeholder="Chọn thời gian bắt đầu" showTime />
+					<DatePicker placeholder="Chọn thời gian bắt đầu" showTime disabledDate={isDateDisabled}  />
 				</Form.Item>
-				<Form.Item name="endedAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian kết thúc!' }]}>
-					<DatePicker placeholder="Chọn thời gian kết thúc" showTime />
+				<Form.Item name="endedAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian kết thúc!' }, { validator: validateEndTime },]}>
+					<DatePicker placeholder="Chọn thời gian kết thúc" showTime disabledDate={isDateDisabled} />
 				</Form.Item>
 
-				<Form.List name="questions" style={{textAlign:'center'}}>
+				<Form.List name="questions" style={{ textAlign: 'center' }}>
 					{(fields, { add, remove }) => (
 						<>
 							{fields.map(({ key, name, fieldKey, ...restField }, index) => (
 								<div
 									key={key}
-									style={{ marginBottom: 8, border: '1px solid black', paddingLeft: '15px',width:'50%', marginLeft:'25%' }}
+									style={{
+										marginBottom: 8,
+										border: '1px solid black',
+										paddingLeft: '15px',
+										width: '50%',
+										marginLeft: '25%',
+									}}
 								>
 									<div
 										style={{
@@ -192,7 +242,10 @@ const CreateQuiz = () => {
 										onClick={() => handleEditQuestion(index)}
 									>
 										<lable> Câu hỏi: </lable>
-										<div dangerouslySetInnerHTML={{ __html: value[index] }} />
+										<div
+											dangerouslySetInnerHTML={{ __html: value[index] }}
+											className="question-content"
+										/>
 									</div>
 
 									<Form.Item name={[name, 'answerType']} valuePropName="checked">

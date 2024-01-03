@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Button, Form, Radio, Tooltip, Select } from 'antd';
 import LableGroup from '../components/LableGroup';
 import { FaEarthEurope } from 'react-icons/fa6';
@@ -12,37 +12,17 @@ import Api from '../../../api/Api';
 import { selectGroup } from '../../../redux/GetItemGroup';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-
+import axios from 'axios';
 export default function LeftCreateGroup() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const location = useLocation();
+	const { Option } = Select;
 	const isClassesPath = location.pathname.includes('classes');
-	const options = [
-		{
-			value: 'Khang',
-			label: 'Khang',
-			imageUrl: 'https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png',
-		},
-		{
-			value: 'Toàn',
-			label: 'Toàn',
-			imageUrl: 'https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png',
-		},
-		{
-			value: 'Kiệt',
-			label: 'Kiệt',
-			imageUrl: 'https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png',
-		},
-		{
-			value: 'Huy',
-			label: 'Huy',
-			imageUrl: 'https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png',
-		},
-	];
+	const [grade, setGrade] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
 	const [policyDescription, setPolicyDescription] = useState('');
-
+	const [subjects, setSubjects] = useState([]);
 	const description = (e) => {
 		if (e.target.value === 'PUBLIC') {
 			setPolicyDescription(
@@ -53,6 +33,20 @@ export default function LeftCreateGroup() {
 				'Chỉ thành viên mới có thể xem và đăng bài trong nhóm. Quản trị viên có thể xét duyệt người lần đầu tham gia.'
 			);
 		}
+	};
+	useEffect(() => {
+		callSubject();
+	}, []);
+	
+	const callSubject = async () => {
+		await axios
+			.get(url + 'api/v1/subjects')
+			.then((response) => {
+				setSubjects(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 	const setNameGroup = (e) => {
 		dispatch(
@@ -170,17 +164,28 @@ export default function LeftCreateGroup() {
 							/>
 						</Form.Item>
 						{isClassesPath ? (
-							<Form.Item
-								name="subject"
-								rules={[
-									{
-										required: true,
-										message: 'Vui lòng nhập tên môn học',
-									},
-								]}
-							>
-								<Input placeholder="Môn học" style={{ width: '80%', marginLeft: '20px' }} />
-							</Form.Item>
+							subjects !== null && subjects.length > 0 && subjects !== undefined ? (
+								<Form.Item
+									name="subject"
+									rules={[{ required: true, message: 'Vui lòng chọn môn học!' }]}
+									className=""
+								>
+									<Select
+										showSearch
+										style={{ width: '80%', marginLeft: '20px' }}
+										placeholder="Môn học"
+										optionFilterProp="children"
+									>
+										{subjects &&
+											
+											subjects.map((grade) => (
+												<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+													{grade.name}
+												</Option>
+											))}
+									</Select>
+								</Form.Item>
+							) : null
 						) : null}
 						{isClassesPath ? (
 							<Form.Item
@@ -192,7 +197,18 @@ export default function LeftCreateGroup() {
 									},
 								]}
 							>
-								<Input placeholder="Khối" style={{ width: '80%', marginLeft: '20px' }} />
+								<Select
+								showSearch
+								style={{ width: '80%', marginLeft: '20px' }}
+								placeholder="Khối học"
+								optionFilterProp="children"
+							>
+								{grade.map((grade) => (
+									<Option value={grade} key={grade} style={{ color: 'black' }}>
+										{grade}
+									</Option>
+								))}
+							</Select>
 							</Form.Item>
 						) : null}
 						<Form.Item

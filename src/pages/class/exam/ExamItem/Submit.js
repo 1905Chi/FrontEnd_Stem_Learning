@@ -266,6 +266,8 @@ export default function Submit() {
 										className="quest-content"
 										dangerouslySetInnerHTML={{ __html: question.content }}
 										style={{marginTop:'15px'}}
+										
+										
 
 									/>
 								</div>
@@ -309,7 +311,7 @@ export default function Submit() {
 								</div>
 							</div>
 						))}
-					<button onClick={onFinish}>Submit</button>
+					<button onClick={onFinish}>Nộp bài</button>
 				</div>
 			) : null
 			)}

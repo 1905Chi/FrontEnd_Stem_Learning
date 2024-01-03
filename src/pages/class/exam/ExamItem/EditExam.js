@@ -251,7 +251,7 @@ export default function EditExam() {
 			dataIndex: 'content',
 			key: 'content',
 			width: '50%',
-			render: (content) => <div dangerouslySetInnerHTML={{ __html: content }} />,
+			render: (content) => <div dangerouslySetInnerHTML={{ __html: content }} className='question-content-edit' />,
 		},
 		{
 			title: 'Mức độ ',

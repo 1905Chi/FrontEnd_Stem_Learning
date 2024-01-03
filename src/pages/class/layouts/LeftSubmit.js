@@ -14,8 +14,8 @@ export default function LeftSubmit() {
 
 	return (
 		<div className="Left-submit">
-			<h2>Các đáp án đã trả lời</h2>
-			{exam.length > 0 ? (
+			<h2>Các câu hỏi đã trả lời</h2>
+			{ exam && exam.length > 0 ? (
 				<div style={{display:'flex'}}>
 				{exam.map((question, index) => (
 					<div style={{width:'50px', height:'auto'}}>

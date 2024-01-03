@@ -64,6 +64,9 @@ export default function Parent() {
                 console.log(response.error);
             }
         })
+        .catch((error) => {
+            console.log(error);
+        });
         
     };
     const ReviewTest = (record) => {

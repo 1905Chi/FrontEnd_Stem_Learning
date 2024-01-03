@@ -8,17 +8,19 @@ flex-wrap:wrap;
 }
 .item-class{
     display: flex;
-    width: 54%; /* Đặt chiều rộng của mỗi item */
+    width: 48%; /* Đặt chiều rộng của mỗi item */
 
     margin-bottom: 10px; /* Tạo khoảng cách giữa các item */
     box-sizing: border-box; /* Đảm bảo padding và border không làm tăng kích thước thực sự của phần tử */
     border: 2px solid #e8e8e8;
     background-color: white;
     border-radius: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
 
 }
 .item-class img{
-    width: 70%;
+    width: 65%;
     height: 15rem;
     border-radius: 50%;
     margin-right: 10px;

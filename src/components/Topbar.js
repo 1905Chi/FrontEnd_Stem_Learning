@@ -265,7 +265,7 @@ const Topbar = (props) => {
 				sethistorySearch(arr);
 			}
 			setSearch(false);
-			navigate('/search/?search=' + inputValue);
+			navigate('/search/?query=' + inputValue);
 		}
 	};
 

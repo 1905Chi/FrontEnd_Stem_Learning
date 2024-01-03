@@ -87,25 +87,41 @@ export default function Profile() {
 				<div>
 					<div className="cover-photo">
 						<img src={coverPhoto} alt="Cover Photo" />
-					</div>
-					<button className="cover-picture-self__button" style={{ height: '40px' }} onClick={setEditCoverPhoto}>
+						<button className="cover-picture-self__button" style={{ height: '40px' }} onClick={setEditCoverPhoto}>
 						<AiFillCamera style={{ fontSize: '30px', margin: '0 0 0 5px', color: 'white' }}></AiFillCamera>
 						<span style={{ fontSize: '15px', color: 'white', margin: '0 5px 0 0' }}>Chỉnh sửa ảnh bìa</span>
 					</button>
+					</div>
+					
 				</div>
 				<div style={{position:'relative'}}>
 					<div className="profile-picture-self">
 						<img src={avatar} alt="Profile Picture" />
-					</div>
-					<button className="profile-picture-self__button" style={{ height: '40px' }} onClick={setEditAvatar}>
+						<button className="profile-picture-self__button" style={{ height: '40px' }} onClick={setEditAvatar}>
 						<AiFillCamera style={{ fontSize: '30px', color: 'white' }}></AiFillCamera>
 					</button>
-					<div className="usename-button">
+					</div>
+					
+					<div className="usename-button-self">
 						<span style={{ fontSize: '35px' }}>
 							{JSON.parse(localStorage.getItem('user')).firstName +
 								' ' +
 								JSON.parse(localStorage.getItem('user')).lastName}
 						</span>
+						<p
+									style={{
+										fontSize: '25px',
+										height: 'fit-content',
+										marginTop:'10px',
+										marginLeft:'0.5rem'
+
+									}}
+								>
+									{user.role === 'TEACHER' ? '(Giáo viên)' : null}
+									{user.role === 'PARENT' ? '(Phụ huynh)' : null}
+									{user.role === 'STUDENT' ? '(Học sinh)' : null}
+									{user.role === 'ADMIN' ? '(Quản trị viên)' : null}
+								</p>
 					</div>
 				</div>
 				
@@ -140,15 +156,7 @@ export default function Profile() {
 								</div>
 							) : null}
 
-							{user.workAt ? (
-								<div style={{ width: '100%', margin: '5px 0' }}>
-									<span style={{ fontWeight: 'bold' }}>
-										{' '}
-										Nơi làm việc<TbBuildingFactory className="icon-profile"></TbBuildingFactory> :{' '}
-									</span>
-									{user.workAt}
-								</div>
-							) : null}
+							
 
 							<div style={{ width: '100%', margin: '5px 0' }}>
 								<span style={{ fontWeight: 'bold' }}>

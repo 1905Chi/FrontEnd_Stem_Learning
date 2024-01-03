@@ -52,7 +52,7 @@ export default function VerifyForm(props) {
 			district: districtsItem,
 			school: values.school,
 			grade: values.grade,
-			subjects: [values.subject],
+			subjects: values.subject,
 		};
 		axios
 			.post(url + `api/v1/auth/verify?token=${uuid}`, data, config)
@@ -251,25 +251,7 @@ export default function VerifyForm(props) {
 								))}
 							</Select>
 						</Form.Item>
-						<Form.Item
-							name="grade"
-							rules={[{ required: true, message: 'Vui lòng chọn khối lớp!' }]}
-							className="form-item-register"
-						>
-							<Select
-								showSearch
-								style={{ width: '180px' }}
-								placeholder="Khối lớp"
-								optionFilterProp="children"
-								onChange={handleChange}
-							>
-								{grade.map((grade) => (
-									<Option value={grade} key={grade} style={{ color: 'black' }}>
-										{grade}
-									</Option>
-								))}
-							</Select>
-						</Form.Item>
+						
 						{subjects !== null && subjects.length > 0 && subjects !== undefined ? (
 							<Form.Item
 								name="subject"
@@ -278,6 +260,7 @@ export default function VerifyForm(props) {
 							>
 								<Select
 									showSearch
+									mode="multiple"
 									style={{ width: '180px' }}
 									placeholder="Môn học"
 									optionFilterProp="children"
@@ -326,7 +309,7 @@ export default function VerifyForm(props) {
 					</div>
 					<Form.Item>
 						<Button type="primary" htmlType="submit" className="login-form-button">
-							Xác thực
+							Lưu
 						</Button>
 					</Form.Item>
 				</Form>

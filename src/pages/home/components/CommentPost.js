@@ -10,11 +10,29 @@ import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
 export default function CommentPost({user,idPost, homePosts}) {
+	console.log(idPost);
+	console.log(homePosts);
+
+	console.log(user);
 
 	const [value, setValue] = useState('');
+	
 	const [showEditor, setShowEditor] = useState(false);
 const openEditor = () => {
+	console.log(idPost);
+	if(localStorage.getItem('user')===null){
+		toast.error('Bạn cần đăng nhập để thực hiện chức năng này');
+		return;
+	}
+	else if(idPost===null || idPost===undefined){
+		toast.error('Bạn không thể thực hiện chức năng này ngoài nhóm /lớp');
+		return;
+	}
+	else{
 		setShowEditor(true);
+	}
+
+		
 		
 
 	}

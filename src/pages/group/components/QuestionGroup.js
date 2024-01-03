@@ -1,20 +1,41 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import Editor from "../../home/components/Editor"
 import "./QuestionGroup.css"
+import Api from '../../../api/Api';
+import { url } from '../../../constants/Constant';
 import PostItem from "../../home/components/PostItem"
-import { useSelector } from "react-redux";
-import { selectSelectedPostGroup } from "../../../redux/Group";
+import { useSelector, useDispatch } from "react-redux";
+import { selectSelectedPostGroup, selectPostGroup } from "../../../redux/Group";
 export default function QuestionGroup() {
     const [open, setOpen] = useState(false);
 
 	const postgroup = useSelector(selectSelectedPostGroup);
-	
+	const dispatch = useDispatch();
 	const [post, setPost] = useState([]);
-
+	const { uuid } = useParams();
     const openEdttor = () => {
         setOpen(!open);
     }
-    
+    const headers = {
+		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+	};
+	
+	const callBackApi = () => {
+		Api.get(url + 'api/v1/posts?' + 'groupId=' + uuid, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					dispatch(selectPostGroup(response.data.result));
+				} else {
+					console.log(response.error);
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+		}
+
     return (
         <div>
             <div className="question-group">
@@ -41,6 +62,7 @@ export default function QuestionGroup() {
 							totalComments={item.post.totalComments}
 							comments={item.post.comments}
 							reaction={item.reaction}
+							callBackApi={callBackApi}
 						/>): null
 						
 						

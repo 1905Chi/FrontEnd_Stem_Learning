@@ -65,7 +65,7 @@ const privateRoutes2page = [
 	{ path: '/exam/:id/submit/', component: Submit, Left: LeftSubmit },
 	{ path: '/classes', component: Class, Left: RightClass },
 	{ path: '/groups', component: Class, Left: LeftsGroup },
-	{ path: '/search', component: MainSearch, Left: LeftSearch },
+	
 	
 
 ];
@@ -92,5 +92,10 @@ const publicRoutes = [
 	{ path: '/', component: LandingPage },
 ];
 
+const publicRoutes2 = [
+	{ path: '/search', component: MainSearch, Left: LeftSearch },
+	
+];
+
 const notFoundRoute = { path: '*', component: NotFound };
-export { privateRoutes, publicRoutes, notFoundRoute, privateRoutes2page, private1page };
+export { privateRoutes, publicRoutes, notFoundRoute, privateRoutes2page, private1page,publicRoutes2 };

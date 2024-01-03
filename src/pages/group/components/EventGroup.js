@@ -27,7 +27,7 @@ export default function EventGroup() {
 	const memberGroup = useSelector(selectselectMemberGroup);
 	const [role, setRole] = useState('GUEST');
 	const dispatch = useDispatch();
-
+	
 	useEffect(() => {
 		memberGroup.map((member) => {
 			if (member.user.id === JSON.parse(localStorage.getItem('user')).id) {
@@ -35,6 +35,8 @@ export default function EventGroup() {
 			}
 		});
 	}, []);
+
+
 
 	const openEditEvent = (eventData) => {
 		setEditEventData(eventData);
@@ -233,7 +235,7 @@ export default function EventGroup() {
 				</div>
 				<div className="event-upcoming-main" >
 					<div className="header-envent-title">
-						<h3 style={{ marginLeft: '22px' }}>Sự kiện sắp diễn ra</h3>
+						<h3 style={{ marginLeft: '22px' }}>Danh sách các sự kiện</h3>
 						
 						<button className="btn btn-primary" onClick={openCreateEvent}  style={{backgroundColor:'#f4f6fa'}}>
 							Thêm sự kiện
