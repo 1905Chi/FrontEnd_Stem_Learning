@@ -110,14 +110,14 @@ function Login() {
 			) : null}
 			<div className="body-login">
 				<div className="login-container">
-					<div style={{ overflow: 'hidden', width: '75%' }}>
+					<div style={{ overflow: 'hidden', width: '75%' }} className='login-logo'>
 						<img
 							src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
 							alt="logo"
 							className="logo"
 						/>
 					</div>
-					<div style={{ width: '75%' }}>
+					<div style={{  }} className='login-content'>
 						<h2 style={{ color: "#4949c1"}}> Đăng nhập </h2>
 						<Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
 							<Form.Item

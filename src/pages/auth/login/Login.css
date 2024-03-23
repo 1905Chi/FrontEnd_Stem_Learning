@@ -106,3 +106,42 @@ button:hover {
   height: auto;
   padding-top: 71px;
 }
+
+.login-content{
+  width: 75%
+}
+@media screen and (max-width: 768px)
+{
+  .body-login {
+    width: 95%;
+  }
+
+  .login-page{
+    display: block;
+    margin-top: 1rem;
+    margin-left: 3%;
+  }
+  .login-container {
+    display: block;
+    padding-bottom: 1rem;
+  }
+  .logo{
+    padding-top: 0px;
+  }
+  .login-logo{
+    margin-left: 15%;
+  }
+  .login-content{
+    width: 100%;
+  }
+  .login-content h2{
+    margin-top:0 ;
+  }
+  .login-footer br{
+    display: none;
+  }
+  .main-web-content{
+    width: 93%;
+  }
+  
+}

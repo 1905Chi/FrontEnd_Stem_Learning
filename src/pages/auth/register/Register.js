@@ -172,7 +172,7 @@ export default function Register(props) {
 				<Loading></Loading>
 			) : null}
 			<div className="Register-form">
-				<div className="register-body-form">
+				<div className="register-body-form-student">
 					<div
 						style={{
 							display: 'flex',
@@ -181,7 +181,7 @@ export default function Register(props) {
 							flex: 10,
 						}}
 					>
-						<h2 style={{ flex: 8, textAlign: 'end' }}>Đăng ký tài khoản cho học sinh</h2>
+						<h2 style={{ flex: 8 }}>Đăng ký tài khoản cho học sinh</h2>
 						<button
 							style={{ flex: 3, height: '72.5px', backgroundColor: 'aliceblue	', textAlign: 'end' }}
 							onClick={props.cancelRegister}
@@ -207,7 +207,7 @@ export default function Register(props) {
 								]}
 								className="form-item-register"
 							>
-								<Input placeholder="Email" style={{ width: '180px' }} />
+								<Input placeholder="Email" className='item-form' />
 							</Form.Item>
 							<Form.Item
 								name="password"
@@ -224,7 +224,7 @@ export default function Register(props) {
 								hasFeedback
 								className="form-item-register"
 							>
-								<Input.Password placeholder="Mật khẩu" style={{ width: '180px' }} />
+								<Input.Password placeholder="Mật khẩu" className='item-form' />
 							</Form.Item>
 							<Form.Item
 								name="confirm"
@@ -246,7 +246,7 @@ export default function Register(props) {
 								]}
 								className="form-item-register"
 							>
-								<Input.Password placeholder="Nhập lại mật khẩu" style={{ width: '180px' }} />
+								<Input.Password placeholder="Nhập lại mật khẩu" className='item-form' />
 							</Form.Item>
 						</div>
 						<h3 style={{ color: 'blue' }}>Thông tin cá nhân:</h3>
@@ -256,14 +256,14 @@ export default function Register(props) {
 								rules={[{ required: true, message: 'Vui lòng nhập tên của bạn!' }]}
 								className="form-item-register"
 							>
-								<Input placeholder="Tên" style={{ width: '180px' }} />
+								<Input placeholder="Tên" className='item-form' />
 							</Form.Item>
 							<Form.Item
 								name="lastName"
 								rules={[{ required: true, message: 'Vui lòng nhập họ của bạn!' }]}
 								className="form-item-register"
 							>
-								<Input placeholder="Họ" style={{ width: '180px' }} />
+								<Input placeholder="Họ" className='item-form' />
 							</Form.Item>
 
 							<Form.Item
@@ -282,12 +282,12 @@ export default function Register(props) {
 									},
 								]}
 							>
-								<Input placeholder="Số điện thoại" style={{ width: '180px' }} />
+								<Input placeholder="Số điện thoại" className='item-form' />
 							</Form.Item>
 							<Form.Item name="date_picker" {...config} className="form-item-register">
 								<DatePicker
 									format="DD-MM-YYYY"
-									style={{ width: '180px' }}
+									className='item-form'
 									placeholder="Ngày tháng năm sinh"
 									onChange={(date) => setCurrentDate(date)}
 									disabledDate={isDateDisabled}
@@ -300,7 +300,7 @@ export default function Register(props) {
 							>
 								<Select
 									showSearch
-									style={{ width: '180px' }}
+									className='item-form'
 									placeholder="Tỉnh thành"
 									onChange={(value) => {
 										handleChangeProvince(value);
@@ -322,7 +322,7 @@ export default function Register(props) {
 							>
 								<Select
 									showSearch
-									style={{ width: '180px' }}
+									className='item-form'
 									placeholder="Quận huyện"
 									onChange={(value) => {
 										handleChangeDistrict(value);
@@ -343,7 +343,7 @@ export default function Register(props) {
 							>
 								<Select
 									showSearch
-									style={{ width: '180px' }}
+									className='item-form'
 									placeholder="Trường học"
 									onChange={handleChange}
 								>
@@ -361,7 +361,7 @@ export default function Register(props) {
 							>
 								<Select
 									showSearch
-									style={{ width: '180px' }}
+									className='item-form'
 									placeholder="Khối lớp"
 									onChange={handleChange}
 								>
@@ -384,7 +384,7 @@ export default function Register(props) {
 								className="form-item-register"
 							>
 								<div>
-									<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
+									<Radio.Group defaultValue="MALE" className='item-form'>
 										<Tooltip title="Nam">
 											<Radio.Button value="MALE">
 												<FcManager />
@@ -426,7 +426,7 @@ export default function Register(props) {
 									]}
 									className="form-item-register"
 								>
-									<Input placeholder="Email" style={{ width: '180px' }} />
+									<Input placeholder="Email" className='item-form' />
 								</Form.Item>
 								<Form.Item
 									name="password_parent"
@@ -443,7 +443,7 @@ export default function Register(props) {
 									hasFeedback
 									className="form-item-register"
 								>
-									<Input.Password placeholder="Mật khẩu" style={{ width: '180px' }} />
+									<Input.Password placeholder="Mật khẩu" className='item-form' />
 								</Form.Item>
 								<Form.Item
 									name="confirm-parent"
@@ -465,21 +465,21 @@ export default function Register(props) {
 									]}
 									className="form-item-register"
 								>
-									<Input.Password placeholder="Nhập lại mật khẩu" style={{ width: '180px' }} />
+									<Input.Password placeholder="Nhập lại mật khẩu" className='item-form' />
 								</Form.Item>
 								<Form.Item
 									name="firstname_parent"
 									rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
 									className="form-item-register"
 								>
-									<Input placeholder="Tên" style={{ width: '180px' }} />
+									<Input placeholder="Tên" className='item-form' />
 								</Form.Item>
 								<Form.Item
 									name="lastName_parent"
 									rules={[{ required: true, message: 'Vui lòng nhập họ !' }]}
 									className="form-item-register"
 								>
-									<Input placeholder="Họ" style={{ width: '180px' }} />
+									<Input placeholder="Họ" className='item-form' />
 								</Form.Item>
 								<Form.Item
 									label="Gender"
@@ -493,7 +493,7 @@ export default function Register(props) {
 									]}
 									className="form-item-register"
 								>
-									<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
+									<Radio.Group defaultValue="MALE" className='item-form'>
 										<Tooltip title="Nam">
 											<Radio.Button value="MALE">
 												<FcManager />
@@ -527,12 +527,12 @@ export default function Register(props) {
 										},
 									]}
 								>
-									<Input placeholder="Số điện thoại" style={{ width: '180px' }} />
+									<Input placeholder="Số điện thoại" className='item-form' />
 								</Form.Item>
 								<Form.Item name="date_parent" {...config} className="form-item-register">
 									<DatePicker
 										format="DD-MM-YYYY"
-										style={{ width: '180px' }}
+										className='item-form'
 										placeholder="Ngày tháng năm sinh"
 										onChange={(date) => setCurrentDate(date)}
 										disabledDate={isDateDisabled}

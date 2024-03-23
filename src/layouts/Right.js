@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectFriendRequest } from '../redux/Friend';
 import { selectselectFriendRequest } from '../redux/Friend';
 import { Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { selectFriend } from '../redux/Friend';
 import './../pages/friend/layouts/LeftFriend.css';
 import './Right.css';
@@ -14,6 +15,7 @@ import { selectOption } from '../redux/Group';
 import LableGroup from '../pages/group/components/LableGroup';
 import { Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { Modal } from 'antd';
 export default function Right() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -22,6 +24,12 @@ export default function Right() {
 	const [lisstInvite, setListInvite] = useState();
 	const [listRelationShip, setListRelationShip] = useState();
 	const [countRequestParent, setCountRequestParent] = useState();
+	const [confirmLoading, setConfirmLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [openDeleteinvite, setOpenDeleteinvite] = useState(false);
+	const [modalText, setModalText] = useState('Bạn có chắc muốn xóa lời mời này?');
+	const [item, setItem] = useState();
+	
 	const accept = (status, id) => () => {
 		if (status === 'ACCEPT') {
 			const headers = {
@@ -157,9 +165,34 @@ export default function Right() {
 				});
 		}
 	}
+	const handleCancel = () => {
+		setOpen(false);
+		setOpenDeleteinvite(false);
+		
+	};
+
 	return (
 		<>
 			<div className="friend-request" style={{overflowY:'auto'}}>
+			<Modal
+				title="Thông báo"
+				open={open}
+				onOk={()=>{accept('REJECT', item.id)}}
+				confirmLoading={confirmLoading}
+				onCancel={handleCancel}
+			>
+				<p>{modalText}</p>
+			</Modal>
+			<Modal
+				title="Thông báo"
+				open={openDeleteinvite}
+				onOk={()=>{acceptInvite('REJECT', item.id)}}
+				confirmLoading={confirmLoading}
+				onCancel={handleCancel}
+			>
+				<p>{modalText}</p>
+			</Modal>
+			
 				<div className="friend-request__title">
 					<h3>Lời mời kết bạn</h3>
 				</div>
@@ -173,7 +206,7 @@ export default function Right() {
 							>
 								<div style={{ flex: '2', margin: '15px', marginTop: '18px' }} onClick={()=>{navigate(`/profile/${item.sender.id}`)}}>
 									<div className="friend-request__item__avatar">
-										<Avatar src={item.sender.avartarUrl} alt="" />
+									{item.sender.avatarUrl !== null  && item.sender.avatarUrl !=="" ? (<Avatar src={item.sender.avatarUrl} alt="" />):( <Avatar icon={<UserOutlined  style={{height:'3em'}}/>} />)}	
 									</div>
 								</div>
 								<div className="friend-request__item__button" >
@@ -190,7 +223,9 @@ export default function Right() {
 										</button>
 										<button
 											className="btn btn-danger"
-											onClick={accept('REJECT', item.id)}
+											onClick={()=>{setOpen(true)
+											setItem(item)
+										setModalText(`Bạn có chắc muốn xóa lời mời kết bạn của ${item.sender.firstName + ' ' + item.sender.lastName}?`)}}
 											style={{ width: '64px' }}
 										>
 											Xóa
@@ -222,7 +257,12 @@ export default function Right() {
 							>
 								<div style={{ flex: '2', margin: '15px', marginTop: '18px' }} onClick={()=>{navigate(`/profile/${item.parent.id}`)}}>
 									<div className="friend-request__item__avatar">
-										<Avatar src={item.parent.avartarUrl} alt="" />
+										{
+											item.parent.avatarUrl !== null && item.parent.avatarUrl !== "" ? (<Avatar src={item.parent
+												.avatarUrl} alt="" />) : (<Avatar icon={<UserOutlined style={{height:'3em'}}/>} />)
+
+										}
+										
 									</div>
 								</div>
 								<div className="friend-request__item__button" >
@@ -275,7 +315,10 @@ export default function Right() {
 								>
 									<div style={{ flex: '2', margin: '15px', marginTop: '18px', paddingBottom: '1px' }}>
 										<div className="invite-request__item__avatar">
-											<Avatar src={item.group.avatarUrl} alt="" />
+											{
+												item.inviter.avatarUrl !== null && item.inviter.avatarUrl !== "" ? (<Avatar src={item.inviter.avatarUrl} alt="" />) : (<Avatar icon={<UserOutlined style={{height:'3em'}} />} />)
+
+											}
 										</div>
 									</div>
 									<div className="invite-request__item__button">
@@ -315,7 +358,11 @@ export default function Right() {
 									</button>
 									<button
 										className="btn btn-danger"
-										onClick={acceptInvite('REJECT', item.id)}
+										onClick={()=>{
+											setOpenDeleteinvite(true)
+											setItem(item)
+											setModalText(`Bạn có chắc muốn xóa lời mời tham gia nhóm ${item.group.name}?`)
+										}}
 										style={{ width: '64px', borderRadius: '0.5rem' }}
 									>
 										Xóa

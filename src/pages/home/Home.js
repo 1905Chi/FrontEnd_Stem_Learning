@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef  } from 'react';
 import PostItem from './components/PostItem';
 import { ToastContainer, toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,6 +7,9 @@ import Api from '../../api/Api';
 import { url } from '../../constants/Constant';
 import { Skeleton } from 'antd';
 import { selectPostHome } from '../../redux/Group';
+import { TfiAngleDoubleRight } from "react-icons/tfi";
+import Left from '../../layouts/Left';
+import './Home.css';
 //import { verifyJwtToken } from '../../api/Jwt';
 function Home() {
 	const [ispost, setIspost] = useState(false);
@@ -14,7 +17,8 @@ function Home() {
 	const [listpost, setListpost] = useState([]);
 	const [page, setPage] = useState(0);
 	const [size, setSize] = useState(30);
-
+	const [openLeft, setOpenLeft] = useState(false);
+	const LeftHomeRef = useRef(null);
 	useEffect(() => {
 		//console.log(verifyJwtToken(localStorage.getItem('use')));
 		if (localStorage.getItem('login')) {
@@ -22,25 +26,25 @@ function Home() {
 			localStorage.removeItem('login');
 		}
 		dispatch(selectuser(JSON.parse(localStorage.getItem('user'))));
-		// const headers = {
-		// 	'Content-Type': 'application/json',
-		// 	Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
-		// };
-		// Api.get(url+`api/v1/posts/home-posts?page=${page}&size=${size}`, {headers:headers}).then((response) => {
-		//   if (response.data.statusCode === 200) {
-		//     setListpost(response.data.result);
-		//   } else {
-		//     console.log(response.error);
-		//   }
-
-		// }).catch((error) => {
-		//   console.log(error);
-		// });
+		
 		dispatch(selectPostHome(homePosts));
 	}, []);
 	useEffect(() => {
 		homePosts();
 	}, []);
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+		  if (LeftHomeRef.current && !LeftHomeRef.current.contains(event.target)) {
+			setOpenLeft(false);
+		  }
+		};
+	
+		document.addEventListener("mousedown", handleClickOutside);
+	
+		return () => {
+		  document.removeEventListener("mousedown", handleClickOutside);
+		};
+	  }, []);
 	const fetchData = () => {
 		// Tạo một Promise mới
 		const myPromise = new Promise((resolve, reject) => {
@@ -116,8 +120,15 @@ function Home() {
 
 	return (
 		<>
+			<div className='Left' >
+			<TfiAngleDoubleRight onClick={()=>{setOpenLeft( prev => !prev)}} />
+			</div>
+			{openLeft ? <div className="LeftHome" ref={LeftHomeRef} style={{ position: 'absolute', top: '37px', left: 0, width: '50%', height: '100%', zIndex: 999 }}>
+            <Left />
+          </div>: null}
 			<div className="home-page">
-				{listpost === null ? <Skeleton active /> : null}
+			
+				{listpost === null && listpost.length ===0 ? <Skeleton active /> : null}
 				{listpost !== null &&
 					listpost.length > 0 &&
 					listpost.map((post, index) => {

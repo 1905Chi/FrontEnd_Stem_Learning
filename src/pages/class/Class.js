@@ -1,13 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState , useRef} from 'react';
 import Api from '../../api/Api';
 import anh_logo_1 from '../../assets/images/anh_logo_1.jpg';
 import { useLocation } from 'react-router-dom';
 import './Class.css';
 import { toast } from 'react-toastify';
+import { TfiAngleDoubleRight } from "react-icons/tfi";
+import RightClass from './layouts/RightClass';
+import LeftsGroup from '../group/layouts/LeftsGroup';
 export default function Class() {
 	const [classList, setClassList] = useState([]);
 	const [avatarUrl, setAvatarUrl] = useState(anh_logo_1);
 	const location = useLocation();
+	const [openLeft, setOpenLeft] = useState(false);
+	const LeftHomeRef = useRef(null);
 	useEffect(() => {
 		if (location.pathname.includes('classes')) {
 			fetchClass();
@@ -61,6 +66,12 @@ export default function Class() {
 	};
 	return (
 		<div className="class">
+			<div className='Left' >
+			<TfiAngleDoubleRight onClick={()=>{setOpenLeft( prev => !prev)}} />
+			</div>
+			{openLeft ? <div className="LeftHome" ref={LeftHomeRef} style={{ position: 'absolute', top: '54px', left: 0, width: '50%', height: '100%', zIndex: 999 }}>
+            <RightClass />
+          </div>: null}
 			{classList.map((item) => (
 				<div className="item-class" key={item.id}>
 					<img src={item.group.avatarUrl === null ? anh_logo_1 : item.group.avatarUrl} alt="" />

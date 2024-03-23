@@ -13,6 +13,10 @@
  overflow-y: scroll;
  overflow-x: scroll;
 }
+.register-body-form h2{
+  text-align: end;
+
+}
 .register-body-form{
   position: relative;
   top:3rem;
@@ -29,6 +33,44 @@
   overflow-x: scroll;
   margin-top: 15px;
   margin-bottom: 15px;
+}
+
+.register-body-form-teacher{
+  position: relative;
+  top:3rem;
+  width: 100%;
+  height: auto;
+  max-width: 700px;
+  max-height: 80vh;
+  padding: 12px;
+  content: 30px;
+  border: 3px solid blue;
+  border-radius: 10px;
+  background-color: aliceblue;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+}
+
+.register-body-form-student{
+  position: relative;
+  top:3rem;
+  width: 100%;
+  height: auto;
+  max-width: 700px;
+  max-height: 80vh;
+  padding: 12px;
+  content: 30px;
+  border: 3px solid blue;
+  border-radius: 10px;
+  background-color: aliceblue;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
 }
 .Loading-register{
   position: absolute;
@@ -85,4 +127,41 @@
 }
 .form-item-register{
   margin-left: 25px;
+}
+.item-form{
+  width: 180px;
+}
+
+@media screen and (max-width: 768px) {
+  .register-body-form {
+    top :-4rem;
+    text-align:  center;
+  }
+  .register-body-form h2{
+    text-align: center;
+  }
+  .register-body-form-teacher h2{
+    text-align: center;
+  }
+  
+  .register-body-form-student h2{
+    text-align: center;
+  }
+  .item-form{
+    width: 160%;
+  }
+  .information-profile{
+    flex-direction: column;
+    align-items: start }
+  .register-body-form-teacher{
+    top:-10rem
+  }
+  .register-body-form-student{
+    top: -11rem;
+    max-height: 59vh;
+  }
+  .information-account input {
+    width: 180%;
+
+    }
 }

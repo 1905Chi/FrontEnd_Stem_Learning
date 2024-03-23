@@ -25,10 +25,11 @@ export default function Editor(props) {
 	const dispatch = useDispatch();
 	const [isLoading, setIsLoading] = useState(false);
 	const onChange = (content) => {	
+		console.log(content);	
 		setValue(content);
-		if (props.editcontent) {
-			props.editcontent(value);
-		}
+		// if (props.editcontent) {
+		// 	props.editcontent(value);
+		// }
 	};
 	const cancel = () => {
 		if (props.cancel) props.cancel();
@@ -46,20 +47,19 @@ export default function Editor(props) {
 			const stringValue = value.toString();
 			console.log(stringValue);
 			setIsLoading(true);
-			const data = {
-				commentId: props.idComment,
-				content: stringValue,
-				
-			}
+			let  data = new FormData();
+			data.append('content',stringValue);
+			
+			
 			const headers = {
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 				'Content-Type': 'multipart/form-data', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 			};
-			Api.post(url + 'api/v1/comments', data, { headers: headers })
+			Api.post(url + `api/v1/comments/repComment/${props.idComment}`, data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						console.log(response.data.message);
-						dispatch(editPostGroup(response.data.result));
+						toast.success('Bình luận thành công');
 						if(props.homePosts)
 						{
 							props.homePosts();
@@ -114,13 +114,12 @@ export default function Editor(props) {
 		else if (props.editcontent != null) {
 			props.editcontent(value);
 			const stringValue = value.toString();
+			let data= new FormData();
+			data.append('content',stringValue);
+			data.append('postId',props.index);
+			data.append('typeName',props.type);
 			
-			const data = {
-				content: stringValue,
-				postId: props.index,
-				postType:props.type,
-				mediaFiles:[],
-			};
+			
 			const headers = {
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 				'Content-Type': 'multipart/form-data', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
@@ -235,20 +234,20 @@ export default function Editor(props) {
 	return (
 		<div
 			className="Editor"
-			style={{
-				position: 'absolute',
-				width: '50%',
-				position: 'fixed',
-				zIndex: '150',
-				backgroundColor: 'aliceblue',
-				border: '1px solid',
-				top:'25%',
-				left:'25%',
-				overFlow: 'auto',
-			}}
+			// style={{
+			// 	position: 'absolute',
+			// 	width: '50%',
+				
+			// 	zIndex: '150',
+			// 	backgroundColor: 'white',
+			// 	border: '1px solid',
+				
+				
+			// 	overFlow: 'auto',
+			// }}
 		>
-			{isLoading && <Loading></Loading>}
-			<div
+			
+			{/* <div
 				style={{
 					display: 'flex',
 					borderBottom: '1px solid black',
@@ -259,10 +258,11 @@ export default function Editor(props) {
 				<button style={{ height: '72.5px', backgroundColor: 'aliceblue', textAlign: 'end' }} onClick={cancel}>
 					<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
 				</button>
-			</div>
+			</div> */}
 			<ReactQuill
 				ref={reactQuillRef}
-				style={{height:'50vh',overflow:'scroll',width:'100%'}}
+				style={{height:'30vh',overflow:'scroll',width:'100%'}}
+				
 				theme="snow"
 				placeholder="Start writing..."
 				modules={{
@@ -304,9 +304,11 @@ export default function Editor(props) {
 				value={value}
 				onChange={onChange}
 			/>
-			<button style={{ width: '90%', margin: '5px 32px', borderRadius: '10px' }} onClick={Save}>
+			{isLoading && <Loading></Loading>}
+			{value && value.length >0 && value!==''  && value!=='<p><br></p>' && value!== '<p></p>'  ?(<button style={{ width: '90%', margin: '5px 32px', borderRadius: '10px' }} onClick={Save}>
 				Lưu
-			</button>
+			</button>): null}
+			
 		</div>
 	);
 }

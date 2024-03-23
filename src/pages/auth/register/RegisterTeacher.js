@@ -90,7 +90,7 @@ export default function RegisterTeacher(props) {
 				<Loading></Loading>
 			) : null}
 			<div className="Register-form">
-				<div className="register-body-form">
+				<div className="register-body-form-teacher" >
 					<div
 						style={{
 							display: 'flex',
@@ -99,7 +99,7 @@ export default function RegisterTeacher(props) {
 							flex: 10,
 						}}
 					>
-						<h2 style={{ flex: 8, textAlign: 'end' }}>Đăng ký tài khoản cho Giáo viên</h2>
+						<h2 style={{ flex: 8}}>Đăng ký tài khoản cho Giáo viên</h2>
 						<button
 							style={{ flex: 3, height: '72.5px', backgroundColor: 'aliceblue	', textAlign: 'end' }}
 							onClick={props.cancelRegister}
@@ -125,7 +125,7 @@ export default function RegisterTeacher(props) {
 								]}
 								className="form-item-register"
 							>
-								<Input placeholder="Email" style={{ width: '180px' }} />
+								<Input placeholder="Email" className='item-form' />
 							</Form.Item>
 							<Form.Item
 								name="password"
@@ -142,7 +142,7 @@ export default function RegisterTeacher(props) {
 								hasFeedback
 								className="form-item-register"
 							>
-								<Input.Password placeholder="Mật khẩu" style={{ width: '180px' }} />
+								<Input.Password placeholder="Mật khẩu" className='item-form' />
 							</Form.Item>
 							<Form.Item
 								name="confirm"
@@ -164,7 +164,7 @@ export default function RegisterTeacher(props) {
 								]}
 								className="form-item-register"
 							>
-								<Input.Password placeholder="Nhập lại mật khẩu" style={{ width: '180px' }} />
+								<Input.Password placeholder="Nhập lại mật khẩu" className='item-form' />
 							</Form.Item>
 						</div>
 						<Form.Item>

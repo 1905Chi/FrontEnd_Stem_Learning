@@ -37,6 +37,10 @@ export default function EditProfile({ onCancel }) {
 	const [schoolsItem, setschoolsItem] = useState({}); // Thông tin người dùng
 	const [isSaving, setIsSaving] = useState(false);
 	console.log(isSaving);
+	const [subjects, setSubjects] = useState([]);
+	useEffect(() => {
+		callSubject();
+	}, []);
 	const saveUpdate = (values) => {
 		setLoading(true);
 		let data = {};
@@ -122,6 +126,17 @@ export default function EditProfile({ onCancel }) {
 				setLoading(false);
 			});
 	};
+	const callSubject = async () => {
+		await axios
+			.get(url + 'api/v1/subjects')
+			.then((response) => {
+				setSubjects(response.data.result);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
 	const isDateDisabled = (date) => {
 		return date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
 	};
@@ -341,7 +356,7 @@ export default function EditProfile({ onCancel }) {
 										showSearch
 										style={{ width: '180px' }}
 										placeholder="Khối lớp"
-										onChange={handleChange}
+										
 										defaultValue={user.grade}
 									>
 										{grade.map((grade) => (
@@ -367,10 +382,10 @@ export default function EditProfile({ onCancel }) {
 									onChange={handleChange}
 									defaultValue={user.subject}
 								>
-									{grade.map((grade) => (
-										<Option value={grade} key={grade} style={{ color: 'black' }}>
-											{grade}
-										</Option>
+									{subjects.map((grade) => (
+										<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
+										{grade.name}
+									</Option>
 									))}
 								</Select>
 							</Form.Item>

@@ -72,7 +72,7 @@
     background-color: #ffffff;
     border:#dadada solid 1px;
     border-radius: 1rem;
-    padding: 5rem 0 3rem 0;
+    padding: 0rem 0 3rem 0;
 }
 .card-register h1 {
     font-size: 2rem;
@@ -189,6 +189,7 @@
     justify-content: center;
     gap: 1rem;
     margin-top: 1rem;
+
 }
 .content-oustanding {
     width: 100%;
@@ -198,6 +199,8 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    color: white;
+    text-align: center;
 }
 .content-oustanding h1 {
     font-size: 2.5rem;
@@ -328,4 +331,27 @@ span {
 }
 .Button-register span{
 color: white;
+}
+.item-image{
+    display: none;
+}
+@media screen and (max-width: 768px){
+
+    .card-container{
+        flex-direction: column;
+    }
+    .info-header-container{
+        flex-direction: column;
+    }
+
+    .info-header-content {
+        text-align: center;
+    }
+
+    .info-header-image{
+        display: none;
+    }
+    .info-body-container{
+        flex-direction: column;
+    }
 }

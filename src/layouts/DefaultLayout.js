@@ -32,6 +32,7 @@ export default function DefaultLayout({ Left, Right, children }) {
 	const {
 		token: { colorBgContainer, borderRadiusLG },
 	} = theme.useToken();
+
 	return (
 		<>
 			<div style={{backgroundColor:'rgb(244 246 250)'}}>

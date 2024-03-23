@@ -9,7 +9,6 @@ flex-wrap:wrap;
 .item-class{
     display: flex;
     width: 48%; /* Đặt chiều rộng của mỗi item */
-
     margin-bottom: 10px; /* Tạo khoảng cách giữa các item */
     box-sizing: border-box; /* Đảm bảo padding và border không làm tăng kích thước thực sự của phần tử */
     border: 2px solid #e8e8e8;
@@ -38,4 +37,22 @@ flex-wrap:wrap;
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
+}
+
+@media screen and (max-width: 768px) {
+    .class {
+        flex-direction: column;
+        margin-top: 5%;
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .item-class {
+        flex-direction: column ;
+        width: 95%;
+        padding:5% 0 0 8%;
+      }
+      .item-class img {
+        margin-top: 1%;
+        align-items: center;
+      }
 }

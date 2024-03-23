@@ -115,13 +115,7 @@ const RightClass = () => {
 		<>
 			<div>
 				<div
-					style={{
-						position: 'fixed',
-						top: '76px',
-						zIndex: '700',
-						width: '24.5%',
-						backgroundColor: 'white',
-					}}
+				className='header-classes'
 				>
 					{loading ? ( // Nếu đang loading thì hiển thị component loading
 						<Loading Loading={loading}></Loading>

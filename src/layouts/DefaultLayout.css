@@ -139,3 +139,39 @@ body {
   margin-left: 2%;
 }
 
+@media only screen  and (max-width: 46.1875em){
+  .header {
+    background: colorBgContainer;
+  }
+
+  .body-web {
+    flex-direction: column;
+    height: 70vh;
+    overflow-y:auto ;
+    margin-top: 15%;
+  }
+
+  
+  .main-web {
+    width: 100%;
+
+  }
+
+  .left-web,.right-web {
+    display: none; /* Ẩn phần bên trái, phải trên điện thoại */
+  }
+ 
+
+  .left-web-content,
+  .main-web-content {
+    padding: 0 10px; /* Điều chỉnh padding cho nội dung trái và chính */
+  }
+  .ant-col-19{
+      max-width: 100%;
+  }
+  .ant-col-18 {
+    max-width: 100%;
+  }
+ 
+}
+

@@ -3,8 +3,7 @@ import './Topbar.css';
 import { MegaMenu } from 'primereact/megamenu';
 import { InputText } from 'primereact/inputtext';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectselectuser } from '../redux/User';
+import { UserOutlined } from '@ant-design/icons';
 import anh_logo_1 from '../../src/assets/images/anh_logo_1.jpg';
 import { Avatar, Badge, List, Typography, Button } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -22,7 +21,9 @@ import classnames from 'classnames';
 import { Notifications } from '@material-ui/icons';
 import { url } from '../constants/Constant';
 import toast, { Toaster } from 'react-hot-toast';
-
+import { TfiAlignJustify } from 'react-icons/tfi';
+import { Dropdown } from 'antd';
+import { Menu } from 'antd';
 const Topbar = (props) => {
 	const adver4 = 'https://res.cloudinary.com/djzwxw0ao/image/upload/v1696942528/uqbxidtwcdbqn8glt6we.jpg';
 	const [activeIndex, setActiveIndex] = useState(1);
@@ -34,10 +35,14 @@ const Topbar = (props) => {
 	const [historySearch, sethistorySearch] = useState(JSON.parse(localStorage.getItem('search')));
 	const [openMenu, setOpenMenu] = useState(false);
 	const [editprofile, setEditProfile] = useState(false);
-	const role = localStorage.getItem('role') ? localStorage.getItem('role')? JSON.parse(localStorage.getItem('user')).role:JSON.parse(localStorage.getItem('user')).role : null;
+	const role = localStorage.getItem('role')
+		? localStorage.getItem('role')
+			? JSON.parse(localStorage.getItem('user')).role
+			: JSON.parse(localStorage.getItem('user')).role
+		: null;
 	const [isLogin, setIsLogin] = useState(localStorage.getItem('accessToken') ? true : false);
 	const [items, setItems] = useState([]);
-
+	const [isSemore, setIsSemore] = useState(false);
 	const classParent = ['notification--item'];
 	const [listNotification, setListNotification] = useState([]);
 	const [page, setPage] = useState(0);
@@ -129,7 +134,7 @@ const Topbar = (props) => {
 	};
 
 	useEffect(() => {
-		if (role !== null && role === 'ADMIN' ) {
+		if (role !== null && role === 'ADMIN') {
 			setItems([
 				{
 					label: 'Trang chủ',
@@ -321,6 +326,81 @@ const Topbar = (props) => {
 			</div>
 		);
 	};
+	const itemenu=[
+		{
+			key: '1',
+			label: (
+				<div style={{ fontSize: '15px' }} onClick={()=>{navigate("/home")}}>						
+							<span style={{ fontSize: '15px' }}>Trang chủ</span>
+				</div>
+			),
+		},
+		{
+			key: '2',
+			label: (
+				<div style={{ fontSize: '15px' }} onClick={()=>{navigate("/classes")}}>						
+							<span style={{ fontSize: '15px' }}>Lớp học</span>
+				</div>
+			),
+		},
+		{
+			key: '3',
+			label: (
+				<div style={{ fontSize: '15px' }} onClick={()=>{navigate("/groups")}}>						
+							<span style={{ fontSize: '15px' }}>Nhóm học</span>
+				</div>
+			),
+		},
+		
+		
+	];
+	const itemenuAvatar=[
+		{
+			key: '1',
+			label: (
+				<div style={{ fontSize: '15px' }} onClick={() => {
+					navigate('/profile');
+				}}>						
+						<div
+							className="menu-option-item"
+							
+						>
+							
+							<CgProfile className="iocon-pr" /> <span>Trang cá nhân</span>
+						</div>
+				</div>
+			),
+		},
+		{
+			key: '2',
+			label: (
+				<div style={{ fontSize: '15px' }} onClick={openEditProfile}>						
+							<div className="menu-option-item" >
+							<CiEdit className="iocon-pr" /> <span>Chỉnh sửa thông tin cá nhân</span>
+						</div>
+				</div>
+			),
+		},
+		{
+			key: '3',
+			label: (
+				<div style={{ fontSize: '15px' }} onClick={() => {
+					localStorage.clear();
+					navigate('/login');
+				}}>						
+							<div
+							className="menu-option-item"
+							
+						>
+							<IoExitOutline className="iocon-pr" />
+							<span>Đăng xuất</span>
+						</div>
+				</div>
+			),
+		},
+		
+		
+	];
 
 	const end = () => {
 		return (
@@ -337,7 +417,7 @@ const Topbar = (props) => {
 				) : null}
 
 				{isLogin && user !== null ? (
-					<div style={{ display: 'flex' }}>
+					<div style={{ display: 'flex' }} className="end-topbar-login">
 						<div className="button-right">
 							<Badge
 								// chỉ tính những thông báo chưa đọc
@@ -422,7 +502,7 @@ const Topbar = (props) => {
 																		{item.content}
 																	</span>
 																	<span className="notification--item-time">
-																		Thời gian:{' '}
+																		Thời gian:
 																		{moment(item.createdAt).format('DD/MM/YYYY')}
 																	</span>
 																</div>
@@ -452,42 +532,65 @@ const Topbar = (props) => {
 							</Popover>
 						</div>
 
-						{user.avatarUrl !== null ? (
-							<div className="avatar-topbar" onClick={toProfile}>
+						{user.avatarUrl !== null && user.avatarUrl !== '' ? (
+							<div className="avatar-topbar" >
+								<Dropdown
+								overlay={
+									<Menu >
+										{itemenuAvatar.map((item) => (
+											<Menu.Item key={item.key}>{item.label}</Menu.Item>
+										))}
+									</Menu>
+								}
+								placement="bottomRight"
+								arrow={{
+									pointAtCenter: true,
+								}}
+								style={{ border: 'none', flex: 1 }}
+							>
 								<Avatar alt="avatar" src={user.avatarUrl} height="40" className="mr-2" />
+							</Dropdown>
+								
 							</div>
 						) : (
-							<div className="avatar-topbar" onClick={toProfile}>
-								<Avatar alt="avatar" src={anh_logo_1} height="40" className="mr-2" />
+							<div className="avatar-topbar" >
+								<Dropdown
+								overlay={
+									<Menu >
+										{itemenuAvatar.map((item) => (
+											<Menu.Item key={item.key}>{item.label}</Menu.Item>
+										))}
+									</Menu>
+								}
+								placement="bottomRight"
+								arrow={{
+									pointAtCenter: true,
+								}}
+								style={{ border: 'none', flex: 1 }}
+							>
+								<Avatar alt="avatar" height="40" icon={<UserOutlined style={{ height: '3em' }} />} />
+							</Dropdown>
+								
 							</div>
 						)}
-					</div>
-				) : null}
-
-				{openMenu === true ? (
-					<div className="menu-option">
-						<button
-							className="menu-option-item"
-							onClick={() => {
-								navigate('/profile');
-							}}
-						>
-							{' '}
-							<CgProfile className="iocon-pr" /> <span>Trang cá nhân</span>
-						</button>
-						<button className="menu-option-item" onClick={openEditProfile}>
-							<CiEdit className="iocon-pr" /> <span>Chỉnh sửa thông tin cá nhân</span>
-						</button>
-						<button
-							className="menu-option-item"
-							onClick={() => {
-								localStorage.clear();
-								navigate('/login');
-							}}
-						>
-							<IoExitOutline className="iocon-pr" />
-							<span>Đăng xuất</span>
-						</button>
+						<div className="menu-topbar">
+							<Dropdown
+								overlay={
+									<Menu >
+										{itemenu.map((item) => (
+											<Menu.Item key={item.key}>{item.label}</Menu.Item>
+										))}
+									</Menu>
+								}
+								placement="bottomRight"
+								arrow={{
+									pointAtCenter: true,
+								}}
+								style={{ border: 'none', flex: 1 }}
+							>
+								<TfiAlignJustify />
+							</Dropdown>
+						</div>
 					</div>
 				) : null}
 			</div>
@@ -525,7 +628,7 @@ const Topbar = (props) => {
 					</div>
 				</div>
 			) : null}
-			<MegaMenu model={items} orientation="horizontal" start={start} end={end} />
+			<MegaMenu model={items} orientation="horizontal" start={start} end={end} className="Top-bar-start-end" />
 		</div>
 	);
 };

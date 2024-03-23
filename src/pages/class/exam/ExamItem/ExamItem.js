@@ -86,7 +86,7 @@ export default function ExamItem(props) {
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					setExamId(response.data.result);
-					dispatch(selectexam(response.data.result));
+					//dispatch(selectexam(response.data.result));
 					const startTime = moment(
 						response.data.result.exam.startedAt,
 						'DD-MM-YYYY HH:mm:ss:SSSSSS'

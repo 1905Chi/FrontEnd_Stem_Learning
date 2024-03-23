@@ -8,7 +8,9 @@
   border-bottom: 10px solid #c2bebe;
 
 }
-
+.comment {
+  margin: 0 0 1em 0;
+}
 .post-content{
   max-height: 500px;
 }
@@ -164,6 +166,10 @@ text-align: center;
   display: flex;
   margin-top: 15px;
   margin-left: 15px;
+  margin-bottom: 2%;
+}
+.comment-contaner{
+  display: flex;
 }
 .content-comment p{
   margin-top: 0px;
@@ -211,3 +217,35 @@ text-align: center;
   width: 100%;
   height: auto;
 }
+
+.sub-comments{
+  margin-left: 10%;
+}
+.infor-author{
+  display:'flex';
+  flex-direction: 'row';
+  flex: 9 ;
+  margin-top: 3%;
+}
+.infor-author p {
+  margin-top: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .infor-author {
+    display: block;
+    margin-top: 5%;
+    
+  }
+  .infor-author p {
+    margin-top: 0;
+  }
+  .ant-modal-body {
+    height: 40vh;
+    overflow-y: auto;
+  }
+  .ant-modal {
+    top: 5px
+  }
+}
+  

@@ -12,6 +12,7 @@ import { selectselectMemberGroup } from '../../../redux/MemberGroup';
 import moment from 'moment';
 import { selectOptionSearchDocementbyDate, selectOptionSearchDocumentbyName,selectOptionSearchDocumentbySender,selectOptionSearchDocumentbyType } from '../../../redux/Group';
 import { selectSelectOptionSearchDocementbyDate,selectSelectOptionSearchDocumentbyName, selectSelectOptionSearchDocumentbySender, selectSelectOptionSearchDocumentbyType } from '../../../redux/Group';
+import { SwapHorizontalCircleSharp } from '@material-ui/icons';
 export default function DocumentGroup() {
 	const [isShowAllFile, setIsShowAllFile] = useState(false);
 	const  dispatch = useDispatch();
@@ -133,6 +134,7 @@ export default function DocumentGroup() {
 	};
 	
 
+	
 	const getTypes = (filename) => {
 		const parts = filename.split('.');
 
