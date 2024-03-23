@@ -1,0 +1,32 @@
+.request-request__item{
+    
+    margin:15px;
+    border-bottom: 2px solid #e6e6e6;   
+    border-radius: 15px;
+    background-color: aliceblue;
+    width: 30%;
+    height : auto
+    
+}
+.request-request__item img{
+    margin: 15px;
+    width: 90%;
+    height: auto;
+}
+.list-friend-request{
+    display: flex;
+    flex-wrap: wrap;
+   
+    margin: 0 auto;
+    width: 100%;
+}
+.request-request__item button {
+    width: 90%;
+    margin: 10px;
+}
+.request-request__item p{
+    margin: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}

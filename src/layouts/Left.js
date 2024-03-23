@@ -1,90 +1,154 @@
-import React from 'react';
-import { Layout, Menu } from 'antd';
-import { FaUserFriends } from 'react-icons/fa';
-import { HiOutlineUserGroup } from 'react-icons/hi';
-import {
-    MessageOutlined,
-    BellOutlined,
-    CalendarOutlined,
-} from '@ant-design/icons';
-import './Left.css';
+import { Button, Divider, List, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
-export default function Left() {
-    return ( <
-            >
-            <
-            Menu mode = "vertical"
-            theme = "light"
-            defaultSelectedKeys = {
-                ['0'] } >
-            <
-            Menu.Item key = "1"
-            icon = { < MessageOutlined style = {
-                    { fontSize: '24px', color: 'blue' } }
-                />} >
-                { ' ' } <
-                span > Tin nhắn < /span>{' '} <
-                Link
-                to = "/messages
-                " >
-                { ' ' } <
-                /Link>{' '} <
-                /Menu.Item>{' '} <
-                Menu.Item
-                key = "2"
-                icon = { < FaUserFriends style = {
-                        { fontSize: '24px', color: 'blue' } }
-                    />} >
-                    { ' ' } <
-                    span > Bạn bè < /span>{' '} <
-                    Link
-                    to = "/friends
-                    " >
-                    { ' ' } <
-                    /Link>{' '} <
-                    /Menu.Item>{' '} <
-                    Menu.Item
-                    key = "3"
-                    icon = { < BellOutlined style = {
-                            { fontSize: '24px', color: 'blue' } }
-                        />} >
-                        { ' ' } <
-                        span > Thông báo < /span>{' '} <
-                        Link
-                        to = "/notifications
-                        " >
-                        { ' ' } <
-                        /Link>{' '} <
-                        /Menu.Item>{' '} <
-                        Menu.Item
-                        key = "4"
-                        icon = { < HiOutlineUserGroup style = {
-                                { fontSize: '24px', color: 'blue' } }
-                            />} >
-                            { ' ' } <
-                            span > Nhóm < /span>{' '} <
-                            Link
-                            to = "/groups
-                            " >
-                            { ' ' } <
-                            /Link>{' '} <
-                            /Menu.Item>{' '} <
-                            Menu.Item
-                            key = "5"
-                            icon = { <
-                                CalendarOutlined style = {
-                                    { fontSize: '24px', color: 'blue' } }
-                                />
-                            } >
-                            <
-                            span > Sự kiện < /span>{' '} <
-                            Link
-                            to = "/events
-                            " >
-                            { ' ' } <
-                            /Link>{' '} <
-                            /Menu.Item>{' '} <
-                            /Menu>{' '} <
-                            />
-                        );
-                    }
+import UseTheme from './UseTheme';
+import { FaUserFriends } from "react-icons/fa";
+import './Left.css'
+import { useNavigate } from 'react-router-dom';
+import {
+	FcAbout,
+	FcCustomerSupport,
+	FcFeedback,
+	FcInfo,
+	FcPrivacy,
+	FcReading,
+	FcRefresh,
+	FcSettings,
+	FcSportsMode,
+} from 'react-icons/fc';
+export default function Left  () {
+    const { theme } = UseTheme();
+	const navigate = useNavigate();
+	const user = JSON.parse(localStorage.getItem('user'));
+    const openMessager = () => {
+		navigate('/messenger');
+    };
+
+	//Đăng xuất
+	const logoutHandler = () => {
+		localStorage.clear();
+		navigate('/login');
+	};
+
+	const listAccountAction = [
+		{
+			title: 'Chuyển tài khoản',
+			icon: FcRefresh,
+		},
+		{
+			title: 'Đăng xuất',
+			icon: FcSportsMode,
+			onClick: logoutHandler,
+		},
+		user.role === 'PARENT' || localStorage.getItem('role')==='PARENT' || user.role==='TEACHER'? {
+			title: 'Phụ huynh - Học sinh',
+			icon: FcCustomerSupport,
+			onClick: () => {
+				navigate('/parent');
+			},
+		} : {
+			title: 'Cài đặt',
+			icon: FcSettings,
+			href: '/settings',
+		},
+	];
+
+	const listShortCutAction= [
+		
+		{
+			title: 'Bạn bè',
+			icon: FaUserFriends,
+			onClick: () => {
+				navigate('/friends');
+			},
+		},
+		{
+			title: 'Tin nhắn',
+			icon: FcFeedback,
+			onClick: openMessager,
+		},
+		{
+			title: 'Giới thiệu',
+			icon: FcAbout,
+			href: '/about',
+		},
+		{
+			title: 'Điều khoản',
+			icon: FcReading,
+			href: '/terms',
+		},
+		{
+			title: 'Quyền riêng tư',
+			icon: FcInfo,
+			href: '/privacy',
+		},
+		{
+			title: 'Bảo mật',
+			icon: FcPrivacy,
+			href: '/security',
+		},
+	];
+
+	const lists = [
+		{
+			title: 'Tài khoản',
+			data: listAccountAction,
+		},
+		{
+			title: 'Lối tắt',
+			data: listShortCutAction,
+		},
+	];
+
+	return (
+        
+		<Space  className="sidebar" direction="vertical" style={{ color: theme.foreground, background: theme.background , width:'100%'}}>
+			{lists.map((list, index) => (
+				<List
+					key={index}
+					header={
+						<Divider orientation="left" style={{ margin: 0 }}>
+							<Typography.Title level={4} style={{ margin: 0 }}>
+								{list.title}
+							</Typography.Title>
+						</Divider>
+					}
+					split={false}
+					dataSource={list.data}
+					renderItem={(item) => (
+						<List.Item style={{ padding: '4px 0' }}>
+							{item.href ? (
+								<Link to={item.href} draggable style={{ width: '100%' }}>
+									<Button
+										type="text"
+										block
+										style={{ height: 'auto', padding: '8px' }}
+										onClick={item.onClick}
+									>
+										<Space align="center" style={{ width: '100%' }}>
+											<item.icon size={20} />
+
+											<Typography.Text strong>{item.title}</Typography.Text>
+										</Space>
+									</Button>
+								</Link>
+							) : (
+								<Button
+									type="text"
+									block
+									style={{ height: 'auto', padding: '8px' }}
+									onClick={item.onClick}
+								>
+									<Space align="center" style={{ width: '100%' }}>
+										<item.icon size={20} />
+
+										<Typography.Text strong>{item.title}</Typography.Text>
+									</Space>
+								</Button>
+							)}
+						</List.Item>
+					)}
+				/>
+			))}
+		</Space>
+	);
+}

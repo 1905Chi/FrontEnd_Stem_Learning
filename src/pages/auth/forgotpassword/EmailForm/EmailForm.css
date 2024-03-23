@@ -1,15 +1,19 @@
-.body-enteremail-resetform {
-  background-color: #f5f5f5;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 
 .enteremail-resetform {
-  width: 100%;
-  max-width: 330px;
-  padding: 5px;
-  content: 30px;
+  width: 50%;
   border: 3px solid blue;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  display: flex;
+  margin: 10%;
+}
+
+
+.enteremail-resetform  img{
+  width: 35%;
+  height: auto;
+}
+.forgot-pass{
+ 
 }

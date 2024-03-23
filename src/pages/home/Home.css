@@ -1,0 +1,31 @@
+.home-page{
+    width: 80%;
+    margin: 25px 0 0 0 ;
+    position: relative;
+   
+}
+.Left{
+    display: none;
+}
+.LeftHome{
+  display: none;
+}
+
+@media screen and (max-width: 46.1875em){
+   .LeftHome {
+    width: 25%;
+    z-index: 999;
+    display: block;
+
+   }
+   .Left {
+    display: block;
+    font-size: 20px;
+    margin-top: 2%;
+   
+   }
+   .home-page {
+    width: 99%;
+    
+   }
+}

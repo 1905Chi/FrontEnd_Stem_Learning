@@ -4,6 +4,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  
 }
 
 .login-form-button {
@@ -12,8 +14,11 @@
 
 .verify-form {
   width: 100%;
-  max-width: 330px;
-  padding: 5px;
+  max-width: 400px;
+  padding: 20px;
   content: 30px;
-  border: 3px solid blue;
+  
+  border-radius: 10px;
+ 
+  
 }

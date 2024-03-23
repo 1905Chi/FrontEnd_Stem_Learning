@@ -1,0 +1,19 @@
+.item-question{
+    border: 1px solid #e8e8e8;
+    background-color: aliceblue;
+    padding-left: 15px;
+    margin-bottom: 10px;
+    margin-right: 15px;
+}
+
+.submit-sipn button{
+    text-align: end;
+    position: absolute;
+    /* bottom: 50%; */
+    right: 50%;
+    width: 59px;
+    border-radius: 5px;
+}
+.quest-content img{
+    width: 80%;
+}

@@ -1,0 +1,16 @@
+.infor-exam{
+    text-align: start  ;
+    margin-left: 5%;
+}
+
+.edit-infor-exam-button{
+    background-color: #eee;
+    font-size: large;
+    border-radius: 5px;
+    color: blue;
+}
+
+.back-to-exam-button{
+    margin: 3rem 0 0 1rem;
+
+}

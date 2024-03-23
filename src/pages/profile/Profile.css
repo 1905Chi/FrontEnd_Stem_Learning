@@ -1,0 +1,101 @@
+
+  .cover-photo {
+    width: 100%;
+    height: 50vh;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .cover-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .profile-picture-self {
+    width: 150px;
+    height: 150px;
+    border: 5px solid white;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    transform: translateY(-40%);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+  }
+  .profile-picture-self__button{
+    width: 40px;
+    border-top: 3px solid black;
+    border-radius: 50%;
+    background: #4d4b4b;
+    position: absolute;
+    top: 12vh;
+    
+    
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+
+
+  }
+  .cover-picture-self__button{
+    width: 165px;
+    border-top: 3px solid black;
+   
+    background: #4d4b4b;
+    position: absolute;
+    top: 41%;
+    left: 75%;
+
+    transform: translateX(50% );
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+  }
+  .edit-profile__button{
+    width: 165px;
+    border-top: 3px solid black;
+   
+    background: #4d4b4b;
+    position: absolute;
+    top: 63px;
+    left: 216px;
+
+    transform: translateX(50% );
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+  }
+  .profile-picture-self img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .usename-button-self{
+    
+    display: flex;
+    width: 55%;
+    justify-content: center;
+    position: absolute;
+    margin-top: 10px;
+    right: 83px;
+  }
+  .profile-picture-self__button{
+    height: 30px;
+    font-size: medium;
+  }
+  .profile-self{
+    margin: 5rem 5rem 0 5rem;
+  }

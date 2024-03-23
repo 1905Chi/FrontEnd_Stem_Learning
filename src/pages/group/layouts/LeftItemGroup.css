@@ -1,0 +1,65 @@
+.header-item-group{
+	position: relative;
+	top: 0;
+    border: 2px solid #e6e6e6;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.custom-option-group{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    
+}
+.custom-option-group:hover{
+    background-color:#007bff;
+    border-radius: 10px;
+}
+
+.icon-option-group{
+    color:#007bff;
+
+}
+
+.option-label-group{
+    font-size: 15px;
+    margin-left: 10px;
+    font-weight: 500;
+}
+.body-invite-friend{
+    margin: 2%;
+    
+    display: flex;
+    
+}
+
+.right-invite-friend p{
+    margin: 0px;
+    
+}
+
+.left-invite-friend input{
+    border-radius: 30px;
+}
+
+.left-invite-friend {
+    width: 50%;
+    border-right: 1px solid #e6e6e6;
+    
+}
+.right-invite-friend{
+    width: 50%;
+    margin-left: 15px;
+}
+.footer-invite-friend button{
+    border-radius: 5px;
+}
+
+.custom-option-group.active{
+    background-color: #e6e6e6; /* Đặt màu nền khi button được chọn */}
+
+.Toastify{
+    z-index: 9999;
+}

@@ -1,0 +1,46 @@
+.header-left{
+    border-bottom: 1px solid #e6e6e6;
+    padding: 0 0 15px 0;
+    width: 88%;
+  margin-top: 2%;
+  margin-left: 2%;
+
+
+}
+.button-add{
+   
+    /*padding: 0 0 15px 0;*/
+    margin-left: 0px;
+}
+
+.your-group{
+    border-bottom: 1px solid #e6e6e6;
+    padding: 0 0 15px 0;
+}
+.header-classes {
+   
+        position: fixed;
+        top: 76px;
+        z-index: 700;
+        width: 24.5%;
+        background-Color: white,
+
+}
+@media screen and (max-width: 46.1875em){
+    .LeftHome {
+        width: 25%;
+        z-index: 999;
+        display: block;
+        background-color: #a7a1a1;
+       }
+       .Left {
+        display: block;
+        font-size: 20px;
+        margin-top: 2%;
+       
+       }
+    .header-left {
+        width: 186%;
+    margin-top: 58%;
+    }
+}
