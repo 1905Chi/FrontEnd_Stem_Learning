@@ -30,7 +30,7 @@ const CreateQuiz = () => {
 		console.log('Received values:', values);
 		console.log('Answer types:', answerTypes);
 		console.log('content ', value);
-		
+
 		setIsLoading(true);
 		const data = {
 			groupId: uuid,
@@ -61,7 +61,14 @@ const CreateQuiz = () => {
 						isCorrect: true,
 					};
 					questions.answers = [...questions.answers, answer];
-				} else {
+				} else if (item.isCorrect === undefined && answerTypes[index] === 'essay') {
+					answer = {
+						content: item.answer,
+						isCorrect: true,
+					};
+					questions.answers = [...questions.answers, answer];
+				}
+				 else {
 					answer = {
 						content: item.answer,
 						isCorrect: false,
@@ -99,8 +106,10 @@ const CreateQuiz = () => {
 		newAnswerTypes[index] = e.target.value;
 		if (e.target.value === 'single_choice') {
 			newAnswerTypes[index] = 'single_choice';
-		} else {
+		} else if (e.target.value === 'multiple_choice'){
 			newAnswerTypes[index] = 'multiple_choice';
+		} else {
+			newAnswerTypes[index] = 'essay';
 		}
 		setAnswerTypes(newAnswerTypes);
 	};
@@ -127,25 +136,27 @@ const CreateQuiz = () => {
 
 	const validateEndTime = (_, value) => {
 		const { startedAt, duration, endedAt } = form.getFieldsValue();
-		
-		
-		const startTime = moment(startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
-		console.log('start',startTime);
-		
-		
-		const endTime = moment(endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),'DD-MM-YYYY HH:mm:ss:SSSSSS' ).valueOf();
-		console.log('end',endTime);
-		
-		
+
+		const startTime = moment(
+			startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
+			'DD-MM-YYYY HH:mm:ss:SSSSSS'
+		).valueOf();
+		console.log('start', startTime);
+
+		const endTime = moment(endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'), 'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
+		console.log('end', endTime);
+
 		console.log(duration);
-		console.log(duration*60000+ startTime)
-	
-		if (endTime <(startTime+duration*60000)) {
-		  return Promise.reject(new Error(`Thời gian kết thúc phải sau ít nhất 1 khoảng thời gian ${duration} phút.`));
+		console.log(duration * 60000 + startTime);
+
+		if (endTime < startTime + duration * 60000) {
+			return Promise.reject(
+				new Error(`Thời gian kết thúc phải sau ít nhất 1 khoảng thời gian ${duration} phút.`)
+			);
 		}
-	
+
 		return Promise.resolve();
-	  };
+	};
 
 	return (
 		<div className="create-quiz">
@@ -187,7 +198,10 @@ const CreateQuiz = () => {
 						style={{ width: '60%', border: '1px solid black' }}
 					/>
 				</Form.Item>
-				<Form.Item name="maxScore" rules={[{ required: true, message: 'Vui lòng nhập điểm số tối đa của bài kiểm tra!' }]}>
+				<Form.Item
+					name="maxScore"
+					rules={[{ required: true, message: 'Vui lòng nhập điểm số tối đa của bài kiểm tra!' }]}
+				>
 					<InputNumber
 						min={1}
 						placeholder="Nhập điểm tối đa"
@@ -213,9 +227,15 @@ const CreateQuiz = () => {
 				</Form.Item>
 
 				<Form.Item name="startedAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian bắt đầu!' }]}>
-					<DatePicker placeholder="Chọn thời gian bắt đầu" showTime disabledDate={isDateDisabled}  />
+					<DatePicker placeholder="Chọn thời gian bắt đầu" showTime disabledDate={isDateDisabled} />
 				</Form.Item>
-				<Form.Item name="endedAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian kết thúc!' }, { validator: validateEndTime },]}>
+				<Form.Item
+					name="endedAt"
+					rules={[
+						{ required: true, message: 'Vui lòng nhập thời gian kết thúc!' },
+						{ validator: validateEndTime },
+					]}
+				>
 					<DatePicker placeholder="Chọn thời gian kết thúc" showTime disabledDate={isDateDisabled} />
 				</Form.Item>
 
@@ -255,6 +275,7 @@ const CreateQuiz = () => {
 										>
 											<Radio value="single_choice">Chọn 1 đáp án</Radio>
 											<Radio value="multiple_choice">Chọn nhiều đáp án</Radio>
+											<Radio value="essay">Trả lời ngắn</Radio>
 										</Radio.Group>
 									</Form.Item>
 									<Form.List name={[name, 'answers']}>
@@ -303,6 +324,15 @@ const CreateQuiz = () => {
 																	valuePropName="checked"
 																>
 																	<Radio>Đáp án đúng</Radio>
+																</Form.Item>
+															)}
+															{answerTypes[index] === 'essay' && (
+																<Form.Item
+																	name={[answerName, 'isCorrect']}
+																	valuePropName="checked"
+																	
+																>
+																	 <Radio defaultChecked={true}>Đáp án đúng</Radio>
 																</Form.Item>
 															)}
 															<MinusCircleOutlined

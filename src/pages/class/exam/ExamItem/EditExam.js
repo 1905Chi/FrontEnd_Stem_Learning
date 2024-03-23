@@ -206,7 +206,7 @@ export default function EditExam() {
 			url + `api/v1/answers/${answer.id}`,
 			{
 				content: newAswer ? newAswer : answer.content,
-				isCorrect: isCorrect ? isCorrect : answer.isCorrect,
+				isCorrect: isCorrect!==answer.isCorrect ? isCorrect : answer.isCorrect,
 			},
 			{
 				headers: {
@@ -339,7 +339,9 @@ export default function EditExam() {
 						<div style={{ display: 'flex', padding: 'px' }}>
 							<input defaultValue={answer.content} style={{ width: '50%' }} onChange= {UpdateContent} />
 							<label style={{ paddingTop: '10px', margin: '0 20px' }}>Đáp án đúng</label>{' '}
-							{answer.isCorrect ? <Checkbox defaultChecked > </Checkbox> : <Checkbox > </Checkbox>}
+							{answer.isCorrect ? <Checkbox defaultChecked > </Checkbox> : <Checkbox onChange={(e)=>{
+								 setIsCorrect(e.target.checked);
+							}}> </Checkbox>}
 						</div>
 						<div style={{ textAlign: 'center' }}>
 							<button
