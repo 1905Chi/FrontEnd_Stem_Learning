@@ -183,7 +183,7 @@ export default function Submit() {
 		}
 	}, []);
 
-	const handleRadioChange = (questionId, answer, typeCode) => {
+	const handleRadioChange = (questionId, answer, typeCode,index) => {
 		const oldSelectedAnswers = selectedAnswers;
 
 		if (oldSelectedAnswers.filter((item) => item.questionId === questionId).length === 0) {
@@ -191,31 +191,30 @@ export default function Submit() {
 		} else {
 			if (
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.includes(answer) &&
-				typeCode === 'multiple_choice'
+				(typeCode === 'multiple_choice' )
 			) {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex = oldSelectedAnswers
 					.filter((item) => item.questionId === questionId)[0]
 					.answerIndex.filter((item) => item !== answer);
-
-				// else
-				// 	{
-				// 		oldSelectedAnswers.filter((item)=>item.questionId===questionId)[0].answerIndex=[];
-				// 		oldSelectedAnswers.filter((item)=>item.questionId===questionId)[0].answerIndex.push(answer);
-				// 	}
-			} else if (typeCode === 'single_choice') {
+				console.log(oldSelectedAnswers);
+			} else if (typeCode === 'single_choice' ) {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex = [];
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.push(answer);
-			} else {
+			} else if(typeCode === 'essay') {
+				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex[index]=answer;
+			}
+			 else {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.push(answer);
 			}
 		}
 
 		setSelectedAnswers(oldSelectedAnswers);
+		console.log(oldSelectedAnswers);
 		console.log(selectedAnswers);
 		if (selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.length > 0) {
 			const data = {
 				id: questionId,
-				answer: selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.join(','),
+				answer: selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.join(', '),
 			};
 			Api.put(url + 'api/v1/submission-details/update', data, {
 				headers: {
@@ -276,6 +275,7 @@ export default function Submit() {
 									{question.answers.map((answer, index) => (
 										<label key={index}>
 											{question.typeCode === 'multiple_choice' ? (
+												<>
 												<input
 													type="checkbox"
 													name={`question_${question.submissionDetailId}`}
@@ -285,11 +285,29 @@ export default function Submit() {
 														handleRadioChange(
 															question.submissionDetailId,
 															answer.answer,
-															question.typeCode
+															question.typeCode,
+															index,
 														)
 													}
 												/>
-											) : (
+												{answer.answer}
+												</>
+											) : question.typeCode === 'essay' ? (
+												<input
+													
+													name={`question_${question.submissionDetailId}`}
+													defaultChecked={answer.checked ? true : false}
+													style={{ width: '25%', height: '15px', marginRight: '10px' }}
+													onBlur={(e) =>
+														handleRadioChange(
+															question.submissionDetailId,
+															e.target.value,
+															question.typeCode,
+															index
+														)
+													}
+												/>
+											): (<>
 												<input
 													type="radio"
 													name={`question_${question.submissionDetailId}`}
@@ -299,13 +317,16 @@ export default function Submit() {
 														handleRadioChange(
 															question.submissionDetailId,
 															answer.answer,
-															question.typeCode
+															question.typeCode,
+															index
 														)
 													}
 												/>
+												{answer.answer}
+												</>
 											)}
 
-											{answer.answer}
+											
 										</label>
 									))}
 								</div>

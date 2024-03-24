@@ -187,6 +187,7 @@ export default function LeftItemGroup() {
 					console.log(error);
 				});
 		}
+		dispatch(selectOption('post'))
 	}, []);
 
 	const convertDay = (date) => {

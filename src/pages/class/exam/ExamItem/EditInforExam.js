@@ -22,6 +22,7 @@ export default function EditInforExam(props) {
 	const { uuid , id } = useParams();
 	const [value, setValue] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	console.log(props);
 	const onFinish = (values) => {
         try {
 		// console.log('Received values:', values);
@@ -36,7 +37,7 @@ export default function EditInforExam(props) {
 			endedAt: values.endedAt ? values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS') : props.endedAt +':000000',
 			isEnabled: true,
 			level: values.level ? values.level : props.level,
-			numberOfQuestion: values.numberOfQuestion ? Number(values.numberOfQuestion) : props.numberOfQuestion,
+			numberOfQuestion: Number(values.numberOfQuestion) ? Number(values.numberOfQuestion) : props.numberOfQuestion,
 			maxScore: 100,
 			questions: [],
 		};

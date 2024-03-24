@@ -67,8 +67,7 @@ const CreateQuiz = () => {
 						isCorrect: true,
 					};
 					questions.answers = [...questions.answers, answer];
-				}
-				 else {
+				} else {
 					answer = {
 						content: item.answer,
 						isCorrect: false,
@@ -106,7 +105,7 @@ const CreateQuiz = () => {
 		newAnswerTypes[index] = e.target.value;
 		if (e.target.value === 'single_choice') {
 			newAnswerTypes[index] = 'single_choice';
-		} else if (e.target.value === 'multiple_choice'){
+		} else if (e.target.value === 'multiple_choice') {
 			newAnswerTypes[index] = 'multiple_choice';
 		} else {
 			newAnswerTypes[index] = 'essay';
@@ -160,14 +159,6 @@ const CreateQuiz = () => {
 
 	return (
 		<div className="create-quiz">
-			{editingIndex >= 0 ? (
-				<Editor
-					data={value[editingIndex]}
-					editcontent={handleEditorChange}
-					cancel={handleEditorCancel}
-					isQuiz={true}
-				/>
-			) : null}
 			<div className="back-to-exam" style={{ margin: '5rem 0 0 3rem' }}>
 				<button
 					className="back-to-exam-button"
@@ -265,7 +256,16 @@ const CreateQuiz = () => {
 										<div
 											dangerouslySetInnerHTML={{ __html: value[index] }}
 											className="question-content"
+											hidden = {editingIndex === index}
 										/>
+										{editingIndex >= 0  && editingIndex==index ? (
+											<Editor
+												data={value[editingIndex]}
+												editcontent={handleEditorChange}
+												cancel={handleEditorCancel}
+												isQuiz={true}
+											/>
+										) : null}
 									</div>
 
 									<Form.Item name={[name, 'answerType']} valuePropName="checked">
@@ -330,9 +330,8 @@ const CreateQuiz = () => {
 																<Form.Item
 																	name={[answerName, 'isCorrect']}
 																	valuePropName="checked"
-																	
 																>
-																	 <Radio defaultChecked={true}>Đáp án đúng</Radio>
+																	<Radio defaultChecked={true}>Đáp án đúng</Radio>
 																</Form.Item>
 															)}
 															<MinusCircleOutlined

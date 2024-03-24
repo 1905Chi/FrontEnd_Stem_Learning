@@ -75,6 +75,8 @@ const CalendarAntd = () => {
 			return listData;
 		} else if(listExam.length > 0) {
 			listExam.map((item) => {
+				console.log(item.exam);
+				if (item.exam!== undefined &&	item.exam!==null ) {
 				//const dateStart = item.exam.startedAt;
 				const dateStart = item.exam.startedAt;
 								// Tách các phần tử từ chuỗi
@@ -116,6 +118,7 @@ const CalendarAntd = () => {
 				 else {
 					console.log('khong co');
 				}
+			}
 			});
 		}
 

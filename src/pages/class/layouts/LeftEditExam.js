@@ -50,7 +50,7 @@ export default function LeftEditExam() {
                 <button className='edit-infor-exam-button' onClick={()=>{setIsEdit(true)}}><CiEdit/></button>
             </div>)}
             {   isEdit ? (<EditInforExam cancel={cancel} name={exam.name} description={exam.description}
-                duration={exam.duration} startedAt={exam.startedAt} endedAt={exam.endedAt} numberOfQuestion={exam.numberOfQuestions} level={exam.level} id={exam.id}
+                duration={exam.duration} startedAt={exam.startedAt} endedAt={exam.endedAt} numberOfQuestion={exam.numberOfQuestion} level={exam.level} id={exam.id}
                 CallApiExam={CallApiExam}
             >
 

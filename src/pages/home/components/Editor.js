@@ -11,8 +11,6 @@ import {editPostGroup} from '../../../redux/Group'
 import { toast, ToastContainer } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import { selectPostGroup } from '../../../redux/Group';
-import { useSelector } from 'react-redux';
-import { selectSelectedPostGroup } from '../../../redux/Group';
 export default function Editor(props) {
 	const [value, setValue] = useState(props.data || '');
 	console.log(props);
@@ -25,20 +23,21 @@ export default function Editor(props) {
 	const dispatch = useDispatch();
 	const [isLoading, setIsLoading] = useState(false);
 	const onChange = (content) => {	
+		if(props.isQuiz){
+			props.editcontent(content);
+		}
 		console.log(content);	
 		setValue(content);
 		// if (props.editcontent) {
 		// 	props.editcontent(value);
 		// }
 	};
-	const cancel = () => {
-		if (props.cancel) props.cancel();
-	};
 	const Save = async (e) => {
 		setIsLoading(true);
 		e.preventDefault();
 		if(props.isQuiz){
 			props.editcontent(value);
+			setIsLoading(false);
 			props.cancel();
 			return ;
 		}
@@ -197,6 +196,7 @@ export default function Editor(props) {
 			// Thực hiện các thao tác bạn muốn với mỗi thẻ img
 			console.log(img.src);
 		});
+		setIsLoading(false);
 		props.cancel();
 	};
 	const callapiPost = async () => {
@@ -305,7 +305,7 @@ export default function Editor(props) {
 				onChange={onChange}
 			/>
 			{isLoading && <Loading></Loading>}
-			{value && value.length >0 && value!==''  && value!=='<p><br></p>' && value!== '<p></p>'  ?(<button style={{ width: '90%', margin: '5px 32px', borderRadius: '10px' }} onClick={Save}>
+			{value && value.length >0 && value!==''  && value!=='<p><br></p>' && value!== '<p></p>' && !props.isQuiz  ?(<button style={{ width: '90%', margin: '5px 32px', borderRadius: '10px' }} onClick={Save}>
 				Lưu
 			</button>): null}
 			

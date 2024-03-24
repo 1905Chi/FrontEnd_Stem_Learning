@@ -72,7 +72,9 @@ export default function Exam() {
 							<div className="exam-class__item" key={index} onClick={()=>{
 								navigate('/classes/' + uuid + '/exam/'+item.exam.id);
 							}}>
+								{item.exam ?( <>
 								<div className="infor-exam">
+									
 									<p> Tên bài kiểm tra: <strong>{item.exam.name}</strong></p>
 									<p>Mô tả: <span style={{fontStyle:'italic'}}>{item.exam.description}</span></p>
 									{WithinTimeRang(item.exam.startedAt, item.exam.endedAt) ? (
@@ -89,7 +91,9 @@ export default function Exam() {
 									<p>Thời gian làm bài: <strong>{item.exam.duration} </strong>phút</p>
 
 								</div>
+								</>):null}	
 							</div>
+							
 						);
 					})}
 			</div>
