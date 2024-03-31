@@ -22,7 +22,6 @@ import LeftClass from '../pages/class/layouts/LeftClass';
 import Class from '../pages/class/Class';
 import LeftItemClass from '../pages/class/layouts/LeftItemClass';
 import RightClass from '../pages/class/layouts/RightClass';
-import MainClass from '../pages/class/itemclass/MainClass';
 import CreateQuiz from '../pages/class/exam/CreateQuiz ';
 import RightItemGroup from '../pages/group/layouts/RightItemGroup';
 import LeftFriend from '../pages/friend/layouts/LeftFriend';

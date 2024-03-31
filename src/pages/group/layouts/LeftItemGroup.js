@@ -35,6 +35,7 @@ import anh_logo_1 from './../../../assets/images/anh_logo_1.jpg';
 import Loading from '../../../components/Loading';
 import { Edit } from '@material-ui/icons';
 import { MdDriveFileRenameOutline } from "react-icons/md";
+import { FaRankingStar } from "react-icons/fa6";
 import { CiCamera } from "react-icons/ci";
 export default function LeftItemGroup() {
 	const { theme } = UseTheme();
@@ -654,6 +655,19 @@ export default function LeftItemGroup() {
 										>
 											<QuestionCircleOutlined className="icon-option-group" size={20} />
 											<span className="option-label-group">Bài kiểm tra</span>
+										</div>
+									) : null}
+									{isClassesPath ? (
+										<div
+											className={`custom-option-group ${
+												selectedOption === 'rank' ? 'active' : ''
+											}`}
+											onClick={() => {
+												dispatch(selectOption('rank'));
+											}}
+										>
+											<FaRankingStar  className="icon-option-group" size={20} />
+											<span className="option-label-group">Xếp hạng</span>
 										</div>
 									) : null}
 									<div

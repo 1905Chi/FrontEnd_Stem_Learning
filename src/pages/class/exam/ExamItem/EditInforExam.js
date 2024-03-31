@@ -2,115 +2,122 @@ import React, { useState } from 'react';
 import { GiCancel } from 'react-icons/gi';
 import Loading from '../../../../components/Loading';
 import './EditInforExam.css';
-import { Form, Input, Checkbox, Radio, Button, Space , InputNumber} from 'antd';
+import { Form, Input, Checkbox, Radio, Button, Space, InputNumber } from 'antd';
 import { PlusOutlined, MinusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import Editor from '../../../home/components/Editor';
 import { useParams } from 'react-router-dom';
-import { toast,ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Api from '../../../../api/Api';
 import { url } from '../../../../constants/Constant';
 import { useNavigate } from 'react-router-dom';
 import { Select } from 'antd';
 export default function EditInforExam(props) {
 	const [loading, setloading] = useState(false);
-    const [form] = Form.useForm();
+	const [form] = Form.useForm();
 	const navigate = useNavigate();
 	const { Option } = Select;
 	const [answerTypes, setAnswerTypes] = useState(['single']); // 'single' or 'multiple'
 	const [editingIndex, setEditingIndex] = useState(-1);
-	const { uuid , id } = useParams();
+	const { uuid, id } = useParams();
 	const [value, setValue] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	console.log(props);
 	const onFinish = (values) => {
-        try {
-		// console.log('Received values:', values);
-		// console.log('Answer types:', answerTypes);
-		// console.log('content ', value);
-		setIsLoading(true);
-		const data = {
-			name: values.name ? values.name : props.name,
-			description: values.description ? values.description : props.description,
-			duration: Number(values.duration) ? Number(values.duration) : props.duration,
-			startedAt: values.startedAt ? values.startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS') : props.startedAt+':000000' ,
-			endedAt: values.endedAt ? values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS') : props.endedAt +':000000',
-			isEnabled: true,
-			level: values.level ? values.level : props.level,
-			numberOfQuestion: Number(values.numberOfQuestion) ? Number(values.numberOfQuestion) : props.numberOfQuestion,
-			maxScore: 100,
-			questions: [],
-		};
-		value.map((item, index) => {
-			let questions = {
-				content: item,
-				level: 'Easy',
-				typeCode: answerTypes[index],
-				answers: [],
+		try {
+			// console.log('Received values:', values);
+			// console.log('Answer types:', answerTypes);
+			// console.log('content ', value);
+			setIsLoading(true);
+			const data = {
+				name: values.name ? values.name : props.name,
+				description: values.description ? values.description : props.description,
+				duration: Number(values.duration) ? Number(values.duration) : props.duration,
+				startedAt: values.startedAt
+					? values.startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS')
+					: props.startedAt + ':000000',
+				endedAt: values.endedAt
+					? values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS')
+					: props.endedAt + ':000000',
+				isEnabled: true,
+				level: values.level ? values.level : props.level,
+				numberOfQuestion: Number(values.numberOfQuestion)
+					? Number(values.numberOfQuestion)
+					: props.numberOfQuestion,
+				maxScore: 100,
+				questions: [],
+			};
+			value.map((item, index) => {
+				let questions = {
+					content: item,
+					level: 'Easy',
+					typeCode: answerTypes[index],
+					answers: [],
+				};
+
+				values.questions[index].answers.map((item) => {
+					var answer = {};
+					if (item.isCorrect === true) {
+						answer = {
+							content: item.answer,
+							isCorrect: true,
+						};
+						questions.answers = [...questions.answers, answer];
+					} else if (item.isCorrect === undefined && answerTypes[index] === 'essay') {
+						answer = {
+							content: item.answer,
+							isCorrect: true,
+						};
+						questions.answers = [...questions.answers, answer];
+					} else {
+						answer = {
+							content: item.answer,
+							isCorrect: false,
+						};
+						questions.answers = [...questions.answers, answer];
+					}
+				});
+				data.questions = [...data.questions, questions];
+			});
+
+			const headers = {
+				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+				'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 			};
 
-			values.questions[index].answers.map((item) => {
-				var answer = {};
-				if (item.isCorrect === true) {
-					answer = {
-						content: item.answer,
-						isCorrect: true,
-					};
-					questions.answers = [...questions.answers, answer];
-				} else {
-					answer = {
-						content: item.answer,
-						isCorrect: false,
-					};
-					questions.answers = [...questions.answers, answer];
-				}
-			});
-			data.questions = [...data.questions, questions];
-		});
-        
-
-		const headers = {
-			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
-		};
-        
-           
-		Api.put(url + 'api/v1/exams/' +id, data, { headers: headers })
-			.then((response) => {
-				if (response.data.statusCode === 200) {
-					toast.success('Cập kiểm tra thành công !');   
-					props.CallApiExam();        
-				}
-			})
-			.catch((error) => {
-				toast.error('Cập nhật kiểm tra thất bại !');
-			});
-        if(data.questions.length>0)
-        {
-            data.questions.forEach((item,index)=>{
-                Api.post(url + 'api/v1/questions/create?examId='+props.id, item, { headers: headers })
-                .then((response) => {
-                    if (response.data.statusCode === 200) {
-                        toast.success('Thêm câu hỏi thành công !');           
-                    }
-                })
-                .catch((error) => {
-                    toast.error('Thêm câu hỏi thất bại !');
-                });
-            })
-        }
-			
-        } catch (error) {
-            console.log(error);
-        }
-        finally{
-            setTimeout(() => {
-                setIsLoading(false);
-            props.cancel();
-            }, 3000);
-            
-        }
-        
+			Api.put(url + 'api/v1/exams/' + id, data, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						toast.success('Cập kiểm tra thành công !');
+						
+						props.CallApiExam();
+					}
+				})
+				.catch((error) => {
+					toast.error('Cập nhật kiểm tra thất bại !');
+				});
+			if (data.questions.length > 0) {
+				data.questions.forEach((item, index) => {
+					Api.post(url + 'api/v1/questions/create?examId=' + props.id, item, { headers: headers })
+						.then((response) => {
+							if (response.data.statusCode === 200) {
+								toast.success('Thêm câu hỏi thành công !');
+							}
+						})
+						.catch((error) => {
+							toast.error('Thêm câu hỏi thất bại !');
+						});
+				});
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setTimeout(() => {
+				setIsLoading(false);
+				props.cancel();
+				window.location.reload();
+			}, 3000);
+		}
 	};
 
 	const handleAnswerTypeChange = (index, e) => {
@@ -118,8 +125,11 @@ export default function EditInforExam(props) {
 		newAnswerTypes[index] = e.target.value;
 		if (e.target.value === 'single_choice') {
 			newAnswerTypes[index] = 'single_choice';
-		} else {
+		} else if (e.target.value === 'multiple_choice'){
 			newAnswerTypes[index] = 'multiple_choice';
+		}
+		else {
+			newAnswerTypes[index] = 'essay';
 		}
 		setAnswerTypes(newAnswerTypes);
 	};
@@ -166,83 +176,94 @@ export default function EditInforExam(props) {
 						<GiCancel style={{ color: 'black', fontSize: '30px' }}></GiCancel>
 					</button>
 				</div>
-				<div className="body-form-edit-exam" style={{maxHeight:'60vh', overflowY:'scroll'}}>
+				<div className="body-form-edit-exam" style={{ maxHeight: '60vh', overflowY: 'scroll' }}>
 					<div>
-						{editingIndex >= 0 ? (
-							<Editor
-								data={value[editingIndex]}
-								editcontent={handleEditorChange}
-								cancel={handleEditorCancel}
-								isQuiz={true}
-							/>
-						) : null}
 						{isLoading ? <Loading /> : null}
-						<Form form={form} 
-						
-						onFinish={onFinish} layout="vertical" style={{marginLeft:'65px'}} >
-                            <div style={{display:'flex', flexWrap:'wrap'}}>
-							<Form.Item
-								name="name"
-								rules={[{ required: false, message: 'Vui lòng nhập tên bài kiểm tra!' }]}
-                                style={{width:'45%', marginRight:'5px'}}
-                                
-							>
-								<Input placeholder="Nhập tên bài kiểm tra" style={{ width: '100%',height:'40px' }} defaultValue={props.name}/>
-							</Form.Item>
-							<Form.Item
-								name="description"
-								rules={[{ required: false, message: 'Vui lòng nhập mô tả bài kiểm tra!' }]}
-                                style={{width:'45%'}}
-                                
-							>
-								<Input placeholder="Nhập mô tả bài kiểm tra" style={{ width: '100%' ,height:'40px'}} defaultValue={props.description} />
-							</Form.Item>
-							<Form.Item
-								name="duration"
-								rules={[{ required: false, message: 'Vui lòng nhập thời gian làm bài!' }]}
-                                style={{width:'45%' , marginRight:'5px'}}
-							>
-								<InputNumber placeholder="Nhập thời gian làm bài ( Số phút)" style={{ width: '100%',height:'40px' }}   defaultValue={props.duration}/>
-							</Form.Item>
-							<Form.Item
-								name="level"
-								rules={[{ required: false, message: 'Vui lòng nhập mức độ bài kiểm tra!' }]}
-                                style={{width:'45%'}}
+						<Form form={form} onFinish={onFinish} layout="vertical" style={{ marginLeft: '65px' }}>
+							<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+								<Form.Item
+									name="name"
+									rules={[{ required: false, message: 'Vui lòng nhập tên bài kiểm tra!' }]}
+									style={{ width: '45%', marginRight: '5px' }}
+								>
+									<Input
+										placeholder="Nhập tên bài kiểm tra"
+										style={{ width: '100%', height: '40px' }}
+										defaultValue={props.name}
+									/>
+								</Form.Item>
+								<Form.Item
+									name="description"
+									rules={[{ required: false, message: 'Vui lòng nhập mô tả bài kiểm tra!' }]}
+									style={{ width: '45%' }}
+								>
+									<Input
+										placeholder="Nhập mô tả bài kiểm tra"
+										style={{ width: '100%', height: '40px' }}
+										defaultValue={props.description}
+									/>
+								</Form.Item>
+								<Form.Item
+									name="duration"
+									rules={[{ required: false, message: 'Vui lòng nhập thời gian làm bài!' }]}
+									style={{ width: '45%', marginRight: '5px' }}
+								>
+									<InputNumber
+										placeholder="Nhập thời gian làm bài ( Số phút)"
+										style={{ width: '100%', height: '40px' }}
+										defaultValue={props.duration}
+									/>
+								</Form.Item>
+								<Form.Item
+									name="level"
+									rules={[{ required: false, message: 'Vui lòng nhập mức độ bài kiểm tra!' }]}
+									style={{ width: '45%' }}
+								>
+									<Select
+										placeholder="Chọn mức độ bài kiểm tra"
+										style={{ width: '100%', height: '40px' }}
+										defaultValue={props.level}
+									>
+										<Option value="Easy">Dễ</Option>
+										<Option value="Medium">Trung bình</Option>
+										<Option value="Hard">Khó</Option>
+									</Select>
+								</Form.Item>
+								<Form.Item
+									name="numberOfQuestion"
+									rules={[{ required: false, message: 'Nhập số lượng câu hỏi mỗi bài kiểm tra' }]}
+									style={{ width: '45%', marginRight: '5px' }}
+								>
+									<InputNumber
+										defaultValue={props.numberOfQuestion}
+										placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra"
+										style={{ width: '100%', height: '40px' }}
+									/>
+								</Form.Item>
 
-							>
-								<Select placeholder="Chọn mức độ bài kiểm tra" style={{ width: '100%',height:'40px' }} defaultValue={props.level}>
-									<Option value="Easy">Dễ</Option>
-									<Option value="Medium">Trung bình</Option>
-									<Option value="Hard">Khó</Option>
-								</Select>
-							</Form.Item>
-							<Form.Item
-								name="numberOfQuestion"
-								rules={[{ required: false, message: 'Nhập số lượng câu hỏi mỗi bài kiểm tra' }]}
-                                style={{width:'45%', marginRight:'5px'}}
-							>
-								<InputNumber
-                                defaultValue= {props.numberOfQuestion}
-									placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra"
-									style={{ width: '100%' , height:'40px'}}
-								/>
-							</Form.Item>
-
-							<Form.Item
-								name="startedAt"
-								rules={[{ required: false, message: 'Vui lòng nhập thời gian bắt đầu!' }]}
-                                style={{width:'45%'}}
-							>
-								<DatePicker placeholder="Chọn thời gian bắt đầu" showTime style={{width: '100%'}} />
-							</Form.Item>
-							<Form.Item
-								name="endedAt"
-								rules={[{ required: false, message: 'Vui lòng nhập thời gian kết thúc!' }]}
-                                style={{width:'45%'}}
-							>
-								<DatePicker placeholder="Chọn thời gian kết thúc" showTime style={{width:'100%'}} />
-							</Form.Item>
-                            </div>
+								<Form.Item
+									name="startedAt"
+									rules={[{ required: false, message: 'Vui lòng nhập thời gian bắt đầu!' }]}
+									style={{ width: '45%' }}
+								>
+									<DatePicker
+										placeholder="Chọn thời gian bắt đầu"
+										showTime
+										style={{ width: '100%' }}
+									/>
+								</Form.Item>
+								<Form.Item
+									name="endedAt"
+									rules={[{ required: false, message: 'Vui lòng nhập thời gian kết thúc!' }]}
+									style={{ width: '45%' }}
+								>
+									<DatePicker
+										placeholder="Chọn thời gian kết thúc"
+										showTime
+										style={{ width: '100%' }}
+									/>
+								</Form.Item>
+							</div>
 
 							<Form.List name="questions">
 								{(fields, { add, remove }) => (
@@ -265,7 +286,19 @@ export default function EditInforExam(props) {
 													onClick={() => handleEditQuestion(index)}
 												>
 													<lable> Câu hỏi: </lable>
-													<div dangerouslySetInnerHTML={{ __html: value[index] }} className='question-content-edit' />
+													<div
+														dangerouslySetInnerHTML={{ __html: value[index] }}
+														className="question-content"
+														hidden={editingIndex === index}
+													/>
+													{editingIndex >= 0 && editingIndex == index ? (
+														<Editor
+															data={value[editingIndex]}
+															editcontent={handleEditorChange}
+															cancel={handleEditorCancel}
+															isQuiz={true}
+														/>
+													) : null}
 												</div>
 
 												<Form.Item name={[name, 'answerType']} valuePropName="checked">
@@ -275,6 +308,7 @@ export default function EditInforExam(props) {
 													>
 														<Radio value="single_choice">Chọn 1 đáp án</Radio>
 														<Radio value="multiple_choice">Chọn nhiều đáp án</Radio>
+														<Radio value="essay">Trả lời ngắn</Radio>
 													</Radio.Group>
 												</Form.Item>
 												<Form.List name={[name, 'answers']}>
@@ -323,6 +357,16 @@ export default function EditInforExam(props) {
 																				valuePropName="checked"
 																			>
 																				<Radio>Đáp án đúng</Radio>
+																			</Form.Item>
+																		)}
+																		{answerTypes[index] === 'essay' && (
+																			<Form.Item
+																				name={[answerName, 'isCorrect']}
+																				valuePropName="checked"
+																			>
+																				<Radio defaultChecked={true}>
+																					Đáp án đúng
+																				</Radio>
 																			</Form.Item>
 																		)}
 																		<MinusCircleOutlined

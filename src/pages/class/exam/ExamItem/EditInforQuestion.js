@@ -37,7 +37,14 @@ export default function EditInforQuestion(props) {
 				level: 'Easy',
 			};
             let answers = [];
-            if( values.answers !== undefined){
+			if( values.answers === undefined && answerTypes==='essay'){
+				answers = values.answers.map((item, index) => ({
+                    content: item.answer,
+                    isCorrect:  true ,
+                    
+                }));
+			}
+             if( values.answers !== undefined && answerTypes!=='essay'){
                 answers = values.answers.map((item, index) => ({
                     content: item.answer,
                     isCorrect: item.isCorrect ? true : false,
@@ -162,6 +169,7 @@ export default function EditInforQuestion(props) {
 								>
 									<Radio value="single_choice">Chọn 1 đáp án</Radio>
 									<Radio value="multiple_choice">Chọn nhiều đáp án</Radio>
+									<Radio value="essay">Trả lời ngắn</Radio>
 								</Radio.Group>
 							</Form.Item>
 							<Form.List name="answers">

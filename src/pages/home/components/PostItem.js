@@ -21,6 +21,7 @@ import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { Title } from '@material-ui/icons';
+import { PiStarThin } from "react-icons/pi";
 function PostItem(props) {
 	const navigate = useNavigate();
 	console.log(props);
@@ -52,7 +53,13 @@ function PostItem(props) {
 	const [selectedReport, setSelectedReport] = useState(null);
 	const [opentReport, setOpentReport] = useState(false);
 	const [reportTo, setReportTo] = useState(null);
-	const [inforReport,setInforReport ] = useState(null);
+	const [inforReport, setInforReport] = useState(null);
+	const [rating, setRating] = useState(0);
+
+	const handleStarClick = (value) => {
+		setRating(value);
+	};
+	const [openGiveStar, setOpenGiveStar] = useState(false);
 	const [ListReaction, setListReaction] = useState([
 		{
 			key: '1',
@@ -247,6 +254,7 @@ function PostItem(props) {
 		setOpen(false);
 		setOpentModelDeletecmt(false);
 		setOpentReport(false);
+		setOpenGiveStar(false);
 	};
 
 	const items = [
@@ -299,6 +307,25 @@ function PostItem(props) {
 						>
 							<MdBugReport style={{ color: 'red' }} />
 							<span style={{ fontSize: '15px' }}>Báo cáo bài đăng </span>
+						</div>
+					)}
+				</div>
+			),
+		},
+		{
+			key: '3',
+			label: (
+				<div style={{ font: '15px' }}>
+					{JSON.parse(localStorage.getItem('user')) &&
+					props.authorId === JSON.parse(localStorage.getItem('user')).id ? null : (
+						<div
+							onClick={() => {
+								setOpenGiveStar(true);
+								setRating(0);
+							}}
+						>
+							<PiStarThin  style={{ color: 'yellow' }} />
+							<span style={{ fontSize: '15px' }}>Tặng sao tác giả</span>
 						</div>
 					)}
 				</div>
@@ -419,6 +446,12 @@ function PostItem(props) {
 			],
 		},
 	];
+	const giveStart = () => {
+		setConfirmLoading(true);
+		console.log('giveStart');
+		setOpenGiveStar(false);
+		setConfirmLoading(false);
+	};
 	const getTypes = (filename) => {
 		const parts = filename.split('.');
 
@@ -600,6 +633,25 @@ function PostItem(props) {
 					</div>
 				),
 			},
+			{
+				key: '3',
+				label: (
+					<div style={{ font: '15px' }}>
+						{JSON.parse(localStorage.getItem('user')) &&
+						id === JSON.parse(localStorage.getItem('user')).id ? null : (
+							<div
+								onClick={() => {
+									setOpenGiveStar(true);
+									setRating(0);
+								}}
+							>
+								<PiStarThin  style={{ color: 'yellow' }} />
+								<span style={{ fontSize: '15px' }}>Tặng sao tác giả</span>
+							</div>
+						)}
+					</div>
+				),
+			},
 		];
 
 		const handleMenuClick = ({ key }) => {
@@ -634,7 +686,7 @@ function PostItem(props) {
 	const handleReportSelect = (report) => {
 		setInforReport(null);
 		setSelectedReport(report);
-		if(report.treeReportContent.length === 0){
+		if (report.treeReportContent.length === 0) {
 			setInforReport(report.reportContent);
 		}
 	};
@@ -670,27 +722,65 @@ function PostItem(props) {
 				confirmLoading={confirmLoading}
 				onCancel={handleCancel}
 			>
-				<h3>Chọn lý do báo cáo:</h3>
+				<h3>NỘI DUNG VI PHẠM CHÍNH SÁCH :</h3>
 				{reportContent.map((report) => (
 					<div key={report.key}>
-						<Button onClick={() => handleReportSelect(report)} style={{ backgroundColor: selectedReport && selectedReport.key === report.key ? '#1890ff' : '',marginBottom:'1em' }}>{report.reportContent}</Button>
-						
+						<Button
+							onClick={() => handleReportSelect(report)}
+							style={{
+								backgroundColor: selectedReport && selectedReport.key === report.key ? '#1890ff' : '',
+								marginBottom: '1em',
+							}}
+						>
+							{report.reportContent}
+						</Button>
 					</div>
 				))}
-				{
-					selectedReport !== null ? (
-						<div>
-							<h4>Thêm thông tin:</h4>
-							<button>{selectedReport.reportContent} </button>
-							<p>{selectedReport.information}</p> <br />
-							{selectedReport.treeReportContent !== null && selectedReport.treeReportContent.map((subReport) => (
-								<Button key={subReport.key} onClick={() =>{setInforReport(subReport.reportContent)}} style={{ backgroundColor: inforReport === subReport.reportContent ? '#1890ff' : '',marginBottom:'1em'  }}>
+				{selectedReport !== null ? (
+					<div>
+						<h4>Thêm thông tin:</h4>
+						<button>{selectedReport.reportContent} </button>
+						<p>{selectedReport.information}</p> <br />
+						{selectedReport.treeReportContent !== null &&
+							selectedReport.treeReportContent.map((subReport) => (
+								<Button
+									key={subReport.key}
+									onClick={() => {
+										setInforReport(subReport.reportContent);
+									}}
+									style={{
+										backgroundColor: inforReport === subReport.reportContent ? '#1890ff' : '',
+										marginBottom: '1em',
+									}}
+								>
 									{subReport.reportContent}
 								</Button>
 							))}
-						</div>
-					): null
-				}
+					</div>
+				) : null}
+			</Modal>
+			<Modal
+				title="Tặng sao cho tác giả"
+				open={openGiveStar}
+				onOk={giveStart}
+				confirmLoading={confirmLoading}
+				onCancel={handleCancel}
+			>
+				<div className="give-start">
+					{[...Array(10)].map((_, index) => (
+						<span
+							key={index}
+							style={{
+								cursor: 'pointer',
+								color: index < rating ? 'red' : 'black', // Thiết lập màu cho ngôi sao
+							}}
+							onClick={() => handleStarClick(index + 1)}
+						>
+							{index < rating ? '★' : '☆'}
+						</span>
+					))}
+					<p>Điểm đánh giá: {rating}/10</p>
+				</div>
 			</Modal>
 
 			{/* {responseComement ? (

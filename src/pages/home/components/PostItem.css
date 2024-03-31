@@ -230,6 +230,9 @@ text-align: center;
 .infor-author p {
   margin-top: 0;
 }
+.give-start span {
+  font-size: 2rem;
+}
 
 @media screen and (max-width: 768px) {
   .infor-author {

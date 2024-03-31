@@ -13,8 +13,10 @@ import MemberGroup from '../components/MemberGroup';
 import EventGroup from '../components/EventGroup';
 import DocumentGroup from '../components/DocumentGroup';
 import Exam from '../../class/exam/Exam';
+import Rank from '../../class/components/Rank';
 import { selectselectMemberGroup } from '../../../redux/MemberGroup';
 import ManagerMemberGroup from '../components/ManagerMemberGroup';
+
 export default function MainGroup() {
   const selectedOption = useSelector(selectSelectedOption);
   const inforGroup = useSelector(selectselectGroup);
@@ -34,6 +36,7 @@ export default function MainGroup() {
         {selectedOption === 'document' ? <DocumentGroup /> : null}
         {selectedOption === 'exam' ? <Exam /> : null} 
         {selectedOption === 'manager-member' ? <ManagerMemberGroup /> : null}
+        {selectedOption === 'rank' ? <Rank /> : null}
 
        
 
