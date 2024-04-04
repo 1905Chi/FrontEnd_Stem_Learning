@@ -148,13 +148,13 @@ export default function ManagerMemberGroup() {
 			width: 10,
 		},
 		{
-			title: 'Name',
+			title: 'Họ và tên',
 			dataIndex: 'name',
 			key: 'name',
 			width: 20,
 		},
 		{
-			title: 'Role',
+			title: 'Quyền',
 			dataIndex: 'role',
 			key: 'role',
 			width: 20,
@@ -169,17 +169,17 @@ export default function ManagerMemberGroup() {
 			),
 		},
 		{
-			title: 'Locked At',
+			title: 'Bị cấm',
 			dataIndex: 'lockedAt',
 			key: 'lockedAt',
 		},
 		{
-			title: 'Locked Reason',
+			title: 'Lý do khóa',
 			dataIndex: 'lockedReason',
 			key: 'lockedReason',
 		},
 		{
-			title: 'Action',
+			title: 'Hành động',
 			dataIndex: 'action',
 			key: 'action',
 			render: (text, record, role) => {

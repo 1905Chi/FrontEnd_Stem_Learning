@@ -173,62 +173,108 @@ const CreateQuiz = () => {
 
 			<Form form={form} onFinish={onFinish} layout="vertical" style={{ textAlign: 'center' }}>
 				<h1 style={{ textAlign: 'center' }}>Tạo bài kiểm tra</h1>
-				<Form.Item name="name" rules={[{ required: true, message: 'Vui lòng nhập tên bài kiểm tra!' }]}>
-					<Input placeholder="Nhập tên bài kiểm tra" style={{ width: '60%' }} />
-				</Form.Item>
-				<Form.Item
-					name="description"
-					rules={[{ required: true, message: 'Vui lòng nhập mô tả bài kiểm tra!' }]}
-				>
-					<Input placeholder="Nhập mô tả bài kiểm tra" style={{ width: '60%' }} />
-				</Form.Item>
-				<Form.Item name="duration" rules={[{ required: true, message: 'Vui lòng nhập thời gian làm bài!' }]}>
-					<InputNumber
-						min={15}
-						placeholder="Nhập thời gian làm bài ( Số phút)"
-						style={{ width: '60%', border: '1px solid black' }}
-					/>
-				</Form.Item>
-				<Form.Item
-					name="maxScore"
-					rules={[{ required: true, message: 'Vui lòng nhập điểm số tối đa của bài kiểm tra!' }]}
-				>
-					<InputNumber
-						min={1}
-						placeholder="Nhập điểm tối đa"
-						style={{ width: '60%', border: '1px solid black' }}
-					/>
-				</Form.Item>
-				<Form.Item name="level" rules={[{ required: true, message: 'Vui lòng nhập mức độ bài kiểm tra!' }]}>
-					<Select placeholder="Chọn mức độ bài kiểm tra" style={{ width: '60%', border: '1px solid black' }}>
-						<Option value="Easy">Dễ</Option>
-						<Option value="Medium">Trung bình</Option>
-						<Option value="Hard">Khó</Option>
-					</Select>
-				</Form.Item>
-				<Form.Item
-					name="numberOfQuestion"
-					rules={[{ required: true, message: 'Nhập số lượng câu hỏi mỗi bài kiểm tra' }]}
-				>
-					<InputNumber
-						min={1}
-						placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra"
-						style={{ width: '60%', border: '1px solid black' }}
-					/>
-				</Form.Item>
-
-				<Form.Item name="startedAt" rules={[{ required: true, message: 'Vui lòng nhập thời gian bắt đầu!' }]}>
-					<DatePicker placeholder="Chọn thời gian bắt đầu" showTime disabledDate={isDateDisabled} />
-				</Form.Item>
-				<Form.Item
-					name="endedAt"
-					rules={[
-						{ required: true, message: 'Vui lòng nhập thời gian kết thúc!' },
-						{ validator: validateEndTime },
-					]}
-				>
-					<DatePicker placeholder="Chọn thời gian kết thúc" showTime disabledDate={isDateDisabled} />
-				</Form.Item>
+				<div className="infor-exam-create">
+					<strong>Tên bài kiểm tra:</strong>
+					<Form.Item
+						name="name"
+						className="infor-exam-create-input"
+						rules={[{ required: true, message: 'Vui lòng nhập tên bài kiểm tra!' }]}
+					>
+						<Input placeholder="Nhập tên bài kiểm tra" style={{ width: '60%' }} />
+					</Form.Item>
+				</div>
+				<div className="infor-exam-create">
+					<strong>Mô tả bài kiểm tra:</strong>
+					<Form.Item
+						className="infor-exam-create-input"
+						name="description"
+						rules={[{ required: true, message: 'Vui lòng nhập mô tả bài kiểm tra!' }]}
+					>
+						<Input placeholder="Nhập mô tả bài kiểm tra" style={{ width: '60%' }} />
+					</Form.Item>
+				</div>
+				<div className="infor-exam-create">
+					<strong>Thời gian làm bài:</strong>
+					<Form.Item
+						name="duration"
+						className="infor-exam-create-input"
+						rules={[{ required: true, message: 'Vui lòng nhập thời gian làm bài!' }]}
+					>
+						<InputNumber
+							min={15}
+							placeholder="Nhập thời gian làm bài ( Số phút)"
+							style={{ width: '60%', border: '1px solid black' }}
+						/>
+					</Form.Item>
+				</div>
+				<div className="infor-exam-create">
+					<strong>Điểm số tối đa:</strong>
+					<Form.Item
+						name="maxScore"
+						rules={[{ required: true, message: 'Vui lòng nhập điểm số tối đa của bài kiểm tra!' }]}
+						className="infor-exam-create-input"
+					>
+						<InputNumber
+							min={1}
+							placeholder="Nhập điểm tối đa"
+							style={{ width: '60%', border: '1px solid black' }}
+						/>
+					</Form.Item>
+				</div>
+				<div className="infor-exam-create">
+					<strong>Mức độ bài kiểm tra:</strong>
+					<Form.Item
+						name="level"
+						className="infor-exam-create-input"
+						rules={[{ required: true, message: 'Vui lòng nhập mức độ bài kiểm tra!' }]}
+					>
+						<Select
+							placeholder="Chọn mức độ bài kiểm tra"
+							style={{ width: '60%', border: '1px solid black' }}
+						>
+							<Option value="Easy">Dễ</Option>
+							<Option value="Medium">Trung bình</Option>
+							<Option value="Hard">Khó</Option>
+						</Select>
+					</Form.Item>
+				</div>
+				<div className="infor-exam-create">
+					<strong>Số lượng câu hỏi mỗi bài kiểm tra:</strong>
+					<Form.Item
+						name="numberOfQuestion"
+						className="infor-exam-create-input"
+						rules={[{ required: true, message: 'Nhập số lượng câu hỏi mỗi bài kiểm tra' }]}
+					>
+						<InputNumber
+							min={1}
+							placeholder="Nhập số lượng câu hỏi mỗi bài kiểm tra"
+							style={{ width: '60%', border: '1px solid black' }}
+						/>
+					</Form.Item>
+				</div>
+				<div className="infor-exam-create">
+					<strong>Thời gian bắt đầu:</strong>
+					<Form.Item
+						name="startedAt"
+						className="infor-exam-create-input"
+						rules={[{ required: true, message: 'Vui lòng nhập thời gian bắt đầu!' }]}
+					>
+						<DatePicker placeholder="Chọn thời gian bắt đầu" showTime disabledDate={isDateDisabled} />
+					</Form.Item>
+				</div>
+				<div className="infor-exam-create">
+					<strong>Thời gian kết thúc:</strong>
+					<Form.Item
+						name="endedAt"
+						className="infor-exam-create-input"
+						rules={[
+							{ required: true, message: 'Vui lòng nhập thời gian kết thúc!' },
+							{ validator: validateEndTime },
+						]}
+					>
+						<DatePicker placeholder="Chọn thời gian kết thúc" showTime disabledDate={isDateDisabled} />
+					</Form.Item>
+				</div>
 
 				<Form.List name="questions" style={{ textAlign: 'center' }}>
 					{(fields, { add, remove }) => (
@@ -256,9 +302,9 @@ const CreateQuiz = () => {
 										<div
 											dangerouslySetInnerHTML={{ __html: value[index] }}
 											className="question-content"
-											hidden = {editingIndex === index}
+											hidden={editingIndex === index}
 										/>
-										{editingIndex >= 0  && editingIndex==index ? (
+										{editingIndex >= 0 && editingIndex == index ? (
 											<Editor
 												data={value[editingIndex]}
 												editcontent={handleEditorChange}

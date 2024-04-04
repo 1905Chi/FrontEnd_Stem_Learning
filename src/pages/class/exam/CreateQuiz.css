@@ -4,3 +4,19 @@
 .create-quiz input{
     border: 1px solid black
 }
+
+.infor-exam-create{
+    display: flex;
+}
+.infor-exam-create strong {
+    flex: 4;
+    text-align: end;
+    margin-top: 0.5%;
+}
+.infor-exam-create-input {
+    text-align: start;
+
+    width: 50%;
+    margin-left: 2%;
+    flex: 6;
+}

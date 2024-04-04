@@ -237,7 +237,7 @@ export default function EventGroup() {
 					<div className="header-envent-title">
 						<h3 style={{ marginLeft: '22px' }}>Danh sách các sự kiện</h3>
 						
-						<button className="btn btn-primary" onClick={openCreateEvent}  style={{backgroundColor:'#f4f6fa'}}>
+						<button className="btn btn-primary" onClick={openCreateEvent}  style={{backgroundColor:'white'}}>
 							Thêm sự kiện
 						</button>
 					

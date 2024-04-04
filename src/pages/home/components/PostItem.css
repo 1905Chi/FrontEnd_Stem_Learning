@@ -167,6 +167,8 @@ text-align: center;
   margin-top: 15px;
   margin-left: 15px;
   margin-bottom: 2%;
+  width: fit-content;
+ 
 }
 .comment-contaner{
   display: flex;
@@ -182,7 +184,7 @@ text-align: center;
   background-color: #eaeaf9;
   border: 1px  solid #c4bebe;
   border-radius: 15px;
-  width: fit-content;
+  width: 9rem;
   padding-right: 15px;
   max-width: 70%;
   padding-left: 10px;
