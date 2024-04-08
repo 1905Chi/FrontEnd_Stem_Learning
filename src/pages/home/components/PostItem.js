@@ -21,7 +21,9 @@ import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { Title } from '@material-ui/icons';
-import { PiStarThin } from "react-icons/pi";
+import { PiStarThin } from 'react-icons/pi';
+import styled from '@emotion/styled';
+import { AiOutlineHeart, AiOutlineLike, AiOutlineSmile, AiOutlineCheckCircle } from 'react-icons/ai';
 function PostItem(props) {
 	const navigate = useNavigate();
 	console.log(props);
@@ -60,24 +62,57 @@ function PostItem(props) {
 		setRating(value);
 	};
 	const [openGiveStar, setOpenGiveStar] = useState(false);
-	const [ListReaction, setListReaction] = useState([
-		{
-			key: '1',
-			label: (
-				<div style={{ font: '15px' }} onClick={handleLike}>
-					haha
-				</div>
-			),
-		},
-		{
-			key: '2',
-			label: (
-				<div style={{ font: '15px' }} onClick={handleLike}>
-					huhu
-				</div>
-			),
-		},
-	]);
+	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+	const handleMouseEnter = () => {
+		setIsDropdownVisible(true);
+	};
+
+	const handleMouseLeave = () => {
+		setIsDropdownVisible(false);
+	};
+
+	const handleReaction = (reactionType) => {
+		// Handle reaction logic here
+		console.log('Reacted with:', reactionType);
+	};
+	const Button = styled.button`
+		border: none;
+		background: none;
+		cursor: pointer;
+		font-size: 22px;
+		color: black;
+	`;
+
+	const DropdownContainer = styled.div`
+		position: relative;
+		display: inline-block;
+	`;
+
+	const DropdownContent = styled.div`
+		display: ${(props) => (props.isVisible ? 'block' : 'none')};
+		position: absolute;
+		bottom: 100%; /* Hiển thị dropdown phía trên button */
+		left: 0;
+		background-color: #f9f9f9;
+		min-width: 160px;
+		z-index: 1;
+		border: 1px solid #ddd;
+	`;
+	const ReactionButton = styled.button`
+		display: block;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		margin: 0 5px;
+		font-size: 24px;
+		color: #888;
+		transition: color 0.3s ease;
+
+		&:hover {
+			color: #333;
+		}
+	`;
 	function EditContentPost(value) {
 		setContentPost(value);
 	}
@@ -324,7 +359,7 @@ function PostItem(props) {
 								setRating(0);
 							}}
 						>
-							<PiStarThin  style={{ color: 'yellow' }} />
+							<PiStarThin style={{ color: 'yellow' }} />
 							<span style={{ fontSize: '15px' }}>Tặng sao tác giả</span>
 						</div>
 					)}
@@ -537,6 +572,7 @@ function PostItem(props) {
 			setShowEditor(false);
 			setReplyIndex(null);
 		};
+
 		return (
 			<div className="comment">
 				<div className="new-comment">
@@ -645,7 +681,7 @@ function PostItem(props) {
 									setRating(0);
 								}}
 							>
-								<PiStarThin  style={{ color: 'yellow' }} />
+								<PiStarThin style={{ color: 'yellow' }} />
 								<span style={{ fontSize: '15px' }}>Tặng sao tác giả</span>
 							</div>
 						)}
@@ -782,10 +818,6 @@ function PostItem(props) {
 					<p>Điểm đánh giá: {rating}/10</p>
 				</div>
 			</Modal>
-
-			{/* {responseComement ? (
-				<Editor cancel={openComment} idComment={idComment} homePosts={props.homePosts}></Editor>
-			) : null} */}
 			<div className="user-info">
 				<div className="avatarPost" style={{ flex: 1, marginTop: '15px' }}>
 					{props.authorAvatar !== null && props.authorAvatar !== '' ? (
@@ -892,17 +924,32 @@ function PostItem(props) {
 			</div>
 
 			<div className="post-actions">
-				<button
-					style={{
-						marginRight: '5px',
-						fontSize: '22px',
-						color: 'black',
-						background: 'none',
-					}}
-					onClick={handleLike}
-				>
-					<BiLike style={likeButtonStyle} />
-				</button>
+				<DropdownContainer>
+					<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+						<BiLike style={{ marginRight: '5px' }} />
+					</Button>
+					<DropdownContent
+						isVisible={isDropdownVisible}
+						onMouseEnter={handleMouseEnter}
+						onMouseLeave={handleMouseLeave}
+					>
+						<div style={{ display: 'flex' }}>
+							<ReactionButton onClick={() => handleReaction('love')}>
+								<AiOutlineHeart />
+							</ReactionButton>
+							<ReactionButton onClick={() => handleReaction('like')}>
+								<AiOutlineLike />
+							</ReactionButton>
+							<ReactionButton onClick={() => handleReaction('support')}>
+								<AiOutlineSmile />
+							</ReactionButton>
+							<ReactionButton onClick={() => handleReaction('thank')}>
+								<AiOutlineCheckCircle />
+							</ReactionButton>
+						</div>
+					</DropdownContent>
+				</DropdownContainer>
+
 				<button
 					style={{
 						marginRight: '5px',
@@ -916,7 +963,6 @@ function PostItem(props) {
 				</button>
 			</div>
 			<div style={{ width: '100%' }}>
-				{/* <CommentPost user={props.authorAvatar} idPost={props.id} homePosts={props.homePosts} /> */}
 				{showEditor ? (
 					<Editor
 						data={value}
@@ -927,28 +973,6 @@ function PostItem(props) {
 						style={{ marginTop: '10px' }}
 					/>
 				) : null}
-
-				{/* <div className="comment-component">
-					<div className="avatarPost-comment-self">
-						{props.authorAvatar!== null && props.authorAvatar!=="" ? (
-							<Avatar src={props.authorAvatar} className="user-profile-comment" />
-						):(
-							<Avatar
-							icon={<UserOutlined style={{height:'3em'}} />}
-						/>
-						)}
-						
-					</div>
-
-					<div className="input-comment">
-						<Input
-							placeholder="Viết bình luận"
-							className="input-comment-self"
-							style={{ width: '100%', margin: '10px 35px', borderRadius: '15px' }}
-							onClick={openEditor}
-						/>
-					</div>
-				</div> */}
 			</div>
 
 			{props.comments && props.comments.length > 0 && xemthem === false ? (
@@ -960,43 +984,6 @@ function PostItem(props) {
 					) : null}
 					<div className="new-comment">
 						<Comment key={props.comments[0].id} comment={props.comments[0]} />
-
-						{/* {props.comments[0].authorAvatar !== null && props.comments[0].authorAvatar !== '' ? (
-							<Avatar src={props.comments[0].authorAvatar} />
-						) : (
-							<Avatar icon={<UserOutlined style={{ height: '3em' }} />} />
-						)}
-
-						<div style={{ flex: 8 }}>
-							<div className="content-comment">
-								<p className="user-name" style={{ fontWeight: 'bold' }}>
-									{props.comments[0].authorFirstName + ' ' + props.comments[0].authorLastName}
-								</p>
-								<div
-									className="comment-content"
-									dangerouslySetInnerHTML={{
-										__html: props.comments[0].content,
-									}}
-								/>
-							</div>
-							<div className="react-post">
-								<button>Thích</button>
-
-								<button onClick={() => RepComent(0)}>Phản hồi</button>
-							</div>
-							
-							{showEditorRepcmt[0] ? (
-								<div>
-									<Editor
-										data={value}
-										cancel={RepComent}
-										editcontent={setValue}
-										idComment={props.comments[0].id}
-										homePosts={props.homePosts}
-									/>
-								</div>
-							) : null}
-						</div> */}
 					</div>
 				</div>
 			) : null}
@@ -1008,47 +995,6 @@ function PostItem(props) {
 					{props.comments.map((comment) => (
 						<Comment key={comment.id} comment={comment} />
 					))}
-					{/* {props.comments.map((item, index) => (
-						<div className="new-comment">
-							{props.comments[index].authorAvatar !== null &&
-							props.comments[index].authorAvatar !== '' ? (
-								<Avatar src={props.comments[index].authorAvatar} />
-							) : (
-								<Avatar icon={<UserOutlined style={{ height: '3em' }} />} />
-							)}
-							
-							<div style={{ flex: 8 }}>
-								<div className="content-comment">
-									<p className="user-name" style={{ fontWeight: 'bold' }}>
-										{props.comments[index].authorFirstName +
-											' ' +
-											props.comments[index].authorLastName}
-									</p>
-									<div
-										className="comment-content"
-										dangerouslySetInnerHTML={{
-											__html: props.comments[index].content,
-										}}
-									/>
-								</div>
-								<div className="react-post">
-									<button>Thích</button>
-									<button onClick={() => RepComent(index)}>Phản hồi</button>
-								</div>
-								{showEditorRepcmt[index] ? (
-									<div>
-										<Editor
-											data={value}
-											cancel={RepComent}
-											editcontent={setValue}
-											idComment={props.comments[index].id}
-											homePosts={props.homePosts}
-										/>
-									</div>
-								) : null}
-							</div>
-						</div>
-					))} */}
 				</div>
 			) : null}
 		</div>

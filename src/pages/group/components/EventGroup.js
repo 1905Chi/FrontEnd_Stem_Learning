@@ -236,10 +236,10 @@ export default function EventGroup() {
 				<div className="event-upcoming-main" >
 					<div className="header-envent-title">
 						<h3 style={{ marginLeft: '22px' }}>Danh sách các sự kiện</h3>
-						
+						{role === 'GROUP_ADMIN' || role === 'GROUP_OWNER' ?
 						<button className="btn btn-primary" onClick={openCreateEvent}  style={{backgroundColor:'white'}}>
 							Thêm sự kiện
-						</button>
+						</button> : null }
 					
 					</div>
 					{event.map((event, index) => (
