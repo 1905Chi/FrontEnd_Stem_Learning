@@ -16,6 +16,8 @@ import { RiArrowGoBackLine } from 'react-icons/ri';
 import moment from 'moment';
 import { Table } from 'antd';
 import Title from 'antd/es/skeleton/Title';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 export default function ExamItem(props) {
 	const { uuid, id } = useParams();
 	const navigate = useNavigate();
@@ -95,7 +97,7 @@ export default function ExamItem(props) {
 					const endTime = moment(response.data.result.exam.endedAt, 'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
 					const now = new Date();
 					if (response.data.result.submission !== null) {
-						let data=response.data.result.submission
+						let data = response.data.result.submission;
 						let correct = 0;
 						let totalquestion = 0;
 						Api.get(url + 'api/v1/submission-details/detail/' + response.data.result.submission.id, {
@@ -104,7 +106,7 @@ export default function ExamItem(props) {
 							.then((response) => {
 								if (response.data.statusCode === 200) {
 									totalquestion = response.data.result.submissionDetail.length;
-									response.data.result.submissionDetail.forEach(element => {
+									response.data.result.submissionDetail.forEach((element) => {
 										if (element.score === 1) {
 											correct++;
 										}
@@ -112,18 +114,15 @@ export default function ExamItem(props) {
 									console.log(`${correct}/${totalquestion}`);
 									setconverArray(() => [
 										{
-										  key: 0,
-										  startedAt: data.startedAt,
-										  endedAt:
-											data.endedAt === null
-											  ? data.startedAt
-											  : data.endedAt,
-										  closeAt: data.endedAt,
-										  score: data.score,
-										  correct: `${correct}/${totalquestion}`,
+											key: 0,
+											startedAt: data.startedAt,
+											endedAt: data.endedAt === null ? data.startedAt : data.endedAt,
+											closeAt: data.endedAt,
+											score: data.score,
+											correct: `${correct}/${totalquestion}`,
 										},
-										// Giữ nguyên các phần tử cũ 
-									  ]);
+										// Giữ nguyên các phần tử cũ
+									]);
 								}
 							})
 							.catch((error) => {
@@ -258,7 +257,7 @@ export default function ExamItem(props) {
 		},
 		{
 			title: 'Học sinh',
-			
+
 			key: 'firstName',
 			render: (record) => <span>{record.firstName + ' ' + record.lastName}</span>,
 		},
@@ -328,7 +327,23 @@ export default function ExamItem(props) {
 				),
 		},
 	];
-
+	const handleExportExcel = () => {
+		const datademo = [
+		  ['Name', 'Age', 'Email'],
+		  ['John Doe', 30, 'john@example.com'],
+		  ['Jane Smith', 25, 'jane@example.com'],
+		  ['Tom Brown', 35, 'tom@example.com']
+		];
+	
+		// Tạo worksheet từ dữ liệu
+		const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+		const fileExtension = '.xlsx';
+		const ws = XLSX.utils.json_to_sheet(datademo);
+        const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const data = new Blob([excelBuffer], {type: fileType});
+        FileSaver.saveAs(data, "hello" + fileExtension);
+	  };
 	return (
 		<div className="exam-item-component">
 			<button className="exam-item-component__back" onClick={() => navigate('/classes/' + uuid)}>
@@ -362,7 +377,12 @@ export default function ExamItem(props) {
 							<div>
 								<div style={{ display: 'flex', justifyContent: 'center' }}>
 									<div className="exam-item__button">
-										<button className="exam-item__button__start" onClick={() => {deleteExam()}}>
+										<button
+											className="exam-item__button__start"
+											onClick={() => {
+												deleteExam();
+											}}
+										>
 											Xóa
 										</button>
 									</div>
@@ -411,6 +431,7 @@ export default function ExamItem(props) {
 						{user.role === 'TEACHER' || localStorage.getItem('role') === 'TEACHER' ? (
 							<div style={{ textAlign: 'center' }}>
 								<h3>Danh sách bài làm</h3>
+								<button onClick={handleExportExcel}>Export to Excel</button>
 
 								<Table
 									columns={columns}

@@ -80,20 +80,22 @@ function PostItem(props) {
 		border: none;
 		background: none;
 		cursor: pointer;
-		font-size: 22px;
+		font-size: 15px;
 		color: black;
 	`;
 
 	const DropdownContainer = styled.div`
 		position: relative;
 		display: inline-block;
+		width: 50%;
+		text-align: center;
 	`;
 
 	const DropdownContent = styled.div`
 		display: ${(props) => (props.isVisible ? 'block' : 'none')};
 		position: absolute;
 		bottom: 100%; /* Hiển thị dropdown phía trên button */
-		left: 0;
+		left: 10%;
 		background-color: #f9f9f9;
 		min-width: 160px;
 		z-index: 1;
@@ -926,7 +928,7 @@ function PostItem(props) {
 			<div className="post-actions">
 				<DropdownContainer>
 					<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-						<BiLike style={{ marginRight: '5px' }} />
+						<BiLike style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }} />
 					</Button>
 					<DropdownContent
 						isVisible={isDropdownVisible}
@@ -934,18 +936,10 @@ function PostItem(props) {
 						onMouseLeave={handleMouseLeave}
 					>
 						<div style={{ display: 'flex' }}>
-							<ReactionButton onClick={() => handleReaction('love')}>
-								<AiOutlineHeart />
-							</ReactionButton>
-							<ReactionButton onClick={() => handleReaction('like')}>
-								<AiOutlineLike />
-							</ReactionButton>
-							<ReactionButton onClick={() => handleReaction('support')}>
-								<AiOutlineSmile />
-							</ReactionButton>
-							<ReactionButton onClick={() => handleReaction('thank')}>
-								<AiOutlineCheckCircle />
-							</ReactionButton>
+							<ReactionButton onClick={() => handleReaction('love')}>❤️</ReactionButton>
+							<ReactionButton onClick={() => handleReaction('like')}>👍</ReactionButton>
+							<ReactionButton onClick={() => handleReaction('doubt')}>❓</ReactionButton>
+							<ReactionButton onClick={() => handleReaction('thank')}>✔️</ReactionButton>
 						</div>
 					</DropdownContent>
 				</DropdownContainer>

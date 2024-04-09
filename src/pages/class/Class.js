@@ -7,12 +7,20 @@ import { toast } from 'react-toastify';
 import { TfiAngleDoubleRight } from "react-icons/tfi";
 import RightClass from './layouts/RightClass';
 import LeftsGroup from '../group/layouts/LeftsGroup';
+import { url } from '../../constants/Constant';
+import { useNavigate } from 'react-router-dom';
+const headers = {
+	Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+	'Content-Type': 'application/json',
+};
+
 export default function Class() {
 	const [classList, setClassList] = useState([]);
 	const [avatarUrl, setAvatarUrl] = useState(anh_logo_1);
 	const location = useLocation();
 	const [openLeft, setOpenLeft] = useState(false);
 	const LeftHomeRef = useRef(null);
+	const navigate = useNavigate();
 	useEffect(() => {
 		if (location.pathname.includes('classes')) {
 			fetchClass();
@@ -23,7 +31,7 @@ export default function Class() {
 
 	const fetchClass = async () => {
 		try {
-			const response = await Api.get('api/v1/groups/suggested-classes');
+			const response = await Api.get(url + 'api/v1/groups/myClasses', { headers });
 			console.log('Fetch class successfully: ', response);
 			if (response.data.statusCode === 200) {
 				setClassList(response.data.result);
@@ -32,13 +40,46 @@ export default function Class() {
 			console.log('Failed to fetch class list: ', error);
 		}
 	};
+	
 	const fetchgroup = async () => {
 		try {
-			const response = await Api.get('api/v1/groups/suggested-groups');
-			console.log('Fetch class successfully: ', response);
-			if (response.data.statusCode === 200) {
-				setClassList(response.data.result);
-			}
+			setClassList([]);
+			Api.get(url + 'api/v1/groups', { headers })
+			.then(async (response) => {
+				if (response.data.statusCode === 200) {
+					response.data.result.GROUP_ADMIN.forEach((element) => {
+						if (element.isClass === false) {
+							setClassList(classList => [...classList, element]);
+						}
+					});
+					response.data.result.GROUP_MEMBER.forEach((element) => {
+						if (element.isClass === false) {
+							setClassList(classList => [...classList, element]);
+						}
+						
+					});
+					response.data.result.GROUP_OWNER.forEach((element) => {
+						if (element.isClass === false) {
+							setClassList( classList => [...classList, element]);
+						}
+						
+					});
+				}
+			})
+			.catch(async (error) => {
+				if (error.response) {
+					// lỗi khi access token hết hạn
+					toast.error(error.response.data.message);
+				} else if (error.request) {
+					// Lỗi không có phản hồi từ máy chủ
+					toast.error(error.request.data.message);
+				} else {
+					// Lỗi trong quá trình thiết lập yêu cầu
+				}
+			})
+			.finally(() => {
+				
+			});
 		} catch (error) {
 			console.log('Failed to fetch class list: ', error);
 		}
@@ -73,41 +114,20 @@ export default function Class() {
             <RightClass />
           </div>: null}
 			{classList.map((item) => (
-				<div className="item-class" key={item.id}>
-					<img src={item.group.avatarUrl === null ? anh_logo_1 : item.group.avatarUrl} alt="" />
+				<div className="item-class" key={item.id} onClick={()=>{
+					if(location.pathname.includes('classes')) {
+						navigate(`/classes/${item.id}`);
+					} else {
+						navigate(`/groups/${item.id}`);
+					}
+
+				}} >
+					<img src={item.avatarUrl === null ? anh_logo_1 : item.avatarUrl} alt="" />
 					<div className="info-class">
-						<h3> {item.group.name} </h3>
-						<p> Khối: {item.group.grade} </p>
-						<p> Số thành viên: {item.memberCount}</p>
-						<div id="avatar-container">
-							<img
-								src={item.group.author.avatarUrl === null ? anh_logo_1 : item.group.author.avatarUrl}
-								alt=""
-							/>
-							<p>
-								{item.group.author.firstName} {item.group.author.lastName}
-							</p>
-						</div>
-						{item.isMember === true ? (
-							<button
-								disabled={true}
-								onClick={() => {
-									handleJoinClass(item.group.id);
-								}}
-							>
-								{' '}
-								Đã tham gia{' '}
-							</button>
-						) : (
-							<button
-								onClick={() => {
-									handleJoinClass(item.group.id);
-								}}
-							>
-								{' '}
-								Tham gia{' '}
-							</button>
-						)}
+						<h3> {item.name} </h3>
+						<p> {item.description} </p>
+						
+						
 					</div>
 				</div>
 			))}
