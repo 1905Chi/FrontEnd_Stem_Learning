@@ -8,6 +8,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import anh_logo_1 from '../../../assets/images/anh_logo_1.jpg';
 import Loading from '../../../components/Loading';
 import Api from './../../../api/Api';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import {
 	selectSelectedGroupOwner,
 	selectGroupOwner,
@@ -51,29 +54,11 @@ const RightClass = () => {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 		};
-		Api.get(url + 'api/v1/groups/myClasses', { headers })
-				// Api.get(url + 'api/v1/groups/', { headers })
+		Api.get(url + 'api/v1/groups/suggested-classes', { headers })
+				
 			.then(async (response) => {
 				if (response.data.statusCode === 200) {
-					// let MYGROUP = [];
-
-					// response.data.result.GROUP_OWNER.map((item) => {
-					// 	if (item.isClass) {
-					// 		MYGROUP = [...MYGROUP, item];
-					// 	}
-					// });
-					// response.data.result.GROUP_ADMIN.map((item) => {
-					// 	if (item.isClass) {
-					// 		MYGROUP = [...MYGROUP, item];
-					// 	}
-					// });
-					// response.data.result.GROUP_MEMBER.map((item) => {
-					// 	if (item.isClass) {
-					// 		MYGROUP = [...MYGROUP, item];
-					// 	}
-					// });
-
-					// dispatch(selectGroupOwner(MYGROUP));
+				
 					setListClassJoin(response.data.result);
 					setMygroup(response.data.result);
 				}
@@ -92,25 +77,10 @@ const RightClass = () => {
 			.finally(() => {
 				setLoading(false);
 			});
-		//fetchClassJoin();
+		
 	}, []);
 
-	// const fetchClassJoin = async () => {
-	// 	try {
-	// 		const headers = {
-	// 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-	// 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
-	// 		};
-	// 		const response = await Api.get('class/join', headers);
-	// 		console.log('Fetch class successfully: ', response);
-	// 		if (response.data.statusCode === 200) {
-	// 			setClassJoin(response.data.groupClassIds);
-	// 		}
-	// 	} catch (error) {
-	// 		console.log('Failed to fetch class list: ', error);
-	// 	}
-	// };
-
+	
 	return (
 		<>
 			<div>
@@ -145,9 +115,18 @@ const RightClass = () => {
 				) : null}
 					<div className="your-group">
 						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{textAlign:'center', width:'100%', color: '#2424a5'}}>Lớp học của bạn</h3>
+							<h3 style={{textAlign:'center', width:'100%', color: '#2424a5'}}>Đề xuất</h3>
 						</div>
-						<div style={{ height: '52vh', overflowY: 'scroll' }}>
+						<div style={{ height: '52vh', overflowY: 'scroll' }} >
+						<Slider
+							dots={true}
+							infinite={true}
+							speed={500}
+							slidesToShow={1}
+							slidesToScroll={1}
+							autoplay={true}
+							autoplaySpeed={3000}
+						>
 							{listClassJoin &&
 								listClassJoin.map((mygroup, index) => {
 									return (
@@ -162,6 +141,7 @@ const RightClass = () => {
 										</div>
 									);
 								})}
+								</Slider>
 						</div>
 					</div>
 

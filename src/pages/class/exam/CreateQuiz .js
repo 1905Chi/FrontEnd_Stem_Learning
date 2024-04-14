@@ -322,6 +322,7 @@ const CreateQuiz = () => {
 											<Radio value="single_choice">Chọn 1 đáp án</Radio>
 											<Radio value="multiple_choice">Chọn nhiều đáp án</Radio>
 											<Radio value="essay">Trả lời ngắn</Radio>
+											<Radio value="true_false">Đúng sai </Radio>
 										</Radio.Group>
 									</Form.Item>
 									<Form.List name={[name, 'answers']}>

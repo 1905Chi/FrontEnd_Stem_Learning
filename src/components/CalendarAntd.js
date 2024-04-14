@@ -132,7 +132,7 @@ const CalendarAntd = () => {
 					className={`events ${listData.length > 0 ? 'has-event' : ''} 
         `}
 					onMouseEnter={() => openEvent(value)}
-					onMouseLeave={() => openEvent(null)}
+					onMouseLeave={() => closeEvent(null)}
 				>
 					{listData.length > 0 && <div className="event-day" />}
 				</div>
@@ -148,6 +148,17 @@ const CalendarAntd = () => {
 		return null;
 	};
 	const openEvent = (value) => {
+		if (value === null) {
+			setTimeout(() => {
+				setEvent([]);
+				return;
+			}, 2000);
+		} else {
+			const listData = getListData(value);
+			setEvent(listData);
+		}
+	};
+	const closeEvent = (value) => {
 		if (value === null) {
 			setTimeout(() => {
 				setEvent([]);

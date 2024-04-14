@@ -328,22 +328,25 @@ export default function ExamItem(props) {
 		},
 	];
 	const handleExportExcel = () => {
-		const datademo = [
-		  ['Name', 'Age', 'Email'],
-		  ['John Doe', 30, 'john@example.com'],
-		  ['Jane Smith', 25, 'jane@example.com'],
-		  ['Tom Brown', 35, 'tom@example.com']
-		];
-	
+		const filteredData = listsubmit.map(item => {
+			return {
+			  Họ: item.firstName,
+			  Tên: item.lastName,
+			  Điểm: item.score,
+			  note: item.createdAt
+			};
+		  });
+		
+
 		// Tạo worksheet từ dữ liệu
 		const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 		const fileExtension = '.xlsx';
-		const ws = XLSX.utils.json_to_sheet(datademo);
-        const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
-        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        const data = new Blob([excelBuffer], {type: fileType});
-        FileSaver.saveAs(data, "hello" + fileExtension);
-	  };
+		const ws = XLSX.utils.json_to_sheet(filteredData);
+		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+		const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+		const data = new Blob([excelBuffer], { type: fileType });
+		FileSaver.saveAs(data, "Điểm "+examId.exam.name + examId.exam.description+ fileExtension);
+	};
 	return (
 		<div className="exam-item-component">
 			<button className="exam-item-component__back" onClick={() => navigate('/classes/' + uuid)}>
@@ -430,8 +433,10 @@ export default function ExamItem(props) {
 						) : null}
 						{user.role === 'TEACHER' || localStorage.getItem('role') === 'TEACHER' ? (
 							<div style={{ textAlign: 'center' }}>
-								<h3>Danh sách bài làm</h3>
-								<button onClick={handleExportExcel}>Export to Excel</button>
+								
+									<h3>Danh sách bài làm</h3>
+									<button onClick={handleExportExcel}>Lưu kết quả</button>
+							
 
 								<Table
 									columns={columns}

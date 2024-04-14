@@ -16,7 +16,7 @@ import Exam from '../../class/exam/Exam';
 import Rank from '../../class/components/Rank';
 import { selectselectMemberGroup } from '../../../redux/MemberGroup';
 import ManagerMemberGroup from '../components/ManagerMemberGroup';
-
+import Servey from '../components/Survey';
 export default function MainGroup() {
   const selectedOption = useSelector(selectSelectedOption);
   const inforGroup = useSelector(selectselectGroup);
@@ -32,7 +32,7 @@ export default function MainGroup() {
         {selectedOption === 'post' ? <PostGroup /> : null}
         {selectedOption === 'member' ? <MemberGroup /> : null}
         {selectedOption === 'event' ? <EventGroup /> : null}
-        {selectedOption === 'question' ? <QuestionGroup /> : null}
+        {selectedOption === 'question' ? <Servey /> : null}
         {selectedOption === 'document' ? <DocumentGroup /> : null}
         {selectedOption === 'exam' ? <Exam /> : null} 
         {selectedOption === 'manager-member' ? <ManagerMemberGroup /> : null}

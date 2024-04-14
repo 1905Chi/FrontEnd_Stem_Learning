@@ -632,7 +632,7 @@ export default function LeftItemGroup() {
 										}}
 									>
 										<QuestionCircleOutlined className="icon-option-group" size={20} />
-										<span className="option-label-group">Câu hỏi</span>
+										<span className="option-label-group">Khảo sát</span>
 									</div>
 									<div
 										className={`custom-option-group ${selectedOption === 'member' ? 'active' : ''}`}

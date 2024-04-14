@@ -25,6 +25,7 @@ import { TfiAlignJustify } from 'react-icons/tfi';
 import { Dropdown } from 'antd';
 import { Menu } from 'antd';
 const Topbar = (props) => {
+	
 	const adver4 = 'https://res.cloudinary.com/djzwxw0ao/image/upload/v1696942528/uqbxidtwcdbqn8glt6we.jpg';
 	const [activeIndex, setActiveIndex] = useState(1);
 	const location = useLocation();
@@ -50,6 +51,7 @@ const Topbar = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
+  var selectedButton ="/home";
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
@@ -132,7 +134,12 @@ const Topbar = (props) => {
 		});
 		setListNotification(newListNotification);
 	};
-
+	const handleButtonClick = (command) => {
+		console.log(command);
+		console.log(selectedButton);
+       	// Cập nhật trạng thái khi nút được nhấn
+		navigate(command);
+    };
 	useEffect(() => {
 		if (role !== null && role === 'ADMIN') {
 			setItems([
@@ -140,36 +147,41 @@ const Topbar = (props) => {
 					label: 'Trang chủ',
 					icon: 'pi pi-fw pi-home',
 					command: () => {
-						navigate('/home');
+						handleButtonClick('/home');
 					},
+					style: location.pathname.includes('home')  ? {backgroundColor:"aliceblue"} : ''
 				},
 				{
 					label: 'Nhóm',
 					icon: 'pi pi-fw pi-users',
 					command: () => {
-						navigate('/manage/groups');
+						handleButtonClick('/manage/groups');
 					},
+					style: location.pathname.includes('manage/groups')  ? {backgroundColor:"aliceblue"} : ''
 				},
 				{
 					label: 'Môn học',
 					icon: 'pi pi-fw pi-users',
 					command: () => {
-						navigate('/subjects');
+						handleButtonClick('/subjects');
 					},
+					style: location.pathname.includes('subjects')  ? {backgroundColor:"aliceblue"} : ''
 				},
 				{
 					label: 'Địa chỉ',
 					icon: 'pi pi-fw pi-users',
 					command: () => {
-						navigate('/addresses');
+						handleButtonClick('/addresses');
 					},
+					style: location.pathname.includes('addresses')  ? {backgroundColor:"aliceblue"} : ''
 				},
 				{
 					label: 'Người dùng',
 					icon: 'pi pi-fw pi-users',
 					command: () => {
-						navigate('/users');
+						handleButtonClick('/users');
 					},
+					style: location.pathname.includes('users')  ? {backgroundColor:"aliceblue"} : ''
 				},
 			]);
 		} else if (
@@ -187,22 +199,26 @@ const Topbar = (props) => {
 					label: 'Trang chủ',
 					icon: 'pi pi-fw pi-home',
 					command: () => {
-						navigate('/home');
+						handleButtonClick('/home');
 					},
+					style: location.pathname.includes('home')  ? {backgroundColor:"aliceblue"} : ''
+					
 				},
 				{
 					label: 'Lớp học',
 					icon: 'pi pi-fw pi-users',
 					command: () => {
-						navigate('/classes');
+						handleButtonClick('/classes');
 					},
+					style: location.pathname.includes('classes') ? {backgroundColor:"aliceblue"} : ''
 				},
 				{
 					label: 'Nhóm',
 					icon: 'pi pi-fw pi-users',
 					command: () => {
-						navigate('/groups');
+						handleButtonClick('/groups');
 					},
+					style: location.pathname.includes('groups')  ? {backgroundColor:"aliceblue"} : ''
 				},
 			]);
 		} else {
@@ -211,26 +227,30 @@ const Topbar = (props) => {
 					label: 'Trang chủ',
 					icon: 'pi pi-fw pi-home',
 					command: () => {
-						navigate('/home');
+						handleButtonClick('/home');
 					},
+					style: location.pathname.includes('home') ? {backgroundColor:"aliceblue"} : ''
+					
 				},
 				{
 					label: 'Lớp học',
 					icon: 'pi pi-fw pi-users',
 					command: () => {
-						navigate('/classes');
+						handleButtonClick('/classes');
 					},
+					style: location.pathname.includes('classes') ? {backgroundColor:"aliceblue"} : ''
 				},
 				{
 					label: 'Nhóm',
 					icon: 'pi pi-fw pi-users',
 					command: () => {
-						navigate('/groups');
+						handleButtonClick('/groups');
 					},
+					style: location.pathname.includes('groups') ? {backgroundColor:"aliceblue"} : ''
 				},
 			]);
 		}
-	}, [role]);
+	}, [role,location]);
 
 	const openEditProfile = () => {
 		toProfile();
