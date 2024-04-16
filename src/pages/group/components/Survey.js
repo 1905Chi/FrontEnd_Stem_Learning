@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectSelectedPostGroup, selectPostGroup } from '../../../redux/Group';
 import { Form, Button, Input, Row, Col } from 'antd';
 import { Modal } from 'antd';
+import { Checkbox } from 'antd';
 const { TextArea } = Input;
 
 export default function Servey() {
@@ -20,9 +21,14 @@ export default function Servey() {
 	const { uuid } = useParams();
 	const [question, setQuestion] = useState('');
 	const [options, setOptions] = useState(['', '']); // Mặc định có hai ô input đáp án
-
+	const [settingOpen, setSettingOpen] = useState(false);
+    const [isAddOption, setIsAddOption] = useState(false);
+    const [isMultiSelect, setIsMultiSelect] = useState(false);
 	const handleChangeQuestion = (e) => {
 		setQuestion(e.target.value);
+	};
+	const toggleSettingModal = () => {
+		setSettingOpen(!settingOpen);
 	};
 
 	const handleChangeOption = (index, value) => {
@@ -36,6 +42,7 @@ export default function Servey() {
 	};
 
 	const openEdttor = () => {
+		setOptions(['', '']);
 		setOpen(!open);
 	};
 	const headers = {
@@ -61,6 +68,8 @@ export default function Servey() {
 		const trimmedOptions = options.filter((option) => option.trim() !== '');
 
 		console.log(trimmedOptions);
+        console.log(isAddOption);
+        console.log(isMultiSelect);
 		setTimeout(() => {
 			setOptions(['', '']);
 			setQuestion('');
@@ -68,16 +77,35 @@ export default function Servey() {
 			setOpen(false); // Đặt setOpen ở đây khi xử lý hoàn tất
 		}, 5000);
 	};
-    const handleRemoveOption = (index) => {
-        const newOptions = [...options];
-        newOptions.splice(index, 1); // Xóa phần tử ở vị trí index
-        setOptions(newOptions);
-    };
+	const handleRemoveOption = (index) => {
+		const newOptions = [...options];
+		if (newOptions.length === 2) return; // Không cho xóa nếu chỉ còn 2 ô input
+		newOptions.splice(index, 1); // Xóa phần tử ở vị trí index
+		setOptions(newOptions);
+	};
 	return (
 		<div>
 			<Modal
+				title="Cài đặt"
+				open={settingOpen}
+				onCancel={toggleSettingModal}
+				footer={null} // Không cần footer cho Modal cài đặt
+			>
+				<div style={{ marginBottom: '10px' }}>
+					<Checkbox onChange={(value)=>{
+                        setIsAddOption(value.target.checked);
+                    }}>Cho phép chọn nhiều đáp án</Checkbox>
+				</div>
+				<div style={{ marginBottom: '10px' }}>
+					<Checkbox onChange={(value)=>{
+                        setIsMultiSelect(value.target.checked)
+                    }}>Cho phép thêm đáp án</Checkbox>
+				</div>
+			</Modal>
+
+			<Modal
 				title="Tạo cuộc thăm dò ý kiến"
-				visible={open}
+				open={open}
 				onOk={createServey}
 				confirmLoading={confirmLoading}
 				onCancel={openEdttor}
@@ -88,7 +116,7 @@ export default function Servey() {
 					</Form.Item>
 					<Form.Item label="Options">
 						{options.map((option, index) => (
-							<Row key={index}>
+							<Row key={index} style={{ marginBottom: '2%' }}>
 								<Col span={20}>
 									<Input
 										placeholder={`Option ${index + 1}`}
@@ -105,17 +133,20 @@ export default function Servey() {
 						))}
 					</Form.Item>
 					<Button type="primary" onClick={handleAddOption}>
-						Add Option
-					</Button>{' '}
+						Thêm lựa chọn
+					</Button>
+					<Button type="primary" onClick={toggleSettingModal}>
+						Cài đặt
+					</Button>
 				</Form>
 			</Modal>
 			<div className="question-group">
 				<h2 style={{ textAlign: 'center', margin: '15px', borderBottom: '3px solid', padding: '15px' }}>
-					Khảo sát{' '}
+					Khảo sát
 				</h2>
 
 				<button className="question-group__button" onClick={openEdttor} cancel={openEdttor}>
-					Đặt câu hỏi
+					Tạo khảo sát
 				</button>
 			</div>
 			<div className="post-group__list">
