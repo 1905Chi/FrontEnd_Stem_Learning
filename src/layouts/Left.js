@@ -1,8 +1,8 @@
 import { Button, Divider, List, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import UseTheme from './UseTheme';
-import { FaUserFriends } from "react-icons/fa";
-import './Left.css'
+import { FaUserFriends } from 'react-icons/fa';
+import './Left.css';
 import { useNavigate } from 'react-router-dom';
 import {
 	FcAbout,
@@ -15,14 +15,32 @@ import {
 	FcSettings,
 	FcSportsMode,
 } from 'react-icons/fc';
-export default function Left  () {
-    const { theme } = UseTheme();
+export default function Left() {
+	const { theme } = UseTheme();
 	const navigate = useNavigate();
 	const user = JSON.parse(localStorage.getItem('user'));
-    const openMessager = () => {
+	const openMessager = () => {
 		navigate('/messenger');
-    };
+	};
+	const listclassHistory = localStorage.getItem('listclassHistory')
+		? JSON.parse(localStorage.getItem('listclassHistory'))
+		: [];
+		listclassHistory.sort((a, b) => b.count - a.count);
 
+		// Lấy 3 lịch sử đầu tiên
+	const top3History =listclassHistory.length>3 ?  listclassHistory.slice(0, 3): listclassHistory
+	const divHistory = top3History.map((item, index) => {
+		return {
+			img: item.avatarUrl ? (
+				<div style={{ display: 'flex' ,flexWrap: 'wrap'}}>
+					<img src={item.avatarUrl} alt="avatar" style={{ width: 100 }} />
+					<strong style={{maxWidth: '60%',textWrap: 'wrap'}}>{item.name}</strong>
+				</div>
+			) : null,
+			title: item.name,
+			href: item.isClass ? `/classes/${item.id}` : `/groups/${item.id}`,
+		};
+	});
 	//Đăng xuất
 	const logoutHandler = () => {
 		localStorage.clear();
@@ -39,21 +57,22 @@ export default function Left  () {
 			icon: FcSportsMode,
 			onClick: logoutHandler,
 		},
-		user.role === 'PARENT' || localStorage.getItem('role')==='PARENT' || user.role==='TEACHER'? {
-			title: 'Phụ huynh - Học sinh',
-			icon: FcCustomerSupport,
-			onClick: () => {
-				navigate('/parent');
-			},
-		} : {
-			title: 'Cài đặt',
-			icon: FcSettings,
-			href: '/settings',
-		},
+		user.role === 'PARENT' || localStorage.getItem('role') === 'PARENT' || user.role === 'TEACHER'
+			? {
+					title: 'Phụ huynh - Học sinh',
+					icon: FcCustomerSupport,
+					onClick: () => {
+						navigate('/parent');
+					},
+			  }
+			: {
+					title: 'Cài đặt',
+					icon: FcSettings,
+					href: '/settings',
+			  },
 	];
 
-	const listShortCutAction= [
-		
+	const listShortCutAction = [
 		{
 			title: 'Bạn bè',
 			icon: FaUserFriends,
@@ -87,21 +106,39 @@ export default function Left  () {
 			href: '/security',
 		},
 	];
-
-	const lists = [
-		{
-			title: 'Tài khoản',
-			data: listAccountAction,
-		},
-		{
-			title: 'Lối tắt',
-			data: listShortCutAction,
-		},
-	];
+	let lists = [];
+	listclassHistory && listclassHistory.length > 0
+		? (lists = [
+				{
+					title: 'Tài khoản',
+					data: listAccountAction,
+				},
+				{
+					title: 'Lối tắt',
+					data: listShortCutAction,
+				},
+				{
+					title: 'Hoạt động gần đây',
+					data: divHistory,
+				},
+		  ])
+		: (lists = [
+				{
+					title: 'Tài khoản',
+					data: listAccountAction,
+				},
+				{
+					title: 'Lối tắt',
+					data: listShortCutAction,
+				},
+		  ]);
 
 	return (
-        
-		<Space  className="sidebar" direction="vertical" style={{ color: theme.foreground, background: theme.background , width:'100%'}}>
+		<Space
+			className="sidebar"
+			direction="vertical"
+			style={{ color: theme.foreground, background: theme.background, width: '100%' }}
+		>
 			{lists.map((list, index) => (
 				<List
 					key={index}
@@ -125,9 +162,14 @@ export default function Left  () {
 										onClick={item.onClick}
 									>
 										<Space align="center" style={{ width: '100%' }}>
-											<item.icon size={20} />
-
-											<Typography.Text strong>{item.title}</Typography.Text>
+											{item.icon ? (
+												<>
+													<item.icon size={20} />
+													<Typography.Text strong>{item.title}</Typography.Text>
+												</>
+											) : (
+												item.img
+											)}
 										</Space>
 									</Button>
 								</Link>
@@ -139,9 +181,14 @@ export default function Left  () {
 									onClick={item.onClick}
 								>
 									<Space align="center" style={{ width: '100%' }}>
-										<item.icon size={20} />
-
-										<Typography.Text strong>{item.title}</Typography.Text>
+										{item.icon ? (
+											<>
+												<item.icon size={20} />
+												<Typography.Text strong>{item.title}</Typography.Text>
+											</>
+										) : (
+											item.img
+										)}
 									</Space>
 								</Button>
 							)}

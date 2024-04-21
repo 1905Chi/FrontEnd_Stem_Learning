@@ -47,7 +47,6 @@ const RightClass = () => {
 		setListClassJoin(mygroup.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase())));
 	};
 	const role = JSON.parse(localStorage.getItem('user')).role;
-	
 
 	useEffect(() => {
 		const headers = {
@@ -55,10 +54,9 @@ const RightClass = () => {
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 		};
 		Api.get(url + 'api/v1/groups/suggested-classes', { headers })
-				
+
 			.then(async (response) => {
 				if (response.data.statusCode === 200) {
-				
 					setListClassJoin(response.data.result);
 					setMygroup(response.data.result);
 				}
@@ -77,71 +75,65 @@ const RightClass = () => {
 			.finally(() => {
 				setLoading(false);
 			});
-		
 	}, []);
 
-	
 	return (
 		<>
 			<div>
-				<div
-				className='header-classes'
-				>
+				<div className="header-classes">
 					{loading ? ( // Nếu đang loading thì hiển thị component loading
 						<Loading Loading={loading}></Loading>
 					) : null}
 					<div className="header-left" style={{}}>
-						<h1 style={{ textAlign: 'center', marginTop:'0' }}>Lớp</h1>
+						<h1 style={{ textAlign: 'center', marginTop: '0' }}>Lớp</h1>
 
 						<Search
 							theme={theme}
 							placeholder="Tìm kiếm Lớp"
 							onChange={searchClass}
-							style={{ textAlign: 'center', marginLeft:'1rem' }}
+							style={{ textAlign: 'center', marginLeft: '1rem' }}
 						/>
 					</div>
 				</div>
-				
+
 				<div style={{ margin: '20vh 0px 0px 0px' }}>
-				{(role && role === 'TEACHER') || localStorage.getItem('role') === 'TEACHER' ? (
-					<div className="button-add" onClick={create}>
-						<Button
-							type="primary"
-							style={{ width: '100%', marginTop: '0', height: '50px', marginLeft: '0px' }}
-						>
-							<span style={{ fontSize: '15px', fontWeight: '500' }}>+ Tạo Lớp </span>
-						</Button>
-					</div>
-				) : null}
+					{(role && role === 'TEACHER') || localStorage.getItem('role') === 'TEACHER' ? (
+						<div className="button-add" onClick={create}>
+							<Button
+								type="primary"
+								style={{ width: '100%', marginTop: '0', height: '50px', marginLeft: '0px' }}
+							>
+								<span style={{ fontSize: '15px', fontWeight: '500' }}>+ Tạo Lớp </span>
+							</Button>
+						</div>
+					) : null}
 					<div className="your-group">
 						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<h3 style={{textAlign:'center', width:'100%', color: '#2424a5'}}>Đề xuất</h3>
+							<h3 style={{ textAlign: 'center', width: '100%', color: '#2424a5' }}>Đề xuất</h3>
 						</div>
-						<div style={{ height: '52vh', overflowY: 'scroll' }} >
-						<Slider
-							dots={true}
-							infinite={true}
-							speed={500}
-							slidesToShow={1}
-							slidesToScroll={1}
-							autoplay={true}
-							autoplaySpeed={3000}
-						>
-							{listClassJoin &&
-								listClassJoin.map((mygroup, index) => {
-									return (
-										<div style={{marginRight:'1rem'}}>
-										<LableGroup
-											key={index}
-											image={mygroup.avatarUrl}
-											name={mygroup.name}
-											id={mygroup.id}
-											type={true}
-										/>
-										</div>
-									);
-								})}
-								</Slider>
+						<div style={{ height: '52vh' }}>
+							<Slider
+								dots={true}
+								infinite={true}
+								speed={500}
+								slidesToShow={1}
+								slidesToScroll={1}
+								autoplay={true}
+								autoplaySpeed={3000}
+							>
+								{listClassJoin &&
+									listClassJoin.map((mygroup, index) => {
+										return (
+											<div key={index} className="slide">
+												<img src={mygroup.group.avatarUrl} alt="Group Avatar" />
+												<div className="group-info">
+													<h2>{mygroup.group.name}</h2>
+													<p>{mygroup.group.description}</p>
+												</div>
+											</div>
+										);
+									})}
+							</Slider>
 						</div>
 					</div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import Editor from '../../home/components/Editor';
 import './QuestionGroup.css';
@@ -9,7 +9,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectSelectedPostGroup, selectPostGroup } from '../../../redux/Group';
 import { Form, Button, Input, Row, Col } from 'antd';
 import { Modal } from 'antd';
-import { Checkbox } from 'antd';
+import { Checkbox, Radio } from 'antd';
+import ServeyItem from './ServeyItem';
 const { TextArea } = Input;
 
 export default function Servey() {
@@ -22,15 +23,17 @@ export default function Servey() {
 	const [question, setQuestion] = useState('');
 	const [options, setOptions] = useState(['', '']); // Mặc định có hai ô input đáp án
 	const [settingOpen, setSettingOpen] = useState(false);
-    const [isAddOption, setIsAddOption] = useState(false);
-    const [isMultiSelect, setIsMultiSelect] = useState(false);
+	const [isAddOption, setIsAddOption] = useState(false);
+	const [isMultiSelect, setIsMultiSelect] = useState(false);
 	const handleChangeQuestion = (e) => {
 		setQuestion(e.target.value);
 	};
 	const toggleSettingModal = () => {
+		setSettingOpen(false);
+		setIsAddOption(false);
 		setSettingOpen(!settingOpen);
 	};
-
+    
 	const handleChangeOption = (index, value) => {
 		const newOptions = [...options];
 		newOptions[index] = value;
@@ -68,11 +71,11 @@ export default function Servey() {
 		const trimmedOptions = options.filter((option) => option.trim() !== '');
 
 		console.log(trimmedOptions);
-        console.log(isAddOption);
-        console.log(isMultiSelect);
+		console.log(isAddOption);
+		console.log(isMultiSelect);
 		setTimeout(() => {
-			setOptions(['', '']);
-			setQuestion('');
+			//setOptions(['', '']);
+			//	setQuestion('');
 			setConfirmLoading(false);
 			setOpen(false); // Đặt setOpen ở đây khi xử lý hoàn tất
 		}, 5000);
@@ -83,6 +86,53 @@ export default function Servey() {
 		newOptions.splice(index, 1); // Xóa phần tử ở vị trí index
 		setOptions(newOptions);
 	};
+	
+    const listservey = [
+        {
+            question: 'Câu hỏi 1',
+            options: ['Option 1', 'Option 2', 'Option 3'],
+            isAddOption: false,
+            isMultiSelect: false,
+            listAnswer: [
+                {
+                    answer: 'Option 1',
+                    count: 2,
+                },
+                {
+                    answer: 'Option 2',
+                    count: 1,
+                },
+                {
+                    answer: 'Option 3',
+                    count: 0,
+                },
+            ],
+            
+        },
+        {
+            question: 'Câu hỏi 2',
+            options: ['Option 1', 'Option 2', 'Option 3'],
+            isAddOption: true,
+            isMultiSelect: true,
+            listAnswer: [
+                {
+                    answer: 'Option 1',
+                    count: 5,
+                },
+                {
+                    answer: 'Option 2',
+                    count: 1,
+                },
+                {
+                    answer: 'Option 3',
+                    count: 0,
+                },
+            ],
+        }
+    ]
+
+	
+
 	return (
 		<div>
 			<Modal
@@ -92,14 +142,22 @@ export default function Servey() {
 				footer={null} // Không cần footer cho Modal cài đặt
 			>
 				<div style={{ marginBottom: '10px' }}>
-					<Checkbox onChange={(value)=>{
-                        setIsAddOption(value.target.checked);
-                    }}>Cho phép chọn nhiều đáp án</Checkbox>
+					<Checkbox
+						onChange={(value) => {
+							setIsAddOption(value.target.checked);
+						}}
+					>
+						Cho phép chọn nhiều đáp án
+					</Checkbox>
 				</div>
 				<div style={{ marginBottom: '10px' }}>
-					<Checkbox onChange={(value)=>{
-                        setIsMultiSelect(value.target.checked)
-                    }}>Cho phép thêm đáp án</Checkbox>
+					<Checkbox
+						onChange={(value) => {
+							setIsMultiSelect(value.target.checked);
+						}}
+					>
+						Cho phép thêm đáp án
+					</Checkbox>
 				</div>
 			</Modal>
 
@@ -149,28 +207,20 @@ export default function Servey() {
 					Tạo khảo sát
 				</button>
 			</div>
-			<div className="post-group__list">
-				{postgroup &&
-					postgroup.posts.map((item) =>
-						item.post.type === 'QUESTION' ? (
-							<PostItem
-								id={item.post.id}
-								authorId={item.post.authorId}
-								authorFirstName={item.post.authorFirstName}
-								authorLastName={item.post.authorLastName}
-								authorAvatar={item.post.authorAvatar}
-								content={item.post.content}
-								type={item.post.type}
-								refUrls={item.post.refUrls}
-								totalReactions={item.post.totalReactions}
-								totalComments={item.post.totalComments}
-								comments={item.post.comments}
-								reaction={item.reaction}
-								callBackApi={callBackApi}
-							/>
-						) : null
-					)}
-			</div>
+            <div>
+          {  listservey.map((servey, index) => (
+                <ServeyItem key={index} 
+                question={servey.question}
+                options={servey.options}
+                isAddOption={servey.isAddOption}
+                isMultiSelect={servey.isMultiSelect}
+                listAnswer={servey.listAnswer}
+                index={index}
+
+
+                 />
+            ))}
+            </div>
 		</div>
 	);
 }

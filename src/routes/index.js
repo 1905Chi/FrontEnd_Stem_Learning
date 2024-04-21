@@ -41,7 +41,7 @@ import Address from '../pages/address/Address';
 import ManageGroup from '../pages/manageGroup/ManageGroup';
 import Parent from  '../pages/user/Parent'
 import RightParent from '../pages/user/layouts/RightParent';
-
+import MainCompetition from '../pages/competition/itemCompetition/MainCompetition';
 import Meessage from '../pages/messenger/Message';
 const privateRoutes = [
 	{ path: '/home', component: Home, Left: Left, Right: Right },
@@ -81,6 +81,7 @@ const private1page = [
 	{ path: '/messenger/u/:userId', component: Meessage},
 	{ path: '/messenger/g/:chatRoomId', component: Meessage},
 	{ path: '/messenger', component: Meessage},
+	{ path: '/competition', component: MainCompetition},
 ];
 const publicRoutes = [
 	{ path: '/login', component: Login },
