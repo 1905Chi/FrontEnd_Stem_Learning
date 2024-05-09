@@ -9,10 +9,14 @@ const dataExam = createSlice({
 		question: null,
 		answer: [],
 		questionChoose: [],
+		totalScore: 0,
 	},
 	reducers: {
 		selectexam: (state, action) => {
 			state.value = action.payload;
+		},
+		selectscore: (state, action) => {
+			state.totalScore = action.payload;
 		},
 		selectsubmition: (state, action) => {
 			state.submition = action.payload;
@@ -79,10 +83,12 @@ export const {
 	editquestion,
 	selectquestionChoose,
 	deletequestionChoose,
+	selectscore,
 } = dataExam.actions;
 export const selectselectexam = (state) => state.exam.value;
 export const selectselectsubmition = (state) => state.exam.submition;
 export const selectselectquestion = (state) => state.exam.question;
 export const selectselectanswer = (state) => state.exam.answer;
 export const selectselectquestionChoose = (state) => state.exam.questionChoose;
+export const selectselectscore = (state) => state.exam.totalScore;
 export default dataExam.reducer;

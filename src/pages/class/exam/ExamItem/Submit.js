@@ -7,15 +7,16 @@ import Api from '../../../../api/Api';
 import { CountdownProps } from 'antd';
 import { Col, Row, Statistic, Skeleton } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
-import './Submit.css';
+//import './Submit.css';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import Loading from '../../../../components/Loading';
 import { selectsubmition, selectexam, selectquestionChoose, deletequestionChoose } from '../../../../redux/Exam';
-
+import Editor from '../../../home/components/Editor';
 export default function Submit() {
 	const [submition, setsubmition] = useState();
-
+	const user = JSON.parse(localStorage.getItem('user'));
+	console.log(user);
 	const navigate = useNavigate();
 	const { Countdown } = Statistic;
 	const { id } = useParams();
@@ -26,6 +27,8 @@ export default function Submit() {
 	const dispatch = useDispatch();
 	const typesubmit = localStorage.getItem('typesubmit');
 	const [submissionDetailId, setsubmissionDetailId] = useState();
+	const [data, setData] = useState('');
+	const [mark, setMark] = useState("");
 	const onFinish = () => {
 		setloading(true);
 		Api.post(url + 'api/v1/submissions/submit?submissionId=' + localStorage.getItem('submissionId'), {
@@ -154,8 +157,12 @@ export default function Submit() {
 							}
 
 							let userAnswerArray = [];
-							if (item.userAnswer !== null) {
+							if (item.userAnswer !== null) { 
+								if(item.typeCode === 'essay'){
+									userAnswerArray = [item.userAnswer];
+								}else{
 								userAnswerArray = item.userAnswer.split(',');
+								}
 								listAnserchonsed = [...listAnserchonsed, { id: item.id, answer: item.userAnswer }];
 							}
 
@@ -183,7 +190,7 @@ export default function Submit() {
 		}
 	}, []);
 
-	const handleRadioChange = (questionId, answer, typeCode,index) => {
+	const handleRadioChange = (questionId, answer, typeCode, index) => {
 		const oldSelectedAnswers = selectedAnswers;
 
 		if (oldSelectedAnswers.filter((item) => item.questionId === questionId).length === 0) {
@@ -191,19 +198,18 @@ export default function Submit() {
 		} else {
 			if (
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.includes(answer) &&
-				(typeCode === 'multiple_choice' )
+				typeCode === 'multiple_choice'
 			) {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex = oldSelectedAnswers
 					.filter((item) => item.questionId === questionId)[0]
 					.answerIndex.filter((item) => item !== answer);
 				console.log(oldSelectedAnswers);
-			} else if (typeCode === 'single_choice' ) {
+			} else if (typeCode === 'single_choice') {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex = [];
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.push(answer);
-			} else if(typeCode === 'essay') {
-				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex[index]=answer;
-			}
-			 else {
+			} else if (typeCode === 'essay') {
+				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex[index] = answer;
+			} else {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.push(answer);
 			}
 		}
@@ -247,11 +253,47 @@ export default function Submit() {
 		}
 	};
 
+	const handleEditorChange = (value) => {
+		console.log(value);
+		setData(value);
+	};
+	const handleEditorCancel = () => {
+		setData('');
+	};
+const postMark= (id) => {
+setloading(true);
+const data = {
+	mark: Number(mark),
+	submissionDetailId: id,
+	}
+	let headers= {
+		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),	
+		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+	}
+	Api.post(url + 'api/v1/submission-details/mark', data, {headers: headers})
+	.then((response) => {
+		if (response.data.success === true) {
+			toast.success('Chấm điểm thành công');
+		} else {
+			toast.error(response.data.message);
+
+		}
+	})
+	.catch((error) => {
+		toast.error(error);
+	})
+	.finally(() => {
+		setloading(false);
+	});
+
+
+console.log(id, mark);
+}
 	return (
-		<div className="submit-sipn" style={{width:'72vw'}}>
+		<div className="submit-sipn" style={{ width: '72vw' }}>
 			{submition === null && typesubmit !== 'review' ? (
 				<Skeleton active />
-			) : (	typesubmit === 'create' || typesubmit === 'continue' ? (
+			) : typesubmit === 'create' || typesubmit === 'continue' ? (
 				<div>
 					<Countdown title="Thời gian còn lại" value={Date.now() + targetTime} onFinish={onFinish} />
 					{loading ? <Loading /> : null}
@@ -264,80 +306,90 @@ export default function Submit() {
 									<div
 										className="quest-content"
 										dangerouslySetInnerHTML={{ __html: question.content }}
-										style={{marginTop:'15px'}}
-										
-										
-
+										style={{ marginTop: '15px' }}
 									/>
 								</div>
 
 								<div>
-									{question.answers.map((answer, index) => (
-										<label key={index}>
-											{question.typeCode === 'multiple_choice' ? (
-												<>
-												<input
-													type="checkbox"
-													name={`question_${question.submissionDetailId}`}
-													defaultChecked={answer.checked ? true : false}
-													style={{ width: '15px', height: '15px', marginRight: '10px' }}
-													onChange={() =>
-														handleRadioChange(
-															question.submissionDetailId,
-															answer.answer,
-															question.typeCode,
-															index,
-														)
-													}
-												/>
-												{answer.answer}
-												</>
-											) : question.typeCode === 'essay' ? (
-												<input
-													
-													name={`question_${question.submissionDetailId}`}
-													defaultChecked={answer.checked ? true : false}
-													style={{ width: '25%', height: '15px', marginRight: '10px' }}
-													onBlur={(e) =>
-														handleRadioChange(
-															question.submissionDetailId,
-															e.target.value,
-															question.typeCode,
-															index
-														)
-													}
-												/>
-											): (<>
-												<input
-													type="radio"
-													name={`question_${question.submissionDetailId}`}
-													defaultChecked={answer.checked ? true : false}
-													style={{ width: '15px', height: '15px', marginRight: '10px' }}
-													onChange={() =>
-														handleRadioChange(
-															question.submissionDetailId,
-															answer.answer,
-															question.typeCode,
-															index
-														)
-													}
-												/>
-												{answer.answer}
-												</>
-											)}
-
-											
-										</label>
-									))}
+									{question.typeCode === 'essay' ? (
+										<>
+											<Editor
+												data={data}
+												editcontent={handleEditorChange}
+												cancel={handleEditorCancel}
+												isQuiz={true}
+											/>
+											<button
+												onClick={() =>
+													handleRadioChange(
+														question.submissionDetailId,
+														data,
+														question.typeCode
+													)
+												}
+											>
+												Lưu đáp án
+											</button>
+										</>
+									) : null}
+									{question.typeCode !== 'essay' &&
+										question.answers.map((answer, index) => (
+											<label key={index}>
+												{question.typeCode === 'multiple_choice' ? (
+													<>
+														<input
+															type="checkbox"
+															name={`question_${question.submissionDetailId}`}
+															defaultChecked={answer.checked ? true : false}
+															style={{
+																width: '15px',
+																height: '15px',
+																marginRight: '10px',
+															}}
+															onChange={() =>
+																handleRadioChange(
+																	question.submissionDetailId,
+																	answer.answer,
+																	question.typeCode,
+																	index
+																)
+															}
+														/>
+														{answer.answer}
+													</>
+												) : (
+													<>
+														<input
+															type="radio"
+															name={`question_${question.submissionDetailId}`}
+															defaultChecked={answer.checked ? true : false}
+															style={{
+																width: '15px',
+																height: '15px',
+																marginRight: '10px',
+															}}
+															onChange={() =>
+																handleRadioChange(
+																	question.submissionDetailId,
+																	answer.answer,
+																	question.typeCode,
+																	index
+																)
+															}
+														/>
+														{answer.answer}
+													</>
+												)}
+											</label>
+										))}
 								</div>
 							</div>
 						))}
 					<button onClick={onFinish}>Nộp bài</button>
 				</div>
-			) : null
-			)}
+			) : null}
 
-			{typesubmit === 'review' ? (
+			{typesubmit === 'review' && user.role === 'STUDENT' ? (
 				<div>
 					{submissionDetailId && submissionDetailId.length > 0 ? (
 						<div>
@@ -356,18 +408,20 @@ export default function Submit() {
 										<div
 											className="quest-content"
 											dangerouslySetInnerHTML={{ __html: item.question }}
-											style={{marginTop:'15px'}}
+											style={{ marginTop: '15px' }}
 										/>
 									</div>
 									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
 										<strong>Đáp án của bạn: </strong>
-										{
+										{item.correctAnswer[0] === 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
+											<div dangerouslySetInnerHTML={{ __html: item.userAnswer[0] }} />
+										) : (
 											<div style={{ marginLeft: '15px' }}>
 												{item.userAnswer.map((answer) => (
 													<div>{answer}</div>
 												))}
 											</div>
-										}
+										)}
 									</div>
 
 									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
@@ -379,6 +433,68 @@ export default function Submit() {
 												))}
 											</div>
 										}
+									</div>
+								</div>
+							))}
+						</div>
+					) : null}
+				</div>
+			) : null}
+			{typesubmit === 'review' && user.role === 'TEACHER' ? (
+				<div>
+					{submissionDetailId && submissionDetailId.length > 0 ? (
+						<div>
+							<h4>Bài làm của học sinh</h4>
+							{submissionDetailId.map((item, index) => (
+								<div
+									style={{
+										backgroundColor: 'aliceblue',
+										marginBottom: '15px',
+										paddingLeft: '15px',
+										paddingBottom: '15px',
+									}}
+								>
+									<div style={{ display: 'flex' }}>
+										<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
+										<div
+											className="quest-content"
+											dangerouslySetInnerHTML={{ __html: item.question }}
+											style={{ marginTop: '15px' }}
+										/>
+									</div>
+									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
+										<strong>Đáp án được trả lời: </strong>
+										{item.correctAnswer[0] === 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
+											<div dangerouslySetInnerHTML={{ __html: item.userAnswer[0] }} />
+										) : (
+											<div style={{ marginLeft: '15px' }}>
+												{item.userAnswer.map((answer) => (
+													<div>{answer}</div>
+												))}
+											</div>
+										)}
+									</div>
+
+									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
+										{item.correctAnswer[0] !== 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
+											<>
+												<strong>Đáp án đúng: </strong>
+												{
+													<div style={{ marginLeft: '15px' }}>
+														{item.correctAnswer.map((answer) => (
+															<div>{answer}</div>
+														))}
+													</div>
+												}
+											</>
+										) : (
+											<div style={{ display: 'flex', marginBottom: '15px' }}>
+												<strong>Điểm: </strong>
+												<input style={{ marginLeft: '15px' }} 
+												onChange={(e)=>setMark(e.target.value)}/>
+												 <button onClick={() => postMark(item.id)}>Chấm điểm</button>
+											</div>
+										)}
 									</div>
 								</div>
 							))}

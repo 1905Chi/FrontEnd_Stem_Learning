@@ -12,9 +12,15 @@ import { useNavigate } from 'react-router-dom';
 import { Select } from 'antd';
 import './CreateQuiz.css';
 import { RiArrowGoBackLine } from 'react-icons/ri';
+import { selectselectscore, selectscore } from '../../../redux/Exam';
 import moment from 'moment';
+import { useSelector, useDispatch } from 'react-redux';
+import { InputBase } from '@mui/material';
 const CreateQuiz = () => {
 	const [form] = Form.useForm();
+	const dispatch = useDispatch();
+	const maxScore = useSelector(selectselectscore);
+	console.log(maxScore);
 	const navigate = useNavigate();
 	const { Option } = Select;
 	const [answerTypes, setAnswerTypes] = useState(['single']); // 'single' or 'multiple'
@@ -23,6 +29,7 @@ const CreateQuiz = () => {
 	const [value, setValue] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [currentDate, setCurrentDate] = useState(moment());
+	const [scores, setScores] = useState([]);
 	const isDateDisabled = (date) => {
 		return !date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
 	};
@@ -30,6 +37,7 @@ const CreateQuiz = () => {
 		console.log('Received values:', values);
 		console.log('Answer types:', answerTypes);
 		console.log('content ', value);
+		console.log('scores ', scores);
 
 		setIsLoading(true);
 		const data = {
@@ -42,41 +50,49 @@ const CreateQuiz = () => {
 			isEnabled: true,
 			level: values.level,
 			numberOfQuestion: Number(values.numberOfQuestion),
-			maxScore: values.maxScore,
+			maxScore: maxScore,
 			questions: [],
 		};
-		value.map((item, index) => {
-			let questions = {
-				content: item,
-				level: 'Easy',
-				typeCode: answerTypes[index],
-				answers: [],
-			};
-
-			values.questions[index].answers.map((item) => {
-				var answer = {};
-				if (item.isCorrect === true) {
-					answer = {
-						content: item.answer,
-						isCorrect: true,
-					};
-					questions.answers = [...questions.answers, answer];
-				} else if (item.isCorrect === undefined && answerTypes[index] === 'essay') {
-					answer = {
-						content: item.answer,
-						isCorrect: true,
-					};
-					questions.answers = [...questions.answers, answer];
-				} else {
-					answer = {
-						content: item.answer,
-						isCorrect: false,
-					};
-					questions.answers = [...questions.answers, answer];
+		answerTypes.map((item, index) => {
+			if(index < answerTypes.length-1) {
+				let questions = {
+					content: value[index],
+					level: 'Easy',
+					typeCode: answerTypes[index],
+					answers: [],
+					score: answerTypes[index] === 'essay' && scores[index] !== undefined ? scores[index] : 1,
+				};
+				if (answerTypes[index] !== 'essay' ) {
+					values.questions[index].answers !== undefined &&
+						values.questions[index].answers.map((item) => {
+							var answer = {};
+							if (item.isCorrect === true) {
+								answer = {
+									content: item.answer,
+									isCorrect: true,
+								};
+								questions.answers = [...questions.answers, answer];
+							} else if (item.isCorrect === undefined && answerTypes[index] === 'essay') {
+								answer = {
+									content: item.answer,
+									isCorrect: true,
+								};
+								questions.answers = [...questions.answers, answer];
+							} else {
+								answer = {
+									content: item.answer,
+									isCorrect: false,
+								};
+								questions.answers = [...questions.answers, answer];
+							}
+						});
 				}
-			});
-			data.questions = [...data.questions, questions];
+	
+				data.questions = [...data.questions, questions];
+			}
+			
 		});
+		console.log('data', data);
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
@@ -101,16 +117,20 @@ const CreateQuiz = () => {
 	};
 
 	const handleAnswerTypeChange = (index, e) => {
-		const newAnswerTypes = [...answerTypes];
+		let newAnswerTypes = [...answerTypes];
 		newAnswerTypes[index] = e.target.value;
 		if (e.target.value === 'single_choice') {
 			newAnswerTypes[index] = 'single_choice';
 		} else if (e.target.value === 'multiple_choice') {
 			newAnswerTypes[index] = 'multiple_choice';
-		} else {
+		}  else {
 			newAnswerTypes[index] = 'essay';
 		}
+		totalScore(newAnswerTypes, scores);
+		console.log(newAnswerTypes);
 		setAnswerTypes(newAnswerTypes);
+		
+		
 	};
 	const handleEditQuestion = (index) => {
 		setEditingIndex(index);
@@ -156,7 +176,20 @@ const CreateQuiz = () => {
 
 		return Promise.resolve();
 	};
-
+	const totalScore = (newAnswerTypes,scores)=> {
+		let total = 0;
+		console.log(scores)
+		console.log(answerTypes)
+		newAnswerTypes.map((item, index) => {
+			if (item === 'essay' && scores[index] !== undefined && !Number.isNaN(scores[index])){
+				total += scores[index];
+			} else {
+				total += 1;
+			}
+		});
+		console.log("total",total);
+		dispatch(selectscore(total-1));
+	};
 	return (
 		<div className="create-quiz">
 			<div className="back-to-exam" style={{ margin: '5rem 0 0 3rem' }}>
@@ -211,14 +244,11 @@ const CreateQuiz = () => {
 					<strong>Điểm số tối đa:</strong>
 					<Form.Item
 						name="maxScore"
-						rules={[{ required: true, message: 'Vui lòng nhập điểm số tối đa của bài kiểm tra!' }]}
+						//		rules={[{ required: true, message: 'Vui lòng nhập điểm số tối đa của bài kiểm tra!' }]}
 						className="infor-exam-create-input"
 					>
-						<InputNumber
-							min={1}
-							placeholder="Nhập điểm tối đa"
-							style={{ width: '60%', border: '1px solid black' }}
-						/>
+						
+						{useSelector(selectselectscore)}
 					</Form.Item>
 				</div>
 				<div className="infor-exam-create">
@@ -321,13 +351,32 @@ const CreateQuiz = () => {
 										>
 											<Radio value="single_choice">Chọn 1 đáp án</Radio>
 											<Radio value="multiple_choice">Chọn nhiều đáp án</Radio>
-											<Radio value="essay">Trả lời ngắn</Radio>
-											<Radio value="true_false">Đúng sai </Radio>
+											<Radio value="essay">Tự luận</Radio>
+											
 										</Radio.Group>
 									</Form.Item>
 									<Form.List name={[name, 'answers']}>
 										{(answerFields, { add: addAnswer, remove: removeAnswer }) => (
 											<>
+												{answerTypes[index] === 'essay' && (
+													<Form.Item name={[name, 'score']}>
+														<lable>Điểm cho câu hỏi:</lable>
+														<InputNumber
+															min={1}
+															placeholder="Điểm cho câu hỏi"
+															style={{
+																width: '60%',
+																border: '1px solid black',
+															}}
+															onChange={(value) => {
+																const newScores = [...scores];
+																newScores[index] = value;
+																setScores(newScores);
+																totalScore(answerTypes,newScores);
+															}}
+														/>
+													</Form.Item>
+												)}
 												{answerFields.map(
 													(
 														{
@@ -338,64 +387,66 @@ const CreateQuiz = () => {
 														},
 														answerIndex
 													) => (
-														<Space
-															key={answerKey}
-															style={{ display: 'flex', marginBottom: 8 }}
-															align="baseline"
-														>
-															<Form.Item
-																{...answerRestField}
-																name={[answerName, 'answer']}
-																rules={[
-																	{
-																		required: true,
-																		message: 'Vui lòng nhập đáp án!',
-																	},
-																]}
+														<>
+															<Space
+																key={answerKey}
+																style={{ display: 'flex', marginBottom: 8 }}
+																align="baseline"
 															>
-																<Input placeholder="Nhập đáp án" />
-															</Form.Item>
+																{answerTypes[index] !== 'essay' && (
+																	<Form.Item
+																		{...answerRestField}
+																		name={[answerName, 'answer']}
+																		rules={[
+																			{
+																				required: true,
+																				message: 'Vui lòng nhập đáp án!',
+																			},
+																		]}
+																	>
+																		<Input placeholder="Nhập đáp án" />
+																	</Form.Item>
+																)}
 
-															{answerTypes[index] === 'multiple_choice' && (
-																<Form.Item
-																	name={[answerName, 'isCorrect']}
-																	valuePropName="checked"
-																>
-																	<Checkbox>Đáp án đúng</Checkbox>
-																</Form.Item>
-															)}
+																{answerTypes[index] === 'multiple_choice' && (
+																	<Form.Item
+																		name={[answerName, 'isCorrect']}
+																		valuePropName="checked"
+																	>
+																		<Checkbox>Đáp án đúng</Checkbox>
+																	</Form.Item>
+																)}
 
-															{answerTypes[index] === 'single_choice' && (
-																<Form.Item
-																	name={[answerName, 'isCorrect']}
-																	valuePropName="checked"
-																>
-																	<Radio>Đáp án đúng</Radio>
-																</Form.Item>
-															)}
-															{answerTypes[index] === 'essay' && (
-																<Form.Item
-																	name={[answerName, 'isCorrect']}
-																	valuePropName="checked"
-																>
-																	<Radio defaultChecked={true}>Đáp án đúng</Radio>
-																</Form.Item>
-															)}
-															<MinusCircleOutlined
-																onClick={() => removeAnswer(answerName)}
-															/>
-														</Space>
+																{answerTypes[index] === 'single_choice' && (
+																	<Form.Item
+																		name={[answerName, 'isCorrect']}
+																		valuePropName="checked"
+																	>
+																		<Radio>Đáp án đúng</Radio>
+																	</Form.Item>
+																)}
+																
+
+																{answerTypes[index] !== 'essay' && (
+																	<MinusCircleOutlined
+																		onClick={() => removeAnswer(answerName)}
+																	/>
+																)}
+															</Space>
+														</>
 													)
 												)}
-												<Form.Item>
-													<Button
-														type="dashed"
-														onClick={() => addAnswer()}
-														icon={<PlusOutlined />}
-													>
-														Thêm đáp án
-													</Button>
-												</Form.Item>
+												{answerTypes[index] !== 'essay' && (
+													<Form.Item>
+														<Button
+															type="dashed"
+															onClick={() => addAnswer()}
+															icon={<PlusOutlined />}
+														>
+															Thêm đáp án
+														</Button>
+													</Form.Item>
+												)}
 											</>
 										)}
 									</Form.List>
@@ -407,6 +458,7 @@ const CreateQuiz = () => {
 													const newAnswerTypes = [...answerTypes];
 													newAnswerTypes.splice(index, 1);
 													setAnswerTypes(newAnswerTypes);
+													totalScore(newAnswerTypes, scores);
 												}}
 											/>
 										</Form.Item>
@@ -418,8 +470,10 @@ const CreateQuiz = () => {
 									type="dashed"
 									onClick={() => {
 										add();
-										setAnswerTypes([...answerTypes, 'single_choice']);
+										const newAnswerTypes = [...answerTypes, 'single_choice'];
+										setAnswerTypes(newAnswerTypes);
 										setValue([...value, '<p>Nhập câu hỏi </p>']);
+										totalScore(newAnswerTypes, scores);
 									}}
 									icon={<PlusOutlined />}
 								>

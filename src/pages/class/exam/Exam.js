@@ -46,9 +46,12 @@ export default function Exam() {
 		
 		
 		if (nowDate >= startTime && nowDate <= endTime) {
-			return true;
-		} else {
-			return false;
+			return 0;
+		} else if (nowDate < startTime) {
+			return -1;
+		}
+		else {
+			return 1;
 		}
 	};
 	return (
@@ -77,9 +80,11 @@ export default function Exam() {
 									
 									<p> Tên bài kiểm tra: <strong>{item.exam.name}</strong></p>
 									<p>Mô tả: <span style={{fontStyle:'italic'}}>{item.exam.description}</span></p>
-									{WithinTimeRang(item.exam.startedAt, item.exam.endedAt) ? (
+									{WithinTimeRang(item.exam.startedAt, item.exam.endedAt)===0 ? (
 										<p > Trạng thái: <strong style={{ color: 'green' }}>Đang diễn ra</strong></p>
-									) : (
+									) :WithinTimeRang(item.exam.startedAt, item.exam.endedAt)===-1 ?  (
+										<p > Trạng thái: <strong style={{ color: 'yellow' }}>Chưa diễn ra</strong></p>
+									): (
 										<p > Trạng thái: <strong style={{ color: 'red' }}>Đã kết thúc</strong></p>
 									)}
 									<p>

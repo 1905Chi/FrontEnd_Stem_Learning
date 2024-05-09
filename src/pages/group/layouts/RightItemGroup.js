@@ -66,7 +66,7 @@ export default function RightItemClass() {
 			<div className="Lich">
 				<CalendarAntd />
 			</div>
-			<div className="event-upcoming">
+			{/* <div className="event-upcoming">
 				<h3>Sự kiện sắp diễn ra</h3>
 				{listEvent && listEvent !== null && listEvent.length > 0 ? (
 					listEvent.map((event, index) => (
@@ -86,7 +86,7 @@ export default function RightItemClass() {
 				) : (
 					<Empty />
 				)}
-			</div>
+			</div> */}
 		</div>
 	);
 }
