@@ -16,6 +16,7 @@ import LableGroup from '../pages/group/components/LableGroup';
 import { Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
+import Slider from 'react-slick';
 export default function Right() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -29,6 +30,18 @@ export default function Right() {
 	const [openDeleteinvite, setOpenDeleteinvite] = useState(false);
 	const [modalText, setModalText] = useState('Bạn có chắc muốn xóa lời mời này?');
 	const [item, setItem] = useState();
+	const [listCompetition, setListCompetition] = useState(
+		[
+			{
+				id: 1,
+				img: "https://nld.mediacdn.vn/291774122806476800/2022/11/25/9-phu-1669389995850149695263.jpg"
+			},
+			{	
+				id:2,
+				img:"https://khoahoctre.com.vn/wp-content/uploads/2022/04/44493e3a5621987fc130-810x607.jpg"
+			}
+		]
+	);
 	
 	const accept = (status, id) => () => {
 		if (status === 'ACCEPT') {
@@ -144,8 +157,8 @@ export default function Right() {
 			});
 	};
 	const acceptRelation = (status, id) => () => {
-		if(status === 'ACCEPT'){
-			Api.put(url + 'api/v1/relationships/' + id, {isAccepted: true},{ headers: headers })
+		if (status === 'ACCEPT') {
+			Api.put(url + 'api/v1/relationships/' + id, { isAccepted: true }, { headers: headers })
 				.then((res) => {
 					toast.success('Đã chấp nhận yêu cầu');
 					callRelationShip();
@@ -154,8 +167,8 @@ export default function Right() {
 					toast.error('Đã xảy ra lỗi');
 				});
 		}
-		if(status === 'REJECT'){
-			Api.put(url + 'api/v1/relationships/' + id,{isAccepted: false}, { headers: headers })
+		if (status === 'REJECT') {
+			Api.put(url + 'api/v1/relationships/' + id, { isAccepted: false }, { headers: headers })
 				.then((res) => {
 					toast.success('Đã xóa yêu cầu');
 					callRelationShip();
@@ -164,217 +177,263 @@ export default function Right() {
 					toast.error('Đã xảy ra lỗi');
 				});
 		}
-	}
+	};
 	const handleCancel = () => {
 		setOpen(false);
 		setOpenDeleteinvite(false);
-		
 	};
 
 	return (
 		<>
-			<div className="friend-request" style={{overflowY:'auto'}}>
-			<Modal
-				title="Thông báo"
-				open={open}
-				onOk={()=>{accept('REJECT', item.id)}}
-				confirmLoading={confirmLoading}
-				onCancel={handleCancel}
-			>
-				<p>{modalText}</p>
-			</Modal>
-			<Modal
-				title="Thông báo"
-				open={openDeleteinvite}
-				onOk={()=>{acceptInvite('REJECT', item.id)}}
-				confirmLoading={confirmLoading}
-				onCancel={handleCancel}
-			>
-				<p>{modalText}</p>
-			</Modal>
-			
-				<div className="friend-request__title">
-					<h3>Lời mời kết bạn</h3>
-				</div>
+			<div className="friend-request" style={{ overflowY: 'auto' }}>
+				<Modal
+					title="Thông báo"
+					open={open}
+					onOk={() => {
+						accept('REJECT', item.id);
+					}}
+					confirmLoading={confirmLoading}
+					onCancel={handleCancel}
+				>
+					<p>{modalText}</p>
+				</Modal>
+				<Modal
+					title="Thông báo"
+					open={openDeleteinvite}
+					onOk={() => {
+						acceptInvite('REJECT', item.id);
+					}}
+					confirmLoading={confirmLoading}
+					onCancel={handleCancel}
+				>
+					<p>{modalText}</p>
+				</Modal>
+				{listCompetition && listCompetition.length > 0 ? (
+					<div className="your-group">
+						<Slider
+							dots={true}
+							infinite={true}
+							speed={500}
+							slidesToShow={1}
+							slidesToScroll={1}
+							autoplay={true}
+							autoplaySpeed={3000}
+						>
+							{listCompetition &&
+								listCompetition.map((item, index) => {
+									return (
+										<div key={index} className="slide">
+											<img src={item.img} alt="Group Avatar" />																			
+										</div>
+									);
+								})}
+						</Slider>
+					</div>
+				) : null}
+
+					
 				{friendRequest && friendRequest.length > 0 && countRequest > 0 ? (
-					friendRequest.map((item, index) =>
-						item.status === 'PENDING' ? (
-							<div
-								className="friend-request__item"
-								key={item.id}
-								
-							>
-								<div style={{ flex: '2', margin: '15px', marginTop: '18px' }} onClick={()=>{navigate(`/profile/${item.sender.id}`)}}>
-									<div className="friend-request__item__avatar">
-									{item.sender.avatarUrl !== null  && item.sender.avatarUrl !=="" ? (<Avatar src={item.sender.avatarUrl} alt="" />):( <Avatar icon={<UserOutlined  style={{height:'3em'}}/>} />)}	
-									</div>
-								</div>
-								<div className="friend-request__item__button" >
-									<div className="friend-request__item__name" onClick={()=>{navigate(`/profile/${item.sender.id}`)}}>
-										<p>{item.sender.firstName + ' ' + item.sender.lastName}</p>
-									</div>
-									<div style={{ textAlign: 'start' }}>
-										<button
-											className="btn btn-primary"
-											style={{ backgroundColor: '#1677ff', width: '83px' }}
-											onClick={accept('ACCEPT', item.id)}
-										>
-											Chấp nhận
-										</button>
-										<button
-											className="btn btn-danger"
-											onClick={()=>{setOpen(true)
-											setItem(item)
-										setModalText(`Bạn có chắc muốn xóa lời mời kết bạn của ${item.sender.firstName + ' ' + item.sender.lastName}?`)}}
-											style={{ width: '64px' }}
-										>
-											Xóa
-										</button>
-									</div>
-								</div>
-							</div>
-						) : null
-					)
-				) : !friendRequest || friendRequest.length === 0 || countRequest === 0 ? (
-					<div>
-						<Empty />
-					</div>
-				) : (
-					<div>
-						<Empty />
-					</div>
-				)}
-				<div className="friend-request__title">
-					<h3>Yêu cầu liên kết tài khoản </h3>
-				</div>
-				{listRelationShip && listRelationShip.length > 0 && countRequestParent > 0 ? (
-					listRelationShip.map((item, index) =>
-						item.accepted === false? (
-							<div
-								className="friend-request__item"
-								key={item.id}
-								
-							>
-								<div style={{ flex: '2', margin: '15px', marginTop: '18px' }} onClick={()=>{navigate(`/profile/${item.parent.id}`)}}>
-									<div className="friend-request__item__avatar">
-										{
-											item.parent.avatarUrl !== null && item.parent.avatarUrl !== "" ? (<Avatar src={item.parent
-												.avatarUrl} alt="" />) : (<Avatar icon={<UserOutlined style={{height:'3em'}}/>} />)
-
-										}
-										
-									</div>
-								</div>
-								<div className="friend-request__item__button" >
-									<div className="friend-request__item__name" onClick={()=>{navigate(`/profile/${item.parent.id}`)}}>
-										<p>{item.parent.firstName + ' ' + item.parent.lastName}</p>
-									</div>
-									<div style={{ textAlign: 'start' }}>
-										<button
-											className="btn btn-primary"
-											style={{ backgroundColor: '#1677ff', width: '83px' }}
-											onClick={acceptRelation('ACCEPT', item.id)}
-										>
-											Chấp nhận
-										</button>
-										<button
-											className="btn btn-danger"
-											onClick={acceptRelation('REJECT', item.id)}
-											style={{ width: '64px' }}
-										>
-											Xóa
-										</button>
-									</div>
-								</div>
-							</div>
-						) : null
-					)
-				) : !friendRequest || friendRequest.length === 0 || countRequestParent === 0 ? (
-					<div>
-						<Empty />
-					</div>
-				) : (
-					<div>
-						<Empty />
-					</div>
-				)}
-
-				<div className="friend-request__title">
-					<h3>Lời mời tham gia nhóm </h3>
-				</div>
-
-				{lisstInvite && lisstInvite.length > 0 ? (
-					lisstInvite.map((item, index) =>
-						item.state === 'PENDING' ? (
-							<div style={{ backgroundColor: 'white' }} className="invite-group">
-								<div
-									className="invite-request__item"
-									key={item.id}
-									onClick={() => {}}
-									style={{ border: 'none', marginBottom: '0px' }}
-								>
-									<div style={{ flex: '2', margin: '15px', marginTop: '18px', paddingBottom: '1px' }}>
-										<div className="invite-request__item__avatar">
-											{
-												item.inviter.avatarUrl !== null && item.inviter.avatarUrl !== "" ? (<Avatar src={item.inviter.avatarUrl} alt="" />) : (<Avatar icon={<UserOutlined style={{height:'3em'}} />} />)
-
-											}
-										</div>
-									</div>
-									<div className="invite-request__item__button">
-										<div className="invite-request__item__name">
-											<p
-												style={{
-													textAlign: 'start',
-													fontSize: 'larger',
-													fontWeight: '800',
-													marginTop: '9.5%',
-												}}
-												onClick={() => {
-													navigate(`/profile/${item.inviter.id}`);
-												}}
-											>
-												{item.inviter.firstName + ' ' + item.inviter.lastName}
-											</p>
-											<span>Mời bạn tham gia </span>
-											<strong
-												onClick={() => {
-													navigate(`/groups/${item.group.id}`);
-												}}
-											>
-												{item.group.name}
-											</strong>
-										</div>
-									</div>
-								</div>
-
-								<div style={{ textAlign: 'center', marginBottom: '20px', margin: '0 0 0 14%' }}>
-									<button
-										className="btn btn-primary"
-										style={{ backgroundColor: '#1677ff', width: '83px', borderRadius: '0.5rem' }}
-										onClick={acceptInvite('ACCEPT', item.id)}
-									>
-										Chấp nhận
-									</button>
-									<button
-										className="btn btn-danger"
-										onClick={()=>{
-											setOpenDeleteinvite(true)
-											setItem(item)
-											setModalText(`Bạn có chắc muốn xóa lời mời tham gia nhóm ${item.group.name}?`)
+					<>
+						<div className="friend-request__title">
+							<h3>Lời mời kết bạn</h3>
+						</div>
+						{friendRequest.map((item, index) => {
+							return item.status === 'PENDING' ? (
+								<div className="friend-request__item" key={item.id}>
+									<div
+										style={{ flex: '2', margin: '15px', marginTop: '18px' }}
+										onClick={() => {
+											navigate(`/profile/${item.sender.id}`);
 										}}
-										style={{ width: '64px', borderRadius: '0.5rem' }}
 									>
-										Xóa
-									</button>
+										<div className="friend-request__item__avatar">
+											{item.sender.avatarUrl !== null && item.sender.avatarUrl !== '' ? (
+												<Avatar src={item.sender.avatarUrl} alt="" />
+											) : (
+												<Avatar icon={<UserOutlined style={{ height: '3em' }} />} />
+											)}
+										</div>
+									</div>
+									<div className="friend-request__item__button">
+										<div
+											className="friend-request__item__name"
+											onClick={() => {
+												navigate(`/profile/${item.sender.id}`);
+											}}
+										>
+											<p>{item.sender.firstName + ' ' + item.sender.lastName}</p>
+										</div>
+										<div style={{ textAlign: 'start' }}>
+											<button
+												className="btn btn-primary"
+												style={{ backgroundColor: '#1677ff', width: '83px' }}
+												onClick={() => accept('ACCEPT', item.id)}
+											>
+												Chấp nhận
+											</button>
+											<button
+												className="btn btn-danger"
+												onClick={() => {
+													setOpen(true);
+													setItem(item);
+													setModalText(
+														`Bạn có chắc muốn xóa lời mời kết bạn của ${
+															item.sender.firstName + ' ' + item.sender.lastName
+														}?`
+													);
+												}}
+												style={{ width: '64px' }}
+											>
+												Xóa
+											</button>
+										</div>
+									</div>
 								</div>
-							</div>
-						) : null
-					)
-				) : (
-					<div>
-						<Empty />
-					</div>
+							) : null;
+						})}
+					</>
+				) : null}
+
+				{listRelationShip && listRelationShip.length > 0 && countRequestParent > 0 && (
+					<>
+						<div className="friend-request__title">
+							<h3>Yêu cầu liên kết tài khoản </h3>
+						</div>
+						{listRelationShip.map((item, index) =>
+							item.accepted === false ? (
+								<div className="friend-request__item" key={item.id}>
+									<div
+										style={{ flex: '2', margin: '15px', marginTop: '18px' }}
+										onClick={() => {
+											navigate(`/profile/${item.parent.id}`);
+										}}
+									>
+										<div className="friend-request__item__avatar">
+											{item.parent.avatarUrl !== null && item.parent.avatarUrl !== '' ? (
+												<Avatar src={item.parent.avatarUrl} alt="" />
+											) : (
+												<Avatar icon={<UserOutlined style={{ height: '3em' }} />} />
+											)}
+										</div>
+									</div>
+									<div className="friend-request__item__button">
+										<div
+											className="friend-request__item__name"
+											onClick={() => {
+												navigate(`/profile/${item.parent.id}`);
+											}}
+										>
+											<p>{item.parent.firstName + ' ' + item.parent.lastName}</p>
+										</div>
+										<div style={{ textAlign: 'start' }}>
+											<button
+												className="btn btn-primary"
+												style={{ backgroundColor: '#1677ff', width: '83px' }}
+												onClick={() => acceptRelation('ACCEPT', item.id)}
+											>
+												Chấp nhận
+											</button>
+											<button
+												className="btn btn-danger"
+												onClick={() => acceptRelation('REJECT', item.id)}
+												style={{ width: '64px' }}
+											>
+												Xóa
+											</button>
+										</div>
+									</div>
+								</div>
+							) : null
+						)}
+					</>
+				)}
+
+				{lisstInvite && lisstInvite.length > 0 && (
+					<>
+						<div className="friend-request__title">
+							<h3>Lời mời tham gia nhóm </h3>
+						</div>
+						{lisstInvite.map((item, index) =>
+							item.state === 'PENDING' ? (
+								<div style={{ backgroundColor: 'white' }} className="invite-group" key={item.id}>
+									<div
+										className="invite-request__item"
+										onClick={() => {}}
+										style={{ border: 'none', marginBottom: '0px' }}
+									>
+										<div
+											style={{
+												flex: '2',
+												margin: '15px',
+												marginTop: '18px',
+												paddingBottom: '1px',
+											}}
+										>
+											<div className="invite-request__item__avatar">
+												{item.inviter.avatarUrl !== null && item.inviter.avatarUrl !== '' ? (
+													<Avatar src={item.inviter.avatarUrl} alt="" />
+												) : (
+													<Avatar icon={<UserOutlined style={{ height: '3em' }} />} />
+												)}
+											</div>
+										</div>
+										<div className="invite-request__item__button">
+											<div className="invite-request__item__name">
+												<p
+													style={{
+														textAlign: 'start',
+														fontSize: 'larger',
+														fontWeight: '800',
+														marginTop: '9.5%',
+													}}
+													onClick={() => {
+														navigate(`/profile/${item.inviter.id}`);
+													}}
+												>
+													{item.inviter.firstName + ' ' + item.inviter.lastName}
+												</p>
+												<span>Mời bạn tham gia </span>
+												<strong
+													onClick={() => {
+														navigate(`/groups/${item.group.id}`);
+													}}
+												>
+													{item.group.name}
+												</strong>
+											</div>
+										</div>
+									</div>
+
+									<div style={{ textAlign: 'center', marginBottom: '20px', margin: '0 0 0 14%' }}>
+										<button
+											className="btn btn-primary"
+											style={{
+												backgroundColor: '#1677ff',
+												width: '83px',
+												borderRadius: '0.5rem',
+											}}
+											onClick={() => acceptInvite('ACCEPT', item.id)}
+										>
+											Chấp nhận
+										</button>
+										<button
+											className="btn btn-danger"
+											onClick={() => {
+												setOpenDeleteinvite(true);
+												setItem(item);
+												setModalText(
+													`Bạn có chắc muốn xóa lời mời tham gia nhóm ${item.group.name}?`
+												);
+											}}
+											style={{ width: '64px', borderRadius: '0.5rem' }}
+										>
+											Xóa
+										</button>
+									</div>
+								</div>
+							) : null
+						)}
+					</>
 				)}
 
 				<ToastContainer />
