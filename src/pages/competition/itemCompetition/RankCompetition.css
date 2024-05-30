@@ -1,0 +1,107 @@
+.search {
+    margin-top: 60px;
+}
+@media (min-width: 576px) {
+    .container {
+        max-width: 100%;
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+}
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.search .search-wrapper {
+    padding: 20px !important;
+}
+.search .search-wrapper {
+    padding: 10px;
+    background: #f3f0e6;
+    border-radius: 6px;
+    border: 1px solid #f3f0e6;
+}
+form {
+    display: block;
+    margin-top: 0em;
+    unicode-bidi: isolate;
+}
+body {
+    font-family: "Roboto", sans-serif;
+    line-height: 1.6;
+    background: #d7e8f1;
+    color: #3b3b3b;
+}
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.search-wrapper .col-md-4 {
+    padding: 10px;
+}
+.form-control {
+    width: 100%;
+}
+.form-control {
+    padding: 7px 10px;
+    border-radius: 4px;
+    border: 1px solid #f3f3f3;
+    background: #fff;
+}
+button, select {
+    text-transform: none;
+}
+button, input, optgroup, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+}
+.section, .notification .notification-item, .search-results .detail, .contact .maps, .contact .info {
+    margin-top: 15px;
+}
+.search-results .detail {
+    background: #fff;
+}
+.search-results .detail {
+    position: relative;
+    z-index: 2;
+}
+.section, .notification .notification-item, .search-results .detail, .contact .maps, .contact .info {
+    margin-top: 15px;
+}
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.pagination .nav, .pagination {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 15px -2.5px 0 -2.5px;
+    padding: 0;
+}
+.pagination .nav .item, .pagination .nav .page-item, .pagination .item, .pagination .page-item {
+    list-style: none;
+    margin: 2.5px;
+}
+ul {
+    list-style-type: disc;
+}
+

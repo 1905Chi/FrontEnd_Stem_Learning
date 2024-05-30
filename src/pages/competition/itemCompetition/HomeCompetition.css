@@ -1,0 +1,52 @@
+@media (min-width: 768px) {
+    .col-md-10 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 83.333333%;
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+}
+@media (min-width: 768px) {
+    .container {
+        max-width: 100%;
+    }
+}
+.result {
+    background-color: #e7e8e8;
+    margin-top: 10px;
+    border-radius: 4px;
+    text-align: center;
+    padding-bottom: 10px;
+}
+.titleHeader {
+    border-bottom: 1px solid #c2c2c2;
+    font-size: 24px;
+    padding: 5px;
+    color: #153f6a;
+    text-align: center;
+}
+.result > div {
+    margin: 30px 10px 0px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    text-align: left;
+}
+.result > div p {
+    font-size: 18px;
+    margin: 5px 0px;
+}
+.result > div p > span {
+    font-weight: 600;
+}.checked {
+    color: green;
+    font-size: 22px;
+}
+b, strong {
+    font-weight: bolder;
+}
+.home-competition {
+    height: 80vh;
+    overflow-y: scroll;
+}

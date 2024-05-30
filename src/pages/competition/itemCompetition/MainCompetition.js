@@ -1,63 +1,37 @@
-import React from 'react';
 import './MainCompetition.css';
-import { Tabs, Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import React from 'react';
+import { Tabs } from 'antd';
+import { Label } from '@material-ui/icons';
+import HomeCompetition from './HomeCompetition';
+import RankCompetition from './RankCompetition';
+import InstructCompetition from './InstructCompetition';
 function MainCompetition() {
 	const items = [
 		{
 			key: '1',
-			label: 'Bảng xếp hạng',
-			children: <div></div>,
+			label:"Trang chủ",
+			children:(<HomeCompetition />),
 		},
 		{
 			key: '2',
-			label: 'Thể lệ',
-			children: <div></div>,
+			label:"Xếp hạng",
+			children:(<RankCompetition />),
 		},
-	];
-	const user = JSON.parse(localStorage.getItem('user'));
-	return (
-		<div className="main-competition" style={{}}>
-			<div className="marquee-container">
-				<div className="marquee-content">
-					<span>giương buồm ra khơi truy tìm kho báu.</span>
-				</div>
-			</div>
-			<div className="map-copetition">
-				<div className="grid-container">
-					{/* Dòng 1 */}
-					<div className="grid-item">
-                        <img src=""/>   
-                    </div>
-					<div className="grid-item">2</div>
-					<div className="grid-item">3</div>
+		{
+			key: '3',
+			label:"Hướng dẫn",
+			children:(<InstructCompetition />),
+		},
+	]
 
-					{/* Dòng 2 */}
-					<div className="grid-item">4</div>
-					<div className="grid-item">5</div>
-					<div className="grid-item">6</div>
+			
 
-					{/* Dòng 3 */}
-					<div className="grid-item">7</div>
-					<div className="grid-item">8</div>
-					<div className="grid-item">9</div>
-				</div>
-				{user.avatarUrl !== null && user.avatarUrl !== '' ? (
-					<Avatar src={user.avatarUrl} size={64} className="overlay-image" />
-				) : (
-					<Avatar
-						alt="avatar"
-						height="40"
-						icon={<UserOutlined style={{ height: '3em' }} />}
-						className="overlay-image"
-					/>
-				)}
-			</div>
-			<div className="rank-infor">
-				<Tabs defaultActiveKey="1" items={items} />
-			</div>
-		</div>
-	);
+
+
+	return <div className="main-competition">
+		<img src="https://nld.mediacdn.vn/291774122806476800/2022/11/25/9-phu-1669389995850149695263.jpg" alt="anh" className="img-baner"/>
+		<Tabs defaultActiveKey="1" items={items}  centered indicatorSize={(origin) => origin - 16} />
+	</div>;
 }
 
 export default MainCompetition;
