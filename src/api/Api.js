@@ -31,7 +31,7 @@ const handleTokenRefreshError = (error) => {
 	// Xóa token và thực hiện các xử lý khác (ví dụ: đăng xuất người dùng)
 	localStorage.removeItem('accessToken');
 	localStorage.removeItem('refreshToken');
-	window.history.push('/login');
+	window.location='/login';
 };
 
 // Thêm interceptor để xử lý lỗi token hết hạn và cập nhật token
@@ -78,7 +78,7 @@ Api.interceptors.response.use(
 					// Xóa token và thực hiện các xử lý khác (ví dụ: đăng xuất người dùng)
 					localStorage.removeItem('accessToken');
 					localStorage.removeItem('refreshToken');
-					window.history.push('/login');
+					window.location='/login';
 				}
 			} else {
 				// Xử lý lỗi khi không có refreshToken
