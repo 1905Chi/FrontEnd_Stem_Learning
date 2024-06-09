@@ -1,0 +1,63 @@
+/* SubmitCompetition.css */
+.submitcompetition {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8%;
+  }
+  
+  .question-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 80%; /* Chiếm 80% màn hình */
+    margin: 20px auto; /* Canh giữa container */
+    justify-content: space-between; /* Khoảng cách giữa các phần tử */
+  }
+  
+  .item-question {
+    flex: 1 1 calc(50% - 20px); /* Chiếm 50% chiều rộng của container trừ 20px khoảng cách */
+    box-sizing: border-box;
+    margin-bottom: 20px; /* Khoảng cách phía dưới mỗi phần tử */
+    border: 1px solid #ccc; /* Đường viền xung quanh câu hỏi */
+    padding: 20px; /* Khoảng cách bên trong câu hỏi */
+    min-width: calc(50% - 20px); /* Đảm bảo không bị co lại quá nhỏ */
+  }
+  
+  .header-submit {
+    display: flex;
+   
+    align-items: center;
+    margin: 16px 15px 0 15px;
+    position: relative;
+    flex-direction: column;
+
+  }
+  .header-submit button {
+    width: 150%;
+  }
+  .header-submit span {
+    margin-left: 15%;
+  }
+  .question-container {
+    margin: 20px 0; /* Cách phần câu hỏi với phần trên */
+  }
+  
+  .answer-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Khoảng cách giữa các ô */
+  }
+  
+  .answer {
+    flex: 0 1 48%; /* Mỗi câu trả lời chiếm khoảng 48% chiều rộng dòng, điều chỉnh giá trị nếu cần */
+    display: flex;
+    align-items: center;
+  }
+  
+  
+  
+  .answer input {
+    margin-right: 10px; /* Khoảng cách giữa input và label */
+    width: 5%;
+  }
+  

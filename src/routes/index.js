@@ -39,34 +39,30 @@ import User from '../pages/user/User';
 import Subject from '../pages/subject/Subject';
 import Address from '../pages/address/Address';
 import ManageGroup from '../pages/manageGroup/ManageGroup';
-import Parent from  '../pages/user/Parent'
+import Parent from '../pages/user/Parent';
 import RightParent from '../pages/user/layouts/RightParent';
 import MainCompetition from '../pages/competition/itemCompetition/MainCompetition';
 import Meessage from '../pages/messenger/Message';
+import SubmitCompetition from '../pages/competition/itemCompetition/SubmitCompetition';
 const privateRoutes = [
 	{ path: '/home', component: Home, Left: Left, Right: Right },
 
 	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
 	{ path: '/classes/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
-	
-	{ path: '/parent', component: Parent, Left: Left ,Right:RightParent},
 
+	{ path: '/parent', component: Parent, Left: Left, Right: RightParent },
 ];
 
 const privateRoutes2page = [
-
 	{ path: '/groups/create', component: CreateGroup, Left: LeftCreateGroup },
 	{ path: '/classes/create', component: CreateGroup, Left: LeftCreateGroup },
 	{ path: '/friends', component: MainFriend, Left: LeftFriend },
-	
+
 	{ path: '/classes/:uuid/edit-exam/:id', component: EditExam, Left: LeftEditExam },
 
 	{ path: '/exam/:id/submit/', component: Submit, Left: LeftSubmit },
 	{ path: '/classes', component: Class, Left: RightClass },
 	{ path: '/groups', component: Class, Left: LeftsGroup },
-	
-	
-
 ];
 
 const private1page = [
@@ -78,10 +74,11 @@ const private1page = [
 	{ path: '/subjects', component: Subject, Left: Left },
 	{ path: '/addresses', component: Address, Left: Left },
 	{ path: '/manage/groups', component: ManageGroup },
-	{ path: '/messenger/u/:userId', component: Meessage},
-	{ path: '/messenger/g/:chatRoomId', component: Meessage},
-	{ path: '/messenger', component: Meessage},
-	{ path: '/competition', component: MainCompetition},
+	{ path: '/messenger/u/:userId', component: Meessage },
+	{ path: '/messenger/g/:chatRoomId', component: Meessage },
+	{ path: '/messenger', component: Meessage },
+	{ path: '/competition', component: MainCompetition },
+	{ path: '/competition/:id', component: SubmitCompetition },
 ];
 const publicRoutes = [
 	{ path: '/login', component: Login },
@@ -92,10 +89,7 @@ const publicRoutes = [
 	{ path: '/', component: LandingPage },
 ];
 
-const publicRoutes2 = [
-	{ path: '/search', component: MainSearch, Left: LeftSearch },
-	
-];
+const publicRoutes2 = [{ path: '/search', component: MainSearch, Left: LeftSearch }];
 
 const notFoundRoute = { path: '*', component: NotFound };
-export { privateRoutes, publicRoutes, notFoundRoute, privateRoutes2page, private1page,publicRoutes2 };
+export { privateRoutes, publicRoutes, notFoundRoute, privateRoutes2page, private1page, publicRoutes2 };
