@@ -1,0 +1,33 @@
+/* SubmitCompetition.css */
+.header-submit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 15px 0 15px;
+  }
+  
+  .question-container {
+    margin: 20px 0; /* Cách phần câu hỏi với phần trên */
+  }
+  
+  .answer-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Khoảng cách giữa các ô */
+  }
+  
+  .answer {
+    flex: 0 1 48%; /* Mỗi câu trả lời chiếm khoảng 48% chiều rộng dòng, điều chỉnh giá trị nếu cần */
+    display: flex;
+    align-items: center;
+  }
+  
+  .ant-select,
+  .ant-picker {
+    margin-right: 15px;
+  }
+  
+  .ant-btn {
+    margin-left: 10px;
+  }
+  

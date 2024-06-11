@@ -50,3 +50,8 @@ b, strong {
     height: 80vh;
     overflow-y: scroll;
 }
+.btn-join {
+    width: 20%;
+    height: 7vh;
+    background-color: yellowgreen;
+}

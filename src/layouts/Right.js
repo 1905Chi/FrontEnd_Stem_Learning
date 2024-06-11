@@ -30,19 +30,17 @@ export default function Right() {
 	const [openDeleteinvite, setOpenDeleteinvite] = useState(false);
 	const [modalText, setModalText] = useState('Bạn có chắc muốn xóa lời mời này?');
 	const [item, setItem] = useState();
-	const [listCompetition, setListCompetition] = useState(
-		[
-			{
-				id: 1,
-				img: "https://nld.mediacdn.vn/291774122806476800/2022/11/25/9-phu-1669389995850149695263.jpg"
-			},
-			{	
-				id:2,
-				img:"https://khoahoctre.com.vn/wp-content/uploads/2022/04/44493e3a5621987fc130-810x607.jpg"
-			}
-		]
-	);
-	
+	const [listCompetition, setListCompetition] = useState([
+		{
+			id: '6f3e4fa0-b815-4d71-9db0-f60f0e5e5f4b',
+			img: 'https://nghiquyet.hoisinhvien.com.vn/storage/images/news//202403281115Screenshot%202024-03-28%20at%2010.45.44.png',
+		},
+		{
+			id: 2,
+			img: 'https://khoahoctre.com.vn/wp-content/uploads/2022/04/44493e3a5621987fc130-810x607.jpg',
+		},
+	]);
+
 	const accept = (status, id) => () => {
 		if (status === 'ACCEPT') {
 			const headers = {
@@ -182,7 +180,9 @@ export default function Right() {
 		setOpen(false);
 		setOpenDeleteinvite(false);
 	};
-
+	const linktoCompetition = (id) => () => {
+		navigate(`/competition/${id}`);
+	};
 	return (
 		<>
 			<div className="friend-request" style={{ overflowY: 'auto' }}>
@@ -222,8 +222,8 @@ export default function Right() {
 							{listCompetition &&
 								listCompetition.map((item, index) => {
 									return (
-										<div key={index} className="slide">
-											<img src={item.img} alt="Group Avatar" />																			
+										<div key={index} className="slide" onClick={linktoCompetition(item.id)}>
+											<img src={item.img} alt="Group Avatar" />
 										</div>
 									);
 								})}
@@ -231,7 +231,6 @@ export default function Right() {
 					</div>
 				) : null}
 
-					
 				{friendRequest && friendRequest.length > 0 && countRequest > 0 ? (
 					<>
 						<div className="friend-request__title">

@@ -50,7 +50,7 @@ const privateRoutes = [
 	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
 	{ path: '/classes/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
 
-	{ path: '/parent', component: Parent, Left: Left, Right: RightParent },
+	
 ];
 
 const privateRoutes2page = [
@@ -63,6 +63,7 @@ const privateRoutes2page = [
 	{ path: '/exam/:id/submit/', component: Submit, Left: LeftSubmit },
 	{ path: '/classes', component: Class, Left: RightClass },
 	{ path: '/groups', component: Class, Left: LeftsGroup },
+	{ path: '/parent', component: Parent, Left: Left},
 ];
 
 const private1page = [
@@ -77,8 +78,8 @@ const private1page = [
 	{ path: '/messenger/u/:userId', component: Meessage },
 	{ path: '/messenger/g/:chatRoomId', component: Meessage },
 	{ path: '/messenger', component: Meessage },
-	{ path: '/competition', component: MainCompetition },
-	{ path: '/competition/:id', component: SubmitCompetition },
+	{ path: '/competition/:uuid', component: MainCompetition },
+	{ path: '/competition/:uuid/submition/:id', component: SubmitCompetition },
 ];
 const publicRoutes = [
 	{ path: '/login', component: Login },

@@ -2,3 +2,33 @@
   width: 100%;
   height: 30vh;
 }
+
+/* MainCompetition.css */
+.main-competition {
+  text-align: center;
+  margin-top: 11vh;
+}
+
+.img-baner {
+  width: 100%;
+  height: 50vh;
+  margin-bottom: 20px;
+}
+
+.ant-tabs-nav-wrap {
+  justify-content: center;
+}
+
+.custom-tab-label h1 {
+  font-size: 20px;
+  color: #1890ff;
+  margin: 0;
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.custom-tab-label-active h1 {
+  font-size: 22px;
+  color: #ff4d4f;
+  font-weight: bold;
+}
