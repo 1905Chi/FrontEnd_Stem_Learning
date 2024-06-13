@@ -1,0 +1,17 @@
+.btn-action-now {
+    width: 80%;
+    height: 7vh;
+    background-color: yellowgreen;
+}
+
+.btn-action-past {
+    width: 80%;
+    height: 7vh;
+    background-color: rgb(205, 50, 58);
+}
+
+.btn-action {
+    width: 80%;
+    height: 7vh;
+    background-color: #007bff;
+}

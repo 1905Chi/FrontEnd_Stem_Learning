@@ -5,11 +5,14 @@ import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch,useSelector } from 'react-redux';
+import { selectrole } from '../../../redux/Exam';
 export default function HomeCompetition() {
 	const { uuid } = useParams();
     const [group, setGroup] = useState(null);  // Chỉnh sửa state để khởi tạo là null
     const [role, setRole] = useState("");
     const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const headers = {
 		'Content-Type': 'application/json',
 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -28,6 +31,8 @@ export default function HomeCompetition() {
             if (response.data.statusCode === 200) {
                 if (response.data.result.user) {
                     setRole(response.data.result.user.role);
+					console.log(response.data.result.user.role)
+					dispatch(selectrole(response.data.result.user.role));
                 }
                 setGroup(response.data.result.group);
             } else {
@@ -47,10 +52,9 @@ export default function HomeCompetition() {
 		Api.post(url + 'api/v1/group-members/request', { groupId: uuid }, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					window.location.reload();
-				} else if (response.data.statusCode === 201) {
-					
-					window.location.reload();
+					getGroup()
+				} else if (response.data.statusCode === 201) {				
+					getGroup()
 				} else {
 					toast.error(response.data.message);
 				}
@@ -101,17 +105,17 @@ export default function HomeCompetition() {
 								<span>Tuần thi</span>: <span className="checked">2</span>
 							</p>
 							<p>
-								<span>Điểm cao nhất</span>: <span className="checked">31</span> điểm
+								<span>Điểm cao nhất</span>: <span className="checked"></span> điểm
 							</p>
 							<p>
-								<span>Thời gian</span>: <span className="checked">14:52.630</span>
+								<span>Thời gian</span>: <span className="checked"></span>
 							</p>
 							<p>
 								<span>Số lần đã thi</span>: <span className="checked">2</span>/2
 							</p>
 						</div>
 					</div>
-					<p>Bạn đã dự thi đủ 2 lần.</p>
+					<p></p>
 				</div>
 			</div>
 		</div>
