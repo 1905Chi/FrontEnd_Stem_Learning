@@ -403,7 +403,7 @@ console.log(id, mark);
 										paddingBottom: '15px',
 									}}
 								>
-									<div style={{ display: 'flex' }}>
+									<div >
 										<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 										<div
 											className="quest-content"
@@ -411,7 +411,7 @@ console.log(id, mark);
 											style={{ marginTop: '15px' }}
 										/>
 									</div>
-									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
+									<div style={{ marginLeft: '20px', marginBottom: '15px' }}>
 										<strong>Đáp án của bạn: </strong>
 										{item.correctAnswer[0] === 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
 											<div dangerouslySetInnerHTML={{ __html: item.userAnswer[0] }} />
@@ -424,7 +424,7 @@ console.log(id, mark);
 										)}
 									</div>
 
-									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
+									<div style={{  marginLeft: '20px', marginBottom: '15px' }}>
 										<strong>Đáp án đúng: </strong>
 										{
 											<div style={{ marginLeft: '15px' }}>
@@ -454,7 +454,7 @@ console.log(id, mark);
 										paddingBottom: '15px',
 									}}
 								>
-									<div style={{ display: 'flex' }}>
+									<div>
 										<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 										<div
 											className="quest-content"
@@ -462,7 +462,7 @@ console.log(id, mark);
 											style={{ marginTop: '15px' }}
 										/>
 									</div>
-									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
+									<div style={{ marginLeft: '20px', marginBottom: '15px' }}>
 										<strong>Đáp án được trả lời: </strong>
 										{item.correctAnswer[0] === 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
 											<div dangerouslySetInnerHTML={{ __html: item.userAnswer[0] }} />
@@ -475,7 +475,7 @@ console.log(id, mark);
 										)}
 									</div>
 
-									<div style={{ display: 'flex', marginLeft: '20px', marginBottom: '15px' }}>
+									<div style={{  marginLeft: '20px', marginBottom: '15px' }}>
 										{item.correctAnswer[0] !== 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
 											<>
 												<strong>Đáp án đúng: </strong>

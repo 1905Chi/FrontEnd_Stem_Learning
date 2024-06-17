@@ -101,6 +101,7 @@ const CreateQuiz = () => {
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					toast.success('Tạo bài kiểm tra thành công !');
+					dispatch(selectscore(0));
 					setTimeout(() => {
 						navigate('/classes/' + uuid);
 					}, 3000);

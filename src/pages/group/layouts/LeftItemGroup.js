@@ -52,7 +52,7 @@ export default function LeftItemGroup() {
 	const [loading, setLoading] = useState(false);
 	const [checkedItems, setCheckedItems] = useState({});
 	const [listfriend, setListFriend] = useState([]);
-	const selectedOption = useSelector(selectSelectedOption);
+	const selectedOption = useSelector(selectSelectedOption) || 'post';
 	const [listFriendSearch, setListFriendSearch] = useState([...listfriend]);
 	const listfriendSelected = useSelector(selectselectFriendInvite);
 	const [newName, setNewName] = useState('');
@@ -100,8 +100,8 @@ export default function LeftItemGroup() {
 
 					setGroup(response.data.result.group);
 					setInforGroup(response.data.result.group);
-					dispatch(selectGroup(response.data.result.group));
-					dispatch(selectUser(response.data.result.user));
+					//dispatch(selectGroup(response.data.result.group));
+					//dispatch(selectUser(response.data.result.user));
 				} else {
 					toast.error(response.data.message);
 					if (isClassesPath) {
@@ -144,7 +144,7 @@ export default function LeftItemGroup() {
 		Api.get(url + 'api/v1/events?groupId=' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					dispatch(selecteventGroup(response.data.result));
+					//dispatch(selecteventGroup(response.data.result));
 				} else {
 					toast.error(response.data.message);
 				}
@@ -188,7 +188,7 @@ export default function LeftItemGroup() {
 					console.log(error);
 				});
 		}
-		dispatch(selectOption('post'))
+		//dispatch(selectOption('post'))
 	}, []);
 
 	const convertDay = (date) => {

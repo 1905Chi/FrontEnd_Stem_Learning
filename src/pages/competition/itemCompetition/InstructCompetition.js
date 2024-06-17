@@ -52,6 +52,7 @@ export default function InstructCompetition() {
 					description: item.exam.description,
 					startedAt: item.exam.startedAt,
 					endedAt: item.exam.endedAt,
+					duration: item.exam.duration,
 					key: index,
 				}));
 				setExams(exams);
@@ -64,12 +65,20 @@ export default function InstructCompetition() {
 			toast.error('Đã xảy ra lỗi khi tải dữ liệu.');
 		}
 	};
-
+	const CreateSubmit = (id,started,duration) => {
+		localStorage.setItem('typesubmit', 'create');
+		localStorage.setItem('StartAt', started);
+		localStorage.setItem('duration', duration);
+		setTimeout(() => {
+			navigate('/competition/' + uuid + '/submition/'+ id );
+		}, 1000);
+	};
 	const columns = [
 		{ title: 'Số thứ tự', dataIndex: 'key', key: 'key', render: (key) => key + 1 },
 		{ title: 'Bài thi', dataIndex: 'name', key: 'name' },
 		{ title: 'Mô tả', dataIndex: 'description', key: 'description' },
 		{ title: 'Bắt đầu lúc', dataIndex: 'startedAt', key: 'startedAt' },
+		{ title: 'Thời gian làm bài', dataIndex: 'duration', key: 'duration'},
 		{ title: 'Kết thúc lúc', dataIndex: 'endedAt', key: 'endedAt' },
 		{
 			title: 'Hành động',
@@ -81,7 +90,7 @@ export default function InstructCompetition() {
 						className={status === 0 ? 'btn-action-now' : status === -1 ? 'btn-action' : 'btn-action-past'}
 						onClick={() => {
 							if (status === 0) {
-								navigate(`/exam/${record.id}`);
+								CreateSubmit(record.id,record.startedAt,record.duration);
 							}
 						}}
 						disabled={status !== 0}
