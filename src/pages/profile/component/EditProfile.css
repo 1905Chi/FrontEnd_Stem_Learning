@@ -64,3 +64,26 @@ margin: 0 30px 0 30px;
   display: flex;
   flex-wrap: wrap;
 }
+
+.information-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.form-item-register {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.ant-form-item-label > label {
+  width: 100px; /* Đặt chiều rộng cố định cho nhãn */
+}
+
+.ant-form-item-control-input-content {
+  max-width: 180px; /* Đặt chiều rộng tối đa cho nội dung */
+}
+
+.stu-tea {
+  width: 100%; /* Đảm bảo khối stu-tea chiếm 100% chiều rộng */
+}

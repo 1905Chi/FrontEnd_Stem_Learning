@@ -54,9 +54,10 @@
 
 
 .p-dialog {
-    background-color: blanchedalmond;
+    background-color: white;
     padding: 1rem;
     border-radius: 0.5rem;
+    border: 1px solid black;
 }
 
 .ant-picker-dropdown {

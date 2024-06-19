@@ -337,7 +337,8 @@ ul {
 
 .footer--chatroom {
 	width: 100%;
-	display: flex;
+    display: flex;
+    margin-bottom: 2%;
 }
 
 .footer--chatroom--icon-message {

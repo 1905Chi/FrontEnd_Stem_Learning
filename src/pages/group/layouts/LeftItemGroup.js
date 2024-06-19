@@ -100,8 +100,8 @@ export default function LeftItemGroup() {
 
 					setGroup(response.data.result.group);
 					setInforGroup(response.data.result.group);
-					//dispatch(selectGroup(response.data.result.group));
-					//dispatch(selectUser(response.data.result.user));
+					dispatch(selectGroup(response.data.result.group));
+					dispatch(selectUser(response.data.result.user));
 				} else {
 					toast.error(response.data.message);
 					if (isClassesPath) {
@@ -144,7 +144,7 @@ export default function LeftItemGroup() {
 		Api.get(url + 'api/v1/events?groupId=' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					//dispatch(selecteventGroup(response.data.result));
+					dispatch(selecteventGroup(response.data.result));
 				} else {
 					toast.error(response.data.message);
 				}
@@ -422,7 +422,7 @@ export default function LeftItemGroup() {
 												{item.firstName} {item.lastName}
 											</span>
 											<button
-												style={{ marginLeft: 'auto', backgroundColor: 'blanchedalmond' }}
+												style={{ marginLeft: 'auto', backgroundColor: 'white',  }}
 												onClick={() => {
 													dispatch(editSelectFriendInvite(item));
 												}}
@@ -512,7 +512,7 @@ export default function LeftItemGroup() {
 										textAlign: 'end',
 										margin: '0 10px 0 0',
 										color: 'blue',
-										backgroundColor:'blanchedalmond'
+										backgroundColor:'white',
 									}}
 									onClick={openAvatarPictureDialog}
 								>

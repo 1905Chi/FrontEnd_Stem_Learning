@@ -84,6 +84,7 @@ export default function ManagerMemberGroup() {
 	const handleCancel = () => {
 		setOpen(false);
 		setOpenDeleteBan(false);
+		setOpenEditRole(false);
 	};
 	useEffect(() => {
 		let data = [];

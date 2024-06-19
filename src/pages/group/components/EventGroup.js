@@ -242,7 +242,7 @@ export default function EventGroup() {
 						</button> : null }
 					
 					</div>
-					{event.map((event, index) => (
+					{event && event.map((event, index) => (
 						<div className="event-upcoming__item" style={{backgroundColor:'white'}}>
 							<div style={{ flex: 7 }}>
 								<div className="event-upcoming__item__title">

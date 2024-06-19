@@ -179,33 +179,37 @@ export default function EditProfile({ onCancel }) {
 	};
 	const { Option } = Select;
 	const saveUpdatePass = (values) => {
-		const data = {
-			oldPassword: values.oldpassword,
-			newPassword: values.newpassword,
-			confirmPassword: values.confirm_password,
-		};
-		console.log(data);
-		const config = {
-			headers: {
-				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-				'Content-Type': 'application/json',
-			},
-		};
-		// if (isSaving === false) {
-		// 	return; // Không thực hiện yêu cầu axios
-		// }
+		try {
+			const data = {
+				oldPassword: values.oldpassword,
+				newPassword: values.newpassword,
+				confirmPassword: values.confirm_password,
+			};
+			console.log(data);
+			const config = {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+					'Content-Type': 'application/json',
+				},
+			};
+			// if (isSaving === false) {
+			// 	return; // Không thực hiện yêu cầu axios
+			// }
 
-		Api.put(url + 'api/v1/users/change-password', data, config).then((response) => {
-			// Xử lý kết quả sau khi gửi thành công
-			if (response.data.statusCode === 200) {
-				toast.success(response.data.message);
-				setTimeout(() => {
-					onCancel();
-				}, 2000);
-			} else {
-				toast.error(response.data.message);
-			}
-		});
+			Api.put(url + 'api/v1/users/change-password', data, config).then((response) => {
+				// Xử lý kết quả sau khi gửi thành công
+				if (response.data.statusCode === 200) {
+					toast.success(response.data.message);
+					setTimeout(() => {
+						onCancel();
+					}, 2000);
+				} else {
+					toast.error(response.data.message);
+				}
+			});
+		} catch (error) {
+			// Xử lý lỗi nếu có lỗi xảy ra
+		}
 	};
 	const config = {
 		rules: [
@@ -233,7 +237,7 @@ export default function EditProfile({ onCancel }) {
 							rules={[{ required: false, message: 'Vui lòng nhập tên của bạn!' }]}
 							className="form-item-register"
 						>
-							<Input placeholder="Tên" style={{ width: '180px' }} defaultValue={user.firstName} />
+							<Input placeholder="Tên" style={{ width: '100%' }} defaultValue={user.firstName} />
 						</Form.Item>
 						<Form.Item
 							name="lastName"
@@ -241,9 +245,8 @@ export default function EditProfile({ onCancel }) {
 							rules={[{ required: false, message: 'Vui lòng nhập họ của bạn!' }]}
 							className="form-item-register"
 						>
-							<Input placeholder="Họ" style={{ width: '180px' }} defaultValue={user.lastName} />
+							<Input placeholder="Họ" style={{ width: '100%' }} defaultValue={user.lastName} />
 						</Form.Item>
-
 						<Form.Item
 							name="phone"
 							label="Số điện thoại"
@@ -254,19 +257,18 @@ export default function EditProfile({ onCancel }) {
 									message: 'Vui lòng nhập số điện thoại!',
 									whitespace: true,
 								},
-
 								{
-									pattern: /^0\d{9,9}$/, // Sử dụng biểu thức chính quy để kiểm tra số điện thoại bắt đầu bằng 0 và có tổng cộng từ 10 đến 11 ký tự
+									pattern: /^0\d{9}$/, // Số điện thoại bắt đầu bằng 0 và có 10 chữ số
 									message: 'Số điện thoại không hợp lệ!',
 								},
 							]}
 						>
-							<Input placeholder="Số điện thoại" style={{ width: '180px' }} defaultValue={user.phone} />
+							<Input placeholder="Số điện thoại" style={{ width: '100%' }} defaultValue={user.phone} />
 						</Form.Item>
 						<Form.Item name="date_picker" {...config} className="form-item-register" label="Ngày sinh">
 							<DatePicker
 								format="DD-MM-YYYY"
-								style={{ width: '180px' }}
+								style={{ width: '100%' }}
 								placeholder="Ngày tháng năm sinh"
 								onChange={(date) => setCurrentDate(date)}
 								disabledDate={isDateDisabled}
@@ -282,7 +284,7 @@ export default function EditProfile({ onCancel }) {
 								>
 									<Select
 										showSearch
-										style={{ width: '180px' }}
+										style={{ width: '100%' }}
 										placeholder="Tỉnh"
 										onChange={(value) => {
 											handleChangeProvince(value);
@@ -291,14 +293,14 @@ export default function EditProfile({ onCancel }) {
 										}}
 										defaultValue={user.province}
 									>
-										{provinces.map((grade) => (
+										{provinces.map((province) => (
 											<Option
-												value={grade.id}
-												key={grade.id}
-												id={grade.name}
+												value={province.id}
+												key={province.id}
+												id={province.name}
 												style={{ color: 'black' }}
 											>
-												{grade.name}
+												{province.name}
 											</Option>
 										))}
 									</Select>
@@ -311,7 +313,7 @@ export default function EditProfile({ onCancel }) {
 								>
 									<Select
 										showSearch
-										style={{ width: '180px' }}
+										style={{ width: '100%' }}
 										placeholder="Quận huyện"
 										onChange={(value) => {
 											handleChangeDistrict(value);
@@ -319,9 +321,9 @@ export default function EditProfile({ onCancel }) {
 										}}
 										defaultValue={user.district}
 									>
-										{districts.map((grade) => (
-											<Option value={grade.id} key={grade.id} style={{ color: 'black' }}>
-												{grade.name}
+										{districts.map((district) => (
+											<Option value={district.id} key={district.id} style={{ color: 'black' }}>
+												{district.name}
 											</Option>
 										))}
 									</Select>
@@ -334,14 +336,14 @@ export default function EditProfile({ onCancel }) {
 								>
 									<Select
 										showSearch
-										style={{ width: '180px' }}
+										style={{ width: '100%' }}
 										placeholder="Trường học"
 										onChange={handleChange}
 										defaultValue={user.school}
 									>
-										{schools.map((grade) => (
-											<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
-												{grade.name}
+										{schools.map((school) => (
+											<Option value={school.name} key={school.id} style={{ color: 'black' }}>
+												{school.name}
 											</Option>
 										))}
 									</Select>
@@ -354,14 +356,13 @@ export default function EditProfile({ onCancel }) {
 								>
 									<Select
 										showSearch
-										style={{ width: '180px' }}
+										style={{ width: '100%' }}
 										placeholder="Khối lớp"
-										
 										defaultValue={user.grade}
 									>
-										{grade.map((grade) => (
-											<Option value={grade} key={grade} style={{ color: 'black' }}>
-												{grade}
+										{grade.map((g) => (
+											<Option value={g} key={g} style={{ color: 'black' }}>
+												{g}
 											</Option>
 										))}
 									</Select>
@@ -377,15 +378,15 @@ export default function EditProfile({ onCancel }) {
 							>
 								<Select
 									showSearch
-									style={{ width: '180px' }}
+									style={{ width: '100%' }}
 									placeholder="Môn học"
 									onChange={handleChange}
 									defaultValue={user.subject}
 								>
-									{subjects.map((grade) => (
-										<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
-										{grade.name}
-									</Option>
+									{subjects.map((subject) => (
+										<Option value={subject.name} key={subject.id} style={{ color: 'black' }}>
+											{subject.name}
+										</Option>
 									))}
 								</Select>
 							</Form.Item>
@@ -394,16 +395,11 @@ export default function EditProfile({ onCancel }) {
 							name="gender"
 							label="Giới tính"
 							defaultValue={user.gender}
-							rules={[
-								{
-									required: false,
-									message: 'Chọn giới tính',
-								},
-							]}
+							rules={[{ required: false, message: 'Chọn giới tính' }]}
 							className="form-item-register"
 						>
 							<div>
-								<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>
+								<Radio.Group defaultValue="MALE" style={{ width: '100%' }}>
 									<Tooltip title="Nam">
 										<Radio.Button value="MALE">
 											<FcManager />
