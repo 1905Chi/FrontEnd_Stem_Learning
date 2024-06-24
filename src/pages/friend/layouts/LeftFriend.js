@@ -357,7 +357,7 @@ export default function LeftFriend() {
 											style={{ backgroundColor: '#1677ff' }}
 											onClick={accept('REQUEST', item.id)}
 										>
-											Thêm bạn bè
+											Kết bạn
 										</button>
 										<button className="btn btn-danger" onClick={accept('REJECT', item.id)}>
 											Xóa

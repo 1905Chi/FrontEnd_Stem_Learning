@@ -22,5 +22,23 @@
 
 .invite-request__item{
     display: flex;
+    background-color: #b5caec;
+    border: 0.5px solid black
     
+}
+
+.btn-primary {
+    border-radius: 10%;
+}
+
+.friend-request_item {
+    display: flex;
+    background-color: white;
+    border: 0.25px solid #c2bebe;
+    border-bottom: 10px solid #c2bebe;
+    border-radius: 16px;
+}
+
+.friend-request_item_button {
+    margin-bottom: 5%;
 }

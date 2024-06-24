@@ -63,7 +63,7 @@ position: relative;
     border-bottom: 2px solid #e6e6e6;   
     border-radius: 15px;
     background-color: aliceblue;
-    width: 100%;
+    width: 90%;
     height : auto;
     display: flex;
     
@@ -90,7 +90,7 @@ position: relative;
 }
 .friend-request__item p{
     margin: 10px;
-    font-size: 20px;
+    font-size: 120%;
     font-weight: bold;
     text-align: start;
 }

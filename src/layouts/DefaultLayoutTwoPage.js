@@ -35,7 +35,7 @@ export default function DefaultLayoutTwoPage({ Left, children }) {
 		token: { colorBgContainer, borderRadiusLG },
 	} = theme.useToken();
 	return (
-		<div style={{backgroundColor:'rgb(244 246 250)'}}>
+		<div style={{backgroundColor:"white"}}>
 			<div className="header" style={{ background: colorBgContainer }}>
 				<Topbar />
 			</div>

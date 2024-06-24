@@ -185,7 +185,7 @@ export default function Right() {
 	};
 	return (
 		<>
-			<div className="friend-request" style={{ overflowY: 'auto' }}>
+			<div className="friend-request" >
 				<Modal
 					title="Thông báo"
 					open={open}
@@ -238,14 +238,14 @@ export default function Right() {
 						</div>
 						{friendRequest.map((item, index) => {
 							return item.status === 'PENDING' ? (
-								<div className="friend-request__item" key={item.id}>
+								<div className="friend-request_item" key={item.id}>
 									<div
-										style={{ flex: '2', margin: '15px', marginTop: '18px' }}
+										style={{margin: '15px', marginTop: '18px' }}
 										onClick={() => {
 											navigate(`/profile/${item.sender.id}`);
 										}}
 									>
-										<div className="friend-request__item__avatar">
+										<div className="friend-request_item_avatar">
 											{item.sender.avatarUrl !== null && item.sender.avatarUrl !== '' ? (
 												<Avatar src={item.sender.avatarUrl} alt="" />
 											) : (
@@ -253,19 +253,19 @@ export default function Right() {
 											)}
 										</div>
 									</div>
-									<div className="friend-request__item__button">
+									<div className="friend-request_item_button">
 										<div
-											className="friend-request__item__name"
+											className="friend-request_item_name"
 											onClick={() => {
 												navigate(`/profile/${item.sender.id}`);
 											}}
 										>
 											<p>{item.sender.firstName + ' ' + item.sender.lastName}</p>
 										</div>
-										<div style={{ textAlign: 'start' }}>
+										<div >
 											<button
 												className="btn btn-primary"
-												style={{ backgroundColor: '#1677ff', width: '83px' }}
+												style={{ backgroundColor: '#1677ff' }}
 												onClick={() => accept('ACCEPT', item.id)}
 											>
 												Chấp nhận

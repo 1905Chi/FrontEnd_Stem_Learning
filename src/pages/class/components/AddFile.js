@@ -135,7 +135,7 @@ export default function AddFile(props) {
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Tài liệu học học</h3>
 						<button
-							style={{ textAlign: 'end', margin: '0 10px 0 0', color: 'blue', backgroundColor: '#ffebcd' }}
+							style={{ textAlign: 'end', margin: '0 10px 0 0', color: 'blue', backgroundColor: 'white' }}
 							onClick={openAvatarPictureDialog}
 						>
 							Thêm

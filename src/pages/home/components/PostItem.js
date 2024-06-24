@@ -3,7 +3,7 @@ import './PostItem.css'; // Import tệp CSS
 import { Input } from 'antd';
 import { useState } from 'react';
 import { Avatar, Button, Dropdown, Popconfirm } from 'antd';
-import { BiCommentDetail, BiSolidShare, BiLike } from 'react-icons/bi';
+import { BiCommentDetail, BiSolidShare, BiLike,BiDislike  } from 'react-icons/bi';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { MdBugReport } from 'react-icons/md';
 import CommentPost from './CommentPost';
@@ -24,21 +24,18 @@ import styled from '@emotion/styled';
 import { AiOutlineHeart, AiOutlineLike, AiOutlineSmile, AiOutlineCheckCircle } from 'react-icons/ai';
 function PostItem(props) {
 	const navigate = useNavigate();
-	console.log(props);
 	const dispatch = useDispatch();
 	const [myReaction, setMyReaction] = useState(props.reaction);
 
 	const [isLiked, setIsLiked] = useState(
 		props.reaction !== null &&
-			props.reaction !== undefined &&
-			(props.reaction === 'LIKE' || props.reaction.type === 'LIKE')
+			props.reaction !== undefined 		
 			? true
 			: false
 	); // Trạng thái ban đầu là "không thích"
 	const [isEditPost, setisEditPost] = useState(false); // Trạng thái ban đầu là "không chỉnh sửa"
 	const [contentPost, setContentPost] = useState(null);
 	console.log('contentPost', props.content);
-	const [idComment, setIdComment] = useState(null);
 	const [responseComement, setResponseComement] = useState(false);
 	const [xemthem, setXemthem] = useState(false);
 	const [countReaction, setCountReaction] = useState(null);
@@ -123,7 +120,7 @@ function PostItem(props) {
 		setShowEditorRepcmt(newShowEditorRepcmt);
 	}
 
-	function handleLike() {
+	function handleLike(typeReacttion) {
 		if (localStorage.getItem('user') === null) {
 			toast.error('Bạn cần đăng nhập để thực hiện chức năng này');
 			return;
@@ -139,7 +136,7 @@ function PostItem(props) {
 		if (isLiked === false) {
 			data = {
 				postId: props.id,
-				typeName: 'LIKE',
+				typeName:typeReacttion,
 			};
 		} else {
 			data = {
@@ -925,19 +922,43 @@ function PostItem(props) {
 
 			<div className="post-actions">
 				<DropdownContainer>
+					{props.reaction !== null && props.reaction.type === 'LIKE' ? (
 					<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-						<BiLike style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }} />
+						<BiLike style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }} onClick={()=>{
+							handleLike('like')
+						}}/>
 					</Button>
+					) : props.reaction !== null && props.reaction.type === 'DISLIKE' ? (
+						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+							<BiDislike style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }} onClick={()=>{
+								handleLike('DISLIKE')
+							}}/>
+						</Button>
+					):props.reaction !== null && props.reaction.type === 'DOUBTFUL' ? (
+						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+							<ReactionButton onClick={() => handleLike('DOUBTFUL')}>❓</ReactionButton>
+						</Button>
+					):props.reaction !== null && props.reaction.type === 'USEFUL' ? (
+						<button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style ={{backgroundColor:'white'}}>
+							<ReactionButton onClick={() => handleLike('DISLIKE')}>❤️</ReactionButton>
+						</button>
+					):(
+						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+							<BiLike style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }} onClick={()=>{
+								handleLike('LIKE')
+							}}/>
+						</Button>
+					)}
 					<DropdownContent
 						isVisible={isDropdownVisible}
 						onMouseEnter={handleMouseEnter}
 						onMouseLeave={handleMouseLeave}
 					>
 						<div style={{ display: 'flex' }}>
-							<ReactionButton onClick={() => handleReaction('love')}>❤️</ReactionButton>
-							<ReactionButton onClick={() => handleReaction('like')}>👍</ReactionButton>
-							<ReactionButton onClick={() => handleReaction('doubt')}>❓</ReactionButton>
-							<ReactionButton onClick={() => handleReaction('thank')}>✔️</ReactionButton>
+							<ReactionButton onClick={() => handleLike('DISLIKE')}>❤️</ReactionButton>
+							<ReactionButton onClick={() => handleLike('LIKE')}>👍</ReactionButton>
+							<ReactionButton onClick={() => handleLike('DOUBTFUL')}>❓</ReactionButton>
+							<ReactionButton onClick={() => handleLike('USEFUL')}>✔️</ReactionButton>
 						</div>
 					</DropdownContent>
 				</DropdownContainer>
