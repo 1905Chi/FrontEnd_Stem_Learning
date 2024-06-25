@@ -10,6 +10,7 @@ import ExamReducer  from './redux/Exam';
 import UserReducer  from './redux/User';
 import MessengerReducer from './redux/Messenger';
 import SearchReducer from './redux/Search';
+import PostReducer from './redux/Post';
 const   store =  configureStore({
   reducer: {
     menu: menuReducer,
@@ -21,6 +22,7 @@ const   store =  configureStore({
     user:UserReducer,
     messageItem:MessengerReducer,
     Search:SearchReducer,
+    listpostHome: PostReducer
 
   },
 })

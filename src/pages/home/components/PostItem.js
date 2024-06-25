@@ -26,7 +26,7 @@ function PostItem(props) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [myReaction, setMyReaction] = useState(props.reaction);
-
+	const [typeReacttion, setTypeReacttion] = useState(props.reaction !== null && props.reaction !== undefined ? props.reaction.type : null);
 	const [isLiked, setIsLiked] = useState(
 		props.reaction !== null &&
 			props.reaction !== undefined 		
@@ -120,7 +120,7 @@ function PostItem(props) {
 		setShowEditorRepcmt(newShowEditorRepcmt);
 	}
 
-	function handleLike(typeReacttion) {
+	function handleLike(type) {
 		if (localStorage.getItem('user') === null) {
 			toast.error('Bạn cần đăng nhập để thực hiện chức năng này');
 			return;
@@ -133,25 +133,22 @@ function PostItem(props) {
 			conttentType: 'application/json',
 		};
 		let data;
-		if (isLiked === false) {
+		console.log('typeReacttion', typeReacttion)
+		if (type !== null && type !== undefined) {
 			data = {
 				postId: props.id,
-				typeName:typeReacttion,
+				typeName:type,
 			};
-		} else {
-			data = {
-				postId: props.id,
-				typeName: 'DISLIKE',
-			};
-		}
-		if (myReaction) {
 			Api.put(url + `api/v1/reactions`, data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						toast.success(response.data.message);
+						if(props.homePosts) {
+							props.homePosts();
+						}
+						setTypeReacttion(type);
 						setCountReaction(response.data.result.count);
-						props.callBackApi();
-						setMyReaction(null);
+						
 					} else {
 						console.log(response.error);
 					}
@@ -159,23 +156,27 @@ function PostItem(props) {
 				.catch((error) => {
 					console.log(error);
 				});
-		} else {
-			Api.put(url + 'api/v1/reactions', data, { headers: headers })
-				.then((response) => {
-					if (response.data.statusCode === 200) {
-						toast.success(response.data.message);
-						setCountReaction(response.data.result.count);
-						setMyReaction(response.data.result.reaction);
-						props.callBackApi();
-					} else {
-						console.log(response.error);
+		} else if(typeReacttion !== null) {
+			Api.delete(url + `api/v1/reactions/${props.reaction.id}`, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success(response.data.message);
+					setTypeReacttion(null);
+					if(props.homePosts) {
+						props.homePosts();
 					}
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+					setCountReaction(countReaction - 1);
+
+				} else {
+					console.log(response.error);
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+
 		}
-		setIsLiked(!isLiked); // Đảo ngược trạng thái khi nút "like" được nhấn
+		
 	}
 
 	const deletePost = () => {
@@ -511,7 +512,7 @@ function PostItem(props) {
 				return 'other';
 		}
 	};
-	const likeButtonStyle = isLiked ? { color: 'blue' } : {}; // Đổi màu của biểu tượng "like"
+	
 	const [value, setValue] = useState('');
 
 	const [showEditor, setShowEditor] = useState(false);
@@ -666,25 +667,7 @@ function PostItem(props) {
 					</div>
 				),
 			},
-			{
-				key: '3',
-				label: (
-					<div style={{ font: '15px' }}>
-						{JSON.parse(localStorage.getItem('user')) &&
-						id === JSON.parse(localStorage.getItem('user')).id ? null : (
-							<div
-								onClick={() => {
-									setOpenGiveStar(true);
-									setRating(0);
-								}}
-							>
-								<PiStarThin style={{ color: 'yellow' }} />
-								<span style={{ fontSize: '15px' }}>Tặng sao tác giả</span>
-							</div>
-						)}
-					</div>
-				),
-			},
+			
 		];
 
 		const handleMenuClick = ({ key }) => {
@@ -917,30 +900,26 @@ function PostItem(props) {
 					: null}
 			</div>
 			<div>
-				<Button style={{ backgroundColor: 'white', border: 'none' }}>{countReaction} likes</Button>
+				<Button style={{ backgroundColor: 'white', border: 'none' }}>{countReaction} reactions</Button>
 			</div>
 
 			<div className="post-actions">
 				<DropdownContainer>
-					{props.reaction !== null && props.reaction.type === 'LIKE' ? (
-					<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-						<BiLike style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }} onClick={()=>{
-							handleLike('like')
-						}}/>
+					{typeReacttion !== null && typeReacttion === 'LIKE' ? (
+					<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style={{color:'blue' }}>
+							<ReactionButton onClick={() => handleLike()}>👍</ReactionButton>
 					</Button>
-					) : props.reaction !== null && props.reaction.type === 'DISLIKE' ? (
-						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-							<BiDislike style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }} onClick={()=>{
-								handleLike('DISLIKE')
-							}}/>
+					) : typeReacttion !== null && typeReacttion === 'DISLIKE' ? (
+						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style={{color:'blue' }}>
+							<ReactionButton onClick={() => handleLike()}>👎</ReactionButton>
 						</Button>
-					):props.reaction !== null && props.reaction.type === 'DOUBTFUL' ? (
+					):typeReacttion !== null && typeReacttion === 'DOUBTFUL' ? (
 						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-							<ReactionButton onClick={() => handleLike('DOUBTFUL')}>❓</ReactionButton>
+							<ReactionButton onClick={() => handleLike()}>❓</ReactionButton>
 						</Button>
-					):props.reaction !== null && props.reaction.type === 'USEFUL' ? (
+					):typeReacttion !== null && typeReacttion === 'USEFUL' ? (
 						<button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style ={{backgroundColor:'white'}}>
-							<ReactionButton onClick={() => handleLike('DISLIKE')}>❤️</ReactionButton>
+							<ReactionButton onClick={() => handleLike()}>✔️</ReactionButton>
 						</button>
 					):(
 						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
@@ -955,7 +934,7 @@ function PostItem(props) {
 						onMouseLeave={handleMouseLeave}
 					>
 						<div style={{ display: 'flex' }}>
-							<ReactionButton onClick={() => handleLike('DISLIKE')}>❤️</ReactionButton>
+							<ReactionButton onClick={() => handleLike('DISLIKE')}>👎</ReactionButton>
 							<ReactionButton onClick={() => handleLike('LIKE')}>👍</ReactionButton>
 							<ReactionButton onClick={() => handleLike('DOUBTFUL')}>❓</ReactionButton>
 							<ReactionButton onClick={() => handleLike('USEFUL')}>✔️</ReactionButton>

@@ -196,7 +196,7 @@ export default function EditProfile({ onCancel }) {
 			// 	return; // Không thực hiện yêu cầu axios
 			// }
 
-			Api.put(url + 'api/v1/users/change-password', data, config).then((response) => {
+			Api.post(url + 'api/v1/users/change-password', data, config).then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
 					toast.success(response.data.message);

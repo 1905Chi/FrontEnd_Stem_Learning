@@ -9,16 +9,18 @@ import { Skeleton } from 'antd';
 import { selectPostHome } from '../../redux/Group';
 import { TfiAngleDoubleRight } from "react-icons/tfi";
 import Left from '../../layouts/Left';
+import {selectlistpostHome,selectselectlistpostHome} from '../../redux/Post';
 import './Home.css';
 //import { verifyJwtToken } from '../../api/Jwt';
 function Home() {
 	const [ispost, setIspost] = useState(false);
 	const dispatch = useDispatch();
-	const [listpost, setListpost] = useState([]);
+
 	const [page, setPage] = useState(0);
 	const [size, setSize] = useState(30);
 	const [openLeft, setOpenLeft] = useState(false);
 	const LeftHomeRef = useRef(null);
+	const listpost = useSelector(selectselectlistpostHome);
 	useEffect(() => {
 		//console.log(verifyJwtToken(localStorage.getItem('use')));
 		if (localStorage.getItem('login')) {
@@ -68,7 +70,8 @@ function Home() {
 			.then((result) => {
 				// Xử lý kết quả khi Promise hoàn thành thành công
 				if (result.data.statusCode === 200) {
-					setListpost(result.data.result);
+					dispatch(selectlistpostHome(result.data.result));
+					
 					console.log('data', result.data.result);
 				} else {
 					console.log(result.error);
@@ -88,7 +91,8 @@ function Home() {
 			};
 			const response = await Api.get(`home-posts`, { headers: headers });
 			if (response.data.statusCode === 200) {
-				setListpost(response.data.result);
+				dispatch(selectlistpostHome(response.data.result));
+				
 			} else {
 				console.log(response.error);
 			}
@@ -108,7 +112,7 @@ function Home() {
 				headers: headers,
 			});
 			if (response.data.statusCode === 200) {
-				setListpost(response.data.result.posts);
+				dispatch(selectlistpostHome(response.data.result.posts));
 				console.log('data', response.data.result.posts);
 			} else {
 				console.log(response.error);
@@ -128,7 +132,7 @@ function Home() {
           </div>: null}
 			<div className="home-page">
 			
-				{listpost === null && listpost.length ===0 ? <Skeleton active /> : null}
+				{listpost === null || listpost.length ===0 ? <Skeleton active /> : null}
 				{listpost !== null &&
 					listpost.length > 0 &&
 					listpost.map((post, index) => {
