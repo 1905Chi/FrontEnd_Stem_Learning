@@ -1,7 +1,7 @@
 .post-group{
     padding: 15px;
     background-color: white;
-    width: 93%;
+    width: 90%;
     border-radius: 10px;
     border: 1px solid #c4bebe;
     border-bottom: 5px solid #c4bebe;
@@ -10,4 +10,8 @@
 
 .question-group__button button :hover{
     background-color: blue;
+}
+
+.post-group__list {
+    width: 96.5%;
 }

@@ -7,7 +7,7 @@ import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import PostItem from './../../home/components/PostItem';
 import { useSelector,useDispatch } from 'react-redux';
-import { selectSelectedPostGroup , selectPostGroup} from '../../../redux/Group';
+import { selectSelectedPostGroup , selectedSurveyGroup} from '../../../redux/Group';
 export default function PostGroup() {
 	const [open, setOpen] = useState(false);
 	const postgroup = useSelector(selectSelectedPostGroup);
@@ -56,7 +56,7 @@ export default function PostGroup() {
 		Api.get(url + 'api/v1/posts?' + 'groupId=' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					dispatch(selectPostGroup(response.data.result));
+					dispatch(selectedSurveyGroup(response.data.result));
 				} else {
 					console.log(response.error);
 				}
@@ -74,9 +74,14 @@ export default function PostGroup() {
 					Bài viết
 				</h2>
 				{open && <Editor cancel={openEdttor} type="POST" />}
-				<button className="question-group__button" onClick={openEdttor} cancel={openEdttor}>
+				{!open ?<button className="question-group__button" onClick={openEdttor} cancel={openEdttor}>
 					<strong>Bài viết mới</strong>
-				</button>
+				</button>:<button className="question-group__button" onClick={openEdttor} cancel={openEdttor}>
+					<strong>Hủy</strong>
+				</button>}
+				{/* <button className="question-group__button" onClick={openEdttor} cancel={openEdttor}>
+					<strong>Bài viết mới</strong>
+				</button> */}
 			</div>
 			<div className="post-group__list">
 				{postgroup &&

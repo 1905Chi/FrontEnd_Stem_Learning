@@ -37,6 +37,7 @@ import { Edit } from '@material-ui/icons';
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { FaRankingStar } from "react-icons/fa6";
 import { CiCamera } from "react-icons/ci";
+import {selectedSurveyGroup,selectSelectedSurveyGroup} from '../../../redux/Group';
 export default function LeftItemGroup() {
 	const { theme } = UseTheme();
 	const [inforGroup, setInforGroup] = useState(null);
@@ -174,7 +175,15 @@ export default function LeftItemGroup() {
 			.catch((error) => {
 				console.log(error);
 			});
-
+		Api.get(url + 'api/v1/surveys/getGroupSurvey/' + uuid, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					dispatch(selectedSurveyGroup(response.data.result.surveys));
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});	
 		if (isClassesPath) {
 			Api.get(url + 'api/v1/exams/group/' + uuid, { headers: headers })
 				.then((response) => {
@@ -188,8 +197,8 @@ export default function LeftItemGroup() {
 					console.log(error);
 				});
 		}
-		//dispatch(selectOption('post'))
-	}, []);
+		dispatch(selectOption('post'))
+	}, [uuid]);
 
 	const convertDay = (date) => {
 		console.log(date);

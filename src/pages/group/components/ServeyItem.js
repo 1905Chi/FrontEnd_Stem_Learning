@@ -10,12 +10,13 @@ import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import './ServeyItem.css';
 import LabelFile from '../../profile/component/LabelFile';
-import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Checkbox, Radio } from 'antd';
+import { toast, ToastContainer } from 'react-toastify';
+import { Form, Row, Col } from 'antd';
 export default function SurveyItem(props) {
 	console.log(props);
 	const navigate = useNavigate();
@@ -26,14 +27,13 @@ export default function SurveyItem(props) {
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [selectedOption, setSelectedOption] = useState(null);
 	const [options, setOptions] = useState(props.options);
-    const [isMultiSelect, setIsMultiSelect] = useState(props.isMultiSelect);
-    const [listAnswer, setListAnswer] = useState(props.listAnswer);
+	const [isMultiSelect, setIsMultiSelect] = useState(props.isMultiSelect);
+	const [listAnswer, setListAnswer] = useState(props.listAnswer);
 	const [question, setQuestion] = useState(props.question);
+	const [isAddOption, setIsAddOption] = useState(props.isAddOption);
 	const totalVotes = props.listAnswer.reduce((acc, answer) => acc + answer.count, 0);
 	const [addOption, setAddOption] = useState(false);
-	const handleSelectOption = (e) => {
-		setSelectedOption(e.target.value);
-	};
+	const [settingOpen, setSettingOpen] = useState(false);
 	const handleCancel = () => {
 		setOpentReport(false);
 	};
@@ -41,7 +41,7 @@ export default function SurveyItem(props) {
 		console.log('EditPost');
 	};
 	const [open, setOpen] = useState(false);
-	const dispatch = useDispatch();
+
 	const handleRemoveOption = () => {
 		const newOptions = [...options];
 		console.log(newOptions.length);
@@ -50,6 +50,22 @@ export default function SurveyItem(props) {
 		setAddOption(false);
 		console.log(newOptions.length);
 	};
+	const headers = {
+		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+	};
+	const selectOption = (id) => {
+		Api.post(url + 'api/v1/options/vote/' + id, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success('Vote thành công');
+				}
+			})
+			.catch((error) => {
+				toast.error('Vote thất bại');
+			});
+	};
+
 	const items = [
 		{
 			key: '1',
@@ -63,7 +79,7 @@ export default function SurveyItem(props) {
 							}}
 						>
 							<RiDeleteBin6Fill style={{ color: 'red', fontSize: '15px' }} />
-							<span style={{ fontSize: '15px' }}>Xóa bài đăng</span>
+							<span style={{ fontSize: '15px' }}>Xóa khảo sát</span>
 						</div>
 					) : (
 						<div
@@ -106,6 +122,7 @@ export default function SurveyItem(props) {
 			),
 		},
 	];
+	
 	const reportContent = [
 		{
 			key: '1',
@@ -231,11 +248,39 @@ export default function SurveyItem(props) {
 	const rePort = () => {
 		console.log('rePort');
 	};
-    const calculateBackgroundWidth = (index) => {
-        const totalVotes = listAnswer.reduce((acc, answer) => acc + answer.count, 0);
-        const percentage = totalVotes === 0 ? 0 : (listAnswer[index].count / totalVotes) * 100;
-        return `${percentage}%`;
-    };
+	const calculateBackgroundWidth = (index) => {
+		const totalVotes = listAnswer.reduce((acc, answer) => acc + answer.voteCount, 0);
+		const percentage = totalVotes === 0 ? 0 : (listAnswer[index].voteCount / totalVotes) * 100;
+		return `${percentage}%`;
+	};
+	const toggleSettingModal = () => {
+		setSettingOpen(false);
+		setIsAddOption(false);
+		setSettingOpen(!settingOpen);
+	};
+	const createServey = () => {
+	}
+	const openEdttor = () => {
+		setOptions(['', '']);
+		setQuestion('');
+		setIsAddOption(false);
+		setIsMultiSelect(false);
+		setOpen(!open);
+	};
+	const handleChangeQuestion = (e) => {
+		setQuestion(e.target.value);
+	}
+	const handleChangeOption = (index, value) => {
+		const newOptions = [...options];
+		newOptions[index] = value;
+		setOptions(newOptions);
+	};
+	const handleAddOption = () => {
+		const newOptions = [...options];
+		newOptions.push('');
+		setOptions(newOptions);
+	};
+
 	return (
 		<div className="post-item">
 			<Modal
@@ -283,7 +328,70 @@ export default function SurveyItem(props) {
 					</div>
 				) : null}
 			</Modal>
+			<Modal
+				title="Cài đặt"
+				open={settingOpen}
+				onCancel={toggleSettingModal}
+				footer={null} // Không cần footer cho Modal cài đặt
+			>
+				<div style={{ marginBottom: '10px' }}>
+					<Checkbox
+						onChange={(value) => {
+							setIsAddOption(!isAddOption);
+						}}
+					>
+						Cho phép thêm đáp án
+					</Checkbox>
+				</div>
+				<div style={{ marginBottom: '10px' }}>
+					<Checkbox
+						onChange={(value) => {
+							setIsMultiSelect(isMultiSelect);
+						}}
+					>
+						Cho phép chọn nhiều đáp án
+						
+					</Checkbox>
+				</div>
+			</Modal>
 
+			<Modal
+				title="Chỉnh sửa khảo sát"
+				open={open}
+				onOk={createServey}
+				confirmLoading={confirmLoading}
+				onCancel={openEdttor}
+			>
+				<Form>
+					<Form.Item label="Question">
+						<Input placeholder="Nhập câu hỏi khảo sát" value={question} onChange={handleChangeQuestion} />
+					</Form.Item>
+					<Form.Item label="Options">
+						{options.map((option, index) => (
+							<Row key={index} style={{ marginBottom: '2%' }}>
+								<Col span={20}>
+									<Input
+										placeholder={`Option ${index + 1}`}
+										value={option}
+										onChange={(e) => handleChangeOption(index, e.target.value)}
+									/>
+								</Col>
+								<Col span={4}>
+									<Button type="danger" onClick={() => handleRemoveOption(index)}>
+										X
+									</Button>
+								</Col>
+							</Row>
+						))}
+					</Form.Item>
+					<Button type="primary" onClick={handleAddOption}>
+						Thêm lựa chọn
+					</Button>
+					<Button type="primary" onClick={toggleSettingModal}>
+						Cài đặt
+					</Button>
+				</Form>
+			</Modal>
 			<div className="user-info">
 				<div className="avatarPost" style={{ flex: 1, marginTop: '15px' }}>
 					{props.authorAvatar !== null && props.authorAvatar !== '' ? (
@@ -339,15 +447,27 @@ export default function SurveyItem(props) {
 				<div style={{ marginBottom: '20px' }}>
 					<h3>{props.question}</h3>
 					{options.map((option, i) => (
-						<div key={i} className="option-item" style={{ background: `linear-gradient(to right, rgba(0, 0, 255, 0.5) ${calculateBackgroundWidth(i)}, transparent ${calculateBackgroundWidth(i)})` }}>
+						<div
+							key={i}
+							className="option-item"
+							style={{
+								background: `linear-gradient(to right, rgba(0, 0, 255, 0.5) ${calculateBackgroundWidth(
+									i
+								)}, transparent ${calculateBackgroundWidth(i)})`,
+							}}
+						>
 							{isMultiSelect ? (
-								<Checkbox>{option}</Checkbox>
+								<Checkbox onChange={() => selectOption(option.id)}>{option.content}</Checkbox>
 							) : (
-								<Radio value={option} onChange={handleSelectOption} checked={selectedOption === option}>
-									{option}
+								<Radio
+									value={option.content}
+									onChange={() => selectOption(option.id)}
+									checked={selectedOption === option.content}
+								>
+									{option.content}
 								</Radio>
 							)}
-							{listAnswer[i].count} votes
+							{listAnswer[i].voteCount} votes
 						</div>
 					))}
 					{addOption && (
@@ -376,6 +496,7 @@ export default function SurveyItem(props) {
 						</div>
 					)}
 				</div>
+				<ToastContainer />
 			</div>
 		</div>
 	);

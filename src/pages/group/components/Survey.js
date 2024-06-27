@@ -11,6 +11,8 @@ import { Form, Button, Input, Row, Col } from 'antd';
 import { Modal } from 'antd';
 import { Checkbox, Radio } from 'antd';
 import ServeyItem from './ServeyItem';
+import { selectedSurveyGroup,selectSelectedSurveyGroup } from '../../../redux/Group';
+import {toast, ToastContainer} from 'react-toastify';
 const { TextArea } = Input;
 
 export default function Servey() {
@@ -25,6 +27,7 @@ export default function Servey() {
 	const [settingOpen, setSettingOpen] = useState(false);
 	const [isAddOption, setIsAddOption] = useState(false);
 	const [isMultiSelect, setIsMultiSelect] = useState(false);
+	const listSurvey = useSelector(selectSelectedSurveyGroup);
 	const handleChangeQuestion = (e) => {
 		setQuestion(e.target.value);
 	};
@@ -46,6 +49,9 @@ export default function Servey() {
 
 	const openEdttor = () => {
 		setOptions(['', '']);
+		setQuestion('');
+		setIsAddOption(false);
+		setIsMultiSelect(false);
 		setOpen(!open);
 	};
 	const headers = {
@@ -54,17 +60,15 @@ export default function Servey() {
 	};
 
 	const callBackApi = () => {
-		Api.get(url + 'api/v1/posts?' + 'groupId=' + uuid, { headers: headers })
+		Api.get(url + 'api/v1/surveys/getGroupSurvey/' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					dispatch(selectPostGroup(response.data.result));
-				} else {
-					console.log(response.error);
+					dispatch(selectedSurveyGroup(response.data.result.surveys));
 				}
 			})
 			.catch((error) => {
 				console.log(error);
-			});
+			});	
 	};
 	const createServey = () => {
 		setConfirmLoading(true);
@@ -73,12 +77,33 @@ export default function Servey() {
 		console.log(trimmedOptions);
 		console.log(isAddOption);
 		console.log(isMultiSelect);
-		setTimeout(() => {
-			//setOptions(['', '']);
-			//	setQuestion('');
+		console.log(question);
+		const data = {
+			groupId :uuid,
+			content : question,
+			isMultipleChoice: isMultiSelect,
+			isAddOtherOption: isAddOption,
+			options: trimmedOptions,
+
+		}
+		Api.post(url + 'api/v1/surveys', data, { headers: headers })
+		.then((response) => {
+			if (response.data.statusCode === 200) {
+				callBackApi()
+				toast.success("Tạo khảo sát thành công");
+			} else {
+				console.log(response.error);
+			}
+		})
+		.catch((error) => {
+			toast.error("Tạo khảo sát thất bại");
+		})
+		.finally(() => {
 			setConfirmLoading(false);
-			setOpen(false); // Đặt setOpen ở đây khi xử lý hoàn tất
-		}, 5000);
+			setOpen(false);
+		}
+		)
+	
 	};
 	const handleRemoveOption = (index) => {
 		const newOptions = [...options];
@@ -144,7 +169,7 @@ export default function Servey() {
 				<div style={{ marginBottom: '10px' }}>
 					<Checkbox
 						onChange={(value) => {
-							setIsAddOption(value.target.checked);
+							setIsAddOption(!isAddOption);
 						}}
 					>
 						Cho phép chọn nhiều đáp án
@@ -153,7 +178,7 @@ export default function Servey() {
 				<div style={{ marginBottom: '10px' }}>
 					<Checkbox
 						onChange={(value) => {
-							setIsMultiSelect(value.target.checked);
+							setIsMultiSelect(isMultiSelect);
 						}}
 					>
 						Cho phép thêm đáp án
@@ -207,20 +232,27 @@ export default function Servey() {
 					Tạo khảo sát
 				</button>
 			</div>
-            <div>
-          {  listservey.map((servey, index) => (
+            <div className='list-survey'>
+          {  listSurvey  && listSurvey.map((servey, index) => (
                 <ServeyItem key={index} 
-                question={servey.question}
+				id= {servey.id}
+				authorId = {servey.author.id}
+				authorAvatar = {servey.author.avatarUrl}
+				authorFirstName = {servey.author.firstName}
+				authorLastName = {servey.author.lastName}
+                question={servey.content}
                 options={servey.options}
                 isAddOption={servey.isAddOption}
                 isMultiSelect={servey.isMultiSelect}
-                listAnswer={servey.listAnswer}
+                listAnswer={servey.options}
+				callBackApi = {callBackApi}
                 index={index}
-
+				
 
                  />
             ))}
             </div>
+			<ToastContainer />
 		</div>
 	);
 }

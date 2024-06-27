@@ -9,6 +9,7 @@ const menuSlice = createSlice({
     selectedGrouOwner: null,
     selectedGroupMember: null,  
     selectedPostGroup: null,
+    selectedSurveyGroup: null,
     selectedPostHome: null,
     selectedOptionSearchGrade: null,
     selectedOptionSearchSubject: null,
@@ -17,6 +18,7 @@ const menuSlice = createSlice({
     selectedOptionSearchDocumentbyType: null,
     selectedOptionSearchDocumentbySender: null,
     selectedOptionSearchDocementbyDate: null,
+
    
    
   },
@@ -35,6 +37,9 @@ const menuSlice = createSlice({
     },
     selectPostGroup: (state, action) => {
       state.selectedPostGroup = action.payload;
+    },
+    selectedSurveyGroup: (state, action) => {
+      state.selectedSurveyGroup = action.payload;
     },
     selectOptionSearchGrade : (state, action) => {
       state.selectedOptionSearchGrade = action.payload;
@@ -61,6 +66,7 @@ const menuSlice = createSlice({
     selectOptionSearchDocementbyDate: (state, action) => {
       state.selectedOptionSearchDocementbyDate = action.payload;
     },
+  
     
     editPostGroup: (state, action) => {
       state.selectedPostGroup = state.selectedPostGroup.map((item) => {
@@ -82,7 +88,7 @@ const menuSlice = createSlice({
 });
 
 export const { selectOption,selectOptionProfile ,selectGroupOwner,selectGroupMember,selectPostGroup,editPostGroup , selectPostHome,deleteRaction,selectOptionSearchGrade,selectOptionSearchSubject, selectOptionSearchPeople,
-selectOptionSearchDocumentbyName,selectOptionSearchDocumentbySender,selectOptionSearchDocumentbyType,selectOptionSearchDocementbyDate} = menuSlice.actions;
+selectOptionSearchDocumentbyName,selectOptionSearchDocumentbySender,selectOptionSearchDocumentbyType,selectOptionSearchDocementbyDate,selectedSurveyGroup} = menuSlice.actions;
 export const selectSelectedOption = (state) => state.menu.selectedOption;
 export const selectSelectedOptionProfile = (state) => state.menu.selectedOptionProfile;
 export const selectSelectedGroupOwner = (state) => state.menu.selectedGrouOwner;
@@ -96,4 +102,5 @@ export const selectSelectOptionSearchDocumentbyName = (state) => state.menu.sele
 export const selectSelectOptionSearchDocumentbyType = (state) => state.menu.selectedOptionSearchDocumentbyType;
 export const selectSelectOptionSearchDocumentbySender = (state) => state.menu.selectedOptionSearchDocumentbySender;
 export const selectSelectOptionSearchDocementbyDate = (state) => state.menu.selectedOptionSearchDocementbyDate;
+export const selectSelectedSurveyGroup = (state) => state.menu.selectedSurveyGroup;
 export default menuSlice.reducer;

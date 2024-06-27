@@ -24,13 +24,6 @@ export default function Rank() {
             width: 200,
         },
         {
-            title: 'Tổng sao',
-            dataIndex: 'star',
-            key: 'star',
-            width: 10,
-
-        },
-        {
             title: 'Điểm kiểm tra',
             dataIndex: 'point',
             key: 'point',
@@ -93,7 +86,7 @@ export default function Rank() {
         }
     ]
 	return (
-		<div>
+		<div className='rank-class'>
 			<h1 style ={{textAlign:'center'}}>Xếp hạng</h1>
             <Table columns={columns} dataSource={dataMember} />
 		</div>
