@@ -16,6 +16,12 @@ import { selectselectscore, selectscore } from '../../../redux/Exam';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import { InputBase } from '@mui/material';
+import { BiSolidFileImport } from 'react-icons/bi';
+import AddFile from './../components/AddFile';
+import { Modal } from 'antd';
+import LabelFile from '../../profile/component/LabelFile';
+import create from '@ant-design/icons/lib/components/IconFont';
+
 const CreateQuiz = () => {
 	const [form] = Form.useForm();
 	const dispatch = useDispatch();
@@ -30,16 +36,70 @@ const CreateQuiz = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [currentDate, setCurrentDate] = useState(moment());
 	const [scores, setScores] = useState([]);
+	const [isopenAddFile, setIsopenAddFile] = useState(false);
+	const [selectedFile, setSelectedFile] = useState([]);
+	const [createby, setCreateby] = useState('');
 	const isDateDisabled = (date) => {
 		return !date.isAfter(moment()); // Trả về true nếu ngày là ngày tương lai
+	};
+	const getFileExtension = (fileName) => {
+		const lastDotIndex = fileName.lastIndexOf('.');
+		if (lastDotIndex !== -1) {
+			return fileName.substring(lastDotIndex + 1);
+		}
+		return ''; // Trả về chuỗi rỗng nếu không tìm thấy dấu chấm
 	};
 	const onFinish = (values) => {
 		console.log('Received values:', values);
 		console.log('Answer types:', answerTypes);
 		console.log('content ', value);
 		console.log('scores ', scores);
-
+		const headers = {
+			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+		};
 		setIsLoading(true);
+		if(createby==='file'){	
+			if (selectedFile) {
+				const formData = new FormData();
+				formData.append("multipartFile", selectedFile[0]);
+				formData.append('groupId', uuid);
+				formData.append('name', values.name);
+				formData.append('description', values.description);
+				formData.append('duration', Number(values.duration));
+				formData.append('startedAt', values.startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'));
+				formData.append('endedAt', values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'));
+				formData.append('isEnabled', true);
+				formData.append('level', values.level);
+				
+				const data = formData;
+				Api.post(url + 'api/v1/exams/importFromExcel', data, {	headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+					'Content-Type': 'multipart/form-data',
+				},})
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						toast.success('Tạo bài kiểm tra thành công !');
+						dispatch(selectscore(0));
+						setTimeout(() => {
+							navigate('/classes/' + uuid);
+						}, 3000);
+					}
+				}
+				)
+				.catch((error) => {
+					toast.error('Tạo bài kiểm tra thất bại !');
+				})
+				.finally(() => {
+					setIsLoading(false);
+					
+				});
+
+			}
+
+		}
+		else {
+		
 		const data = {
 			groupId: uuid,
 			name: values.name,
@@ -54,7 +114,7 @@ const CreateQuiz = () => {
 			questions: [],
 		};
 		answerTypes.map((item, index) => {
-			if(index < answerTypes.length-1) {
+			if (index < answerTypes.length - 1) {
 				let questions = {
 					content: value[index],
 					level: 'Easy',
@@ -62,7 +122,7 @@ const CreateQuiz = () => {
 					answers: [],
 					score: answerTypes[index] === 'essay' && scores[index] !== undefined ? scores[index] : 1,
 				};
-				if (answerTypes[index] !== 'essay' ) {
+				if (answerTypes[index] !== 'essay') {
 					values.questions[index].answers !== undefined &&
 						values.questions[index].answers.map((item) => {
 							var answer = {};
@@ -87,16 +147,12 @@ const CreateQuiz = () => {
 							}
 						});
 				}
-	
+
 				data.questions = [...data.questions, questions];
 			}
-			
 		});
 		console.log('data', data);
-		const headers = {
-			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
-		};
+		
 		Api.post(url + 'api/v1/exams', data, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
@@ -115,6 +171,7 @@ const CreateQuiz = () => {
 			});
 
 		console.log(data);
+		}
 	};
 
 	const handleAnswerTypeChange = (index, e) => {
@@ -124,14 +181,12 @@ const CreateQuiz = () => {
 			newAnswerTypes[index] = 'single_choice';
 		} else if (e.target.value === 'multiple_choice') {
 			newAnswerTypes[index] = 'multiple_choice';
-		}  else {
+		} else {
 			newAnswerTypes[index] = 'essay';
 		}
 		totalScore(newAnswerTypes, scores);
 		console.log(newAnswerTypes);
 		setAnswerTypes(newAnswerTypes);
-		
-		
 	};
 	const handleEditQuestion = (index) => {
 		setEditingIndex(index);
@@ -177,19 +232,38 @@ const CreateQuiz = () => {
 
 		return Promise.resolve();
 	};
-	const totalScore = (newAnswerTypes,scores)=> {
+	const totalScore = (newAnswerTypes, scores) => {
 		let total = 0;
-		console.log(scores)
-		console.log(answerTypes)
+		console.log(scores);
+		console.log(answerTypes);
 		newAnswerTypes.map((item, index) => {
-			if (item === 'essay' && scores[index] !== undefined && !Number.isNaN(scores[index])){
+			if (item === 'essay' && scores[index] !== undefined && !Number.isNaN(scores[index])) {
 				total += scores[index];
 			} else {
 				total += 1;
 			}
 		});
-		console.log("total",total);
-		dispatch(selectscore(total-1));
+		console.log('total', total);
+		dispatch(selectscore(total - 1));
+	};
+	const toggleSettingModal = () => {
+		setIsopenAddFile(!isopenAddFile);
+	};
+	const openAvatarPictureDialog = () => {
+		document.getElementById('AvatarPictureInput').click();
+	};
+	const handelfileSelect = (event) => {
+		// Xử lý khi người dùng chọn hình ảnh đại diện
+		const mediaFiles = event.target.files[0];
+		if (mediaFiles) {
+			const reader = new FileReader();
+			console.log(mediaFiles);
+			console.log(selectedFile)
+			reader.onload = () => {
+				setSelectedFile([...selectedFile, mediaFiles]);
+			};
+			reader.readAsDataURL(mediaFiles);
+		}
 	};
 	return (
 		<div className="create-quiz">
@@ -204,7 +278,51 @@ const CreateQuiz = () => {
 				</button>
 			</div>
 			{isLoading ? <Loading /> : null}
-
+			<Modal title="Thêm file" open={isopenAddFile} onCancel={toggleSettingModal} onOk={toggleSettingModal}>
+				<div style={{ marginBottom: '10px' }}>
+					file mẫu :
+					<LabelFile
+						type={'xlsx'}
+						filename={'temlate mẫu'}
+						link={`${process.env.PUBLIC_URL}/TemplateImportExam.xlsx`}
+					></LabelFile>
+					<input
+						style={{ display: 'none' }}
+						type="file"
+						accept="application/vnd.ms-excel, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx"
+						onChange={handelfileSelect}
+						id="AvatarPictureInput"
+					/>
+					<div style={{ display: 'flex', justifyContent: 'center' }}>
+						<button
+							style={{
+								textAlign: 'center',
+								margin: '0 10px 0 0',
+								color: 'blue',
+								backgroundColor: 'white',
+							}}
+							onClick={openAvatarPictureDialog}
+						>
+							Thêm
+						</button>
+					</div>
+					<div className="file-list">
+						{selectedFile.map((item, index) => {
+							return (
+								<div className="file-item" key={index}>
+									<LabelFile
+										type={getFileExtension(item.name)}
+										filename={item.name}
+										onDelete={() => {
+											setSelectedFile(selectedFile.filter((file, i) => i !== index));
+										}}
+									></LabelFile>
+								</div>
+							);
+						})}
+					</div>
+				</div>
+			</Modal>
 			<Form form={form} onFinish={onFinish} layout="vertical" style={{ textAlign: 'center' }}>
 				<h1 style={{ textAlign: 'center' }}>Tạo bài kiểm tra</h1>
 				<div className="infor-exam-create">
@@ -248,7 +366,6 @@ const CreateQuiz = () => {
 						//		rules={[{ required: true, message: 'Vui lòng nhập điểm số tối đa của bài kiểm tra!' }]}
 						className="infor-exam-create-input"
 					>
-						
 						{useSelector(selectselectscore)}
 					</Form.Item>
 				</div>
@@ -353,7 +470,6 @@ const CreateQuiz = () => {
 											<Radio value="single_choice">Chọn 1 đáp án</Radio>
 											<Radio value="multiple_choice">Chọn nhiều đáp án</Radio>
 											<Radio value="essay">Tự luận</Radio>
-											
 										</Radio.Group>
 									</Form.Item>
 									<Form.List name={[name, 'answers']}>
@@ -373,7 +489,7 @@ const CreateQuiz = () => {
 																const newScores = [...scores];
 																newScores[index] = value;
 																setScores(newScores);
-																totalScore(answerTypes,newScores);
+																totalScore(answerTypes, newScores);
 															}}
 														/>
 													</Form.Item>
@@ -426,7 +542,6 @@ const CreateQuiz = () => {
 																		<Radio>Đáp án đúng</Radio>
 																	</Form.Item>
 																)}
-																
 
 																{answerTypes[index] !== 'essay' && (
 																	<MinusCircleOutlined
@@ -466,21 +581,60 @@ const CreateQuiz = () => {
 									)}
 								</div>
 							))}
-							<Form.Item>
-								<Button
-									type="dashed"
-									onClick={() => {
-										add();
-										const newAnswerTypes = [...answerTypes, 'single_choice'];
-										setAnswerTypes(newAnswerTypes);
-										setValue([...value, '<p>Nhập câu hỏi </p>']);
-										totalScore(newAnswerTypes, scores);
-									}}
-									icon={<PlusOutlined />}
-								>
-									Thêm câu hỏi
-								</Button>
-							</Form.Item>
+							<div className="infor-exam-create" style={{ display: 'flex', justifyContent: 'center' }}>
+								{createby !== 'file' ? (
+									<Form.Item>
+										<Button
+											type="dashed"
+											onClick={() => {
+												add();
+												const newAnswerTypes = [...answerTypes, 'single_choice'];
+												setAnswerTypes(newAnswerTypes);
+												setValue([...value, '<p>Nhập câu hỏi </p>']);
+												totalScore(newAnswerTypes, scores);
+												setCreateby('add');
+											}}
+											icon={<PlusOutlined />}
+										>
+											Thêm câu hỏi
+										</Button>
+									</Form.Item>
+								) : null}
+								{createby !== 'add' ? (
+									<div>
+										<Form.Item>
+											<Button
+												type="dashed"
+												onClick={() => {
+													setIsopenAddFile(!isopenAddFile);
+													setSelectedFile([]);
+													setCreateby('file');
+												}}
+												icon={<BiSolidFileImport />}
+											>
+												Tạo câu hỏi bằng file excel
+											</Button>
+										</Form.Item>
+										<div className="file-list">
+											{selectedFile.map((item, index) => {
+												return (
+													<div className="file-item" key={index}>
+														<LabelFile
+															type={getFileExtension(item.name)}
+															filename={item.name}
+															onDelete={() => {
+																setSelectedFile(
+																	selectedFile.filter((file, i) => i !== index)
+																);
+															}}
+														></LabelFile>
+													</div>
+												);
+											})}
+										</div>
+									</div>
+								) : null}
+							</div>
 						</>
 					)}
 				</Form.List>

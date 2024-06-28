@@ -16,32 +16,42 @@ import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Checkbox, Radio } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
+import { MdDelete } from 'react-icons/md';
 import { Form, Row, Col } from 'antd';
+import { MdEdit } from 'react-icons/md';
 export default function SurveyItem(props) {
 	console.log(props);
 	const navigate = useNavigate();
 	const [inforReport, setInforReport] = useState(null);
 	const [selectedReport, setSelectedReport] = useState(null);
 	const [opentReport, setOpentReport] = useState(false);
-	const [reportTo, setReportTo] = useState('Báo cáo bài đăng');
+	const [reportTo, setReportTo] = useState('Báo cáo khảo sát');
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [selectedOption, setSelectedOption] = useState(null);
-	const [options, setOptions] = useState(props.options);
 	const [isMultiSelect, setIsMultiSelect] = useState(props.isMultiSelect);
-	const [listAnswer, setListAnswer] = useState(props.listAnswer);
+	const [options, setOptions] = useState();
+	const [listAnswer, setListAnswer] = useState();
 	const [question, setQuestion] = useState(props.question);
 	const [isAddOption, setIsAddOption] = useState(props.isAddOption);
 	const totalVotes = props.listAnswer.reduce((acc, answer) => acc + answer.count, 0);
 	const [addOption, setAddOption] = useState(false);
 	const [settingOpen, setSettingOpen] = useState(false);
+	const [oppenAddOption, setOppenAddOption] = useState(false);
+	const [optionAdd, setOptionAdd] = useState('');
+	const [openEditOption, setOpenEditOption] = useState(false);
+	const [optionEdit, setOptionEdit] = useState('');
+	const [idOptionEdit,setIdOptionEdit] = useState('');
 	const handleCancel = () => {
 		setOpentReport(false);
 	};
-	const EditPost = () => {
-		console.log('EditPost');
-	};
+	useEffect(() => {
+		setOptions(props.options);
+		setListAnswer(props.listAnswer);
+		setAddOption(props.isAddOption);
+		setIsMultiSelect(props.isMultiSelect);
+	}, [props.options, props.listAnswer, props.isAddOption, props.isMultiSelect, props.question]);
 	const [open, setOpen] = useState(false);
-
+	const user = JSON.parse(localStorage.getItem('user'));
 	const handleRemoveOption = () => {
 		const newOptions = [...options];
 		console.log(newOptions.length);
@@ -54,16 +64,40 @@ export default function SurveyItem(props) {
 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 	};
-	const selectOption = (id) => {
-		Api.post(url + 'api/v1/options/vote/' + id, { headers: headers })
-			.then((response) => {
-				if (response.data.statusCode === 200) {
-					toast.success('Vote thành công');
-				}
-			})
-			.catch((error) => {
-				toast.error('Vote thất bại');
-			});
+	const selectOption = (id, useVote, ismultiplechoie) => {
+		if (useVote === true && ismultiplechoie === true) {
+			Api.post(url + 'api/v1/options/unvote/' + id, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						toast.success('UnVote thành công');
+						props.callBackApi();
+						setOptions(response.data.result.options);
+						console.log(response.data.result.options);
+						if (props.homePosts) {
+							props.homePosts();
+						}
+					}
+				})
+				.catch((error) => {
+					toast.error('Vote thất bại');
+				});
+		} else {
+			Api.post(url + 'api/v1/options/vote/' + id, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						toast.success('Vote thành công');
+						props.callBackApi();
+						setOptions(response.data.result.options);
+						console.log(response.data.result.options);
+						if (props.homePosts) {
+							props.homePosts();
+						}
+					}
+				})
+				.catch((error) => {
+					toast.error('Vote thất bại');
+				});
+		}
 	};
 
 	const items = [
@@ -75,7 +109,7 @@ export default function SurveyItem(props) {
 					props.authorId === JSON.parse(localStorage.getItem('user')).id ? (
 						<div
 							onClick={() => {
-								setOpen(true);
+								deleteSurvey();
 							}}
 						>
 							<RiDeleteBin6Fill style={{ color: 'red', fontSize: '15px' }} />
@@ -85,12 +119,12 @@ export default function SurveyItem(props) {
 						<div
 							onClick={() => {
 								setOpentReport(true);
-								setReportTo('Báo cáo bài đăng');
+								setReportTo('Báo cáo khảo sát');
 								setSelectedReport(null);
 							}}
 						>
 							<MdBugReport style={{ color: 'red' }} />
-							<span style={{ fontSize: '15px' }}>Báo cáo bài đăng cho quản trị viên</span>
+							<span style={{ fontSize: '15px' }}>Báo cáo khảo sát cho quản trị viên</span>
 						</div>
 					)}
 				</div>
@@ -102,27 +136,31 @@ export default function SurveyItem(props) {
 				<div style={{ font: '15px' }}>
 					{JSON.parse(localStorage.getItem('user')) &&
 					props.authorId === JSON.parse(localStorage.getItem('user')).id ? (
-						<div onClick={EditPost}>
+						<div
+							onClick={() => {
+								setOpen(true);
+							}}
+						>
 							<EditOutlined style={{ color: 'red', fontSize: '15px' }} />
-							<span style={{ fontSize: '15px' }}>Chỉnh sửa bài đăng</span>
+							<span style={{ fontSize: '15px' }}>Chỉnh sửa khảo sát</span>
 						</div>
 					) : (
 						<div
 							onClick={() => {
 								setOpentReport(true);
-								setReportTo('Báo cáo bài đăng');
+								setReportTo('Báo cáo khảo sát');
 								setSelectedReport(null);
 							}}
 						>
 							<MdBugReport style={{ color: 'red' }} />
-							<span style={{ fontSize: '15px' }}>Báo cáo bài đăng </span>
+							<span style={{ fontSize: '15px' }}>Báo cáo khảo sát </span>
 						</div>
 					)}
 				</div>
 			),
 		},
 	];
-	
+
 	const reportContent = [
 		{
 			key: '1',
@@ -258,18 +296,70 @@ export default function SurveyItem(props) {
 		setIsAddOption(false);
 		setSettingOpen(!settingOpen);
 	};
-	const createServey = () => {
-	}
+	const updateSurvey = () => {
+		setConfirmLoading(true);
+		const data = {
+			content: question,
+			isMultipleChoice: isMultiSelect,
+			isAddOption: isAddOption,
+		};
+		Api.put(url + 'api/v1/surveys/' + props.id, data, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success('Cập nhật khảo sát thành công');
+					props.callBackApi();
+					setIsAddOption(isAddOption);
+					setIsMultiSelect(isMultiSelect);
+					if (props.homePosts) {
+						props.homePosts();
+					}
+				}
+			})
+			.catch((error) => {
+				toast.error('Cập nhật khảo sát thất bại');
+			})
+			.finally(() => {
+				setConfirmLoading(false);
+				setOpen(!open);
+			});
+	};
+	const addOptionSurvey = () => {
+		setConfirmLoading(true);
+		const data = {
+			content: optionAdd,
+			surveyId: props.id,
+		};
+		Api.post(url + 'api/v1/options/create', data, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success('Thêm lựa chọn thành công');
+					props.callBackApi();
+					if (props.homePosts) {
+						props.homePosts();
+					}
+				}
+			})
+			.catch((error) => {
+				toast.error('Thêm lựa chọn thất bại');
+			})
+			.finally(() => {
+				setConfirmLoading(false);
+				setOppenAddOption(!oppenAddOption);
+				setOptionAdd('');
+			});
+	};
+
 	const openEdttor = () => {
-		setOptions(['', '']);
-		setQuestion('');
 		setIsAddOption(false);
 		setIsMultiSelect(false);
-		setOpen(!open);
+		setAddOption(false);
+		setOpen(false);
+		setOpenEditOption(false);
 	};
 	const handleChangeQuestion = (e) => {
 		setQuestion(e.target.value);
-	}
+	};
+
 	const handleChangeOption = (index, value) => {
 		const newOptions = [...options];
 		newOptions[index] = value;
@@ -280,7 +370,62 @@ export default function SurveyItem(props) {
 		newOptions.push('');
 		setOptions(newOptions);
 	};
+	const deleteSurvey = () => {
+		Api.delete(url + 'api/v1/surveys/' + props.id, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success('Xóa khảo sát thành công');
+					props.callBackApi();
+					if (props.homePosts) {
+						props.homePosts();
+					}
+				}
+			})
+			.catch((error) => {
+				toast.error('Xóa khảo sát thất bại');
+			});
+	};
+	const deleteOption = (id) => {
+		Api.delete(url + 'api/v1/options/delete/' + id, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success('Xóa lựa chọn thành công');
+					props.callBackApi();
+					if (props.homePosts) {
+						props.homePosts();
+					}
+				}
+			})
+			.catch((error) => {
+				toast.error('Xóa lựa chọn thất bại');
+			});
+	};
+	const EditOption = () => {
+	setConfirmLoading(true);
+	Api.put(url + 'api/v1/options/update/'+ idOptionEdit, { content: optionEdit }, { headers: headers })
+	.then((response) => {
+		if (response.data.statusCode === 200) {
+			toast.success('Chỉnh sửa lựa chọn thành công');
+			props.callBackApi();
+			if (props.homePosts) {
+				props.homePosts();
+			}
+		}})
+			// Remove the closing parenthesis
+			.catch((error) => {
+				toast.error('Chỉnh sửa lựa chọn thất bại');
+			
+		}).finally(() => {
+		setConfirmLoading(false);
+		setIdOptionEdit('')
+		setOpenEditOption(false);
+		
+		});
 
+
+
+
+	}
 	return (
 		<div className="post-item">
 			<Modal
@@ -328,68 +473,80 @@ export default function SurveyItem(props) {
 					</div>
 				) : null}
 			</Modal>
-			<Modal
-				title="Cài đặt"
-				open={settingOpen}
-				onCancel={toggleSettingModal}
-				footer={null} // Không cần footer cho Modal cài đặt
-			>
-				<div style={{ marginBottom: '10px' }}>
-					<Checkbox
-						onChange={(value) => {
-							setIsAddOption(!isAddOption);
-						}}
-					>
-						Cho phép thêm đáp án
-					</Checkbox>
-				</div>
-				<div style={{ marginBottom: '10px' }}>
-					<Checkbox
-						onChange={(value) => {
-							setIsMultiSelect(isMultiSelect);
-						}}
-					>
-						Cho phép chọn nhiều đáp án
-						
-					</Checkbox>
-				</div>
-			</Modal>
 
 			<Modal
 				title="Chỉnh sửa khảo sát"
 				open={open}
-				onOk={createServey}
+				onOk={updateSurvey}
 				confirmLoading={confirmLoading}
 				onCancel={openEdttor}
 			>
 				<Form>
-					<Form.Item label="Question">
-						<Input placeholder="Nhập câu hỏi khảo sát" value={question} onChange={handleChangeQuestion} />
+					<Form.Item label="Nội dung: ">
+						<Input
+							placeholder="Nhập câu hỏi khảo sát"
+							value={props.question}
+							onChange={handleChangeQuestion}
+						/>
 					</Form.Item>
-					<Form.Item label="Options">
-						{options.map((option, index) => (
-							<Row key={index} style={{ marginBottom: '2%' }}>
-								<Col span={20}>
-									<Input
-										placeholder={`Option ${index + 1}`}
-										value={option}
-										onChange={(e) => handleChangeOption(index, e.target.value)}
-									/>
-								</Col>
-								<Col span={4}>
-									<Button type="danger" onClick={() => handleRemoveOption(index)}>
-										X
-									</Button>
-								</Col>
-							</Row>
-						))}
+					<Form.Item label="">
+						<Checkbox
+							onChange={(value) => {
+								setIsAddOption(!isAddOption);
+							}}
+							checked={isAddOption}
+						>
+							Cho phép thêm đáp án
+						</Checkbox>
 					</Form.Item>
-					<Button type="primary" onClick={handleAddOption}>
-						Thêm lựa chọn
-					</Button>
-					<Button type="primary" onClick={toggleSettingModal}>
-						Cài đặt
-					</Button>
+					<Form.Item label="">
+						<Checkbox
+							onChange={(value) => {
+								setIsMultiSelect(!isMultiSelect);
+							}}
+							checked={isMultiSelect}
+						>
+							Cho phép chọn nhiều đáp án
+						</Checkbox>
+					</Form.Item>
+				</Form>
+			</Modal>
+
+			<Modal
+				title="Thêm lựa chọn"
+				open={oppenAddOption}
+				onOk={addOptionSurvey}
+				confirmLoading={confirmLoading}
+				onCancel={openEdttor}
+			>
+				<Form>
+					<Form.Item label="Lựa chọn: ">
+						<Input
+							placeholder="Nhập lựa chọn"
+							onChange={(e) => {
+								setOptionAdd(e.target.value);
+							}}
+						/>
+					</Form.Item>
+				</Form>
+			</Modal>
+			<Modal
+				title="Chỉnh sửa lựa chọn"
+				open={openEditOption}
+				onOk={EditOption}
+				confirmLoading={confirmLoading}
+				onCancel={openEdttor}
+			>
+				<Form>
+					<Form.Item label="Lựa chọn: ">
+						<Input
+							placeholder="Nhập lựa chọn"
+							value =  {optionEdit}
+							onChange={(e) => {
+								setOptionEdit(e.target.value);
+							}}
+						/>
+					</Form.Item>
 				</Form>
 			</Modal>
 			<div className="user-info">
@@ -446,49 +603,57 @@ export default function SurveyItem(props) {
 			<div className="conttent-servey">
 				<div style={{ marginBottom: '20px' }}>
 					<h3>{props.question}</h3>
-					{options.map((option, i) => (
-						<div
-							key={i}
-							className="option-item"
-							style={{
-								background: `linear-gradient(to right, rgba(0, 0, 255, 0.5) ${calculateBackgroundWidth(
-									i
-								)}, transparent ${calculateBackgroundWidth(i)})`,
-							}}
-						>
-							{isMultiSelect ? (
-								<Checkbox onChange={() => selectOption(option.id)}>{option.content}</Checkbox>
-							) : (
-								<Radio
-									value={option.content}
-									onChange={() => selectOption(option.id)}
-									checked={selectedOption === option.content}
-								>
-									{option.content}
-								</Radio>
-							)}
-							{listAnswer[i].voteCount} votes
-						</div>
-					))}
-					{addOption && (
-						<div style={{ display: 'flex' }} className="add-option">
-							<Input placeholder="Thêm lựa chọn" />
-							<Button type="danger" onClick={() => handleRemoveOption()}>
-								X
-							</Button>
-							<Button type="danger">Thêm</Button>
-						</div>
-					)}
-					{props.isAddOption && (
+					{options &&
+						options.map((option, i) => (
+							<div
+								key={i}
+								className="option-item"
+								style={{
+									width: '95%',
+									marginBottom: '2%',
+									display: 'flex',
+									justifyContent: 'space-between',
+									background: `linear-gradient(to right, rgba(0, 0, 255, 0.5) ${calculateBackgroundWidth(
+										i
+									)}, transparent ${calculateBackgroundWidth(i)})`,
+								}}
+							>
+								<div>
+									{isMultiSelect ? (
+										<Checkbox
+											onChange={() => selectOption(option.id, option.userVoted, isMultiSelect)}
+											checked={option.userVoted}
+										>
+											{option.content}
+										</Checkbox>
+									) : (
+										<Radio
+											value={option.content}
+											onChange={() => selectOption(option.id, option.userVoted, isMultiSelect)}
+											checked={option.userVoted}
+										>
+											{option.content}
+										</Radio>
+									)}
+									{listAnswer[i].voteCount} votes
+								</div>
+								{option.author.id === user.id ? (
+									<div style={{ width: '10%', display: 'flex', justifyContent: 'space-around' }}>
+										<MdDelete onClick={() => deleteOption(option.id)} />
+										<MdEdit onClick ={()=>{setOpenEditOption(true)
+										setIdOptionEdit(option.id)
+										setOptionEdit(option.content)
+										}}/>
+									</div>
+								) : null}
+							</div>
+						))}
+
+					{(isAddOption || props.authorId=== user.id) && (
 						<div>
 							<Button
 								onClick={() => {
-									let newOptions = [...options];
-									console.log(newOptions);
-									newOptions.push('');
-									setOptions(newOptions);
-									setAddOption(true);
-									console.log(newOptions);
+									setOppenAddOption(true);
 								}}
 							>
 								Thêm lựa chọn

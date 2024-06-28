@@ -33,7 +33,6 @@ export default function Servey() {
 	};
 	const toggleSettingModal = () => {
 		setSettingOpen(false);
-		setIsAddOption(false);
 		setSettingOpen(!settingOpen);
 	};
     
@@ -50,8 +49,6 @@ export default function Servey() {
 	const openEdttor = () => {
 		setOptions(['', '']);
 		setQuestion('');
-		setIsAddOption(false);
-		setIsMultiSelect(false);
 		setOpen(!open);
 	};
 	const headers = {
@@ -101,6 +98,10 @@ export default function Servey() {
 		.finally(() => {
 			setConfirmLoading(false);
 			setOpen(false);
+			setQuestion('');
+			setOptions(['', '']);
+			setIsAddOption(false);
+			setIsMultiSelect(false);
 		}
 		)
 	
@@ -112,49 +113,7 @@ export default function Servey() {
 		setOptions(newOptions);
 	};
 	
-    const listservey = [
-        {
-            question: 'Câu hỏi 1',
-            options: ['Option 1', 'Option 2', 'Option 3'],
-            isAddOption: false,
-            isMultiSelect: false,
-            listAnswer: [
-                {
-                    answer: 'Option 1',
-                    count: 2,
-                },
-                {
-                    answer: 'Option 2',
-                    count: 1,
-                },
-                {
-                    answer: 'Option 3',
-                    count: 0,
-                },
-            ],
-            
-        },
-        {
-            question: 'Câu hỏi 2',
-            options: ['Option 1', 'Option 2', 'Option 3'],
-            isAddOption: true,
-            isMultiSelect: true,
-            listAnswer: [
-                {
-                    answer: 'Option 1',
-                    count: 5,
-                },
-                {
-                    answer: 'Option 2',
-                    count: 1,
-                },
-                {
-                    answer: 'Option 3',
-                    count: 0,
-                },
-            ],
-        }
-    ]
+   
 
 	
 
@@ -168,6 +127,7 @@ export default function Servey() {
 			>
 				<div style={{ marginBottom: '10px' }}>
 					<Checkbox
+					checked={isAddOption}
 						onChange={(value) => {
 							setIsAddOption(!isAddOption);
 						}}
@@ -177,8 +137,9 @@ export default function Servey() {
 				</div>
 				<div style={{ marginBottom: '10px' }}>
 					<Checkbox
+					checked={isMultiSelect}
 						onChange={(value) => {
-							setIsMultiSelect(isMultiSelect);
+							setIsMultiSelect(!isMultiSelect);
 						}}
 					>
 						Cho phép thêm đáp án
@@ -242,8 +203,8 @@ export default function Servey() {
 				authorLastName = {servey.author.lastName}
                 question={servey.content}
                 options={servey.options}
-                isAddOption={servey.isAddOption}
-                isMultiSelect={servey.isMultiSelect}
+                isAddOption={servey.isAddOtherOption}
+                isMultiSelect={servey.isMultipleChoice}
                 listAnswer={servey.options}
 				callBackApi = {callBackApi}
                 index={index}
