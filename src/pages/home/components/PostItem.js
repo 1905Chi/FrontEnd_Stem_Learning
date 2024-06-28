@@ -3,7 +3,7 @@ import './PostItem.css'; // Import tệp CSS
 import { Input } from 'antd';
 import { useState } from 'react';
 import { Avatar, Button, Dropdown, Popconfirm } from 'antd';
-import { BiCommentDetail, BiSolidShare, BiLike,BiDislike  } from 'react-icons/bi';
+import { BiCommentDetail, BiSolidShare, BiLike, BiDislike } from 'react-icons/bi';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { MdBugReport } from 'react-icons/md';
 import CommentPost from './CommentPost';
@@ -13,7 +13,7 @@ import { url } from '../../../constants/Constant';
 import Editor from './Editor';
 import LabelFile from '../../profile/component/LabelFile';
 import { toast } from 'react-toastify';
-import {  useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
@@ -26,13 +26,10 @@ function PostItem(props) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [myReaction, setMyReaction] = useState(props.reaction);
-	const [typeReacttion, setTypeReacttion] = useState(props.reaction !== null && props.reaction !== undefined ? props.reaction.type : null);
-	const [isLiked, setIsLiked] = useState(
-		props.reaction !== null &&
-			props.reaction !== undefined 		
-			? true
-			: false
-	); // Trạng thái ban đầu là "không thích"
+	const [typeReacttion, setTypeReacttion] = useState(
+		props.reaction !== null && props.reaction !== undefined ? props.reaction.type : null
+	);
+	const [isLiked, setIsLiked] = useState(props.reaction !== null && props.reaction !== undefined ? true : false); // Trạng thái ban đầu là "không thích"
 	const [isEditPost, setisEditPost] = useState(false); // Trạng thái ban đầu là "không chỉnh sửa"
 	const [contentPost, setContentPost] = useState(null);
 	console.log('contentPost', props.content);
@@ -133,22 +130,21 @@ function PostItem(props) {
 			conttentType: 'application/json',
 		};
 		let data;
-		console.log('typeReacttion', typeReacttion)
+		console.log('typeReacttion', typeReacttion);
 		if (type !== null && type !== undefined) {
 			data = {
 				postId: props.id,
-				typeName:type,
+				typeName: type,
 			};
 			Api.put(url + `api/v1/reactions`, data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						toast.success(response.data.message);
-						if(props.homePosts) {
+						if (props.homePosts) {
 							props.homePosts();
 						}
 						setTypeReacttion(type);
 						setCountReaction(response.data.result.count);
-						
 					} else {
 						console.log(response.error);
 					}
@@ -156,27 +152,24 @@ function PostItem(props) {
 				.catch((error) => {
 					console.log(error);
 				});
-		} else if(typeReacttion !== null) {
+		} else if (typeReacttion !== null) {
 			Api.delete(url + `api/v1/reactions/${props.reaction.id}`, { headers: headers })
-			.then((response) => {
-				if (response.data.statusCode === 200) {
-					toast.success(response.data.message);
-					setTypeReacttion(null);
-					if(props.homePosts) {
-						props.homePosts();
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						toast.success(response.data.message);
+						setTypeReacttion(null);
+						if (props.homePosts) {
+							props.homePosts();
+						}
+						setCountReaction(countReaction - 1);
+					} else {
+						console.log(response.error);
 					}
-					setCountReaction(countReaction - 1);
-
-				} else {
-					console.log(response.error);
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		}
-		
 	}
 
 	const deletePost = () => {
@@ -309,7 +302,7 @@ function PostItem(props) {
 						<div
 							onClick={() => {
 								setOpentReport(true);
-								setReportTo('Báo cáo bài đăng');
+								setReportTo('AdminGroup');
 								setSelectedReport(null);
 							}}
 						>
@@ -334,31 +327,12 @@ function PostItem(props) {
 						<div
 							onClick={() => {
 								setOpentReport(true);
-								setReportTo('Báo cáo bài đăng');
+								setReportTo('Admin');
 								setSelectedReport(null);
 							}}
 						>
 							<MdBugReport style={{ color: 'red' }} />
 							<span style={{ fontSize: '15px' }}>Báo cáo bài đăng </span>
-						</div>
-					)}
-				</div>
-			),
-		},
-		{
-			key: '3',
-			label: (
-				<div style={{ font: '15px' }}>
-					{JSON.parse(localStorage.getItem('user')) &&
-					props.authorId === JSON.parse(localStorage.getItem('user')).id ? null : (
-						<div
-							onClick={() => {
-								setOpenGiveStar(true);
-								setRating(0);
-							}}
-						>
-							<PiStarThin style={{ color: 'yellow' }} />
-							<span style={{ fontSize: '15px' }}>Tặng sao tác giả</span>
 						</div>
 					)}
 				</div>
@@ -479,12 +453,7 @@ function PostItem(props) {
 			],
 		},
 	];
-	const giveStart = () => {
-		setConfirmLoading(true);
-		console.log('giveStart');
-		setOpenGiveStar(false);
-		setConfirmLoading(false);
-	};
+
 	const getTypes = (filename) => {
 		const parts = filename.split('.');
 
@@ -512,7 +481,7 @@ function PostItem(props) {
 				return 'other';
 		}
 	};
-	
+
 	const [value, setValue] = useState('');
 
 	const [showEditor, setShowEditor] = useState(false);
@@ -644,12 +613,11 @@ function PostItem(props) {
 								<RiDeleteBin6Fill style={{ color: 'red', fontSize: '15px' }} />
 								<span style={{ fontSize: '15px' }}>Xóa bình luận</span>
 							</div>
-						) : (
-							<div>
-								<MdBugReport style={{ color: 'red' }} />
-								<span style={{ fontSize: '15px' }}>Báo cáo bình luận</span>
-							</div>
-						)}
+						) : // <div>
+						// 	<MdBugReport style={{ color: 'red' }} />
+						// 	<span style={{ fontSize: '15px' }}>Báo cáo bình luận</span>
+						// </div>
+						null}
 					</div>
 				),
 			},
@@ -667,7 +635,6 @@ function PostItem(props) {
 					</div>
 				),
 			},
-			
 		];
 
 		const handleMenuClick = ({ key }) => {
@@ -691,7 +658,7 @@ function PostItem(props) {
 					}}
 					style={{ border: 'none', flex: 1 }}
 				>
-					<Button style={{ color: 'black', backgroundColor: 'white', border: 'none', textAlign: 'end' }}>
+					<Button style={{ color: 'black', backgroundColor: 'white', border: 'none', textAlign: 'end', }}>
 						...
 					</Button>
 				</Dropdown>
@@ -706,9 +673,37 @@ function PostItem(props) {
 			setInforReport(report.reportContent);
 		}
 	};
-
+	const headers = {
+		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+		conttentType: 'application/json',
+	};
 	const rePort = () => {
-		console.log('rePort');
+		setConfirmLoading(true);
+		const data = {
+			postId: props.id,
+			reason: inforReport,
+			isReportToAdmin: reportTo === 'Admin' ? true : false,
+			isReportToGroupManager: reportTo === 'AdminGroup' ? true : false,
+		};
+		Api.post(url + 'api/v1/reports/reportPost', data, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success("Báo cáo bài đăng thành công");
+					
+					
+				} else {
+					console.log(response.error);
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
+				setConfirmLoading(false);
+				setOpentReport(false);
+			});
+
+		console.log(inforReport);
 	};
 	return (
 		<div className="post-item">
@@ -775,29 +770,7 @@ function PostItem(props) {
 					</div>
 				) : null}
 			</Modal>
-			<Modal
-				title="Tặng sao cho tác giả"
-				open={openGiveStar}
-				onOk={giveStart}
-				confirmLoading={confirmLoading}
-				onCancel={handleCancel}
-			>
-				<div className="give-start">
-					{[...Array(10)].map((_, index) => (
-						<span
-							key={index}
-							style={{
-								cursor: 'pointer',
-								color: index < rating ? 'red' : 'black', // Thiết lập màu cho ngôi sao
-							}}
-							onClick={() => handleStarClick(index + 1)}
-						>
-							{index < rating ? '★' : '☆'}
-						</span>
-					))}
-					<p>Điểm đánh giá: {rating}/10</p>
-				</div>
-			</Modal>
+
 			<div className="user-info">
 				<div className="avatarPost" style={{ flex: 1, marginTop: '15px' }}>
 					{props.authorAvatar !== null && props.authorAvatar !== '' ? (
@@ -852,7 +825,7 @@ function PostItem(props) {
 					}}
 					style={{ border: 'none', flex: 1 }}
 				>
-					<Button style={{ color: 'black', backgroundColor: 'white', border: 'none', textAlign: 'end' }}>
+					<Button style={{ color: 'black', backgroundColor: 'white', border: 'none', textAlign: 'end',height:'0%'  }}>
 						...
 					</Button>
 				</Dropdown>
@@ -906,26 +879,41 @@ function PostItem(props) {
 			<div className="post-actions">
 				<DropdownContainer>
 					{typeReacttion !== null && typeReacttion === 'LIKE' ? (
-					<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style={{color:'blue' }}>
+						<Button
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
+							style={{ color: 'blue' }}
+						>
 							<ReactionButton onClick={() => handleLike()}>👍</ReactionButton>
-					</Button>
+						</Button>
 					) : typeReacttion !== null && typeReacttion === 'DISLIKE' ? (
-						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style={{color:'blue' }}>
+						<Button
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
+							style={{ color: 'blue' }}
+						>
 							<ReactionButton onClick={() => handleLike()}>👎</ReactionButton>
 						</Button>
-					):typeReacttion !== null && typeReacttion === 'DOUBTFUL' ? (
+					) : typeReacttion !== null && typeReacttion === 'DOUBTFUL' ? (
 						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
 							<ReactionButton onClick={() => handleLike()}>❓</ReactionButton>
 						</Button>
-					):typeReacttion !== null && typeReacttion === 'USEFUL' ? (
-						<button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style ={{backgroundColor:'white'}}>
+					) : typeReacttion !== null && typeReacttion === 'USEFUL' ? (
+						<button
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
+							style={{ backgroundColor: 'white' }}
+						>
 							<ReactionButton onClick={() => handleLike()}>✔️</ReactionButton>
 						</button>
-					):(
+					) : (
 						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-							<BiLike style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }} onClick={()=>{
-								handleLike('LIKE')
-							}}/>
+							<BiLike
+								style={{ marginRight: '5px', fontSize: '22px', marginLeft: '3%' }}
+								onClick={() => {
+									handleLike('LIKE');
+								}}
+							/>
 						</Button>
 					)}
 					<DropdownContent

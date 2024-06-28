@@ -38,6 +38,10 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 import { FaRankingStar } from "react-icons/fa6";
 import { CiCamera } from "react-icons/ci";
 import {selectedSurveyGroup,selectSelectedSurveyGroup} from '../../../redux/Group';
+import { MdOutlineReportGmailerrorred } from "react-icons/md";
+import { Modal } from 'antd';
+import { Table } from 'antd';
+import PostItem from "../../home/components/PostItem";
 export default function LeftItemGroup() {
 	const { theme } = UseTheme();
 	const [inforGroup, setInforGroup] = useState(null);
@@ -60,6 +64,10 @@ export default function LeftItemGroup() {
 	const [openEditName, setOpenEditName] = useState(false);
 	const [newDescription, setNewDescription] = useState('');
 	const [openChangeAvatar, setOpenChangeAvatar] = useState(false);
+	const [openReport, setOpenReport] = useState(false);
+	const [dataReport , setDataReport] = useState([]);
+	const [openPost, setOpenPost] = useState(false);
+	const [post, setPost] = useState(null);
 	const headers = {
 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
@@ -303,7 +311,27 @@ export default function LeftItemGroup() {
 			
 			
 		},
+		{
+			key:'3',
+			label: (<div style={{display:'flex',alignItems:'center'}} onClick={()=>{OpenViewReport()}}><MdOutlineReportGmailerrorred  style={{marginRight:'10px'}}/>Danh sách vi phạm</div>),
+			
+			
+		},
 	];
+	const OpenViewReport = () => {
+		Api.get(url + 'api/v1/reports/groupReport/' + uuid , { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					setDataReport(response.data.result);
+					setOpenReport(true);
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			});
+	}
 	const EditNameGroup = () => {
 		setLoading(true);
 		Api.put(
@@ -349,6 +377,53 @@ export default function LeftItemGroup() {
 			reader.readAsDataURL(file);
 		}
 	};
+	const viewPost = (postId) => {
+		Api.get(url + 'api/v1/posts/' + postId, { headers: headers })
+		.then((response) => {
+			if (response.data.statusCode === 200) {
+				setPost(response.data.result);
+				setOpenPost(true);
+				
+			} else {
+				toast.error(response.data.message);
+			}
+		})
+		.catch((error) => {
+			toast.error(error);
+		}
+	);
+	};
+	const columns = [
+		
+        {
+            title: 'id bài viết',
+            dataIndex: 'postId',
+            key: 'postId',
+            width: 200,
+        },
+        {
+            title: 'Nội dung vi phạm',
+            dataIndex: 'content',
+            key: 'content',
+            width: 10,
+        },
+        
+        {
+            title: 'Hành động',
+            dataIndex: 'action',
+			key: 'action',
+			width: 10,
+			render: (text, record) => {
+				return (
+					<button onClick={()=> {viewPost(record.postId)}}> Xem</button>
+				)
+			}
+
+
+           
+        },
+        
+    ]
 	const UpdateAvatar = () => {
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -377,9 +452,72 @@ export default function LeftItemGroup() {
 				setLoading(false);
 			});
 	};
+	const handelBanuser = () => {
+		Api.put(url + `api/v1/group-members/lock`, { groupMemberId: post?.post.authorId}, { headers: headers })
+			.then((res) => {
+				toast.success('Cấm tài khoản thành công');
+			})
+			.catch((err) => {
+				toast.error('Cấm tài khoản thất bại');
+			})
+			.finally (()=> {
+				setOpenPost(false);
+				
+			})
+	};
 	return (
 		<>
 			{loading ? <Loading /> : null}
+			<Modal
+				title="Danh sách báo cáo "
+				open={openReport}
+				onCancel={()=>{setOpenReport(false)}}
+				onOk={()=>{setOpenReport(false)}}
+				width={1000}
+
+				
+			>
+				<div style={{ marginBottom: '10px' }}>
+				<Table columns={columns} dataSource={dataReport} />
+				</div>
+			</Modal>
+			<Modal
+				title="Nội dung bài viết"
+				open={openPost}
+				onCancel={()=>{setOpenPost(false)}}
+				onOk={()=>{setOpenPost(false)}}
+				width={800}
+				footer = {[
+					<div style ={{display:'flex', flex :'', width: '30%'}}>
+						<button style={{backgroundColor:'#a4a4d0'}} onClick = {()=>{handelBanuser()}}>Cấm tài khoản</button>,
+						<button style={{backgroundColor:'red'}} > Xóa bài viết</button>
+						</div>
+				]}
+
+				
+			>
+				<div style={{ marginBottom: '10px' }}>
+				<PostItem
+								
+								id={post?.post.id}
+								authorId={post?.post.authorId}
+								authorFirstName={post?.post.authorFirstName}
+								authorLastName={post?.post.authorLastName}
+								authorAvatar={post?.post.authorAvatar}
+								type={post?.post.type}
+								refUrls={post?.post.refUrls}
+								totalReactions={post?.post.totalReactions}
+								totalComments={post?.post.totalComments}
+								createdAt={post?.post.createdAt}
+								updatedAt={post?.post.updatedAt}
+								content={post?.post.content}
+								comments={post?.post.comments}
+								reaction={post?.Editreaction}
+								
+							/>
+				</div>
+			</Modal>
+
 			<Dialog
 				header={
 					<div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>Mời thành viên</div>
