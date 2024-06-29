@@ -280,7 +280,7 @@ export default function EditExam() {
 					<span style={{ color: 'orange', fontWeight: 'bold' }}>Chọn nhiều</span>
 				)
 				: typeCode === 'essay' ? (
-					<span style={{ color: 'orange', fontWeight: 'bold' }}>Trả lời ngắn</span>
+					<span style={{ color: 'orange', fontWeight: 'bold' }}>Tự luận</span>
 				)  : (
 					<span style={{ color: 'black', fontWeight: 'bold' }}>Không xác định</span>
 				),

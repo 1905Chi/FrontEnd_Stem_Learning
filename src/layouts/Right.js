@@ -300,9 +300,9 @@ export default function Right() {
 						</div>
 						{listRelationShip.map((item, index) =>
 							item.accepted === false ? (
-								<div className="friend-request__item" key={item.id}>
+								<div className="friend-request_item" key={item.id}>
 									<div
-										style={{ flex: '2', margin: '15px', marginTop: '18px' }}
+										style={{  margin: '15px', marginTop: '18px' }}
 										onClick={() => {
 											navigate(`/profile/${item.parent.id}`);
 										}}
@@ -315,9 +315,9 @@ export default function Right() {
 											)}
 										</div>
 									</div>
-									<div className="friend-request__item__button">
+									<div className="friend-request_item_button">
 										<div
-											className="friend-request__item__name"
+											className="friend-request_item_name"
 											onClick={() => {
 												navigate(`/profile/${item.parent.id}`);
 											}}
@@ -327,7 +327,7 @@ export default function Right() {
 										<div style={{ textAlign: 'start' }}>
 											<button
 												className="btn btn-primary"
-												style={{ backgroundColor: '#1677ff', width: '83px' }}
+												style={{ backgroundColor: '#1677ff' }}
 												onClick={() => acceptRelation('ACCEPT', item.id)}
 											>
 												Chấp nhận
@@ -408,7 +408,7 @@ export default function Right() {
 											className="btn btn-primary"
 											style={{
 												backgroundColor: '#1677ff',
-												width: '83px',
+												
 												borderRadius: '0.5rem',
 											}}
 											onClick={() => acceptInvite('ACCEPT', item.id)}

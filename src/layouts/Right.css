@@ -10,6 +10,7 @@
 
 .invite-group  :hover{
     background-color: #f0f2f5;
+    
    
 
 }
@@ -18,12 +19,16 @@
     border: 1px solid #e6e6e6;
     padding-bottom: 5%;
     border-radius: 10%;
+    border: 0.25px solid #c2bebe;
+    border-bottom: 10px solid #c2bebe;
+    border-radius: 16px;
+    margin-right: 1%;
 }
 
 .invite-request__item{
     display: flex;
-    background-color: #b5caec;
-    border: 0.5px solid black
+    background-color: white;
+    
     
 }
 
@@ -37,8 +42,13 @@
     border: 0.25px solid #c2bebe;
     border-bottom: 10px solid #c2bebe;
     border-radius: 16px;
+    margin-right: 1%;
 }
 
 .friend-request_item_button {
     margin-bottom: 5%;
+}
+
+.friend-request {
+    margin-bottom: 30%;
 }

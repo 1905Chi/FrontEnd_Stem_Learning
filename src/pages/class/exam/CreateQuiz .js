@@ -59,10 +59,10 @@ const CreateQuiz = () => {
 			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 		};
 		setIsLoading(true);
-		if(createby==='file'){	
+		if (createby === 'file') {
 			if (selectedFile) {
 				const formData = new FormData();
-				formData.append("multipartFile", selectedFile[0]);
+				formData.append('multipartFile', selectedFile[0]);
 				formData.append('groupId', uuid);
 				formData.append('name', values.name);
 				formData.append('description', values.description);
@@ -71,12 +71,85 @@ const CreateQuiz = () => {
 				formData.append('endedAt', values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'));
 				formData.append('isEnabled', true);
 				formData.append('level', values.level);
-				
+
 				const data = formData;
-				Api.post(url + 'api/v1/exams/importFromExcel', data, {	headers: {
-					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-					'Content-Type': 'multipart/form-data',
-				},})
+				Api.post(url + 'api/v1/exams/importFromExcel', data, {
+					headers: {
+						Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+						'Content-Type': 'multipart/form-data',
+					},
+				})
+					.then((response) => {
+						if (response.data.statusCode === 200) {
+							toast.success('Tạo bài kiểm tra thành công !');
+							dispatch(selectscore(0));
+							setTimeout(() => {
+								navigate('/classes/' + uuid);
+							}, 3000);
+						}
+					})
+					.catch((error) => {
+						toast.error('Tạo bài kiểm tra thất bại !');
+					})
+					.finally(() => {
+						setIsLoading(false);
+					});
+			}
+		} else {
+			const data = {
+				groupId: uuid,
+				name: values.name,
+				description: values.description,
+				duration: Number(values.duration),
+				startedAt: values.startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
+				endedAt: values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
+				isEnabled: true,
+				level: values.level,
+				numberOfQuestion: Number(values.numberOfQuestion),
+				maxScore: maxScore,
+				questions: [],
+			};
+			answerTypes.map((item, index) => {
+				if (index < answerTypes.length - 1) {
+					let questions = {
+						content: value[index],
+						level: 'Easy',
+						typeCode: answerTypes[index],
+						answers: [],
+						score: answerTypes[index] === 'essay' && scores[index] !== undefined ? scores[index] : 1,
+					};
+					if (answerTypes[index] !== 'essay') {
+						values.questions[index].answers !== undefined &&
+							values.questions[index].answers.map((item) => {
+								var answer = {};
+								if (item.isCorrect === true) {
+									answer = {
+										content: item.answer,
+										isCorrect: true,
+									};
+									questions.answers = [...questions.answers, answer];
+								} else if (item.isCorrect === undefined && answerTypes[index] === 'essay') {
+									answer = {
+										content: item.answer,
+										isCorrect: true,
+									};
+									questions.answers = [...questions.answers, answer];
+								} else {
+									answer = {
+										content: item.answer,
+										isCorrect: false,
+									};
+									questions.answers = [...questions.answers, answer];
+								}
+							});
+					}
+
+					data.questions = [...data.questions, questions];
+				}
+			});
+			console.log('data', data);
+
+			Api.post(url + 'api/v1/exams', data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						toast.success('Tạo bài kiểm tra thành công !');
@@ -85,92 +158,15 @@ const CreateQuiz = () => {
 							navigate('/classes/' + uuid);
 						}, 3000);
 					}
-				}
-				)
+				})
 				.catch((error) => {
 					toast.error('Tạo bài kiểm tra thất bại !');
 				})
 				.finally(() => {
 					setIsLoading(false);
-					
 				});
 
-			}
-
-		}
-		else {
-		
-		const data = {
-			groupId: uuid,
-			name: values.name,
-			description: values.description,
-			duration: Number(values.duration),
-			startedAt: values.startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
-			endedAt: values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'),
-			isEnabled: true,
-			level: values.level,
-			numberOfQuestion: Number(values.numberOfQuestion),
-			maxScore: maxScore,
-			questions: [],
-		};
-		answerTypes.map((item, index) => {
-			if (index < answerTypes.length - 1) {
-				let questions = {
-					content: value[index],
-					level: 'Easy',
-					typeCode: answerTypes[index],
-					answers: [],
-					score: answerTypes[index] === 'essay' && scores[index] !== undefined ? scores[index] : 1,
-				};
-				if (answerTypes[index] !== 'essay') {
-					values.questions[index].answers !== undefined &&
-						values.questions[index].answers.map((item) => {
-							var answer = {};
-							if (item.isCorrect === true) {
-								answer = {
-									content: item.answer,
-									isCorrect: true,
-								};
-								questions.answers = [...questions.answers, answer];
-							} else if (item.isCorrect === undefined && answerTypes[index] === 'essay') {
-								answer = {
-									content: item.answer,
-									isCorrect: true,
-								};
-								questions.answers = [...questions.answers, answer];
-							} else {
-								answer = {
-									content: item.answer,
-									isCorrect: false,
-								};
-								questions.answers = [...questions.answers, answer];
-							}
-						});
-				}
-
-				data.questions = [...data.questions, questions];
-			}
-		});
-		console.log('data', data);
-		
-		Api.post(url + 'api/v1/exams', data, { headers: headers })
-			.then((response) => {
-				if (response.data.statusCode === 200) {
-					toast.success('Tạo bài kiểm tra thành công !');
-					dispatch(selectscore(0));
-					setTimeout(() => {
-						navigate('/classes/' + uuid);
-					}, 3000);
-				}
-			})
-			.catch((error) => {
-				toast.error('Tạo bài kiểm tra thất bại !');
-			})
-			.finally(() => {
-				setIsLoading(false);
-			});
-
-		console.log(data);
+			console.log(data);
 		}
 	};
 
@@ -258,7 +254,7 @@ const CreateQuiz = () => {
 		if (mediaFiles) {
 			const reader = new FileReader();
 			console.log(mediaFiles);
-			console.log(selectedFile)
+			console.log(selectedFile);
 			reader.onload = () => {
 				setSelectedFile([...selectedFile, mediaFiles]);
 			};
@@ -427,194 +423,199 @@ const CreateQuiz = () => {
 				<Form.List name="questions" style={{ textAlign: 'center' }}>
 					{(fields, { add, remove }) => (
 						<>
-							{fields.map(({ key, name, fieldKey, ...restField }, index) => (
-								<div
-									key={key}
-									style={{
-										marginBottom: 8,
-										border: '1px solid black',
-										paddingLeft: '15px',
-										width: '50%',
-										marginLeft: '25%',
-									}}
-								>
-									<div
-										style={{
-											display: 'flex',
-
-											width: '100%',
-										}}
-										onClick={() => handleEditQuestion(index)}
-									>
-										<lable> Câu hỏi: </lable>
+							{createby && createby === 'file' ? null : (
+								<>
+									{fields.map(({ key, name, fieldKey, ...restField }, index) => (
 										<div
-											dangerouslySetInnerHTML={{ __html: value[index] }}
-											className="question-content"
-											hidden={editingIndex === index}
-										/>
-										{editingIndex >= 0 && editingIndex == index ? (
-											<Editor
-												data={value[editingIndex]}
-												editcontent={handleEditorChange}
-												cancel={handleEditorCancel}
-												isQuiz={true}
-											/>
-										) : null}
-									</div>
-
-									<Form.Item name={[name, 'answerType']} valuePropName="checked">
-										<Radio.Group
-											onChange={(e) => handleAnswerTypeChange(index, e)}
-											defaultValue={answerTypes[index] || 'single_choice'} // Sử dụng 'single' nếu giá trị là undefined
+											key={key}
+											style={{
+												marginBottom: 8,
+												border: '1px solid black',
+												paddingLeft: '15px',
+												width: '50%',
+												marginLeft: '25%',
+											}}
 										>
-											<Radio value="single_choice">Chọn 1 đáp án</Radio>
-											<Radio value="multiple_choice">Chọn nhiều đáp án</Radio>
-											<Radio value="essay">Tự luận</Radio>
-										</Radio.Group>
-									</Form.Item>
-									<Form.List name={[name, 'answers']}>
-										{(answerFields, { add: addAnswer, remove: removeAnswer }) => (
-											<>
-												{answerTypes[index] === 'essay' && (
-													<Form.Item name={[name, 'score']}>
-														<lable>Điểm cho câu hỏi:</lable>
-														<InputNumber
-															min={1}
-															placeholder="Điểm cho câu hỏi"
-															style={{
-																width: '60%',
-																border: '1px solid black',
-															}}
-															onChange={(value) => {
-																const newScores = [...scores];
-																newScores[index] = value;
-																setScores(newScores);
-																totalScore(answerTypes, newScores);
-															}}
-														/>
-													</Form.Item>
-												)}
-												{answerFields.map(
-													(
-														{
-															key: answerKey,
-															name: answerName,
-															fieldKey: answerFieldKey,
-															...answerRestField
-														},
-														answerIndex
-													) => (
-														<>
-															<Space
-																key={answerKey}
-																style={{ display: 'flex', marginBottom: 8 }}
-																align="baseline"
-															>
-																{answerTypes[index] !== 'essay' && (
-																	<Form.Item
-																		{...answerRestField}
-																		name={[answerName, 'answer']}
-																		rules={[
-																			{
-																				required: true,
-																				message: 'Vui lòng nhập đáp án!',
-																			},
-																		]}
-																	>
-																		<Input placeholder="Nhập đáp án" />
-																	</Form.Item>
-																)}
+											<div
+												style={{
+													display: 'flex',
 
-																{answerTypes[index] === 'multiple_choice' && (
-																	<Form.Item
-																		name={[answerName, 'isCorrect']}
-																		valuePropName="checked"
-																	>
-																		<Checkbox>Đáp án đúng</Checkbox>
-																	</Form.Item>
-																)}
-
-																{answerTypes[index] === 'single_choice' && (
-																	<Form.Item
-																		name={[answerName, 'isCorrect']}
-																		valuePropName="checked"
-																	>
-																		<Radio>Đáp án đúng</Radio>
-																	</Form.Item>
-																)}
-
-																{answerTypes[index] !== 'essay' && (
-																	<MinusCircleOutlined
-																		onClick={() => removeAnswer(answerName)}
-																	/>
-																)}
-															</Space>
-														</>
-													)
-												)}
-												{answerTypes[index] !== 'essay' && (
-													<Form.Item>
-														<Button
-															type="dashed"
-															onClick={() => addAnswer()}
-															icon={<PlusOutlined />}
-														>
-															Thêm đáp án
-														</Button>
-													</Form.Item>
-												)}
-											</>
-										)}
-									</Form.List>
-									{index > 0 && (
-										<Form.Item>
-											<DeleteOutlined
-												onClick={() => {
-													remove(name);
-													const newAnswerTypes = [...answerTypes];
-													newAnswerTypes.splice(index, 1);
-													setAnswerTypes(newAnswerTypes);
-													totalScore(newAnswerTypes, scores);
+													width: '100%',
 												}}
-											/>
-										</Form.Item>
-									)}
-								</div>
-							))}
+												onClick={() => handleEditQuestion(index)}
+											>
+												<lable> Câu hỏi: </lable>
+												<div
+													dangerouslySetInnerHTML={{ __html: value[index] }}
+													className="question-content"
+													hidden={editingIndex === index}
+												/>
+												{editingIndex >= 0 && editingIndex == index ? (
+													<Editor
+														data={value[editingIndex]}
+														editcontent={handleEditorChange}
+														cancel={handleEditorCancel}
+														isQuiz={true}
+													/>
+												) : null}
+											</div>
+
+											<Form.Item name={[name, 'answerType']} valuePropName="checked">
+												<Radio.Group
+													onChange={(e) => handleAnswerTypeChange(index, e)}
+													defaultValue={answerTypes[index] || 'single_choice'} // Sử dụng 'single' nếu giá trị là undefined
+												>
+													<Radio value="single_choice">Chọn 1 đáp án</Radio>
+													<Radio value="multiple_choice">Chọn nhiều đáp án</Radio>
+													<Radio value="essay">Tự luận</Radio>
+												</Radio.Group>
+											</Form.Item>
+											<Form.List name={[name, 'answers']}>
+												{(answerFields, { add: addAnswer, remove: removeAnswer }) => (
+													<>
+														{answerTypes[index] === 'essay' && (
+															<Form.Item name={[name, 'score']}>
+																<lable>Điểm cho câu hỏi:</lable>
+																<InputNumber
+																	min={1}
+																	placeholder="Điểm cho câu hỏi"
+																	style={{
+																		width: '60%',
+																		border: '1px solid black',
+																	}}
+																	onChange={(value) => {
+																		const newScores = [...scores];
+																		newScores[index] = value;
+																		setScores(newScores);
+																		totalScore(answerTypes, newScores);
+																	}}
+																/>
+															</Form.Item>
+														)}
+														{answerFields.map(
+															(
+																{
+																	key: answerKey,
+																	name: answerName,
+																	fieldKey: answerFieldKey,
+																	...answerRestField
+																},
+																answerIndex
+															) => (
+																<>
+																	<Space
+																		key={answerKey}
+																		style={{ display: 'flex', marginBottom: 8 }}
+																		align="baseline"
+																	>
+																		{answerTypes[index] !== 'essay' && (
+																			<Form.Item
+																				{...answerRestField}
+																				name={[answerName, 'answer']}
+																				rules={[
+																					{
+																						required: true,
+																						message:
+																							'Vui lòng nhập đáp án!',
+																					},
+																				]}
+																			>
+																				<Input placeholder="Nhập đáp án" />
+																			</Form.Item>
+																		)}
+
+																		{answerTypes[index] === 'multiple_choice' && (
+																			<Form.Item
+																				name={[answerName, 'isCorrect']}
+																				valuePropName="checked"
+																			>
+																				<Checkbox>Đáp án đúng</Checkbox>
+																			</Form.Item>
+																		)}
+
+																		{answerTypes[index] === 'single_choice' && (
+																			<Form.Item
+																				name={[answerName, 'isCorrect']}
+																				valuePropName="checked"
+																			>
+																				<Radio>Đáp án đúng</Radio>
+																			</Form.Item>
+																		)}
+
+																		{answerTypes[index] !== 'essay' && (
+																			<MinusCircleOutlined
+																				onClick={() => removeAnswer(answerName)}
+																			/>
+																		)}
+																	</Space>
+																</>
+															)
+														)}
+														{answerTypes[index] !== 'essay' && (
+															<Form.Item>
+																<Button
+																	type="dashed"
+																	onClick={() => addAnswer()}
+																	icon={<PlusOutlined />}
+																>
+																	Thêm đáp án
+																</Button>
+															</Form.Item>
+														)}
+													</>
+												)}
+											</Form.List>
+											{index > 0 && (
+												<Form.Item>
+													<DeleteOutlined
+														onClick={() => {
+															remove(name);
+															const newAnswerTypes = [...answerTypes];
+															newAnswerTypes.splice(index, 1);
+															setAnswerTypes(newAnswerTypes);
+															totalScore(newAnswerTypes, scores);
+														}}
+													/>
+												</Form.Item>
+											)}
+										</div>
+									))}
+								</>
+							)}
+
 							<div className="infor-exam-create" style={{ display: 'flex', justifyContent: 'center' }}>
-								{createby !== 'file' ? (
+								<Form.Item>
+									<Button
+										type="dashed"
+										onClick={() => {
+											add();
+											const newAnswerTypes = [...answerTypes, 'single_choice'];
+											setAnswerTypes(newAnswerTypes);
+											setValue([...value, '<p>Nhập câu hỏi </p>']);
+											totalScore(newAnswerTypes, scores);
+											setCreateby('add');
+										}}
+										icon={<PlusOutlined />}
+									>
+										Thêm câu hỏi
+									</Button>
+								</Form.Item>
+
+								<div>
 									<Form.Item>
 										<Button
 											type="dashed"
 											onClick={() => {
-												add();
-												const newAnswerTypes = [...answerTypes, 'single_choice'];
-												setAnswerTypes(newAnswerTypes);
-												setValue([...value, '<p>Nhập câu hỏi </p>']);
-												totalScore(newAnswerTypes, scores);
-												setCreateby('add');
+												setIsopenAddFile(!isopenAddFile);
+												setSelectedFile([]);
+												setCreateby('file');
 											}}
-											icon={<PlusOutlined />}
+											icon={<BiSolidFileImport />}
 										>
-											Thêm câu hỏi
+											Tạo câu hỏi bằng file excel
 										</Button>
 									</Form.Item>
-								) : null}
-								{createby !== 'add' ? (
-									<div>
-										<Form.Item>
-											<Button
-												type="dashed"
-												onClick={() => {
-													setIsopenAddFile(!isopenAddFile);
-													setSelectedFile([]);
-													setCreateby('file');
-												}}
-												icon={<BiSolidFileImport />}
-											>
-												Tạo câu hỏi bằng file excel
-											</Button>
-										</Form.Item>
+									{createby !== 'add' ? (
 										<div className="file-list">
 											{selectedFile.map((item, index) => {
 												return (
@@ -632,8 +633,8 @@ const CreateQuiz = () => {
 												);
 											})}
 										</div>
-									</div>
-								) : null}
+									) : null}
+								</div>
 							</div>
 						</>
 					)}
