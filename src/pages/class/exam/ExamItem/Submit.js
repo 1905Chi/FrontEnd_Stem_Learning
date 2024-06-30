@@ -389,7 +389,7 @@ console.log(id, mark);
 				</div>
 			) : null}
 
-			{typesubmit === 'review' && user.role === 'STUDENT' ? (
+			{typesubmit === 'review' && (user.role === 'STUDENT'|| user.role === 'PARENT') ? (
 				<div>
 					{submissionDetailId && submissionDetailId.length > 0 ? (
 						<div>

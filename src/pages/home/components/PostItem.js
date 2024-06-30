@@ -808,10 +808,10 @@ function PostItem(props) {
 						{props.type === 'POST' &&
 						props.content !== null &&
 						props.content !== undefined &&
-						props.content !== ''
+						props.refUrls === ''
 							? 'bài viết '
 							: null}
-						{props.type === 'POST' && props.content === '' ? 'tài liệu ' : null}
+						{props.type === 'POST' && props.content !== '' ? 'tài liệu ' : null}
 						trong nhóm
 					</p>
 				</div>

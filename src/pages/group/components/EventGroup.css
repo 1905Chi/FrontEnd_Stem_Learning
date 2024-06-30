@@ -50,3 +50,6 @@
    
 
 }
+.ant-form-item .ant-form-item-label >label{
+    margin-right: 3rem;
+}

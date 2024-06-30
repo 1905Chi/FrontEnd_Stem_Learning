@@ -41,7 +41,7 @@ export default function Right() {
 		},
 	]);
 
-	const accept = (status, id) => () => {
+	const accept = (status, id)  => {
 		if (status === 'ACCEPT') {
 			const headers = {
 				'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export default function Right() {
 				});
 		}
 	};
-	const acceptInvite = (status, id) => () => {
+	const acceptInvite = (status, id)  => {
 		const isAccept = status === 'ACCEPT' ? true : false;
 
 		Api.post(url + `api/v1/group-member-invitations/${id}/response`, { isAccept: isAccept }, { headers: headers })
@@ -148,13 +148,13 @@ export default function Right() {
 		Api.get(url + 'api/v1/relationships/student/relationship-requests', { headers: headers })
 			.then((res) => {
 				setListRelationShip(res.data.result);
-				setCountRequestParent(res.data.result.filter((item) => item.accepted === false).length);
+				setCountRequestParent(res.data.result.filter((item) => (item.accepted === "" || item.accepted=== null)).length);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
 	};
-	const acceptRelation = (status, id) => () => {
+	const acceptRelation = (status, id) => {
 		if (status === 'ACCEPT') {
 			Api.put(url + 'api/v1/relationships/' + id, { isAccepted: true }, { headers: headers })
 				.then((res) => {
@@ -299,7 +299,7 @@ export default function Right() {
 							<h3>Yêu cầu liên kết tài khoản </h3>
 						</div>
 						{listRelationShip.map((item, index) =>
-							item.accepted === false ? (
+							item.accepted === "" || item.accepted === null   ? (
 								<div className="friend-request_item" key={item.id}>
 									<div
 										style={{  margin: '15px', marginTop: '18px' }}
@@ -381,8 +381,8 @@ export default function Right() {
 												<p
 													style={{
 														textAlign: 'start',
-														fontSize: 'larger',
-														fontWeight: '800',
+													
+														
 														marginTop: '9.5%',
 													}}
 													onClick={() => {

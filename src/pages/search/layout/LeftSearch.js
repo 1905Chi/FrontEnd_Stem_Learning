@@ -40,14 +40,14 @@ export default function LeftSearch() {
 		dispatch(selectOption('all'));
 		callSubject();
 		/// bài viết
-		Api.get(url + 'api/v1/posts/search?query=' + searchValue)
-			.then((res) => {
-				dispatch(selectpost(res.data));
-				console.log(res.data);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		// Api.get(url + 'api/v1/posts/search?query=' + searchValue)
+		// 	.then((res) => {
+		// 		dispatch(selectpost(res.data));
+		// 		console.log(res.data);
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err);
+		// 	});
 		// lớp học
 		Api.get(url + 'api/v1/groups/search?isClass=1&query=' + searchValue)
 			.then((res) => {
@@ -124,13 +124,13 @@ export default function LeftSearch() {
 					<MdOutlineBallot className="icon-menu" />
 					<span>Tất cả</span>
 				</button>
-				<button
+				{/* <button
 					className={`menu-item ${selectedOption === 'post' ? 'active' : ''}`}
 					onClick={() => handleButtonClick('post')}
 				>
 					<BsFillPostcardHeartFill className="icon-menu" />
 					<span>Bài viết</span>
-				</button>
+				</button> */}
 				<button
 					className={`menu-item ${selectedOption === 'people' ? 'active' : ''}`}
 					onClick={() => handleButtonClick('people')}

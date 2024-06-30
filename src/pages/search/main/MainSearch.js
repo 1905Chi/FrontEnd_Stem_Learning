@@ -169,7 +169,7 @@ export default function MainSearch() {
 		>
 			{selectedOption === 'all' && (
 				<div>
-					{post && post.length > 0 && (
+					{/* {post && post.length > 0 && (
 						<div>
 							<h1>Bài viết</h1>
 							{post.map((item, index) => (
@@ -188,7 +188,7 @@ export default function MainSearch() {
 								/>
 							))}
 						</div>
-					)}
+					)} */}
 					{group && group.length > 0 && (
 						<div>
 							<h1>Nhóm</h1>
@@ -243,7 +243,7 @@ export default function MainSearch() {
 					)}
 				</div>
 			)}
-			{selectedOption === 'post' && (
+			{/* {selectedOption === 'post' && (
 				<div>
 					{post && post.length > 0 ? (
 						<div>
@@ -273,7 +273,7 @@ export default function MainSearch() {
 						</div>
 					)}
 				</div>
-			)}
+			)} */}
 			{selectedOption === 'people' && (
 				<div>
 					{people && people.length > 0 ? (
