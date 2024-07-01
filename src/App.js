@@ -19,25 +19,14 @@ import LandingPage from './pages/landing/LandingPage';
 import { useWebSocket } from './context/WebSocketContext';
 
 export default function App() {
-	const [isLogin, setIsLogin] = useState(localStorage.getItem('accessToken') ? true : false);
+	const [isLogin, setIsLogin] = useState()
+	useEffect(() => {
+	  setIsLogin(localStorage.getItem('accessToken') ? true : false)
+	})
 	const currentUser = JSON.parse(localStorage.getItem('user'));
 	const isComponentUnmounted = useRef(false);
 	const { connectWebSocket, disconnectWebSocket, notification } = useWebSocket();
-	// if (isLogin) {
-	// 	window.addEventListener('beforeunload', async function (event) {
-	// 		// Hủy bỏ sự kiện ngăn chặn đóng trang
-	// 		event.preventDefault();
 
-	// 		// Gọi hàm disconnectWebSocket(currentUser) và đợi nó hoàn thành
-	// 		await disconnectWebSocket(currentUser);
-
-	// 		// Thực hiện đóng trang
-	// 		const confirmationMessage = 'Bạn có chắc muốn rời khỏi trang?';
-	// 		event.returnValue = confirmationMessage;
-
-	// 		return confirmationMessage;
-	// 	});
-	// }
 
 	useEffect(() => {
 		// Thực hiện kết nối khi component được mount`

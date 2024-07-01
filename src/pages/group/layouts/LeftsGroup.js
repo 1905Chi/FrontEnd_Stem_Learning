@@ -114,7 +114,7 @@ const LeftsGroup = () => {
 				</div>
 			</div>
 			<div style={{ margin: '228px 0 0 0' }}>
-				{groupJoin && groupJoin.length > 0 ? (
+				{groupJoin && groupJoin.length > 1 ? (
 					<div className="your-group">
 						<Slider
 							dots={true}
@@ -133,13 +133,19 @@ const LeftsGroup = () => {
 											<div className="group-info">
 												<h2>{mygroup.group.name}</h2>
 												<p>{mygroup.group.description}</p>
-												
 											</div>
-											
 										</div>
 									);
 								})}
 						</Slider>
+					</div>
+				) : groupJoin && groupJoin.length === 1 ? (
+					<div className="slide">
+						<img src={groupJoin[0].group.avatarUrl} alt="Group Avatar" />
+						<div className="group-info">
+							<h2>{groupJoin[0].group.name}</h2>
+							<p>{groupJoin[0].group.description}</p>
+						</div>
 					</div>
 				) : null}
 

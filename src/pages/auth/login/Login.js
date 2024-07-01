@@ -58,9 +58,7 @@ function Login() {
 						.then(async (response) => {
 							if (response.data.statusCode === 200) {
 								localStorage.setItem('user', JSON.stringify(response.data.result));
-								dispatch(selectuser(response.data.result));
-								//	localStorage.setItem('use',createJwtToken(response.data.result))
-								//toast.success('Đăng nhập thành công');
+								
 								setTimeout(() => {
 									navigate('/home');
 								}, 2000);

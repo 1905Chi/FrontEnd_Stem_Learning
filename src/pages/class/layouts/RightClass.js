@@ -112,28 +112,38 @@ const RightClass = () => {
 							<h3 style={{ textAlign: 'center', width: '100%', color: '#2424a5' }}>Đề xuất</h3>
 						</div>
 						<div style={{ height: '52vh' }}>
-							<Slider
-								dots={true}
-								infinite={true}
-								speed={500}
-								slidesToShow={1}
-								slidesToScroll={1}
-								autoplay={true}
-								autoplaySpeed={3000}
-							>
-								{listClassJoin &&
-									listClassJoin.map((mygroup, index) => {
-										return (
-											<div key={index} className="slide">
-												<img src={mygroup.group.avatarUrl} alt="Group Avatar" />
-												<div className="group-info">
-													<h2>{mygroup.group.name}</h2>
-													<p>{mygroup.group.description}</p>
+							{listClassJoin && listClassJoin.length > 1 ? (
+								<Slider
+									dots={true}
+									infinite={true}
+									speed={500}
+									slidesToShow={1}
+									slidesToScroll={1}
+									autoplay={true}
+									autoplaySpeed={3000}
+								>
+									{listClassJoin &&
+										listClassJoin.map((mygroup, index) => {
+											return (
+												<div key={index} className="slide">
+													<img src={mygroup.group.avatarUrl} alt="Group Avatar" />
+													<div className="group-info">
+														<h2>{mygroup.group.name}</h2>
+														<p>{mygroup.group.description}</p>
+													</div>
 												</div>
-											</div>
-										);
-									})}
-							</Slider>
+											);
+										})}
+								</Slider>
+							) :listClassJoin && listClassJoin.length === 1 ? (
+								<div className="slide">
+									<img src={listClassJoin[0].group.avatarUrl} alt="Group Avatar" />
+									<div className="group-info">
+										<h2>{listClassJoin[0].group.name}</h2>
+										<p>{listClassJoin[0].group.description}</p>
+									</div>
+								</div>
+							): null}
 						</div>
 					</div>
 

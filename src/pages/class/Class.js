@@ -179,7 +179,7 @@ export default function Class() {
 						}
 					}}
 				>
-					<img src={item.avatarUrl === null ? anh_logo_1 : item.avatarUrl} alt="" />
+					<img src={item.avatarUrl === null ||item.avatarUrl === ""  ? anh_logo_1 : item.avatarUrl} alt="" />
 					<div className="info-class">
 						<h3> {item.name} </h3>
 						<p> {item.description} </p>
