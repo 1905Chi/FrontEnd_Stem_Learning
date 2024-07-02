@@ -115,15 +115,17 @@
 
 .information-account{
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+ 
   height: auto;
 }
-.information-profile{
+.information-profile-register
+{
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  margin-top: 20px;
+}
+.information-profile-register .form-item-register {
+  flex: 1 1 45%; /* Mỗi item chiếm khoảng 45% chiều rộng, tạo khoảng cách giữa các item */
+  min-width: 200px; /* Đảm bảo rằng các item có chiều rộng tối thiểu */
 }
 .form-item-register{
   margin-left: 25px;
@@ -131,7 +133,16 @@
 .item-form{
   width: 180px;
 }
-
+.ant-form-item-control-input {
+  width: 88%;
+}
+.date-picker-parent {
+  width: 100%;
+}
+.ant-select,
+.ant-picker {
+  margin-right: 15px;
+}
 @media screen and (max-width: 768px) {
   .register-body-form {
     top :-4rem;
@@ -150,9 +161,11 @@
   .item-form{
     width: 160%;
   }
-  .information-profile{
-    flex-direction: column;
-    align-items: start }
+
+  .information-profile-register{
+  
+    align-items: start 
+  }
   .register-body-form-teacher{
     top:-10rem
   }

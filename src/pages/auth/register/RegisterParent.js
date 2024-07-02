@@ -140,7 +140,7 @@ export default function RegisterParent(props) {
 								]}
 								className="form-item-register"
 							>
-								<Input placeholder="Email" className='item-form' />
+								<Input placeholder="Email" className='item-for-register' />
 							</Form.Item>
 							<Form.Item
 								name="password"
@@ -157,7 +157,7 @@ export default function RegisterParent(props) {
 								hasFeedback
 								className="form-item-register"
 							>
-								<Input.Password placeholder="Mật khẩu" className='item-form' />
+								<Input.Password placeholder="Mật khẩu" className='item-for-register' />
 							</Form.Item>
 							<Form.Item
 								name="confirm"
@@ -179,24 +179,24 @@ export default function RegisterParent(props) {
 								]}
 								className="form-item-register"
 							>
-								<Input.Password placeholder="Nhập lại mật khẩu" className='item-form' />
+								<Input.Password placeholder="Nhập lại mật khẩu" className='item-for-register' />
 							</Form.Item>
 						</div>
 						<h3 style={{ color: 'blue' }}>Thông tin cá nhân:</h3>
-						<div className="information-profile">
+						<div className="information-profile-register">
 							<Form.Item
 								name="firstName"
 								rules={[{ required: true, message: 'Vui lòng nhập tên của bạn!' }]}
 								className="form-item-register"
 							>
-								<Input placeholder="Tên" className='item-form' />
+								<Input placeholder="Tên" className='item-for-register' />
 							</Form.Item>
 							<Form.Item
 								name="lastName"
 								rules={[{ required: true, message: 'Vui lòng nhập họ của bạn!' }]}
 								className="form-item-register"
 							>
-								<Input placeholder="Họ" className='item-form' />
+								<Input placeholder="Họ" className='item-for-register' />
 							</Form.Item>
 
 							<Form.Item
@@ -215,12 +215,12 @@ export default function RegisterParent(props) {
 									},
 								]}
 							>
-								<Input placeholder="Số điện thoại" className='item-form' />
+								<Input placeholder="Số điện thoại" className='item-for-register' />
 							</Form.Item>
 							<Form.Item name="date_picker" {...config} className="form-item-register">
 								<DatePicker
 									format="DD-MM-YYYY"
-									className='item-form'
+									className='item-for-register'
 									placeholder="Ngày tháng năm sinh"
 									disabledDate={isDateDisabled}
 								/>
@@ -233,7 +233,7 @@ export default function RegisterParent(props) {
 							>
 								<Select
 									showSearch
-									className='item-form'
+									className='item-for-register'
 									placeholder="Quận huyện"
 									optionFilterProp="children"
 									onChange={handleChange}
@@ -261,7 +261,7 @@ export default function RegisterParent(props) {
 								className="form-item-register"
 							>
 								<div>
-									<Radio.Group defaultValue="MALE" className='item-form'>
+									<Radio.Group defaultValue="MALE" className='item-for-register'>
 										<Tooltip title="Nam">
 											<Radio.Button value="MALE">
 												<FcManager />

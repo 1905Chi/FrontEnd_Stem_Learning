@@ -12,7 +12,7 @@ import { selectuser } from '../../../redux/User';
 
 import './Login.css';
 
-function Login() {
+function Login({ UpdateIsLogin }) {
 	const navigate = useNavigate();
 	const notify = (string) => toast(string); // Hàm hiển thị thông báo
 	const [loading, setLoading] = useState(false); // Trạng thái loading
@@ -60,7 +60,8 @@ function Login() {
 								localStorage.setItem('user', JSON.stringify(response.data.result));
 								
 								setTimeout(() => {
-									navigate('/home');
+									UpdateIsLogin()
+									navigate('/home')
 								}, 2000);
 								
 							} else {

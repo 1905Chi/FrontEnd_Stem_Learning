@@ -18,7 +18,12 @@ import { url } from '../../../constants/Constant';
 import { useNavigate } from 'react-router-dom';
 import { Empty } from 'antd';
 import { useState } from 'react';
-import { selectSelectOptionSearchGrade, selectSelectOptionSearchSubject, selectSelectOptionSearchPeople } from '../../../redux/Group';
+import { UserOutlined } from '@ant-design/icons';
+import {
+	selectSelectOptionSearchGrade,
+	selectSelectOptionSearchSubject,
+	selectSelectOptionSearchPeople,
+} from '../../../redux/Group';
 export default function MainSearch() {
 	const navigate = useNavigate();
 	const selectedOption = useSelector(selectSelectedOption);
@@ -44,7 +49,7 @@ export default function MainSearch() {
 
 	useEffect(() => {
 		searchPeople();
-	},[selectedOptionSearchPeople])	
+	}, [selectedOptionSearchPeople]);
 	const searchPeople = async () => {
 		if (selectedOptionSearchPeople === 'all' || selectedOptionSearchPeople === null) {
 			setPeople(peopleSearch);
@@ -69,25 +74,23 @@ export default function MainSearch() {
 				console.log(classSearch);
 				setClass(classSearch);
 				return;
-			}
-			else if (selectedOptionSearchGrade !=='all' && selectedOptionSearchSubject !== 'all') {
+			} else if (selectedOptionSearchGrade !== 'all' && selectedOptionSearchSubject !== 'all') {
 				console.log(selectedOptionSearchGrade);
 				console.log(selectedOptionSearchSubject);
 				console.log(clasaSearch);
 				const classSearch = clasaSearch.filter(
-					(item) => item.grade === Number(selectedOptionSearchGrade )&& item.subject === selectedOptionSearchSubject
+					(item) =>
+						item.grade === Number(selectedOptionSearchGrade) && item.subject === selectedOptionSearchSubject
 				);
 				console.log(classSearch);
 				setClass(classSearch);
 				return;
-			}
-			else if (selectedOptionSearchGrade !== 'all' && selectedOptionSearchSubject === 'all') {
+			} else if (selectedOptionSearchGrade !== 'all' && selectedOptionSearchSubject === 'all') {
 				const classSearch = clasaSearch.filter((item) => item.grade === Number(selectedOptionSearchGrade));
 				console.log(classSearch);
 				setClass(classSearch);
 				return;
 			}
-			
 		}
 	};
 	const Requestfriend = async (id) => {
@@ -211,7 +214,35 @@ export default function MainSearch() {
 							{people &&
 								people.map((item, index) => (
 									<div className="user-search">
-										<Avatar size={64} src={item.avatarUrl} />
+										{item.avatarUrl !== null && item.avatarUrl !== '' ? (
+											<Avatar
+												src={item.avatarUrl}
+												size={64}
+												onClick={() => {
+													if (localStorage.getItem('user') === null) {
+														toast.error(
+															'Bạn cần đăng nhập để xem thông tin người dùng này'
+														);
+														return;
+													}
+													navigate('/profile/' + item.id);
+												}}
+											/>
+										) : (
+											<Avatar
+												icon={<UserOutlined style={{ height: '3em' }} />}
+												size={64}
+												onClick={() => {
+													if (localStorage.getItem('user') === null) {
+														toast.error(
+															'Bạn cần đăng nhập để xem thông tin người dùng này'
+														);
+														return;
+													}
+													navigate('/profile/' + item.id);
+												}}
+											/>
+										)}
 										<p>{item.firstName + ' ' + item.lastName}</p>
 										{item.isFriend === 1 ? (
 											<button
@@ -225,17 +256,17 @@ export default function MainSearch() {
 											>
 												Trang cá nhân{' '}
 											</button>
-										) : item.isFriend === 0 ? (
+										) : item.isFriend === 0 && item.id !== user.id ? (
 											<button onClick={() => Requestfriend(item.id)}>Thêm bạn</button>
 										) : item.isFriend === -1 ? (
 											<button>Đã gửi lời mời</button>
 										) : (
-											<button>Chưa đăng nhập</button>
+											null
 										)}
 										{item.role === 'STUDENT' &&
 										user !== null &&
 										(user.role === 'PARENT' || user.role === 'TEACHER') ? (
-											<button onClick={() => requestParent(item.id)}>Phụ huynh- học sinh</button>
+											<button onClick={() => requestParent(item.id)}>Liên kết tài khoản</button>
 										) : null}
 									</div>
 								))}
@@ -282,7 +313,35 @@ export default function MainSearch() {
 							{people &&
 								people.map((item, index) => (
 									<div className="user-search">
-										<Avatar size={64} src={item.avatarUrl} />
+										{item.avatarUrl !== null && item.avatarUrl !== '' ? (
+											<Avatar
+												src={item.avatarUrl}
+												size={64}
+												onClick={() => {
+													if (localStorage.getItem('user') === null) {
+														toast.error(
+															'Bạn cần đăng nhập để xem thông tin người dùng này'
+														);
+														return;
+													}
+													navigate('/profile/' + item.id);
+												}}
+											/>
+										) : (
+											<Avatar
+												icon={<UserOutlined style={{ height: '3em' }} />}
+												size={64}
+												onClick={() => {
+													if (localStorage.getItem('user') === null) {
+														toast.error(
+															'Bạn cần đăng nhập để xem thông tin người dùng này'
+														);
+														return;
+													}
+													navigate('/profile/' + item.id);
+												}}
+											/>
+										)}
 										<p>{item.firstName + ' ' + item.lastName}</p>
 										{item.isFriend === 1 ? (
 											<button
@@ -296,17 +355,17 @@ export default function MainSearch() {
 											>
 												Trang cá nhân{' '}
 											</button>
-										) : item.isFriend === 0 ? (
+										) : item.isFriend === 0  && item.id !== user.id ? (
 											<button onClick={() => Requestfriend(item.id)}>Thêm bạn</button>
 										) : item.isFriend === -1 ? (
 											<button>Đã gửi lời mời</button>
 										) : (
-											<button>Chưa đăng nhập</button>
+											null
 										)}
 										{item.role === 'STUDENT' &&
 										user !== null &&
 										(user.role === 'PARENT' || user.role === 'TEACHER') ? (
-											<button onClick={() => requestParent(item.id)}>Phụ huynh- học sinh</button>
+											<button onClick={() => requestParent(item.id)}>Liên kết tài khoản</button>
 										) : null}
 									</div>
 								))}

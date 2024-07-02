@@ -19,14 +19,14 @@ import LandingPage from './pages/landing/LandingPage';
 import { useWebSocket } from './context/WebSocketContext';
 
 export default function App() {
-	const [isLogin, setIsLogin] = useState()
-	useEffect(() => {
-	  setIsLogin(localStorage.getItem('accessToken') ? true : false)
-	})
+	const [isLogin, setIsLogin] = useState(false);
+	const accessToken = localStorage.getItem('accessToken');
+	const UpdateLogin = () => {
+		setIsLogin(!isLogin);
+	};
 	const currentUser = JSON.parse(localStorage.getItem('user'));
 	const isComponentUnmounted = useRef(false);
 	const { connectWebSocket, disconnectWebSocket, notification } = useWebSocket();
-
 
 	useEffect(() => {
 		// Thực hiện kết nối khi component được mount`
@@ -52,7 +52,7 @@ export default function App() {
 								key={index}
 								path={route.path}
 								element={
-									<DefaultLayoutLogin setIsLogin={setIsLogin}>
+									<DefaultLayoutLogin UpdateIsLogin={UpdateLogin}>
 										<Page />
 									</DefaultLayoutLogin>
 								}
@@ -69,7 +69,7 @@ export default function App() {
 								key={index}
 								path={route.path}
 								element={
-									isLogin ? (
+									isLogin && isLogin === true ? (
 										<>
 											<DefaultLayout setIsLogin={setIsLogin} Left={<Left />} Right={<Right />}>
 												<Page />
@@ -97,7 +97,7 @@ export default function App() {
 								key={index}
 								path={route.path}
 								element={
-									isLogin ? (
+									isLogin && isLogin === true ? (
 										<>
 											<DefaultLayoutTwoPage setIsLogin={setIsLogin} Left={<Left />}>
 												<Page />
@@ -140,7 +140,7 @@ export default function App() {
 								key={index}
 								path={route.path}
 								element={
-									isLogin ? (
+									isLogin && isLogin === true ? (
 										<>
 											<Topbar />
 											<DefaultLayoutLogin setIsLogin={setIsLogin}>
