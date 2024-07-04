@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function DefaultLayoutLogin({ children, UpdateIsLogin }) {
+export default function DefaultLayoutLogin({ children }) {
   return (
     <div style={{ overflowY: 'auto', height: '100vh' }}>
-      {React.cloneElement(children, { UpdateIsLogin })}
+      {React.cloneElement(children)}
     </div>
   );
 }

@@ -260,7 +260,7 @@ export default function Right() {
 												navigate(`/profile/${item.sender.id}`);
 											}}
 										>
-											<p>{item.sender.firstName + ' ' + item.sender.lastName}</p>
+											<p>{item.sender.lastName  + ' ' + item.sender.firstName}</p>
 										</div>
 										<div >
 											<button
@@ -277,7 +277,7 @@ export default function Right() {
 													setItem(item);
 													setModalText(
 														`Bạn có chắc muốn xóa lời mời kết bạn của ${
-															item.sender.firstName + ' ' + item.sender.lastName
+															item.sender.lastName  + ' ' + item.sender.firstName 
 														}?`
 													);
 												}}
@@ -322,7 +322,7 @@ export default function Right() {
 												navigate(`/profile/${item.parent.id}`);
 											}}
 										>
-											<p>{item.parent.firstName + ' ' + item.parent.lastName}</p>
+											<p>{item.parent.lastName  + ' ' + item.parent.firstName}</p>
 										</div>
 										<div style={{ textAlign: 'start' }}>
 											<button
@@ -389,7 +389,7 @@ export default function Right() {
 														navigate(`/profile/${item.inviter.id}`);
 													}}
 												>
-													{item.inviter.firstName + ' ' + item.inviter.lastName}
+													{item.inviter.lastName + ' ' + item.inviter.firstName }
 												</p>
 												<span>Mời bạn tham gia </span>
 												<strong

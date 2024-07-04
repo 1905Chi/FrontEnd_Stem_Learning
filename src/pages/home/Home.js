@@ -14,26 +14,22 @@ import './Home.css';
 //import { verifyJwtToken } from '../../api/Jwt';
 function Home() {
 	const [ispost, setIspost] = useState(false);
-	const dispatch = useDispatch();
 
+	const [listpost, setListpost] = useState(null);
 	const [page, setPage] = useState(0);
 	const [size, setSize] = useState(30);
 	const [openLeft, setOpenLeft] = useState(false);
 	const LeftHomeRef = useRef(null);
-	const listpost = useSelector(selectselectlistpostHome);
 	useEffect(() => {
 		//console.log(verifyJwtToken(localStorage.getItem('use')));
 		if (localStorage.getItem('login')) {
 			toast.success('Đăng nhập thành công');
 			localStorage.removeItem('login');
 		}
-		dispatch(selectuser(JSON.parse(localStorage.getItem('user'))));
-		
-		dispatch(selectPostHome(homePosts));
 	}, []);
 	useEffect(() => {
 		homePosts();
-	}, []);
+	}, [listpost]);
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 		  if (LeftHomeRef.current && !LeftHomeRef.current.contains(event.target)) {
@@ -47,59 +43,6 @@ function Home() {
 		  document.removeEventListener("mousedown", handleClickOutside);
 		};
 	  }, []);
-	const fetchData = () => {
-		// Tạo một Promise mới
-		const myPromise = new Promise((resolve, reject) => {
-			// Simulate an asynchronous task (e.g., fetching data from an API)
-			setTimeout(() => {
-				// Giả sử dữ liệu được lấy từ API
-				const headers = {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
-				};
-				const apiData = Api.get(url + `api/v1/posts/home-posts?page=${page}&size=${size}`, {
-					headers: headers,
-				});
-				// Gọi resolve khi công việc đã hoàn thành thành công
-				resolve(apiData);
-			}, 3000); // Giả định mất 2 giây để lấy dữ liệu
-		});
-
-		// Sử dụng Promise
-		myPromise
-			.then((result) => {
-				// Xử lý kết quả khi Promise hoàn thành thành công
-				if (result.data.statusCode === 200) {
-					dispatch(selectlistpostHome(result.data.result));
-					
-					console.log('data', result.data.result);
-				} else {
-					console.log(result.error);
-				}
-			})
-			.catch((error) => {
-				// Xử lý lỗi khi Promise không thành công
-				console.error('Error fetching data:', error);
-			});
-	};
-
-	const homePostss = async () => {
-		try {
-			const headers = {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-			};
-			const response = await Api.get(`home-posts`, { headers: headers });
-			if (response.data.statusCode === 200) {
-				dispatch(selectlistpostHome(response.data.result));
-				
-			} else {
-				console.log(response.error);
-			}
-		} catch (error) {
-			console.log('Error:', error);
-		}
-	};
 
 	const homePosts = async () => {
 		try {
@@ -111,8 +54,8 @@ function Home() {
 			const response = await Api.get(url + `api/v1/posts/home-posts?page=${page}&size=${size}`, {
 				headers: headers,
 			});
+			setListpost(response.data.result.posts);	
 			if (response.data.statusCode === 200) {
-				dispatch(selectlistpostHome(response.data.result.posts));
 				console.log('data', response.data.result.posts);
 			} else {
 				console.log(response.error);

@@ -8,6 +8,7 @@ import RegisterParent from '../auth/register/RegisterParent';
 import RegisterTeacher from '../auth/register/RegisterTeacher';
 import Topbar from '../../components/Topbar';	
 import { useRef } from 'react';
+import logo from '../../assets/images/anh_logo_1.jpg';
 const LandingPage = () => {
 	const images = [
 		{
@@ -31,56 +32,56 @@ const LandingPage = () => {
 		{
 			id: 1,
 			name: 'Ôn tập lịch sửa lớp 7',
-			image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU',
+			image: logo,
 			examination: 123,
 			comment: 18,
 		},
 		{
 			id: 2,
 			name: 'Ôn tập lịch sửa lớp 8',
-			image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU',
+			image: logo,
 			examination: 123,
 			comment: 18,
 		},
 		{
 			id: 3,
 			name: 'Ôn tập lịch sửa lớp 9',
-			image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU',
+			image: logo,
 			examination: 123,
 			comment: 18,
 		},
 		{
 			id: 4,
 			name: 'Ôn tập lịch sửa lớp 10',
-			image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU',
+			image: logo,
 			examination: 123,
 			comment: 18,
 		},
 		{
 			id: 5,
 			name: 'Ôn tập lịch sửa lớp 11',
-			image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU',
+			image: logo,
 			examination: 123,
 			comment: 18,
 		},
 		{
 			id: 6,
 			name: 'Ôn tập lịch sửa lớp 12',
-			image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU',
+			image: logo,
 			examination: 123,
 			comment: 18,
 		},
 		{
 			id: 7,
 			name: 'Ôn tập lịch sửa lớp 6',
-			image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU',
+			image: logo,
 			examination: 123,
 			comment: 18,
 		},
 		{
 			id: 8,
 			name: 'Ôn tập lịch sửa lớp 5',
-			image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU',
+			image: logo,
 			examination: 123,
 			comment: 18,
 		},
@@ -237,16 +238,11 @@ const LandingPage = () => {
 					</div>
 					<div className="info-header-image">
 						<img
-							src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU"
+							src={logo}
 							alt="landing-page"
 						/>
 					</div>
-					<div className="info-header-image">
-						<img
-							src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU"
-							alt="landing-page"
-						/>
-					</div>
+
 				</div>
 				<div className="info-body-container">
 					<div className="info-body-content-class">
@@ -267,7 +263,7 @@ const LandingPage = () => {
 					</div>
 					<div className="info-body-image">
 						<img
-							src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU"
+							src={logo}
 							alt="landing-page"
 						/>
 					</div>
@@ -294,7 +290,7 @@ const LandingPage = () => {
 					<h1>Nội dung tiêu biểu</h1>
 					<h4>
 						Những khóa học, kỳ thi với số lượng người tham gia nhiều nhất và được đánh giá cao nhất về chất
-						lượng trên ViettelStudy
+						lượng trên Stem
 					</h4>
 				</div>
 				<div className="content-oustanding">
@@ -315,25 +311,25 @@ const LandingPage = () => {
 				<div className="partner-content">
 					<div className="partner-image">
 						<img
-							src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU"
+							src="https://static.topcv.vn/company_covers/oQyPpMXf5765jj8MBs1O.jpg"
 							alt="landing-page"
 						/>
 					</div>
 					<div className="partner-image">
 						<img
-							src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU"
+							src="https://hoc247.vn/static/templates/version1/default/images/fb/pic247.jpg"
 							alt="landing-page"
 						/>
 					</div>
 					<div className="partner-image">
 						<img
-							src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU"
+							src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRafgNEe9aBXu8DDRgUn6BVkBdD6U-DeDg7jA&s"
 							alt="landing-page"
 						/>
 					</div>
 					<div className="partner-image">
 						<img
-							src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLaSxkoR4CKaIrA8N7yILeZRZJVf96XjsVg&usqp=CAU"
+							src="https://tuyensinh247.com/themes/images/logo448x152.png"
 							alt="landing-page"
 						/>
 					</div>

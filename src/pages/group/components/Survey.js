@@ -194,7 +194,7 @@ export default function Servey() {
 				</button>
 			</div>
             <div className='list-survey'>
-          {  listSurvey  && listSurvey.map((servey, index) => (
+          {  listSurvey &&  listSurvey.length>0 && listSurvey.map((servey, index) => (
                 <ServeyItem key={index} 
 				id= {servey.id}
 				authorId = {servey.author.id}

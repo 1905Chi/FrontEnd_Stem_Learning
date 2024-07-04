@@ -32,7 +32,6 @@ function PostItem(props) {
 	const [isLiked, setIsLiked] = useState(props.reaction !== null && props.reaction !== undefined ? true : false); // Trạng thái ban đầu là "không thích"
 	const [isEditPost, setisEditPost] = useState(false); // Trạng thái ban đầu là "không chỉnh sửa"
 	const [contentPost, setContentPost] = useState(null);
-	console.log('contentPost', props.content);
 	const [responseComement, setResponseComement] = useState(false);
 	const [xemthem, setXemthem] = useState(false);
 	const [countReaction, setCountReaction] = useState(null);
@@ -62,11 +61,6 @@ function PostItem(props) {
 
 	const handleMouseLeave = () => {
 		setIsDropdownVisible(false);
-	};
-
-	const handleReaction = (reactionType) => {
-		// Handle reaction logic here
-		console.log('Reacted with:', reactionType);
 	};
 	const Button = styled.button`
 		border: none;
@@ -110,12 +104,6 @@ function PostItem(props) {
 	function EditContentPost(value) {
 		setContentPost(value);
 	}
-	function RepComent(index) {
-		const newShowEditorRepcmt = [...showEditorRepcmt];
-		// Nếu Editor đang được hiển thị cho comment này, ẩn nó; nếu không, hiển thị nó
-		newShowEditorRepcmt[index] = !newShowEditorRepcmt[index];
-		setShowEditorRepcmt(newShowEditorRepcmt);
-	}
 
 	function handleLike(type) {
 		if (localStorage.getItem('user') === null) {
@@ -130,7 +118,7 @@ function PostItem(props) {
 			conttentType: 'application/json',
 		};
 		let data;
-		console.log('typeReacttion', typeReacttion);
+		
 		if (type !== null && type !== undefined) {
 			data = {
 				postId: props.id,
@@ -464,7 +452,6 @@ function PostItem(props) {
 		const lowerCaseExtension = fileExtension.toLowerCase();
 
 		// Kiểm tra loại file và trả về kết quả tương ứng
-		console.log(lowerCaseExtension);
 		switch (lowerCaseExtension) {
 			case 'pdf':
 				return 'pdf';
@@ -500,7 +487,7 @@ function PostItem(props) {
 		setShowEditor(false);
 	};
 	const deleteComent = () => {
-		console.log('deleteComent' + idCmtDelete);
+
 		setConfirmLoading(true);
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -552,7 +539,7 @@ function PostItem(props) {
 						<div style={{ display: 'flex' }}>
 							<div className="content-comment">
 								<p className="user-name" style={{ fontWeight: 'bold' }}>
-									{comment.authorFirstName} {comment.authorLastName}
+								 {comment.authorLastName} {comment.authorFirstName}
 								</p>
 								<div
 									className="comment-content"
@@ -637,21 +624,15 @@ function PostItem(props) {
 			},
 		];
 
-		const handleMenuClick = ({ key }) => {
-			// Handle menu item click here
-			console.log(key);
-		};
+		
 
 		return (
 			<div className="dropdown">
 				<Dropdown
-					overlay={
-						<Menu onClick={handleMenuClick}>
-							{itemsCmt.map((item) => (
-								<Menu.Item key={item.key}>{item.label}</Menu.Item>
-							))}
-						</Menu>
-					}
+					
+					menu={{
+						itemsCmt,
+					}}
 					placement="bottomRight"
 					arrow={{
 						pointAtCenter: true,
@@ -702,8 +683,6 @@ function PostItem(props) {
 				setConfirmLoading(false);
 				setOpentReport(false);
 			});
-
-		console.log(inforReport);
 	};
 	return (
 		<div className="post-item">
@@ -800,7 +779,7 @@ function PostItem(props) {
 				<div style={{}} className="infor-author">
 					<a style={{ textDecoration: 'none', color: 'black' }}>
 						<p className="user-name" style={{ fontWeight: 'bold' }}>
-							{props.authorFirstName + ' ' + props.authorLastName}
+							{ props.authorLastName + ' ' +  props.authorFirstName}
 						</p>
 					</a>
 					<p className="user-name" style={{ display: 'block' }}>
@@ -857,8 +836,6 @@ function PostItem(props) {
 							if (item !== null) {
 								const indexAfterNumbers = item.indexOf('_') + 1;
 								const truncatedFileName = item.slice(indexAfterNumbers);
-								console.log(truncatedFileName);
-								console.log(getTypes(truncatedFileName));
 								return (
 									<LabelFile
 										key={index}
