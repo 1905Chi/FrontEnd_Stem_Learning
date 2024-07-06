@@ -94,19 +94,19 @@ const RightClass = () => {
 							style={{ textAlign: 'center', marginLeft: '1rem' }}
 						/>
 					</div>
-				</div>
-
-				<div style={{ margin: '20vh 0px 0px 0px' }}>
 					{(role && role === 'TEACHER') || localStorage.getItem('role') === 'TEACHER' ? (
 						<div className="button-add" onClick={create}>
 							<Button
 								type="primary"
-								style={{ width: '100%', marginTop: '0', height: '50px', marginLeft: '0px' }}
+								style={{ width: '96%', marginTop: '0', height: '50px', marginLeft: '0px' }}
 							>
 								<span style={{ fontSize: '15px', fontWeight: '500' }}>+ Tạo Lớp </span>
 							</Button>
 						</div>
 					) : null}
+				</div>
+
+				<div style={{ margin: '28vh 0px 0px 0px' }}>
 					<div className="your-group">
 						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 							<h3 style={{ textAlign: 'center', width: '100%', color: '#2424a5' }}>Đề xuất</h3>
@@ -135,7 +135,7 @@ const RightClass = () => {
 											);
 										})}
 								</Slider>
-							) :listClassJoin && listClassJoin.length === 1 ? (
+							) : listClassJoin && listClassJoin.length === 1 ? (
 								<div className="slide">
 									<img src={listClassJoin[0].group.avatarUrl} alt="Group Avatar" />
 									<div className="group-info">
@@ -143,7 +143,7 @@ const RightClass = () => {
 										<p>{listClassJoin[0].group.description}</p>
 									</div>
 								</div>
-							): null}
+							) : null}
 						</div>
 					</div>
 

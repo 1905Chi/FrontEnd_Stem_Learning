@@ -51,9 +51,8 @@ input {
 .login-form-button{
   height: 45px;
 }
-button {
-  background-color: #007bff;
-  color: #fff;  
+/* button {
+
   border: none;
   padding: 5px;
   border-radius: 3px;
@@ -62,7 +61,7 @@ button {
   max-width: 100%;
   flex: auto;
   height: 50px;
-}
+} */
 
 button:hover {
   background-color: #0056b3;

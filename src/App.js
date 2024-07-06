@@ -98,9 +98,11 @@ export default function App() {
               path={route.path}
               element={
                  (
+                  <><Topbar />
                   <DefaultLayoutLogin>
                     <route.component />
                   </DefaultLayoutLogin>
+                  </>
                 ) 
               }
             />

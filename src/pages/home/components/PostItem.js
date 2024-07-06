@@ -193,8 +193,6 @@ function PostItem(props) {
 					toast.success(response.data.message);
 					setConfirmLoading(false);
 					setOpen(false);
-
-					props.callBackApi();
 					if (props.updatePostList) {
 						homePosts();
 					}
