@@ -104,7 +104,28 @@ function PostItem(props) {
 	function EditContentPost(value) {
 		setContentPost(value);
 	}
-
+	const homePosts = async () => {
+		try {
+			const headers = {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
+				timeout: 15000,
+			};
+			const response = await Api.get(url + `api/v1/posts/home-posts?page=0&size=30`, {
+				headers: headers,
+			});
+			if(props.updatePostList){
+				props.updatePostList(response.data.result.posts);
+			}
+			if (response.data.statusCode === 200) {
+				console.log('data', response.data.result.posts);
+			} else {
+				console.log(response.error);
+			}
+		} catch {
+			console.log('error');
+		}
+	};
 	function handleLike(type) {
 		if (localStorage.getItem('user') === null) {
 			toast.error('Bạn cần đăng nhập để thực hiện chức năng này');
@@ -118,7 +139,7 @@ function PostItem(props) {
 			conttentType: 'application/json',
 		};
 		let data;
-		
+
 		if (type !== null && type !== undefined) {
 			data = {
 				postId: props.id,
@@ -128,8 +149,8 @@ function PostItem(props) {
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						toast.success(response.data.message);
-						if (props.homePosts) {
-							props.homePosts();
+						if (props.updatePostList) {
+							homePosts();
 						}
 						setTypeReacttion(type);
 						setCountReaction(response.data.result.count);
@@ -146,8 +167,8 @@ function PostItem(props) {
 					if (response.data.statusCode === 200) {
 						toast.success(response.data.message);
 						setTypeReacttion(null);
-						if (props.homePosts) {
-							props.homePosts();
+						if (props.updatePostList) {
+							homePosts();
 						}
 						setCountReaction(countReaction - 1);
 					} else {
@@ -174,8 +195,8 @@ function PostItem(props) {
 					setOpen(false);
 
 					props.callBackApi();
-					if (props.homePosts) {
-						props.homePosts();
+					if (props.updatePostList) {
+						homePosts();
 					}
 				} else {
 					console.log(response.error);
@@ -487,7 +508,6 @@ function PostItem(props) {
 		setShowEditor(false);
 	};
 	const deleteComent = () => {
-
 		setConfirmLoading(true);
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -499,7 +519,7 @@ function PostItem(props) {
 					toast.success(response.data.message);
 					setConfirmLoading(false);
 					setOpentModelDeletecmt(false);
-					props.homePosts();
+					homePosts();
 				} else {
 					console.log(response.error);
 				}
@@ -539,7 +559,7 @@ function PostItem(props) {
 						<div style={{ display: 'flex' }}>
 							<div className="content-comment">
 								<p className="user-name" style={{ fontWeight: 'bold' }}>
-								 {comment.authorLastName} {comment.authorFirstName}
+									{comment.authorLastName} {comment.authorFirstName}
 								</p>
 								<div
 									className="comment-content"
@@ -562,7 +582,7 @@ function PostItem(props) {
 									cancel={() => setShowEditor(false)}
 									editcontent={setValue}
 									idComment={comment.id}
-									homePosts={props.homePosts}
+									homePosts={props.updatePostList}
 								/>
 							</div>
 						) : null}
@@ -624,22 +644,25 @@ function PostItem(props) {
 			},
 		];
 
-		
-
+		const menu = (
+			<Menu>
+				{itemsCmt.map((item) => (
+					<Menu.Item key={item.key}>{item.label}</Menu.Item>
+				))}
+			</Menu>
+		);
 		return (
 			<div className="dropdown">
 				<Dropdown
-					
-					menu={{
-						itemsCmt,
-					}}
+					overlay={menu} // Đúng prop để truyền menu
 					placement="bottomRight"
 					arrow={{
 						pointAtCenter: true,
 					}}
 					style={{ border: 'none', flex: 1 }}
+					trigger={['click']} // Thay đổi cách kích hoạt
 				>
-					<Button style={{ color: 'black', backgroundColor: 'white', border: 'none', textAlign: 'end', }}>
+					<Button style={{ color: 'black', backgroundColor: 'white', border: 'none', textAlign: 'end' }}>
 						...
 					</Button>
 				</Dropdown>
@@ -669,9 +692,7 @@ function PostItem(props) {
 		Api.post(url + 'api/v1/reports/reportPost', data, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					toast.success("Báo cáo bài đăng thành công");
-					
-					
+					toast.success('Báo cáo bài đăng thành công');
 				} else {
 					console.log(response.error);
 				}
@@ -779,7 +800,7 @@ function PostItem(props) {
 				<div style={{}} className="infor-author">
 					<a style={{ textDecoration: 'none', color: 'black' }}>
 						<p className="user-name" style={{ fontWeight: 'bold' }}>
-							{ props.authorLastName + ' ' +  props.authorFirstName}
+							{props.authorLastName + ' ' + props.authorFirstName}
 						</p>
 					</a>
 					<p className="user-name" style={{ display: 'block' }}>
@@ -804,7 +825,15 @@ function PostItem(props) {
 					}}
 					style={{ border: 'none', flex: 1 }}
 				>
-					<Button style={{ color: 'black', backgroundColor: 'white', border: 'none', textAlign: 'end',height:'0%'  }}>
+					<Button
+						style={{
+							color: 'black',
+							backgroundColor: 'white',
+							border: 'none',
+							textAlign: 'end',
+							height: '0%',
+						}}
+					>
 						...
 					</Button>
 				</Dropdown>
@@ -817,7 +846,7 @@ function PostItem(props) {
 						editcontent={EditContentPost}
 						index={props.id}
 						type={props.type}
-						homePosts={props.homePosts}
+						homePosts={props.updatePostList}
 					></Editor>
 				) : (
 					<div className="post-content" dangerouslySetInnerHTML={{ __html: contentPost }} id="post" />
@@ -861,7 +890,13 @@ function PostItem(props) {
 							onMouseLeave={handleMouseLeave}
 							style={{ color: 'blue' }}
 						>
-							<ReactionButton onClick={() => handleLike()}>👍</ReactionButton>
+							<ReactionButton
+								onClick={() => {
+									handleLike();
+								}}
+							>
+								👍
+							</ReactionButton>
 						</Button>
 					) : typeReacttion !== null && typeReacttion === 'DISLIKE' ? (
 						<Button
@@ -869,11 +904,23 @@ function PostItem(props) {
 							onMouseLeave={handleMouseLeave}
 							style={{ color: 'blue' }}
 						>
-							<ReactionButton onClick={() => handleLike()}>👎</ReactionButton>
+							<ReactionButton
+								onClick={() => {
+									handleLike();
+								}}
+							>
+								👎
+							</ReactionButton>
 						</Button>
 					) : typeReacttion !== null && typeReacttion === 'DOUBTFUL' ? (
 						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-							<ReactionButton onClick={() => handleLike()}>❓</ReactionButton>
+							<ReactionButton
+								onClick={() => {
+									handleLike();
+								}}
+							>
+								❓
+							</ReactionButton>
 						</Button>
 					) : typeReacttion !== null && typeReacttion === 'USEFUL' ? (
 						<button
@@ -881,7 +928,13 @@ function PostItem(props) {
 							onMouseLeave={handleMouseLeave}
 							style={{ backgroundColor: 'white' }}
 						>
-							<ReactionButton onClick={() => handleLike()}>✔️</ReactionButton>
+							<ReactionButton
+								onClick={() => {
+									handleLike();
+								}}
+							>
+								✔️
+							</ReactionButton>
 						</button>
 					) : (
 						<Button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
@@ -899,10 +952,34 @@ function PostItem(props) {
 						onMouseLeave={handleMouseLeave}
 					>
 						<div style={{ display: 'flex' }}>
-							<ReactionButton onClick={() => handleLike('DISLIKE')}>👎</ReactionButton>
-							<ReactionButton onClick={() => handleLike('LIKE')}>👍</ReactionButton>
-							<ReactionButton onClick={() => handleLike('DOUBTFUL')}>❓</ReactionButton>
-							<ReactionButton onClick={() => handleLike('USEFUL')}>✔️</ReactionButton>
+							<ReactionButton
+								onClick={() => {
+									handleLike('DISLIKE');
+								}}
+							>
+								👎
+							</ReactionButton>
+							<ReactionButton
+								onClick={() => {
+									handleLike('LIKE');
+								}}
+							>
+								👍
+							</ReactionButton>
+							<ReactionButton
+								onClick={() => {
+									handleLike('DOUBTFUL');
+								}}
+							>
+								❓
+							</ReactionButton>
+							<ReactionButton
+								onClick={() => {
+									handleLike('USEFUL');
+								}}
+							>
+								✔️
+							</ReactionButton>
 						</div>
 					</DropdownContent>
 				</DropdownContainer>
@@ -926,7 +1003,7 @@ function PostItem(props) {
 						cancel={closeEditor}
 						editcontent={setValue}
 						idPost={props.id}
-						homePosts={props.homePosts}
+						homePosts={props.updatePostList}
 						style={{ marginTop: '10px' }}
 					/>
 				) : null}

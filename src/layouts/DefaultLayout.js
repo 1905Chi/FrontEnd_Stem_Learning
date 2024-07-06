@@ -1,6 +1,6 @@
 import './DefaultLayout.css';
 import Topbar from '../components/Topbar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	AppstoreOutlined,
 	BarChartOutlined,
@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import { Col, Row } from 'antd';
+import { Navigate } from 'react-router-dom';
 const { Header, Content, Footer, Sider } = Layout;
 const items = [
 	UserOutlined,
@@ -29,13 +30,19 @@ const items = [
 	label: `nav ${index + 1}`,
 }));
 export default function DefaultLayout({ Left, Right, children }) {
+	useEffect(() => {
+		const isAuthenticated = localStorage.getItem('accessToken');
+		if (!isAuthenticated) {
+			<Navigate to="/login" />;
+		}
+	}, []);
 	const {
 		token: { colorBgContainer, borderRadiusLG },
 	} = theme.useToken();
 
 	return (
 		<>
-			<div style={{backgroundColor:'rgb(244 246 250)'}}>
+			<div style={{ backgroundColor: 'rgb(244 246 250)' }}>
 				<div className="header" style={{ background: colorBgContainer }}>
 					<Topbar />
 				</div>
@@ -48,7 +55,6 @@ export default function DefaultLayout({ Left, Right, children }) {
 					</Col>
 				</Row>
 				<div className="right-web">{Right}</div>
-
 			</div>
 		</>
 	);

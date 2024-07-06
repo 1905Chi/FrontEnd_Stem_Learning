@@ -29,7 +29,7 @@ function Home() {
 	}, []);
 	useEffect(() => {
 		homePosts();
-	}, [listpost]);
+	}, []);
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 		  if (LeftHomeRef.current && !LeftHomeRef.current.contains(event.target)) {
@@ -43,7 +43,9 @@ function Home() {
 		  document.removeEventListener("mousedown", handleClickOutside);
 		};
 	  }, []);
-
+	  const updatePostList = (updatedPosts) => {
+		setListpost(updatedPosts);
+	  };
 	const homePosts = async () => {
 		try {
 			const headers = {
@@ -98,6 +100,7 @@ function Home() {
 								comments={post.post.comments}
 								reaction={post.reaction}
 								homePosts={homePosts}
+								updatePostList={updatePostList}
 							/>
 						);
 					})}

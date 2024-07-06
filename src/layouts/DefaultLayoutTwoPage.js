@@ -1,6 +1,6 @@
 import './DefaultLayout.css';
 import Topbar from '../components/Topbar';
-import React from 'react';
+import React ,{useEffect} from 'react';
 import {
 	AppstoreOutlined,
 	BarChartOutlined,
@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import { Col, Row } from 'antd';
+import { Navigate } from 'react-router-dom';
 const { Header, Content, Footer, Sider } = Layout;
 
 const items = [
@@ -31,6 +32,12 @@ const items = [
 }));
 
 export default function DefaultLayoutTwoPage({ Left, children }) {
+	useEffect(() => {
+		const isAuthenticated = localStorage.getItem('accessToken');
+		if (!isAuthenticated) {
+			<Navigate to="/login" />;
+		}
+	}, []);
 	const {
 		token: { colorBgContainer, borderRadiusLG },
 	} = theme.useToken();
