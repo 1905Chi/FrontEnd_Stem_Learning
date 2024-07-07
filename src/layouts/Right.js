@@ -208,7 +208,7 @@ export default function Right() {
 				>
 					<p>{modalText}</p>
 				</Modal>
-				{listCompetition && listCompetition.length > 0 ? (
+				{listCompetition && listCompetition.length > 1 ? (
 					<div className="your-group">
 						<Slider
 							dots={true}
@@ -229,7 +229,20 @@ export default function Right() {
 								})}
 						</Slider>
 					</div>
-				) : null}
+				) : listCompetition && listCompetition.length===1 ? (
+					<div className="your-group">
+						{listCompetition &&
+							listCompetition.map((item, index) => {
+								return (
+									<div key={index} className="slide" onClick={linktoCompetition(item.id)}>
+										<img src={item.img} alt="Group Avatar" />
+									</div>
+								);
+							})}
+					</div>
+				) : (
+					null
+				)}
 
 				{friendRequest && friendRequest.length > 0 && countRequest > 0 ? (
 					<>

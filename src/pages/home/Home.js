@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef  } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PostItem from './components/PostItem';
 import { ToastContainer, toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,9 +7,10 @@ import Api from '../../api/Api';
 import { url } from '../../constants/Constant';
 import { Skeleton } from 'antd';
 import { selectPostHome } from '../../redux/Group';
-import { TfiAngleDoubleRight } from "react-icons/tfi";
+import { TfiAngleDoubleRight } from 'react-icons/tfi';
 import Left from '../../layouts/Left';
-import {selectlistpostHome,selectselectlistpostHome} from '../../redux/Post';
+import { selectlistpostHome, selectselectlistpostHome } from '../../redux/Post';
+import { Empty } from 'antd';
 import './Home.css';
 //import { verifyJwtToken } from '../../api/Jwt';
 function Home() {
@@ -32,20 +33,20 @@ function Home() {
 	}, []);
 	useEffect(() => {
 		const handleClickOutside = (event) => {
-		  if (LeftHomeRef.current && !LeftHomeRef.current.contains(event.target)) {
-			setOpenLeft(false);
-		  }
+			if (LeftHomeRef.current && !LeftHomeRef.current.contains(event.target)) {
+				setOpenLeft(false);
+			}
 		};
-	
-		document.addEventListener("mousedown", handleClickOutside);
-	
+
+		document.addEventListener('mousedown', handleClickOutside);
+
 		return () => {
-		  document.removeEventListener("mousedown", handleClickOutside);
+			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	  }, []);
-	  const updatePostList = (updatedPosts) => {
+	}, []);
+	const updatePostList = (updatedPosts) => {
 		setListpost(updatedPosts);
-	  };
+	};
 	const homePosts = async () => {
 		try {
 			const headers = {
@@ -56,7 +57,7 @@ function Home() {
 			const response = await Api.get(url + `api/v1/posts/home-posts?page=${page}&size=${size}`, {
 				headers: headers,
 			});
-			setListpost(response.data.result.posts);	
+			response.data.result !== null ? setListpost(response.data.result.posts): setListpost([]);
 			if (response.data.statusCode === 200) {
 				console.log('data', response.data.result.posts);
 			} else {
@@ -69,19 +70,31 @@ function Home() {
 
 	return (
 		<>
-			<div className='Left' >
-			<TfiAngleDoubleRight onClick={()=>{setOpenLeft( prev => !prev)}} />
+			<div className="Left">
+				<TfiAngleDoubleRight
+					onClick={() => {
+						setOpenLeft((prev) => !prev);
+					}}
+				/>
 			</div>
-			{openLeft ? <div className="LeftHome" ref={LeftHomeRef} style={{ position: 'absolute', top: '37px', left: 0, width: '50%', height: '100%', zIndex: 999 }}>
-            <Left />
-          </div>: null}
+			{openLeft ? (
+				<div
+					className="LeftHome"
+					ref={LeftHomeRef}
+					style={{ position: 'absolute', top: '37px', left: 0, width: '50%', height: '100%', zIndex: 999 }}
+				>
+					<Left />
+				</div>
+			) : null}
 			<div className="home-page">
-			
-				{listpost === null || listpost.length ===0 ? <Skeleton active /> : null}
+				{listpost === null  ? (
+					<Skeleton active />
+				) :listpost !== null  && listpost.length === 0 ? (
+					<Empty style={{ marginTop: '10px' }} description="Không có bài viết nào" />
+				): null}
 				{listpost !== null &&
 					listpost.length > 0 &&
 					listpost.map((post, index) => {
-						
 						return (
 							<PostItem
 								key={index}

@@ -17,6 +17,7 @@ import Rank from '../../class/components/Rank';
 import { selectselectMemberGroup } from '../../../redux/MemberGroup';
 import ManagerMemberGroup from '../components/ManagerMemberGroup';
 import Servey from '../components/Survey';
+
 export default function MainGroup() {
   const selectedOption = useSelector(selectSelectedOption);
   const inforGroup = useSelector(selectselectGroup);

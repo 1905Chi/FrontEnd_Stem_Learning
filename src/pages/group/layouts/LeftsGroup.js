@@ -2,43 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Input, Button } from 'antd';
 import './LeftsGroup.css';
 import { useNavigate } from 'react-router-dom';
-import LableGroup from '../components/LableGroup';
 import { url } from '../../../constants/Constant';
 import { ToastContainer, toast } from 'react-toastify';
-import anh_logo_1 from '../../../assets/images/anh_logo_1.jpg';
 import Loading from '../../../components/Loading';
 import Api from './../../../api/Api';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import {
-	selectSelectedGroupOwner,
-	selectGroupOwner,
-	selectGroupMember,
-	selectSelectedGroupMember,
-} from '../../../redux/Group';
-import { useSelector, useDispatch } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
+import { selectSearchGroup } from '../../../redux/Group';
 const { Search } = Input;
 const LeftsGroup = () => {
+	const [searchValue, setSearchValue] = useState('');
 	const [theme, setTheme] = useState('dark');
-	const [current, setCurrent] = useState('1');
 	const [loading, setLoading] = useState(false);
 	const [groupJoin, setGroupJoin] = useState([]);
-	const [groupManage, setGroupManage] = useState([]);
-	const [groupCreate, setGroupCreate] = useState([]);
 	const navigate = useNavigate();
-	const changeTheme = (value) => {
-		setTheme(value ? 'dark' : 'light');
-	};
-
+	const dispatch = useDispatch();	
 	const create = () => {
 		navigate('/groups/create');
 	};
-	const mygroup = useSelector(selectSelectedGroupOwner);
-	const group = useSelector(selectSelectedGroupMember);
-
-	const dispatch = useDispatch();
 
 	const getGroupJoin = async () => {
 		const headers = {
@@ -70,6 +53,7 @@ const LeftsGroup = () => {
 	useEffect(() => {
 		setLoading(true);
 		getGroupJoin();
+		//dispatch(selectSearchGroup(''));
 		// getGroups();
 	}, []);
 
@@ -84,6 +68,13 @@ const LeftsGroup = () => {
 		slidesToScroll: 1,
 		autoplay: true,
 		autoplaySpeed: 3000,
+	};
+	// Hàm xử lý sự kiện onChange search
+	const handleSearchChange = (event) => {
+		const value = event.target.value;
+		dispatch(selectSearchGroup(value));
+		setSearchValue(value);
+		
 	};
 	return (
 		<div>
@@ -102,7 +93,12 @@ const LeftsGroup = () => {
 				<div className="header-left">
 					<h1 style={{ textAlign: 'center' }}>Nhóm</h1>
 
-					<Search theme={theme} placeholder="Tìm kiếm nhóm" />
+					<Search
+						theme={theme}
+						placeholder="Tìm kiếm nhóm"
+						onChange={handleSearchChange}
+						value={searchValue} // Điều này giúp đồng bộ giá trị với state
+					/>
 				</div>
 				<div className="button-add" onClick={create}>
 					<Button

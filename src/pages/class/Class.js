@@ -9,6 +9,8 @@ import RightClass from './layouts/RightClass';
 import LeftsGroup from '../group/layouts/LeftsGroup';
 import { url } from '../../constants/Constant';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectSelectedSearchGroup } from '../../redux/Group';
 const headers = {
 	Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 	'Content-Type': 'application/json',
@@ -16,52 +18,71 @@ const headers = {
 
 export default function Class() {
 	const [classList, setClassList] = useState([]);
+	const [listClassConst, setListClassConst] = useState([]);
 	const [avatarUrl, setAvatarUrl] = useState(anh_logo_1);
 	const location = useLocation();
 	const [openLeft, setOpenLeft] = useState(false);
 	const LeftHomeRef = useRef(null);
 	const navigate = useNavigate();
+	const search = useSelector(selectSelectedSearchGroup);
+	console.log('search', search);
 	useEffect(() => {
+		
 		if (location.pathname.includes('classes')) {
 			fetchClass();
 		} else if (location.pathname.includes('groups')) {
 			fetchgroup();
 		}
+		
 	}, [location]);
 
 	const fetchClass = async () => {
 		try {
 			const response = await Api.get(url + 'api/v1/groups/myClasses', { headers });
-			console.log('Fetch class successfully: ', response);
+			
 			if (response.data.statusCode === 200) {
+				setListClassConst(response.data.result);
 				setClassList(response.data.result);
 			}
 		} catch (error) {
 			console.log('Failed to fetch class list: ', error);
 		}
 	};
+	useEffect(() => {
+		if (search !== '' && search !== undefined && search !== null) {
+			setClassList(listClassConst.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())));
+		} else {
+			setClassList(listClassConst);
+		}
+	}, [search]);
 
 	const fetchgroup = async () => {
 		try {
-			setClassList([]);
+			
 			Api.get(url + 'api/v1/groups', { headers })
 				.then(async (response) => {
 					if (response.data.statusCode === 200) {
+						const listGroup = [];
 						response.data.result.GROUP_ADMIN.forEach((element) => {
 							if (element.isClass === false) {
-								setClassList((classList) => [...classList, element]);
+								listGroup.push(element);
+								
 							}
 						});
 						response.data.result.GROUP_MEMBER.forEach((element) => {
 							if (element.isClass === false) {
-								setClassList((classList) => [...classList, element]);
+								listGroup.push(element);
+								
 							}
 						});
 						response.data.result.GROUP_OWNER.forEach((element) => {
 							if (element.isClass === false) {
-								setClassList((classList) => [...classList, element]);
+								listGroup.push(element);
+								
 							}
 						});
+						setClassList(listGroup);
+						setListClassConst(listGroup);
 					}
 				})
 				.catch(async (error) => {
@@ -81,26 +102,6 @@ export default function Class() {
 		}
 	};
 
-	const handleJoinClass = async (groupId) => {
-		try {
-			const response = await Api.post('api/v1/group-members/request', {
-				groupId: groupId,
-			});
-			console.log('Join class successfully: ');
-			if (response.data.statusCode === 201) {
-				if (location.pathname.includes('classes')) {
-					fetchClass();
-				} else if (location.pathname.includes('groups')) {
-					fetchgroup();
-				}
-				toast.success('Đã tham gia lớp học thành công');
-			} else if (response.data.statusCode === 200) {
-				toast.success('Đã yêu cầu tham gia lớp học');
-			}
-		} catch (error) {
-			console.log('Failed to join class: ', error);
-		}
-	};
 	return (
 		<div className="class">
 			<div className="Left">

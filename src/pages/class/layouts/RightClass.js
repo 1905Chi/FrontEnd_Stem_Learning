@@ -19,10 +19,11 @@ import {
 } from '../../../redux/Group';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectselectuser } from '../../../redux/User';
-
+import { selectSearchGroup } from '../../../redux/Group';
 const { Search } = Input;
 const RightClass = () => {
 	const [theme, setTheme] = useState('dark');
+	const [searchValue, setSearchValue] = useState('');
 	const [current, setCurrent] = useState('1');
 	const [loading, setLoading] = useState(false);
 	const [listClass, setListClass] = useState([]);
@@ -40,11 +41,9 @@ const RightClass = () => {
 
 	const dispatch = useDispatch();
 	const searchClass = (e) => {
-		if (e.target.value === '') {
-			setListClassJoin(mygroup);
-			return;
-		}
-		setListClassJoin(mygroup.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase())));
+		const value = e.target.value;
+		dispatch(selectSearchGroup(value));
+		setSearchValue(value);
 	};
 	const role = JSON.parse(localStorage.getItem('user')).role;
 
@@ -91,6 +90,7 @@ const RightClass = () => {
 							theme={theme}
 							placeholder="Tìm kiếm Lớp"
 							onChange={searchClass}
+							value={searchValue}
 							style={{ textAlign: 'center', marginLeft: '1rem' }}
 						/>
 					</div>

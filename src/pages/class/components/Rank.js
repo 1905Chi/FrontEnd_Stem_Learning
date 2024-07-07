@@ -9,7 +9,10 @@ import { Modal } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
 import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
+import { selectSelectedListRank } from '../../../redux/Group';
 export default function Rank() {
+    const selectedListRank = useSelector(selectSelectedListRank);
+    console.log(selectedListRank);
     const columns = [
 		{
 			title: 'STT',

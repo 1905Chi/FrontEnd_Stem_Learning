@@ -70,6 +70,7 @@ const CreateQuiz = () => {
 				formData.append('startedAt', values.startedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'));
 				formData.append('endedAt', values.endedAt.format('DD-MM-YYYY HH:mm:ss:SSSSSS'));
 				formData.append('isEnabled', true);
+				formData.append('numberOfQuestion', Number(values.numberOfQuestion));
 				formData.append('level', values.level);
 
 				const data = formData;

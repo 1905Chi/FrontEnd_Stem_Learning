@@ -42,6 +42,7 @@ import { MdOutlineReportGmailerrorred } from "react-icons/md";
 import { Modal } from 'antd';
 import { Table } from 'antd';
 import PostItem from "../../home/components/PostItem";
+import { selectlistRank } from '../../../redux/Group';
 export default function LeftItemGroup() {
 	const { theme } = UseTheme();
 	const [inforGroup, setInforGroup] = useState(null);
@@ -197,6 +198,18 @@ export default function LeftItemGroup() {
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						dispatch(selectexam(response.data.result));
+					} else {
+						console.log(response.error);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+
+			Api.get(url + 'api/v1/submissions/rank/' + uuid, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						dispatch(selectlistRank(response.data.result));
 					} else {
 						console.log(response.error);
 					}

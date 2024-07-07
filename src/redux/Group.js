@@ -1,5 +1,6 @@
 // src/features/menuSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import { selectSearch } from './Search';
 
 const menuSlice = createSlice({
   name: 'menu',
@@ -18,6 +19,8 @@ const menuSlice = createSlice({
     selectedOptionSearchDocumentbyType: null,
     selectedOptionSearchDocumentbySender: null,
     selectedOptionSearchDocementbyDate: null,
+    selectedSearchGroup: null,
+    selectedListtRank: null,
 
    
    
@@ -66,6 +69,12 @@ const menuSlice = createSlice({
     selectOptionSearchDocementbyDate: (state, action) => {
       state.selectedOptionSearchDocementbyDate = action.payload;
     },
+    selectSearchGroup : (state, action) => {
+      state.selectedSearchGroup = action.payload;
+    },
+    selectlistRank: (state, action) => {
+      state.selectedListtRank = action.payload;
+    },
   
     
     editPostGroup: (state, action) => {
@@ -88,7 +97,7 @@ const menuSlice = createSlice({
 });
 
 export const { selectOption,selectOptionProfile ,selectGroupOwner,selectGroupMember,selectPostGroup,editPostGroup , selectPostHome,deleteRaction,selectOptionSearchGrade,selectOptionSearchSubject, selectOptionSearchPeople,
-selectOptionSearchDocumentbyName,selectOptionSearchDocumentbySender,selectOptionSearchDocumentbyType,selectOptionSearchDocementbyDate,selectedSurveyGroup} = menuSlice.actions;
+selectOptionSearchDocumentbyName,selectOptionSearchDocumentbySender,selectOptionSearchDocumentbyType,selectOptionSearchDocementbyDate,selectedSurveyGroup,selectSearchGroup,selectlistRank} = menuSlice.actions;
 export const selectSelectedOption = (state) => state.menu.selectedOption;
 export const selectSelectedOptionProfile = (state) => state.menu.selectedOptionProfile;
 export const selectSelectedGroupOwner = (state) => state.menu.selectedGrouOwner;
@@ -103,4 +112,6 @@ export const selectSelectOptionSearchDocumentbyType = (state) => state.menu.sele
 export const selectSelectOptionSearchDocumentbySender = (state) => state.menu.selectedOptionSearchDocumentbySender;
 export const selectSelectOptionSearchDocementbyDate = (state) => state.menu.selectedOptionSearchDocementbyDate;
 export const selectSelectedSurveyGroup = (state) => state.menu.selectedSurveyGroup;
+export const selectSelectedSearchGroup = (state) => state.menu.selectedSearchGroup;
+export const selectSelectedListRank = (state) => state.menu.selectedListtRank;
 export default menuSlice.reducer;

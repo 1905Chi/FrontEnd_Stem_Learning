@@ -27,8 +27,8 @@ export default function Submit() {
 	const dispatch = useDispatch();
 	const typesubmit = localStorage.getItem('typesubmit');
 	const [submissionDetailId, setsubmissionDetailId] = useState();
-	const [data, setData] = useState('');
-	const [mark, setMark] = useState("");
+	const [data, setData] = useState([]);
+	const [mark, setMark] = useState('');
 	const onFinish = () => {
 		setloading(true);
 		Api.post(url + 'api/v1/submissions/submit?submissionId=' + localStorage.getItem('submissionId'), {
@@ -63,6 +63,7 @@ export default function Submit() {
 			Api.post(url + 'api/v1/submissions/create?examId=' + id + '', { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
+						setData(Array(response.data.result.questions.length).fill(''));
 						setsubmition(response.data.result);
 						localStorage.setItem('submissionId', response.data.result.submissionId);
 						setTargetTime(Number(localStorage.getItem('duration')) * 60 * 1000);
@@ -157,11 +158,11 @@ export default function Submit() {
 							}
 
 							let userAnswerArray = [];
-							if (item.userAnswer !== null) { 
-								if(item.typeCode === 'essay'){
+							if (item.userAnswer !== null) {
+								if (item.typeCode === 'essay') {
 									userAnswerArray = [item.userAnswer];
-								}else{
-								userAnswerArray = item.userAnswer.split(',');
+								} else {
+									userAnswerArray = item.userAnswer.split(',');
 								}
 								listAnserchonsed = [...listAnserchonsed, { id: item.id, answer: item.userAnswer }];
 							}
@@ -188,7 +189,7 @@ export default function Submit() {
 					window.history.back();
 				});
 		}
-	}, []);
+	}, [id]);
 
 	const handleRadioChange = (questionId, answer, typeCode, index) => {
 		const oldSelectedAnswers = selectedAnswers;
@@ -217,10 +218,13 @@ export default function Submit() {
 		setSelectedAnswers(oldSelectedAnswers);
 		console.log(oldSelectedAnswers);
 		console.log(selectedAnswers);
+		console.log(index);
+	
 		if (selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.length > 0) {
 			const data = {
 				id: questionId,
-				answer: selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.join(', '),
+				answer: typeCode !=='essay' ? selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.join(', '): answer,
+				
 			};
 			Api.put(url + 'api/v1/submission-details/update', data, {
 				headers: {
@@ -253,42 +257,54 @@ export default function Submit() {
 		}
 	};
 
-	const handleEditorChange = (value) => {
+	const handleEditorChange = (value,index) => {
 		console.log(value);
-		setData(value);
+		setData((prevData) => {
+			// Tạo bản sao của mảng
+			const newData = [...prevData];
+			// Cập nhật giá trị tại index
+			newData[index] = value;
+			// Trả về mảng mới
+			return newData;
+		});
 	};
-	const handleEditorCancel = () => {
-		setData('');
+	const handleEditorCancel = (index) => {
+		setData((prevData) => {
+			// Tạo bản sao của mảng
+			const newData = [...prevData];
+			// Cập nhật giá trị tại index
+			newData[index] = '';
+			// Trả về mảng mới
+			return newData;
+		});
 	};
-const postMark= (id) => {
-setloading(true);
-const data = {
-	mark: Number(mark),
-	submissionDetailId: id,
-	}
-	let headers= {
-		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),	
-		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
-	}
-	Api.post(url + 'api/v1/submission-details/mark', data, {headers: headers})
-	.then((response) => {
-		if (response.data.success === true) {
-			toast.success('Chấm điểm thành công');
-		} else {
-			toast.error(response.data.message);
+	const postMark = (id) => {
+		setloading(true);
+		const data = {
+			mark: Number(mark),
+			submissionDetailId: id,
+		};
+		let headers = {
+			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+			'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
+		};
+		Api.post(url + 'api/v1/submission-details/mark', data, { headers: headers })
+			.then((response) => {
+				if (response.data.success === true) {
+					toast.success('Chấm điểm thành công');
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			})
+			.finally(() => {
+				setloading(false);
+			});
 
-		}
-	})
-	.catch((error) => {
-		toast.error(error);
-	})
-	.finally(() => {
-		setloading(false);
-	});
-
-
-console.log(id, mark);
-}
+		console.log(id, mark);
+	};
 	return (
 		<div className="submit-sipn" style={{ width: '72vw' }}>
 			{submition === null && typesubmit !== 'review' ? (
@@ -314,16 +330,17 @@ console.log(id, mark);
 									{question.typeCode === 'essay' ? (
 										<>
 											<Editor
-												data={data}
-												editcontent={handleEditorChange}
-												cancel={handleEditorCancel}
+												key={index}
+												data={data[index]}
+												editcontent={(value) => handleEditorChange(value, index)}
+												cancel={() => handleEditorCancel(index)}
 												isQuiz={true}
 											/>
 											<button
 												onClick={() =>
 													handleRadioChange(
 														question.submissionDetailId,
-														data,
+														data[index],
 														question.typeCode
 													)
 												}
@@ -389,7 +406,7 @@ console.log(id, mark);
 				</div>
 			) : null}
 
-			{typesubmit === 'review' && (user.role === 'STUDENT'|| user.role === 'PARENT') ? (
+			{typesubmit === 'review' && (user.role === 'STUDENT' || user.role === 'PARENT') ? (
 				<div>
 					{submissionDetailId && submissionDetailId.length > 0 ? (
 						<div>
@@ -403,7 +420,7 @@ console.log(id, mark);
 										paddingBottom: '15px',
 									}}
 								>
-									<div >
+									<div>
 										<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 										<div
 											className="quest-content"
@@ -424,7 +441,7 @@ console.log(id, mark);
 										)}
 									</div>
 
-									<div style={{  marginLeft: '20px', marginBottom: '15px' }}>
+									<div style={{ marginLeft: '20px', marginBottom: '15px' }}>
 										<strong>Đáp án đúng: </strong>
 										{
 											<div style={{ marginLeft: '15px' }}>
@@ -475,7 +492,7 @@ console.log(id, mark);
 										)}
 									</div>
 
-									<div style={{  marginLeft: '20px', marginBottom: '15px' }}>
+									<div style={{ marginLeft: '20px', marginBottom: '15px' }}>
 										{item.correctAnswer[0] !== 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
 											<>
 												<strong>Đáp án đúng: </strong>
@@ -490,9 +507,11 @@ console.log(id, mark);
 										) : (
 											<div style={{ display: 'flex', marginBottom: '15px' }}>
 												<strong>Điểm: </strong>
-												<input style={{ marginLeft: '15px' }} 
-												onChange={(e)=>setMark(e.target.value)}/>
-												 <button onClick={() => postMark(item.id)}>Chấm điểm</button>
+												<input
+													style={{ marginLeft: '15px' }}
+													onChange={(e) => setMark(e.target.value)}
+												/>
+												<button onClick={() => postMark(item.id)}>Chấm điểm</button>
 											</div>
 										)}
 									</div>

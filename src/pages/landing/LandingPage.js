@@ -184,13 +184,13 @@ const LandingPage = () => {
 					thumbnail={thumbnailTemplate}
 				/>
 			</div>
-			<div className="register-container">
-				<h1>Bạn là ?</h1>
+			<div className="register-container" ref={scrollRef}>
+				<h1 >Bạn là ?</h1>
 				<div className="card-container">
-					<div className="card-led-register" ref={scrollRef}>
-						<div className="item-image" style={{ animation: 'colorChangeTeacher 0.2s infinite' }} />
+					<div className="card-led-register" >
+						<div className="item-image" style={{ animation: 'colorChangeTeacher 0.2s infinite' }}  />
 						<div className="card-register">
-							<h1 style={{ color: '#4d868a' }}>Giáo viên</h1>
+							<h1 style={{ color: '#4d868a' }} >Giáo viên</h1>
 							<h4>
 								Công cụ giúp giảm tải công việc, truyền thông nhanh chóng, hiểu học lực của học sinh
 							</h4>
@@ -227,7 +227,7 @@ const LandingPage = () => {
 					</div>
 				</div>
 			</div>
-			<div className="info-container">
+			<div className="info-container" >
 				<div className="info-header-container">
 					<div className="info-header-content">
 						<h1>Bạn học được những gì trên STEM?</h1>
