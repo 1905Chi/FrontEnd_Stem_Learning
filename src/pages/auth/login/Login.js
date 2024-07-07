@@ -19,6 +19,7 @@ function Login() {
 
 	const onFinish = (values) => {
 		try {
+			setLoading(true);
 			const data = { email: values.email, password: values.password };
 			const headers = {
 				'Content-Type': 'application/json',
