@@ -18,8 +18,9 @@ function Login() {
 	const notify = (message) => toast(message);
 
 	const onFinish = (values) => {
+		setLoading(true);
 		try {
-			setLoading(true);
+			
 			const data = { email: values.email, password: values.password };
 			const headers = {
 				'Content-Type': 'application/json',
@@ -48,8 +49,10 @@ function Login() {
 							.then(async (profileResponse) => {
 								if (profileResponse.data.statusCode === 200) {
 									localStorage.setItem('user', JSON.stringify(profileResponse.data.result));
+									
 
 									navigate('/home');
+									
 								} else {
 									toast.error(profileResponse.data.message);
 								}
@@ -76,9 +79,6 @@ function Login() {
 					} else {
 						toast.error('Error setting up request.');
 					}
-				})
-				.finally(() => {
-					setLoading(false);
 				});
 		} catch (error) {
 			console.error(error);
@@ -104,7 +104,7 @@ function Login() {
 						/>
 					</div>
 					<div className="login-content">
-						<h2 style={{ color: '#4949c1' }}>Login</h2>
+						<h2 style={{ color: '#4949c1' }}>Đăng  nhập tài khoản</h2>
 						<Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
 							<Form.Item
 								name="email"
@@ -132,14 +132,14 @@ function Login() {
 							<Form.Item>
 								<div style={{ display: 'flex', justifyContent: 'center' }}>
 									<Button type="primary" htmlType="submit" className="login-form-button">
-										Login
+										Đăng nhập
 									</Button>
 								</div>
 							</Form.Item>
 						</Form>
 						<div className="login-footer">
 							<Link to="/forgot-password" style={{ textDecoration: 'none', color: 'blue' }}>
-								Forgot password?
+								Quên mật khẩu?
 							</Link>
 							<br />
 							<br />
@@ -154,7 +154,7 @@ function Login() {
 									className="login-form-button"
 									style={{ backgroundColor: 'green' }}
 								>
-									Register
+									Đăng ký
 								</Button>
 							</div>
 						</div>
