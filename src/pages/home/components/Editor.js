@@ -11,6 +11,7 @@ import {editPostGroup} from '../../../redux/Group'
 import { toast, ToastContainer } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import { selectPostGroup } from '../../../redux/Group';
+import './Editor.css';
 export default function Editor(props) {
 	const [value, setValue] = useState(props.data || '');
 	console.log(props);

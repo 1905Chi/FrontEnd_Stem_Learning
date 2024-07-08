@@ -66,7 +66,7 @@ const CalendarAntd = () => {
 					listData = [...listData, data];
 				}
 				else {
-					console.log('khong co');
+					
 				}
 			});
 		}
@@ -75,7 +75,7 @@ const CalendarAntd = () => {
 			return listData;
 		} else if(listExam.length > 0) {
 			listExam.map((item) => {
-				console.log(item.exam);
+				
 				if (item.exam!== undefined &&	item.exam!==null ) {
 				//const dateStart = item.exam.startedAt;
 				const dateStart = item.exam.startedAt;
@@ -116,7 +116,7 @@ const CalendarAntd = () => {
 					listData = [...listData, data];
 				}
 				 else {
-					console.log('khong co');
+					
 				}
 			}
 			});

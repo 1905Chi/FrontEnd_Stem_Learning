@@ -209,7 +209,16 @@ export default function LeftItemGroup() {
 			Api.get(url + 'api/v1/submissions/rank/' + uuid, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						dispatch(selectlistRank(response.data.result));
+						const transformedData = response.data.result.map((item, index) => ({
+							key: index + 1, // STT: assuming STT is a sequential number starting from 1
+							name: ` ${item.author.lastName} ${item.author.firstName}`, // Họ và tên
+							point: item.totalSubmission, // Số bài làm
+							total: item.totalScore, // Tổng điểm
+							 // Xếp hạng: placeholder value; you might need to calculate this based on your criteria
+						}));
+						transformedData.sort((a, b) => b.total - a.total);
+						console.log(transformedData)
+						dispatch(selectlistRank(transformedData));
 					} else {
 						console.log(response.error);
 					}
@@ -350,8 +359,8 @@ export default function LeftItemGroup() {
 		Api.put(
 			url + 'api/v1/groups/' + uuid + '/updateDetail',
 			{
-				name: newName,
-				description: newDescription,
+				name: newName ? newName : group.name,
+				description: newDescription ? newDescription : group.description,
 			},
 			{ headers: headers }
 		)
@@ -609,6 +618,7 @@ export default function LeftItemGroup() {
 				header= {<div style={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5em" }}>Đổi thông tin</div>}
 				visible={openEditName}
 				style={{ width: '50vw' }}
+				
 				onHide={() => {
 					setOpenEditName(false);
 					setNewName('');

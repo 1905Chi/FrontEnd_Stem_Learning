@@ -9,6 +9,7 @@ import { Modal } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
 import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
+import TopThree from './TopThree';
 import { selectSelectedListRank } from '../../../redux/Group';
 export default function Rank() {
     const selectedListRank = useSelector(selectSelectedListRank);
@@ -18,80 +19,40 @@ export default function Rank() {
 			title: 'STT',
 			dataIndex: 'key',
 			key: 'key',
-			width: 10,
+			width: '10%',
 		},
         {
             title: 'Họ và tên',
             dataIndex: 'name',
             key: 'name',
-            width: 200,
+            width: '30%',
         },
         {
-            title: 'Điểm kiểm tra',
+            title: 'Số bài làm',
             dataIndex: 'point',
             key: 'point',
-            width: 10,
+            width: '10%',
         },
         {
             title: 'Tổng điểm',
             dataIndex: 'total',
             key: 'total',
-            width: 10,
+            width: '10%',
         },
         {
             title: 'Xếp hạng',
-            dataIndex: 'rank',
-            key: 'rank',
-            width: 10,
+            dataIndex: 'key',
+            key: 'key',
+            width: '10%',
         },
         
     ]
-    const dataMember = [
-        {
-            key: '1',
-            name: 'Nguyễn Văn A',
-            star: 4,
-            point: 8,
-            total: 12,
-            rank: 1
-        },
-        {
-            key: '2',
-            name: 'Nguyễn Văn B',
-            star: 3,
-            point: 7,
-            total: 10,
-            rank: 2
-        },
-        {
-            key: '3',
-            name: 'Nguyễn Văn C',
-            star: 2,
-            point: 6,
-            total: 8,
-            rank: 3
-        },
-        {
-            key: '4',
-            name: 'Nguyễn Văn D',
-            star: 1,
-            point: 5,
-            total: 6,
-            rank: 4
-        },
-        {
-            key: '5',
-            name: 'Nguyễn Văn E',
-            star: 0,
-            point: 4,
-            total: 4,
-            rank: 5
-        }
-    ]
+    
 	return (
 		<div className='rank-class'>
 			<h1 style ={{textAlign:'center'}}>Xếp hạng</h1>
-            <Table columns={columns} dataSource={dataMember} />
+            <TopThree />
+            <Table columns={columns} dataSource={selectedListRank} style={{width:'94%', margin:'5% 0 0 0'}} />
 		</div>
 	);
 }

@@ -44,13 +44,12 @@ import RightParent from '../pages/user/layouts/RightParent';
 import MainCompetition from '../pages/competition/itemCompetition/MainCompetition';
 import Meessage from '../pages/messenger/Message';
 import SubmitCompetition from '../pages/competition/itemCompetition/SubmitCompetition';
+import TopThree from '../pages/class/components/TopThree';
 const privateRoutes = [
 	{ path: '/home', component: Home, Left: Left, Right: Right },
 
 	{ path: '/groups/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
 	{ path: '/classes/:uuid', component: MainGroup, Left: LeftItemGroup, Right: RightItemGroup },
-
-	
 ];
 
 const privateRoutes2page = [
@@ -63,7 +62,7 @@ const privateRoutes2page = [
 	{ path: '/exam/:id/submit/', component: Submit, Left: LeftSubmit },
 	{ path: '/classes', component: Class, Left: RightClass },
 	{ path: '/groups', component: Class, Left: LeftsGroup },
-	{ path: '/parent', component: Parent, Left: Left},
+	{ path: '/parent', component: Parent, Left: Left },
 ];
 
 const private1page = [
@@ -80,6 +79,7 @@ const private1page = [
 	{ path: '/messenger', component: Meessage },
 	{ path: '/competition/:uuid', component: MainCompetition },
 	{ path: '/competition/:uuid/submition/:id', component: SubmitCompetition },
+	{ path: '/top3', component: TopThree },
 ];
 const publicRoutes = [
 	{ path: '/login', component: Login },
