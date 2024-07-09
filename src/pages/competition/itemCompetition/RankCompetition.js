@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'antd';
 import './RankCompetition.css';
-
+import TopThree from './TopThree';
 export default function RankCompetition() {
 	const columns = [
 		{
@@ -88,12 +88,13 @@ export default function RankCompetition() {
 	];
 	return (
 		<div className="rank-competition">
+			<TopThree TopThree={[]} />
 			<section className="section search">
 				<div className="container">
 					<div className="search-wrapper">
 						<form method="GET">
 							<div className="row">
-								<div className="form-group col-md-4">
+								{/* <div className="form-group col-md-4">
 									<label>Tỉnh / TP</label>
 									<div className="input">
 										<select
@@ -212,7 +213,7 @@ export default function RankCompetition() {
 											<option value="9">Thi tuần 6</option>
 										</select>
 									</div>
-								</div>
+								</div> */}
 								<div className="form-group col-md-4">
 									<label> Họ tên </label>
 									<div className="input">
@@ -226,21 +227,22 @@ export default function RankCompetition() {
 										/>
 									</div>
 								</div>
-							</div>
-							<div className="row">
-								<div className="col-md-12" style={{ marginTop: '10px' }}>
-									<center>
-										<button className="btn btn-primary" id="search" type="submit">
-											Tìm kiếm
-										</button>
-									</center>
+								<div className="form-group col-md-4">
+									<div className="col-md-12" style={{ marginTop: '10px' }}>
+										<center>
+											<button className="btn btn-primary" id="search" type="submit">
+												Tìm kiếm
+											</button>
+										</center>
+									</div>
 								</div>
 							</div>
 						</form>
 					</div>
 				</div>
 			</section>
-			<Table columns={columns} dataSource={dataMember} />
+
+			<Table columns={columns} dataSource={dataMember} style={{ width: '98%', margin: '2% 1%' }} />
 		</div>
 	);
 }

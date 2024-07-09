@@ -69,6 +69,7 @@ export default function LeftItemGroup() {
 	const [dataReport , setDataReport] = useState([]);
 	const [openPost, setOpenPost] = useState(false);
 	const [post, setPost] = useState(null);
+	const [idUserReport, setIdUserReport] = useState(null);
 	const headers = {
 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
@@ -210,10 +211,12 @@ export default function LeftItemGroup() {
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						const transformedData = response.data.result.map((item, index) => ({
+							id: item.author.id, // ID: assuming this is the user ID
 							key: index + 1, // STT: assuming STT is a sequential number starting from 1
 							name: ` ${item.author.lastName} ${item.author.firstName}`, // Họ và tên
 							point: item.totalSubmission, // Số bài làm
 							total: item.totalScore, // Tổng điểm
+							Avatar: item.author.avatarUrl, // Ảnh đại diện
 							 // Xếp hạng: placeholder value; you might need to calculate this based on your criteria
 						}));
 						transformedData.sort((a, b) => b.total - a.total);
@@ -341,6 +344,7 @@ export default function LeftItemGroup() {
 		},
 	];
 	const OpenViewReport = () => {
+		setLoading(true);
 		Api.get(url + 'api/v1/reports/groupReport/' + uuid , { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
@@ -352,6 +356,9 @@ export default function LeftItemGroup() {
 			})
 			.catch((error) => {
 				toast.error(error);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	}
 	const EditNameGroup = () => {
@@ -404,6 +411,7 @@ export default function LeftItemGroup() {
 		.then((response) => {
 			if (response.data.statusCode === 200) {
 				setPost(response.data.result);
+				setIdUserReport(response.data.result.post.authorId);
 				setOpenPost(true);
 				
 			} else {
@@ -475,7 +483,14 @@ export default function LeftItemGroup() {
 			});
 	};
 	const handelBanuser = () => {
-		Api.put(url + `api/v1/group-members/lock`, { groupMemberId: post?.post.authorId}, { headers: headers })
+		var idmember = null;
+		memberGroup.map((item, index) => {
+			if(item.user.id ===  post?.post.authorId) {
+				idmember = item.id;
+			}
+		})
+			
+		Api.put(url + `api/v1/group-members/lock`, { groupMemberId: idmember}, { headers: headers })
 			.then((res) => {
 				toast.success('Cấm tài khoản thành công');
 			})
@@ -874,7 +889,7 @@ export default function LeftItemGroup() {
 												<AiOutlineUsergroupAdd className="icon-option-group" size={20} />
 												<span className="option-label-group">Quản lý thành viên</span>
 											</div>
-											<div>
+											<div className='custom-option-group '>
 												<Dropdown
 													menu={{
 														items,

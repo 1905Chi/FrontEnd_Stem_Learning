@@ -10,10 +10,15 @@
 
 .invite-group  :hover{
     background-color: #f0f2f5;
-    
-   
 
 }
+.slide {
+    width: 100%;
+    text-align: center;
+}
+.slide img {max-width: 20vw;
+    min-width: 20vw;}
+
 .invite-group{
    
     border: 1px solid #e6e6e6;

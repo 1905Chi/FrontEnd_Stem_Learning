@@ -16,6 +16,7 @@ import LableGroup from '../pages/group/components/LableGroup';
 import { Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
+import anh_logo_1  from '../assets/images/anh_logo_1.jpg';
 import Slider from 'react-slick';
 export default function Right() {
 	const dispatch = useDispatch();
@@ -30,18 +31,9 @@ export default function Right() {
 	const [openDeleteinvite, setOpenDeleteinvite] = useState(false);
 	const [modalText, setModalText] = useState('Bạn có chắc muốn xóa lời mời này?');
 	const [item, setItem] = useState();
-	const [listCompetition, setListCompetition] = useState([
-		{
-			id: '6f3e4fa0-b815-4d71-9db0-f60f0e5e5f4b',
-			img: 'https://nghiquyet.hoisinhvien.com.vn/storage/images/news//202403281115Screenshot%202024-03-28%20at%2010.45.44.png',
-		},
-		{
-			id: 2,
-			img: 'https://khoahoctre.com.vn/wp-content/uploads/2022/04/44493e3a5621987fc130-810x607.jpg',
-		},
-	]);
+	const [listCompetition, setListCompetition] = useState();
 
-	const accept = (status, id)  => {
+	const accept = (status, id) => {
 		if (status === 'ACCEPT') {
 			const headers = {
 				'Content-Type': 'application/json',
@@ -90,7 +82,7 @@ export default function Right() {
 				});
 		}
 	};
-	const acceptInvite = (status, id)  => {
+	const acceptInvite = (status, id) => {
 		const isAccept = status === 'ACCEPT' ? true : false;
 
 		Api.post(url + `api/v1/group-member-invitations/${id}/response`, { isAccept: isAccept }, { headers: headers })
@@ -110,6 +102,7 @@ export default function Right() {
 		callApifriendRequest();
 		callApiListInvite();
 		callRelationShip();
+		callApiListCompetition();
 	}, []);
 	// const callApifriendRequest = () => {
 	// 	Api.get(url + 'api/v1/users/friend-requests', { headers: headers })
@@ -133,6 +126,16 @@ export default function Right() {
 			});
 	};
 
+	const callApiListCompetition = () => {
+		Api.get(url + 'api/v1/groups/competitions', { headers: headers })
+			.then((res) => {
+				setListCompetition(res.data.result);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	///call api mời tham gia class/ group
 	const callApiListInvite = () => {
 		Api.get(url + 'api/v1/group-member-invitations', { headers: headers })
@@ -148,7 +151,9 @@ export default function Right() {
 		Api.get(url + 'api/v1/relationships/student/relationship-requests', { headers: headers })
 			.then((res) => {
 				setListRelationShip(res.data.result);
-				setCountRequestParent(res.data.result.filter((item) => (item.accepted === "" || item.accepted=== null)).length);
+				setCountRequestParent(
+					res.data.result.filter((item) => item.accepted === '' || item.accepted === null).length
+				);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -185,7 +190,7 @@ export default function Right() {
 	};
 	return (
 		<>
-			<div className="friend-request" >
+			<div className="friend-request">
 				<Modal
 					title="Thông báo"
 					open={open}
@@ -223,26 +228,34 @@ export default function Right() {
 								listCompetition.map((item, index) => {
 									return (
 										<div key={index} className="slide" onClick={linktoCompetition(item.id)}>
-											<img src={item.img} alt="Group Avatar" />
+											{item.avatarUrl === null || item.avatarUrl === '' ? (
+												<img src={anh_logo_1} alt="Group Avatar" />
+											) : (
+												<img src={item.avatarUrl} alt="Group Avatar" />
+											)}
+											{item.name}
 										</div>
 									);
 								})}
 						</Slider>
 					</div>
-				) : listCompetition && listCompetition.length===1 ? (
+				) : listCompetition && listCompetition.length === 1 ? (
 					<div className="your-group">
 						{listCompetition &&
 							listCompetition.map((item, index) => {
 								return (
 									<div key={index} className="slide" onClick={linktoCompetition(item.id)}>
-										<img src={item.img} alt="Group Avatar" />
+										{item.avatarUrl === null || item.avatarUrl === '' ? (
+											<img src={anh_logo_1} alt="Group Avatar" />
+										) : (
+											<img src={item.avatarUrl} alt="Group Avatar" />
+										)}
+										<strong>{item.name}</strong>
 									</div>
 								);
 							})}
 					</div>
-				) : (
-					null
-				)}
+				) : null}
 
 				{friendRequest && friendRequest.length > 0 && countRequest > 0 ? (
 					<>
@@ -253,7 +266,7 @@ export default function Right() {
 							return item.status === 'PENDING' ? (
 								<div className="friend-request_item" key={item.id}>
 									<div
-										style={{margin: '15px', marginTop: '18px' }}
+										style={{ margin: '15px', marginTop: '18px' }}
 										onClick={() => {
 											navigate(`/profile/${item.sender.id}`);
 										}}
@@ -273,9 +286,9 @@ export default function Right() {
 												navigate(`/profile/${item.sender.id}`);
 											}}
 										>
-											<p>{item.sender.lastName  + ' ' + item.sender.firstName}</p>
+											<p>{item.sender.lastName + ' ' + item.sender.firstName}</p>
 										</div>
-										<div >
+										<div>
 											<button
 												className="btn btn-primary"
 												style={{ backgroundColor: '#1677ff' }}
@@ -290,7 +303,7 @@ export default function Right() {
 													setItem(item);
 													setModalText(
 														`Bạn có chắc muốn xóa lời mời kết bạn của ${
-															item.sender.lastName  + ' ' + item.sender.firstName 
+															item.sender.lastName + ' ' + item.sender.firstName
 														}?`
 													);
 												}}
@@ -312,10 +325,10 @@ export default function Right() {
 							<h3>Yêu cầu liên kết tài khoản </h3>
 						</div>
 						{listRelationShip.map((item, index) =>
-							item.accepted === "" || item.accepted === null   ? (
+							item.accepted === '' || item.accepted === null ? (
 								<div className="friend-request_item" key={item.id}>
 									<div
-										style={{  margin: '15px', marginTop: '18px' }}
+										style={{ margin: '15px', marginTop: '18px' }}
 										onClick={() => {
 											navigate(`/profile/${item.parent.id}`);
 										}}
@@ -335,7 +348,7 @@ export default function Right() {
 												navigate(`/profile/${item.parent.id}`);
 											}}
 										>
-											<p>{item.parent.lastName  + ' ' + item.parent.firstName}</p>
+											<p>{item.parent.lastName + ' ' + item.parent.firstName}</p>
 										</div>
 										<div style={{ textAlign: 'start' }}>
 											<button
@@ -394,15 +407,14 @@ export default function Right() {
 												<p
 													style={{
 														textAlign: 'start',
-													
-														
+
 														marginTop: '9.5%',
 													}}
 													onClick={() => {
 														navigate(`/profile/${item.inviter.id}`);
 													}}
 												>
-													{item.inviter.lastName + ' ' + item.inviter.firstName }
+													{item.inviter.lastName + ' ' + item.inviter.firstName}
 												</p>
 												<span>Mời bạn tham gia </span>
 												<strong
@@ -421,7 +433,7 @@ export default function Right() {
 											className="btn btn-primary"
 											style={{
 												backgroundColor: '#1677ff',
-												
+
 												borderRadius: '0.5rem',
 											}}
 											onClick={() => acceptInvite('ACCEPT', item.id)}

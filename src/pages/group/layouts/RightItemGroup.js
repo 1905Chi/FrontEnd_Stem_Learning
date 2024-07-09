@@ -62,7 +62,7 @@ export default function RightItemClass() {
 		return false;
 	};
 	return (
-		<div className="right-class-group" style={{ height: '99vh', overflowY: 'auto', backgroundColor: 'white' }}>
+		<div className="right-class-group" style={{overflowY: 'auto', backgroundColor: 'white' }}>
 			<div className="Lich">
 				<CalendarAntd />
 			</div>

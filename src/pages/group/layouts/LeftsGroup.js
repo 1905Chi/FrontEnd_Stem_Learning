@@ -11,6 +11,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useDispatch } from 'react-redux';
 import { selectSearchGroup } from '../../../redux/Group';
+import anh_logo_1 from '../../../assets/images/anh_logo_1.jpg';
 const { Search } = Input;
 const LeftsGroup = () => {
 	const [searchValue, setSearchValue] = useState('');
@@ -18,7 +19,7 @@ const LeftsGroup = () => {
 	const [loading, setLoading] = useState(false);
 	const [groupJoin, setGroupJoin] = useState([]);
 	const navigate = useNavigate();
-	const dispatch = useDispatch();	
+	const dispatch = useDispatch();
 	const create = () => {
 		navigate('/groups/create');
 	};
@@ -74,7 +75,6 @@ const LeftsGroup = () => {
 		const value = event.target.value;
 		dispatch(selectSearchGroup(value));
 		setSearchValue(value);
-		
 	};
 	return (
 		<div>
@@ -125,7 +125,14 @@ const LeftsGroup = () => {
 								groupJoin.map((mygroup, index) => {
 									return (
 										<div key={index} className="slide">
-											<img src={mygroup.group.avatarUrl} alt="Group Avatar" />
+											{mygroup.group.avatarUrl !== null &&
+											mygroup.group.avatarUrl !== '' &&
+											mygroup.group.avatarUrl !== undefined ? (
+												<img src={mygroup.group.avatarUrl} alt="Group Avatar" />
+											) : (
+												<img src={anh_logo_1} alt="Group Avatar" />
+											)}
+
 											<div className="group-info">
 												<h2>{mygroup.group.name}</h2>
 												<p>{mygroup.group.description}</p>
@@ -137,7 +144,14 @@ const LeftsGroup = () => {
 					</div>
 				) : groupJoin && groupJoin.length === 1 ? (
 					<div className="slide">
-						<img src={groupJoin[0].group.avatarUrl} alt="Group Avatar" />
+						{groupJoin[0].group.avatarUrl !== null &&
+						groupJoin[0].group.avatarUrl !== '' &&
+						groupJoin[0].group.avatarUrl !== undefined ? (
+							<img src={groupJoin[0].group.avatarUrl} alt="Group Avatar" />
+						) : (
+							<img src={anh_logo_1} alt="Group Avatar" />
+						)}
+						
 						<div className="group-info">
 							<h2>{groupJoin[0].group.name}</h2>
 							<p>{groupJoin[0].group.description}</p>

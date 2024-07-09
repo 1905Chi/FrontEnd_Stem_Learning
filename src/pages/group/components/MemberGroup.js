@@ -80,7 +80,7 @@ export default function MemberGroup() {
 	};
 
 	return (
-		<div>
+		<div style={{width:'94%'}}>
 			<div className="member-group">
 				{memberGroupRequest && memberGroupRequest.length > 0 ? (
 					<div className="member-group-request">

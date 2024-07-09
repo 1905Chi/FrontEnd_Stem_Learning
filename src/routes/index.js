@@ -79,7 +79,6 @@ const private1page = [
 	{ path: '/messenger', component: Meessage },
 	{ path: '/competition/:uuid', component: MainCompetition },
 	{ path: '/competition/:uuid/submition/:id', component: SubmitCompetition },
-	{ path: '/top3', component: TopThree },
 ];
 const publicRoutes = [
 	{ path: '/login', component: Login },

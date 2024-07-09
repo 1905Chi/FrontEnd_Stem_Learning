@@ -183,6 +183,7 @@ export default function ManagerMemberGroup() {
 			title: 'Hành động',
 			dataIndex: 'action',
 			key: 'action',
+			width: "10%",
 			render: (text, record, role) => {
 				if (record.role === 'GROUP_OWNER' ) {
 					return null; // Không hiển thị button nếu là GROUP_OWNER
@@ -280,7 +281,7 @@ export default function ManagerMemberGroup() {
 					<p>Thay quyền admin xuống thành viên</p>
 				)}
 			</Modal>
-			<Table columns={columns} dataSource={dataMember} />
+			<Table columns={columns} dataSource={dataMember} style={{width:'94%'}}/>
 			<ToastContainer />
 		</div>
 	);

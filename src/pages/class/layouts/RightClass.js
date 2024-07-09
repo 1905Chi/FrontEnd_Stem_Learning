@@ -126,7 +126,9 @@ const RightClass = () => {
 										listClassJoin.map((mygroup, index) => {
 											return (
 												<div key={index} className="slide">
+													{mygroup.group.avatarUrl !== null && mygroup.group.avatarUrl !== "" && listClassJoin[0].group.avatarUrl !== undefined ?
 													<img src={mygroup.group.avatarUrl} alt="Group Avatar" />
+													: <img src={anh_logo_1} alt="Group Avatar" />}
 													<div className="group-info">
 														<h2>{mygroup.group.name}</h2>
 														<p>{mygroup.group.description}</p>
@@ -137,7 +139,10 @@ const RightClass = () => {
 								</Slider>
 							) : listClassJoin && listClassJoin.length === 1 ? (
 								<div className="slide">
+									{listClassJoin[0].group.avatarUrl !== null && listClassJoin[0].group.avatarUrl !== ""  && listClassJoin[0].group.avatarUrl !== undefined ?	
 									<img src={listClassJoin[0].group.avatarUrl} alt="Group Avatar" />
+									: <img src={anh_logo_1} alt="Group Avatar" />
+									}
 									<div className="group-info">
 										<h2>{listClassJoin[0].group.name}</h2>
 										<p>{listClassJoin[0].group.description}</p>

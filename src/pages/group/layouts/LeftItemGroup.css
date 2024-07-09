@@ -17,7 +17,10 @@
     background-color:#007bff;
     border-radius: 10px;
 }
-
+.custom-option-group button:hover{
+    background-color:#007bff;
+    border-radius: 10px;
+}
 .icon-option-group{
     color:#007bff;
 

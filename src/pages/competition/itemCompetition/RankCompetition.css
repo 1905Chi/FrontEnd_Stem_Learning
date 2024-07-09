@@ -18,6 +18,9 @@
 .search .search-wrapper {
     padding: 20px !important;
 }
+.search {
+    margin-top: 15%;
+}
 .search .search-wrapper {
     padding: 10px;
     background: #f3f0e6;
@@ -102,5 +105,14 @@ button, input, optgroup, select, textarea {
 }
 ul {
     list-style-type: disc;
+}
+
+.search {
+    margin-top: 5%;
+    width: 98%;
+}
+
+.rank-competition {
+    width: 98%;
 }
 

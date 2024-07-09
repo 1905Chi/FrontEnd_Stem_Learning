@@ -12,6 +12,7 @@ import Api from '../../../api/Api';
 import { selectGroup } from '../../../redux/GetItemGroup';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { Switch } from 'antd';
 import axios from 'axios';
 export default function LeftCreateGroup() {
 	const [loading, setLoading] = useState(false);
@@ -23,6 +24,7 @@ export default function LeftCreateGroup() {
 	const [grade, setGrade] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
 	const [policyDescription, setPolicyDescription] = useState('');
 	const [subjects, setSubjects] = useState([]);
+	const [isCompetition, setIsCompetition] = useState(false);
 	const description = (e) => {
 		if (e.target.value === 'PUBLIC') {
 			setPolicyDescription(
@@ -37,7 +39,7 @@ export default function LeftCreateGroup() {
 	useEffect(() => {
 		callSubject();
 	}, []);
-	
+
 	const callSubject = async () => {
 		await axios
 			.get(url + 'api/v1/subjects')
@@ -63,26 +65,34 @@ export default function LeftCreateGroup() {
 		};
 		let data = {};
 		if (isClassesPath) {
-			data = {
-				name: values.nameGroup,
-				description: values.descriptionGroup,
-				isClass: true,
-				isPublic: values.policy ==='PUBLIC'? true : false,
-				isAcceptAllRequest:  values.policy ==='PUBLIC'? true : false,
-				subject: values.subject,
-				grade: values.grade,
-			};
+			if (!isCompetition) {
+				data = {
+					name: values.nameGroup,
+					description: values.descriptionGroup,
+					isClass: true,
+					isPublic: values.policy === 'PUBLIC' ? true : false,
+					isAcceptAllRequest: values.policy === 'PUBLIC' ? true : false,
+					subject: values.subject,
+					grade: values.grade,
+				};
+			} else {
+				data = {
+					name: values.nameGroup,
+					description: values.descriptionGroup,
+					subjects: values.subject,
+				};
+			}
 		} else {
 			data = {
 				name: values.nameGroup,
 				description: values.descriptionGroup,
 				isClass: false,
-				isPublic: values.policy ==='PUBLIC'? true : false,
-				isAcceptAllRequest:  values.policy ==='PUBLIC'? true : false,
+				isPublic: values.policy === 'PUBLIC' ? true : false,
+				isAcceptAllRequest: values.policy === 'PUBLIC' ? true : false,
 			};
 		}
 
-		Api.post(url + 'api/v1/groups', data, { headers })
+		!isCompetition ?  Api.post(url + 'api/v1/groups', data, { headers })
 			.then((response) => {
 				// Xử lý kết quả sau khi gửi thành công
 				if (response.data.statusCode === 200) {
@@ -91,12 +101,43 @@ export default function LeftCreateGroup() {
 					if (isClassesPath) {
 						setTimeout(() => {
 							navigate(`/classes/${response.data.result}`);
-						}, 5000);
+						}, 3000);
 					} else {
 						setTimeout(() => {
 							navigate(`/groups/${response.data.result}`);
-						}, 5000);
+						}, 3000);
 					}
+				} else {
+					setLoading(false);
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				// Xử lý lỗi nếu có lỗi xảy ra
+				if (error.response) {
+					// lỗi khi access token hết hạn
+					// lỗi khi refresh token hết hạn
+					toast.error(error.response.data.message);
+				} else if (error.request) {
+					// Lỗi không có phản hồi từ máy chủ
+					toast.error(error.request.data.message);
+				} else {
+					// Lỗi trong quá trình thiết lập yêu cầu
+					toast('Lỗi khi thiết lập yêu cầu.');
+				}
+			})
+			.finally(() => {
+				setLoading(false);
+			})
+			: Api.post(url + 'api/v1/groups/create-competition', data, { headers })
+			.then((response) => {
+				// Xử lý kết quả sau khi gửi thành công
+				if (response.data.statusCode === 200) {
+					setLoading(false);
+					toast.success(response.data.message);
+					setTimeout(() => {
+						navigate(`/classes/${response.data.result}`);
+					}, 3000);
 				} else {
 					setLoading(false);
 					toast.error(response.data.message);
@@ -120,7 +161,15 @@ export default function LeftCreateGroup() {
 				setLoading(false);
 			});
 	};
-
+	const onChangeSwitch = (checked) => {
+		console.log(`switch to ${checked}`);
+		if (checked) {
+			console.log(checked);
+			setIsCompetition(true);
+		} else {
+			setIsCompetition(false);
+		}
+	};
 	return (
 		<>
 			{loading ? ( // Nếu đang loading thì hiển thị component loading
@@ -129,9 +178,9 @@ export default function LeftCreateGroup() {
 			<div style={{ height: '100vh' }}>
 				<div className="header-left-create">
 					{isClassesPath ? (
-						<h1 style={{ textAlign: 'start' }}>Tạo Lớp</h1>
+						<h1 style={{ textAlign: 'center' }}>Tạo Lớp/ Cuộc thi</h1>
 					) : (
-						<h1 style={{ textAlign: 'start' }}>Tạo Nhóm Thảo Luận</h1>
+						<h1 style={{ textAlign: 'center' }}>Tạo Nhóm Thảo Luận</h1>
 					)}
 				</div>
 				<div className="body-form">
@@ -158,11 +207,16 @@ export default function LeftCreateGroup() {
 							]}
 						>
 							<Input
-								placeholder="Tên nhóm"
+								placeholder={isClassesPath ? 'Tên lớp' : 'Tên nhóm'}
 								onChange={setNameGroup}
-								style={{ width: '80%', marginLeft: '20px' }}
+								style={{ width: '100%', marginLeft: '20px' }}
 							/>
 						</Form.Item>
+						{isClassesPath ? (
+							<Form.Item name="competition" label="Tạo cuộc thi" style={{ marginLeft: '7%' }}>
+								<Switch onChange={onChangeSwitch} />
+							</Form.Item>
+						) : null}
 						{isClassesPath ? (
 							subjects !== null && subjects.length > 0 && subjects !== undefined ? (
 								<Form.Item
@@ -172,12 +226,11 @@ export default function LeftCreateGroup() {
 								>
 									<Select
 										showSearch
-										style={{ width: '80%', marginLeft: '20px' }}
+										style={{ width: '100%', marginLeft: '20px' }}
 										placeholder="Môn học"
 										optionFilterProp="children"
 									>
 										{subjects &&
-											
 											subjects.map((grade) => (
 												<Option value={grade.name} key={grade.id} style={{ color: 'black' }}>
 													{grade.name}
@@ -187,7 +240,7 @@ export default function LeftCreateGroup() {
 								</Form.Item>
 							) : null
 						) : null}
-						{isClassesPath ? (
+						{isClassesPath && !isCompetition ? (
 							<Form.Item
 								name="grade"
 								rules={[
@@ -198,17 +251,17 @@ export default function LeftCreateGroup() {
 								]}
 							>
 								<Select
-								showSearch
-								style={{ width: '80%', marginLeft: '20px' }}
-								placeholder="Khối học"
-								optionFilterProp="children"
-							>
-								{grade.map((grade) => (
-									<Option value={grade} key={grade} style={{ color: 'black' }}>
-										{grade}
-									</Option>
-								))}
-							</Select>
+									showSearch
+									style={{ width: '100%', marginLeft: '20px' }}
+									placeholder="Khối học"
+									optionFilterProp="children"
+								>
+									{grade.map((grade) => (
+										<Option value={grade} key={grade} style={{ color: 'black' }}>
+											{grade}
+										</Option>
+									))}
+								</Select>
 							</Form.Item>
 						) : null}
 						<Form.Item
@@ -219,7 +272,7 @@ export default function LeftCreateGroup() {
 								},
 							]}
 						>
-							<Input placeholder="Mô tả ngắn " style={{ width: '80%', marginLeft: '20px' }} />
+							<Input placeholder="Mô tả ngắn " style={{ width: '100%', marginLeft: '20px' }} />
 						</Form.Item>
 						<Form.Item
 							name="policy"
@@ -231,7 +284,7 @@ export default function LeftCreateGroup() {
 								},
 							]}
 						>
-							<Radio.Group defaultValue="PUBLIC" onChange={description}>
+							<Radio.Group defaultValue="PUBLIC" onChange={description} style={{ display: 'flex' }}>
 								<Tooltip title="Công khai">
 									<Radio.Button
 										value="PUBLIC"
@@ -278,7 +331,7 @@ export default function LeftCreateGroup() {
 								))}
 							</Select>
 						</Form.Item> */}
-						<Form.Item style={{  width: '80%', margin: '15px' }}>
+						<Form.Item style={{ width: '100%', margin: '15px' }}>
 							<Button type="primary" htmlType="submit" style={{ width: '100%', height: '45px' }}>
 								Tạo
 							</Button>

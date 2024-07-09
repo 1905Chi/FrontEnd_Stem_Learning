@@ -13,7 +13,8 @@ import TopThree from './TopThree';
 import { selectSelectedListRank } from '../../../redux/Group';
 export default function Rank() {
     const selectedListRank = useSelector(selectSelectedListRank);
-    console.log(selectedListRank);
+    const Top3= selectedListRank !== undefined  && selectedListRank !== null && selectedListRank.length > 0
+                         ? selectedListRank.slice(0,3) : [];
     const columns = [
 		{
 			title: 'STT',
@@ -50,9 +51,8 @@ export default function Rank() {
     
 	return (
 		<div className='rank-class'>
-			<h1 style ={{textAlign:'center'}}>Xếp hạng</h1>
-            <TopThree />
-            <Table columns={columns} dataSource={selectedListRank} style={{width:'94%', margin:'5% 0 0 0'}} />
+            <TopThree TopThree= {Top3}/>
+            <Table columns={columns} dataSource={selectedListRank} style={{width:'94%', margin:'10% 0 0 0'}} />
 		</div>
 	);
 }

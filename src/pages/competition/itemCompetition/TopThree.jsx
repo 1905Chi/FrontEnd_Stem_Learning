@@ -123,9 +123,9 @@ const TopThree = (props) => {
 
 	return (
 		<>
-			<div className="main-rank ">
+			<div className="main-rank-competition">
 				
-				<div className="top-three-container">
+				<div className="top-three-container-competition">
 					<img className="left-image" src={Trophy} alt="Trophy Icon" />
 					{topThreeData.map((item, index) => (
 						<div className={`top-three-item ${index === 1 ? 'center-item' : ''}`} key={item.id}>
@@ -147,9 +147,9 @@ const TopThree = (props) => {
 					<img className="floral-design bottom-left" src={FloralDesign} alt="Floral Design Icon" />
 					<img className="floral-design bottom-right" src={FloralDesign} alt="Floral Design Icon" />
 				</div>
-				<div className="banner">
+				<div className="banner-competition">
 				<span>Vinh danh Top 3 xuất sắc</span>
-				<img className="ribbon" src={Ribbon} alt="Ribbon Icon" />
+				<img className="ribbon-competition" src={Ribbon} alt="Ribbon Icon" />
 			</div> 
 			</div>
 			
