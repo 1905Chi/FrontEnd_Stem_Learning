@@ -10,13 +10,19 @@ import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import anh_logo_1 from '../../../assets/images/anh_logo_1.jpg';
-import TopThree from '../../class/components/TopThree';
+import { useDispatch } from 'react-redux';
+import { selectlistRank } from '../../../redux/Group';
 function MainCompetition() {
 	const [activeKey, setActiveKey] = useState('1');
 	const { uuid } = useParams();
 	const [group, setGroup] = useState(null); // Chỉnh sửa state để khởi tạo là null
 	const [role, setRole] = useState();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const headers = {
+		'Content-Type': 'application/json',
+		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+	};
 
 	useEffect(() => {
 		// Thêm class vào tab đang hoạt động
@@ -36,16 +42,13 @@ function MainCompetition() {
 	useEffect(() => {
 		if (uuid) {
 			getGroup();
+			getRank();
 		} else {
 			toast.error('Không tìm thấy UUID.');
 		}
 	}, [uuid]);
 
 	const getGroup = async () => {
-		const headers = {
-			'Content-Type': 'application/json',
-			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-		};
 
 		try {
 			const response = await Api.get(url + 'api/v1/groups/' + uuid, { headers: headers });
@@ -67,6 +70,31 @@ function MainCompetition() {
 			}, 3000);
 		}
 	};
+
+	const getRank = async () => {
+		Api.get(url + 'api/v1/submissions/rank/' + uuid, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+						const transformedData = response.data.result.map((item, index) => ({
+							id: item.author.id, // ID: assuming this is the user ID
+							key: index + 1, // STT: assuming STT is a sequential number starting from 1
+							name: ` ${item.author.lastName} ${item.author.firstName}`, // Họ và tên
+							point: item.totalSubmission, // Số bài làm
+							total: item.totalScore, // Tổng điểm
+							Avatar: item.author.avatarUrl, // Ảnh đại diện
+							 // Xếp hạng: placeholder value; you might need to calculate this based on your criteria
+						}));
+						transformedData.sort((a, b) => b.total - a.total);
+						console.log(transformedData)
+						dispatch(selectlistRank(transformedData));
+					} else {
+						console.log(response.error);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+			}
 
 	const items = [
 		{

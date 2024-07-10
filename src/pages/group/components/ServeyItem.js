@@ -613,7 +613,8 @@ export default function SurveyItem(props) {
 									marginBottom: '2%',
 									display: 'flex',
 									justifyContent: 'space-between',
-									background: `linear-gradient(to right, rgba(0, 0, 255, 0.5) ${calculateBackgroundWidth(
+									borderRadius: '5px',
+									background: `linear-gradient(to right, rgb(208 214 222) ${calculateBackgroundWidth(
 										i
 									)}, transparent ${calculateBackgroundWidth(i)})`,
 								}}

@@ -7,8 +7,20 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import { selectrole } from '../../../redux/Exam';
+import { selectSelectedListRank } from '../../../redux/Group';
 export default function HomeCompetition() {
 	const { uuid } = useParams();
+	const listRank = useSelector(selectSelectedListRank);
+	const user= JSON.parse(localStorage.getItem('user'));
+	var count = 0;
+	var totalScore = 0;
+	listRank && listRank.map(item => {
+		
+		if(item.id === user.id) {
+			count = item.point;	
+			totalScore = item.total;	
+		} 
+	})
     const [group, setGroup] = useState(null);  // Chỉnh sửa state để khởi tạo là null
     const [role, setRole] = useState("");
     const navigate = useNavigate();
@@ -82,36 +94,36 @@ export default function HomeCompetition() {
 					<div>
 						<div className="groupInfo">
 							<p>
-								<span>Họ và tên</span>: Bùi Đặng Quốc Chí.
+								<span>Họ và tên</span>: {user.lastName} {user.firstName}.
 							</p>
 							<p>
-								<span>Email</span>: 20110614@student.hcmute.edu.vn
+								<span>Email</span>: {user.email}
 							</p>
 							<p>
-								<span>Số điện thoại</span>: 0362858058
+								<span>Số điện thoại</span>: {user.phone}
 							</p>
 							<p>
-								<span>Tỉnh / TP</span>: Quảng Ngãi
+								<span>Tỉnh / TP</span>: {user.province}
 							</p>
 							<p>
-								<span>Trường</span>: THPT Số 2 Mộ Đức
+								<span>Trường</span>: {user.school}
 							</p>
 							<p>
-								<span>Lớp</span>: 12A1
+								<span>Lớp</span>: {user.grade}
 							</p>
 						</div>
 						<div className="groupInfo">
 							<p>
-								<span>Tuần thi</span>: <span className="checked">2</span>
+								<span>Tuần thi</span>: <span className="checked">{count}</span>
 							</p>
 							<p>
-								<span>Điểm cao nhất</span>: <span className="checked"></span> điểm
+								<span>Tổng điểm </span>: <span className="checked"></span> {totalScore} điểm
 							</p>
 							<p>
 								<span>Thời gian</span>: <span className="checked"></span>
 							</p>
 							<p>
-								<span>Số lần đã thi</span>: <span className="checked">2</span>/2
+								<span>Số lần đã thi</span>: <span className="checked">{count}</span>/
 							</p>
 						</div>
 					</div>

@@ -38,13 +38,16 @@ body {
     color: #3b3b3b;
 }
 .row {
-    display: -webkit-box;
-    display: -ms-flexbox;
+    
     display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-right: -15px;
-    margin-left: -15px;
+    justify-content: center;
+    
+}
+.row input {
+    width: 40%;
+}
+.row button {
+    width: 10%;
 }
 .search-wrapper .col-md-4 {
     padding: 10px;
@@ -108,11 +111,15 @@ ul {
 }
 
 .search {
-    margin-top: 5%;
+    margin-top: 8%;
     width: 98%;
 }
 
 .rank-competition {
     width: 98%;
+}
+
+.form-group button {
+    margin-left: 5%;
 }
 

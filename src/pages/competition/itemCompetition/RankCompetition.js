@@ -2,88 +2,64 @@ import React from 'react';
 import { Table } from 'antd';
 import './RankCompetition.css';
 import TopThree from './TopThree';
-export default function RankCompetition() {
+import { Button } from 'antd/es/radio';
+export default function RankCompetition(props) {
+
 	const columns = [
 		{
 			title: 'STT',
 			dataIndex: 'key',
 			key: 'key',
-			width: 10,
+			width: '10%',
 		},
-		{
-			title: 'Họ và tên',
-			dataIndex: 'name',
-			key: 'name',
-			width: 200,
-		},
-		{
-			title: 'Tỉnh / TP',
-			dataIndex: 'province',
-			key: 'province',
-			width: 200,
-		},
-		{
-			title: 'Trường',
-			dataIndex: 'school',
-			key: 'school',
-			width: 200,
-		},
-		{
-			title: 'Tổng điểm',
-			dataIndex: 'total',
-			key: 'total',
-			width: 10,
-		},
-		{
-			title: 'Xếp hạng',
-			dataIndex: 'rank',
-			key: 'rank',
-			width: 10,
-		},
-	];
+        {
+            title: 'Họ và tên',
+            dataIndex: 'name',
+            key: 'name',
+            width: '30%',
+        },
+        {
+            title: 'Số bài làm',
+            dataIndex: 'point',
+            key: 'point',
+            width: '10%',
+        },
+        {
+            title: 'Tổng điểm',
+            dataIndex: 'total',
+            key: 'total',
+            width: '10%',
+        },
+        {
+            title: 'Xếp hạng',
+            dataIndex: 'key',
+            key: 'key',
+            width: '10%',
+        },
+        
+    ]
 	const dataMember = [
 		{
 			key: '1',
 			name: 'Nguyễn Văn A',
-			province: 'Hà Nội',
-			school: 'THPT Chuyên Hà Nội',
-			total: 12,
+			point:2,
+			total: 50,
 			rank: 1,
 		},
+		
 		{
 			key: '2',
-			name: 'Nguyễn Văn B',
-			province: 'Hà Nội',
-			school: 'THPT Chuyên Hà Nội',
-			total: 10,
+			name: 'Nguyễn Quang Huy',
+			point:2,
+			total: 50,
 			rank: 2,
 		},
 		{
 			key: '3',
-			name: 'Nguyễn Văn C',
-			province: 'Hà Nội',
-			school: 'THPT Chuyên Hà Nội',
-			total: 8,
+			name: 'Nguyễn Thị B',
+			point:2,
+			total: 50,
 			rank: 3,
-		},
-		{
-			key: '4',
-			name: 'Nguyễn Văn D',
-			province: 'Hà Nội',
-			school: 'THPT Chuyên Hà Nội',
-
-			point: 5,
-			total: 6,
-			rank: 4,
-		},
-		{
-			key: '5',
-			name: 'Nguyễn Văn E',
-			province: 'Hà Nội',
-			school: 'THPT Chuyên Hà Nội',
-			point: 4,
-			total: 4,
-			rank: 5,
 		},
 	];
 	return (
@@ -214,28 +190,18 @@ export default function RankCompetition() {
 										</select>
 									</div>
 								</div> */}
-								<div className="form-group col-md-4">
-									<label> Họ tên </label>
-									<div className="input">
-										<input
-											type="text"
-											id="dataName"
-											name="dataName"
-											className="form-control"
-											placeholder="Nhập họ tên"
-											value=""
-										/>
-									</div>
-								</div>
-								<div className="form-group col-md-4">
-									<div className="col-md-12" style={{ marginTop: '10px' }}>
-										<center>
-											<button className="btn btn-primary" id="search" type="submit">
-												Tìm kiếm
-											</button>
-										</center>
-									</div>
-								</div>
+
+								<input
+									type="text"
+									id="dataName"
+									name="dataName"
+									className="form-control"
+									placeholder="Nhập họ tên"
+									value=""
+								/>
+								<Button type="primary" style={{ marginLeft: '10px' }}>
+									Tìm kiếm
+								</Button>
 							</div>
 						</form>
 					</div>
