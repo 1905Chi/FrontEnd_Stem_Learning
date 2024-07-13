@@ -7,7 +7,7 @@ import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import PostItem from './../../home/components/PostItem';
 import { useSelector,useDispatch } from 'react-redux';
-import { selectSelectedPostGroup , selectedSurveyGroup} from '../../../redux/Group';
+import { selectSelectedPostGroup , selectPostGroup} from '../../../redux/Group';
 export default function PostGroup() {
 	const [open, setOpen] = useState(false);
 	const postgroup = useSelector(selectSelectedPostGroup);
@@ -56,7 +56,7 @@ export default function PostGroup() {
 		Api.get(url + 'api/v1/posts?' + 'groupId=' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
-					dispatch(selectedSurveyGroup(response.data.result));
+					dispatch(selectPostGroup(response.data.result));
 				} else {
 					console.log(response.error);
 				}
@@ -65,8 +65,6 @@ export default function PostGroup() {
 				console.log(error);
 			});
 		}
-
-
 	return (
 		<div>
 			<div className="post-group">

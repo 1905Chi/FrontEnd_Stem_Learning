@@ -162,7 +162,7 @@ function Login() {
 								<Button
 									type="primary"
 									onClick={register}
-									className="login-form-button"
+									className="login-form-button-register"
 									style={{ backgroundColor: 'green' }}
 								>
 									Đăng ký

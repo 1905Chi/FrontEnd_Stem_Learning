@@ -115,25 +115,7 @@ export default function Submit() {
 							setSelectedAnswers([]);
 						}
 
-						var startat = moment(localStorage.getItem('StartAt'), 'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
-						const now = new Date();
-						const nowTime =
-							now.getDate() +
-							'-' +
-							(now.getMonth() + 1) +
-							'-' +
-							now.getFullYear() +
-							' ' +
-							now.getHours() +
-							':' +
-							now.getMinutes() +
-							':' +
-							now.getSeconds() +
-							':' +
-							'000000';
-
-						const nowDate = moment(nowTime, 'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
-						setTargetTime(Number(localStorage.getItem('duration')) * 60 * 1000 - (nowDate - startat));
+						totaltimeExam();
 					} else {
 						toast.error(response.data.message);
 					}
@@ -258,7 +240,8 @@ export default function Submit() {
 	};
 
 	const handleEditorChange = (value,index) => {
-		console.log(value);
+		
+		totaltimeExam();
 		setData((prevData) => {
 			// Tạo bản sao của mảng
 			const newData = [...prevData];
@@ -268,6 +251,27 @@ export default function Submit() {
 			return newData;
 		});
 	};
+	const totaltimeExam = () => {
+		var startat = moment(localStorage.getItem('StartAt'), 'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
+		const now = new Date();
+		const nowTime =
+			now.getDate() +
+			'-' +
+			(now.getMonth() + 1) +
+			'-' +
+			now.getFullYear() +
+			' ' +
+			now.getHours() +
+			':' +
+			now.getMinutes() +
+			':' +
+			now.getSeconds() +
+			':' +
+			'000000';
+
+		const nowDate = moment(nowTime, 'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
+		setTargetTime(Number(localStorage.getItem('duration')) * 60 * 1000 - (nowDate - startat));
+	}
 	const handleEditorCancel = (index) => {
 		setData((prevData) => {
 			// Tạo bản sao của mảng

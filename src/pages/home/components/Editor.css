@@ -1,3 +1,6 @@
 .ql-snow .ql-tooltip {
     left: 18px !important
   }
+  .ql-container{
+    height: auto;
+  }

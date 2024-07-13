@@ -16,7 +16,7 @@ import LableGroup from '../pages/group/components/LableGroup';
 import { Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
-import anh_logo_1  from '../assets/images/anh_logo_1.jpg';
+import anh_logo_1 from '../assets/images/anh_logo_1.jpg';
 import Slider from 'react-slick';
 export default function Right() {
 	const dispatch = useDispatch();
@@ -104,20 +104,9 @@ export default function Right() {
 		callRelationShip();
 		callApiListCompetition();
 	}, []);
-	// const callApifriendRequest = () => {
-	// 	Api.get(url + 'api/v1/users/friend-requests', { headers: headers })
-	// 		.then((res) => {
-	// 			console.log(res.data);
-	// 			dispatch(selectFriendRequest(res.data.result));
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 		});
-	// };
 	const callApifriendRequest = () => {
 		Api.get(url + 'api/v1/users/friend-requests', { headers: headers })
 			.then((res) => {
-				console.log('adgs', res.data.result);
 				setCountRequest(res.data.result.filter((item) => item.status === 'PENDING').length);
 				dispatch(selectFriendRequest(res.data.result));
 			})
@@ -152,7 +141,7 @@ export default function Right() {
 			.then((res) => {
 				setListRelationShip(res.data.result);
 				setCountRequestParent(
-					res.data.result.filter((item) => item.accepted === '' || item.accepted === null).length
+					res.data.result.filter((item) => item.isAccepted === '' || item.isAccepted === null).length
 				);
 			})
 			.catch((err) => {
@@ -319,13 +308,13 @@ export default function Right() {
 					</>
 				) : null}
 
-				{listRelationShip && listRelationShip.length > 0 && countRequestParent > 0 && (
+				{listRelationShip && listRelationShip.length > 0 && countRequestParent > 0 ? (
 					<>
 						<div className="friend-request__title">
 							<h3>Yêu cầu liên kết tài khoản </h3>
 						</div>
 						{listRelationShip.map((item, index) =>
-							item.accepted === '' || item.accepted === null ? (
+							item.isAccepted === '' || item.isAccepted === null ? (
 								<div className="friend-request_item" key={item.id}>
 									<div
 										style={{ margin: '15px', marginTop: '18px' }}
@@ -371,7 +360,7 @@ export default function Right() {
 							) : null
 						)}
 					</>
-				)}
+				) : null}
 
 				{lisstInvite && lisstInvite.length > 0 && (
 					<>

@@ -29,7 +29,23 @@ export default function ExamItem(props) {
 	const [converArray, setconverArray] = useState();
 	const CreateSubmit = () => {
 		localStorage.setItem('typesubmit', 'create');
-		localStorage.setItem('StartAt', examId.exam.startedAt);
+		const now = new Date();
+		const nowTime =
+			now.getDate() +
+			'-' +
+			(now.getMonth() + 1) +
+			'-' +
+			now.getFullYear() +
+			' ' +
+			now.getHours() +
+			':' +
+			now.getMinutes() +
+			':' +
+			now.getSeconds() +
+			':' +
+			'000000';
+
+		localStorage.setItem('StartAt', nowTime);
 		localStorage.setItem('duration', examId.exam.duration);
 		setTimeout(() => {
 			navigate('/exam/' + id + '/submit');

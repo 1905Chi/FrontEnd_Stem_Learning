@@ -48,7 +48,8 @@ function PostItem(props) {
 	const [reportTo, setReportTo] = useState(null);
 	const [inforReport, setInforReport] = useState(null);
 	const [rating, setRating] = useState(0);
-
+	const [contentComment, setContentComment] = useState('');
+	const [idCmtEdit, setIdCmtEdit] = useState(null);
 	const handleStarClick = (value) => {
 		setRating(value);
 	};
@@ -114,7 +115,7 @@ function PostItem(props) {
 			const response = await Api.get(url + `api/v1/posts/home-posts?page=0&size=30`, {
 				headers: headers,
 			});
-			if(props.updatePostList){
+			if (props.updatePostList) {
 				props.updatePostList(response.data.result.posts);
 			}
 			if (response.data.statusCode === 200) {
@@ -149,6 +150,7 @@ function PostItem(props) {
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						toast.success(response.data.message);
+
 						if (props.updatePostList) {
 							homePosts();
 						}
@@ -169,6 +171,9 @@ function PostItem(props) {
 						setTypeReacttion(null);
 						if (props.updatePostList) {
 							homePosts();
+						}
+						if (props.callBackApi) {
+							props.callBackApi();
 						}
 						setCountReaction(countReaction - 1);
 					} else {
@@ -195,6 +200,9 @@ function PostItem(props) {
 					setOpen(false);
 					if (props.updatePostList) {
 						homePosts();
+					}
+					if (props.callBackApi) {
+						props.callBackApi();
 					}
 				} else {
 					console.log(response.error);
@@ -247,7 +255,7 @@ function PostItem(props) {
 		if (props.totalReactions !== null && props.totalReactions !== undefined) {
 			setCountReaction(props.totalReactions);
 		}
-	}, [props.content]);
+	}, []);
 	const SeeMore = () => {
 		const contentContainer = document.querySelector('.content' + props.id);
 		const showMoreButton = document.querySelector('#show' + props.id);
@@ -262,7 +270,7 @@ function PostItem(props) {
 				post.style.maxHeight = 'max-content';
 			}
 		}
-		setXemthem(true);
+		
 	};
 	const SeeLess = () => {
 		const contentContainer = document.querySelector('.content' + props.id);
@@ -277,7 +285,6 @@ function PostItem(props) {
 				post.style.maxHeight = '500px';
 			}
 		}
-		setXemthem(false);
 	};
 	const handleOpenConfirm = () => {
 		setOpen(true);
@@ -517,6 +524,10 @@ function PostItem(props) {
 					toast.success(response.data.message);
 					setConfirmLoading(false);
 					setOpentModelDeletecmt(false);
+					if (props.callBackApi) {
+						props.callBackApi();
+					}
+
 					homePosts();
 				} else {
 					console.log(response.error);
@@ -531,14 +542,24 @@ function PostItem(props) {
 				setOpentModelDeletecmt(false);
 			});
 	};
+	const [replyIndex, setReplyIndex] = useState(null); // State để lưu vị trí được chọn
+	const [showEditorContentCMT, setShowEditorContentCMT] = useState(false);
+
+	const handleReplyClick = (index, id, content) => {
+		setReplyIndex(index === replyIndex ? null : index);
+		setContentComment(content);
+		setIdCmtEdit(id);
+		setShowEditorContentCMT(true);
+	};
+	const cancelEditorCmt = () => {
+		setShowEditorContentCMT(false);
+		setReplyIndex(null);
+		setContentComment('');
+	};
 	function Comment({ comment }) {
-		const [replyIndex, setReplyIndex] = useState(null); // State để lưu vị trí được chọn
-		const [showEditor, setShowEditor] = useState(false); // State để kiểm soát việc hiển thị Editor
+		// State để kiểm soát việc hiển thị Editor
 		// Hàm để xử lý khi bấm phản hồi
-		const handleReplyClick = (index, id) => {
-			setReplyIndex(index === replyIndex ? null : index);
-			setShowEditor(true);
-		};
+
 		// Hàm để tắt Editor khi bấm vào ô khác
 		const handleOutsideClick = () => {
 			setShowEditor(false);
@@ -566,26 +587,40 @@ function PostItem(props) {
 									}}
 								/>
 							</div>
-							<DropdownMenu id={comment.authorId} idcmt={comment.id} />
+							<DropdownMenu id={comment.authorId} idcmt={comment.id} content={comment.content} />
 						</div>
 						<div className="react-post">
 							<button>Thích</button>
 
-							<button onClick={() => handleReplyClick(0)}>Phản hồi</button>
+							<button onClick={() => handleReplyClick(0, comment.id, comment.content)}>Phản hồi</button>
 						</div>
-						{replyIndex === 0 && showEditor ? (
-							<div>
-								<Editor
-									data={value}
-									cancel={() => setShowEditor(false)}
-									editcontent={setValue}
-									idComment={comment.id}
-									homePosts={props.updatePostList}
-								/>
-							</div>
-						) : null}
 					</div>
 				</div>
+				{replyIndex === 0 && showEditorContentCMT && comment.id === idCmtEdit ? (
+					<div>
+						<Editor
+							data={value}
+							cancel={cancelEditorCmt}
+							editcontent={setValue}
+							idComment={comment.id}
+							groupPosts={props.callBackApi}
+							homePosts={props.updatePostList}
+						/>
+					</div>
+				) : null}
+				{replyIndex === 1 && showEditorContentCMT && comment.id === idCmtEdit ? (
+					<div>
+						<Editor
+							data={comment.content}
+							cancel={cancelEditorCmt}
+							editcontent={setValue}
+							idComment={comment.id}
+							EditComent={true}
+							groupPosts={props.callBackApi}
+							homePosts={props.updatePostList}
+						/>
+					</div>
+				) : null}
 
 				{comment.subComments && comment.subComments.length > 0 && (
 					<div className="sub-comments">
@@ -602,7 +637,12 @@ function PostItem(props) {
 		setOpentModelDeletecmt(true);
 		setIdCmtDelete(id);
 	};
-	function DropdownMenu({ id, idcmt }) {
+	const EditComent = (id, content) => {
+		setIdCmtEdit(id);
+		setContentComment(content);
+		handleReplyClick(1, id, content);
+	};
+	function DropdownMenu({ id, idcmt, content }) {
 		const itemsCmt = [
 			{
 				key: '1',
@@ -629,7 +669,12 @@ function PostItem(props) {
 			{
 				key: '2',
 				label: (
-					<div style={{ fontSize: '15px' }} onClick={EditPost}>
+					<div
+						style={{ fontSize: '15px' }}
+						onClick={() => {
+							EditComent(idcmt, content);
+						}}
+					>
 						{JSON.parse(localStorage.getItem('user')) &&
 						id === JSON.parse(localStorage.getItem('user')).id ? (
 							<div>
@@ -844,15 +889,16 @@ function PostItem(props) {
 						editcontent={EditContentPost}
 						index={props.id}
 						type={props.type}
+						groupPosts={props.callBackApi}
 						homePosts={props.updatePostList}
 					></Editor>
 				) : (
 					<div className="post-content" dangerouslySetInnerHTML={{ __html: contentPost }} id="post" />
 				)}
-				<button className={'show-more-button'} id={'show' + props.id} onClick={SeeMore}>
+				<button className={'show-more-button'} id={'show' + props.id} onClick={()=>{SeeMore()}}>
 					Xem thêm
 				</button>
-				<button className={'show-more-button'} id={'less' + props.id} onClick={SeeLess}>
+				<button className={'show-more-button'} id={'less' + props.id} onClick={()=>{SeeLess()}}>
 					Thu gọn
 				</button>
 			</div>
@@ -1001,6 +1047,7 @@ function PostItem(props) {
 						cancel={closeEditor}
 						editcontent={setValue}
 						idPost={props.id}
+						groupPosts={props.callBackApi}
 						homePosts={props.updatePostList}
 						style={{ marginTop: '10px' }}
 					/>

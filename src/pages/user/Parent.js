@@ -28,7 +28,7 @@ export default function Parent() {
 			dataIndex: 'action',
 			key: 'action',
 			render: (text, record) => (
-				<Button type="link" onClick={() => ReviewTest(record)}>
+				<Button type="link" onClick={() => ReviewTest(record)} style={{marginLeft:"10px"}}>
 					Xem bài nộp
 				</Button>
 			),

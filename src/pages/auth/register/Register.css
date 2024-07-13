@@ -85,7 +85,6 @@
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
-  max-width: 98%;
   flex: auto;
   height: 50px;
 }
@@ -133,9 +132,7 @@
 .item-form{
   width: 180px;
 }
-.ant-form-item-control-input {
-  width: 88%;
-}
+
 .date-picker-parent {
   width: 100%;
 }

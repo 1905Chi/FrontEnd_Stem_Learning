@@ -23,6 +23,7 @@ export default function Editor(props) {
 	const reactQuillRef = useRef(null);
 	const dispatch = useDispatch();
 	const [isLoading, setIsLoading] = useState(false);
+	
 	const onChange = (content) => {	
 		if(props.isQuiz){
 			props.editcontent(content);
@@ -55,7 +56,31 @@ export default function Editor(props) {
 				Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 				'Content-Type': 'multipart/form-data', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
 			};
-			Api.post(url + `api/v1/comments/repComment/${props.idComment}`, data, { headers: headers })
+			if(props.EditComent) {
+				Api.put(url + `api/v1/comments/${props.idComment}`, data, { headers: headers })
+				.then((response) => {
+					if (response.data.statusCode === 200) {
+				
+						toast.success('Chỉnh sửa bình luận thành công');
+						if(props.homePosts)
+						{
+							props.homePosts();
+						}
+						if(props.groupPosts) {
+							props.groupPosts();
+						}
+						setValue('');
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				})
+				.finally(()=> {
+					setIsLoading(false);
+				});
+
+			} else {
+				Api.post(url + `api/v1/comments/repComment/${props.idComment}`, data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						console.log(response.data.message);
@@ -63,6 +88,9 @@ export default function Editor(props) {
 						if(props.homePosts)
 						{
 							props.homePosts();
+						}
+						if(props.groupPosts) {
+							props.groupPosts();
 						}
 						setValue('');
 					} else {
@@ -75,7 +103,9 @@ export default function Editor(props) {
 				.finally(()=>{
 					setIsLoading(false);
 				});
-				return ;
+			}
+			props.cancel();
+			return ;
 		}
 
 		if(props.idPost){
@@ -99,6 +129,9 @@ export default function Editor(props) {
 						if(props.homePosts)
 						{
 							props.homePosts();
+						}
+						if(props.groupPosts) {
+							props.groupPosts();
 						}
 					} else {
 						console.log(response.error);
@@ -132,7 +165,10 @@ export default function Editor(props) {
 						{
 							props.homePosts();
 						}
-						callapiPost();
+						if(props.groupPosts) {
+							props.groupPosts();
+						}
+						
 					} else {
 						console.log(response.error);
 					}
@@ -163,12 +199,10 @@ export default function Editor(props) {
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						
-						 callapiPost();
+						 
 						toast.success('Đăng bài thành công');			
-						if(props.homePosts)
-						{
-							props.homePosts();
-						}
+					
+						callapiPost();
 						
 						
 					} else {
@@ -262,7 +296,7 @@ export default function Editor(props) {
 			</div> */}
 			<ReactQuill
 				ref={reactQuillRef}
-				style={{height:'30vh',overflow:'scroll',width:'100%'}}
+				style={{height:'30vh',overflow:'scroll',maxWidth:'50vw'}}
 				
 				theme="snow"
 				placeholder="Start writing..."

@@ -144,3 +144,7 @@ input {
   }
   
 }
+
+.login-form-button-register {
+  height: 7vh;
+}

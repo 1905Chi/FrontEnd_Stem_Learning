@@ -55,7 +55,7 @@ export default function Exam() {
 		}
 	};
 	return (
-		<div>
+		<div style={{marginRight:'5%'}}>
 			<div className="exam-class">
 				<h2 style={{ textAlign: 'start', margin: '15px', borderBottom: '3px solid', padding: '15px', flex: 7 }}>
 					Bài kiểm tra
