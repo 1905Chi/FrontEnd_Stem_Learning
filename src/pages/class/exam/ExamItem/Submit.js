@@ -82,22 +82,27 @@ export default function Submit() {
 		}
 		if (typesubmit === 'continue') {
 			const submissionId = localStorage.getItem('submissionId');
+			totaltimeExam();
 			Api.get(url + 'api/v1/submissions/continue/' + submissionId, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
 						setsubmition(response.data.result);
 						dispatch(selectexam(response.data.result.questions));
 						var oldsubmisstion = [];
-						response.data.result.questions.map((item) => {
+						response.data.result.questions.map((item, index) => {
 							var answer = [];
 							if (item.answers.length > 0) {
 								item.answers.map((answeritem) => {
-									if (answeritem.checked && answer !== null) {
-										answer.push(answeritem.answer);
-									} else if (answeritem.checked && answer === null) {
+									if (answeritem.checked === true) {
 										answer.push(answeritem.answer);
 									}
 								});
+								if (item.typeCode === 'essay') {
+									var answeressay = item.answers[0].answer;
+									var dataTmp = [...data];
+									dataTmp[index] = answeressay;
+									setData(dataTmp);
+								}
 							}
 							if (answer.length > 0) {
 								oldsubmisstion.push({ questionId: item.submissionDetailId, answerIndex: answer });
@@ -114,8 +119,6 @@ export default function Submit() {
 						} else {
 							setSelectedAnswers([]);
 						}
-
-						totaltimeExam();
 					} else {
 						toast.error(response.data.message);
 					}
@@ -191,7 +194,6 @@ export default function Submit() {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex = [];
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.push(answer);
 			} else if (typeCode === 'essay') {
-				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex[index] = answer;
 			} else {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.push(answer);
 			}
@@ -201,12 +203,14 @@ export default function Submit() {
 		console.log(oldSelectedAnswers);
 		console.log(selectedAnswers);
 		console.log(index);
-	
+
 		if (selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.length > 0) {
 			const data = {
 				id: questionId,
-				answer: typeCode !=='essay' ? selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.join(', '): answer,
-				
+				answer:
+					typeCode !== 'essay'
+						? selectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.join(', ')
+						: answer,
 			};
 			Api.put(url + 'api/v1/submission-details/update', data, {
 				headers: {
@@ -239,8 +243,7 @@ export default function Submit() {
 		}
 	};
 
-	const handleEditorChange = (value,index) => {
-		
+	const handleEditorChange = (value, index) => {
 		totaltimeExam();
 		setData((prevData) => {
 			// Tạo bản sao của mảng
@@ -271,7 +274,7 @@ export default function Submit() {
 
 		const nowDate = moment(nowTime, 'DD-MM-YYYY HH:mm:ss:SSSSSS').valueOf();
 		setTargetTime(Number(localStorage.getItem('duration')) * 60 * 1000 - (nowDate - startat));
-	}
+	};
 	const handleEditorCancel = (index) => {
 		setData((prevData) => {
 			// Tạo bản sao của mảng
@@ -310,7 +313,7 @@ export default function Submit() {
 		console.log(id, mark);
 	};
 	return (
-		<div className="submit-sipn" style={{ width: '72vw' }}>
+		<div className="submit-sipn" style={{}}>
 			{submition === null && typesubmit !== 'review' ? (
 				<Skeleton active />
 			) : typesubmit === 'create' || typesubmit === 'continue' ? (
@@ -341,6 +344,11 @@ export default function Submit() {
 												isQuiz={true}
 											/>
 											<button
+												style={{
+													marginTop: '10px',
+													borderRadius: '5px',
+													backgroundColor: '#bee71b',
+												}}
 												onClick={() =>
 													handleRadioChange(
 														question.submissionDetailId,
@@ -406,7 +414,9 @@ export default function Submit() {
 								</div>
 							</div>
 						))}
-					<button onClick={onFinish}>Nộp bài</button>
+					<div style={{textAlign:"center"}}>
+						<button onClick={onFinish} style={{borderRadius:"5px",backgroundColor:'#55c524'}}>Nộp bài</button>
+					</div>
 				</div>
 			) : null}
 
@@ -450,7 +460,7 @@ export default function Submit() {
 										{
 											<div style={{ marginLeft: '15px' }}>
 												{item.correctAnswer.map((answer) => (
-													<div>{answer}</div>
+													<div>* {answer}</div>
 												))}
 											</div>
 										}

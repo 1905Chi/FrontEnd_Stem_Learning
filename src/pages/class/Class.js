@@ -25,27 +25,39 @@ export default function Class() {
 	const LeftHomeRef = useRef(null);
 	const navigate = useNavigate();
 	const search = useSelector(selectSelectedSearchGroup);
-	console.log('search', search);
+	const [listCompetition, setlistCompetition] = useState([]);
+
 	useEffect(() => {
-		
 		if (location.pathname.includes('classes')) {
 			fetchClass();
+			fetchCompetition();
 		} else if (location.pathname.includes('groups')) {
 			fetchgroup();
+			setlistCompetition([]);
 		}
-		
 	}, [location]);
 
 	const fetchClass = async () => {
 		try {
 			const response = await Api.get(url + 'api/v1/groups/myClasses', { headers });
-			
+
 			if (response.data.statusCode === 200) {
 				setListClassConst(response.data.result);
 				setClassList(response.data.result);
 			}
 		} catch (error) {
 			console.log('Failed to fetch class list: ', error);
+		}
+	};
+	const fetchCompetition = async () => {
+		try {
+			const response = await Api.get(url + 'api/v1/groups/get-my-competitions', { headers });
+
+			if (response.data.statusCode === 200) {
+				setlistCompetition(response.data.result);
+			}
+		} catch (error) {
+			console.log('Failed to fetch competetion: ', error);
 		}
 	};
 	useEffect(() => {
@@ -58,7 +70,6 @@ export default function Class() {
 
 	const fetchgroup = async () => {
 		try {
-			
 			Api.get(url + 'api/v1/groups', { headers })
 				.then(async (response) => {
 					if (response.data.statusCode === 200) {
@@ -66,19 +77,16 @@ export default function Class() {
 						response.data.result.GROUP_ADMIN.forEach((element) => {
 							if (element.isClass === false) {
 								listGroup.push(element);
-								
 							}
 						});
 						response.data.result.GROUP_MEMBER.forEach((element) => {
 							if (element.isClass === false) {
 								listGroup.push(element);
-								
 							}
 						});
 						response.data.result.GROUP_OWNER.forEach((element) => {
 							if (element.isClass === false) {
 								listGroup.push(element);
-								
 							}
 						});
 						setClassList(listGroup);
@@ -120,12 +128,67 @@ export default function Class() {
 					<RightClass />
 				</div>
 			) : null}
-			{classList.map((item) => (
-				<div
-					className="item-class"
-					key={item.id}
-					onClick={() => {
-						if (location.pathname.includes('classes')) {
+			{
+				classList.map((item) => {
+					if (item.isCompetition ? item.isCompetition === false : true ) {
+					  return (
+						<div
+						  className="item-class"
+						  key={item.id}
+						  onClick={() => {
+							let listclassHistory = JSON.parse(localStorage.getItem('listclassHistory'));
+							if (listclassHistory === null) {
+							  listclassHistory = [];
+							}
+							// Tìm index của phần tử có id tương ứng
+							const existingIndex = listclassHistory.findIndex((existitem) => item.id === existitem.id);
+				  
+							// Nếu tìm thấy phần tử có cùng id
+							if (existingIndex !== -1) {
+							  // Tăng thêm 1 vào số lượng hoặc thuộc tính cần tăng
+							  listclassHistory[existingIndex].count += 1;
+							} else {
+							  // Nếu không tìm thấy, thêm mới vào listclassHistory
+							  listclassHistory.push({
+								id: item.id,
+								name: item.name,
+								avatarUrl: item.avatarUrl,
+								count: 1, // hoặc thuộc tính cần tăng khác nếu có
+								isClass: location.pathname.includes('classes'),
+							  });
+							}
+				  
+							// Lưu lại vào localStorage
+							localStorage.setItem('listclassHistory', JSON.stringify(listclassHistory));
+							if (location.pathname.includes('classes')) {
+							  navigate(`/classes/${item.id}`);
+							} else {
+							  navigate(`/groups/${item.id}`);
+							}
+						  }}
+						>
+						  <img src={item.avatarUrl === null || item.avatarUrl === '' ? anh_logo_1 : item.avatarUrl} alt="" />
+						  <div className="info-class">
+							<h3> {item.name} </h3>
+							<p> {item.description} </p>
+						  </div>
+						</div>
+					  );
+					} else {
+					  return null;
+					}
+				  })
+			}
+
+
+			{listCompetition !== undefined &&
+				listCompetition !== null &&
+				listCompetition.length > 0 &&
+				listCompetition.map((item) => (
+					<div
+						className="item-class"
+						key={item.id}
+						onClick={() => {
 							let listclassHistory = JSON.parse(localStorage.getItem('listclassHistory'));
 							if (listclassHistory === null) {
 								listclassHistory = [];
@@ -151,42 +214,18 @@ export default function Class() {
 							// Lưu lại vào localStorage
 							localStorage.setItem('listclassHistory', JSON.stringify(listclassHistory));
 							navigate(`/classes/${item.id}`);
-						} else {
-							let listclassHistory = JSON.parse(localStorage.getItem('listclassHistory'));
-							if (listclassHistory === null) {
-								listclassHistory = [];
-							}
-							// Tìm index của phần tử có id tương ứng
-							const existingIndex = listclassHistory.findIndex((exititem) => exititem.id === item.id);
-
-							// Nếu tìm thấy phần tử có cùng id
-							if (existingIndex !== -1) {
-								// Tăng thêm 1 vào số lượng hoặc thuộc tính cần tăng
-								listclassHistory[existingIndex].count += 1;
-							} else {
-								// Nếu không tìm thấy, thêm mới vào listclassHistory
-								listclassHistory.push({
-									id: item.id,
-									name: item.name,
-									avatarUrl: item.avatarUrl,
-									count: 1, // hoặc thuộc tính cần tăng khác nếu có
-									isClass: false,
-								});
-							}
-
-							// Lưu lại vào localStorage
-							localStorage.setItem('listclassHistory', JSON.stringify(listclassHistory));
-							navigate(`/groups/${item.id}`);
-						}
-					}}
-				>
-					<img src={item.avatarUrl === null ||item.avatarUrl === ""  ? anh_logo_1 : item.avatarUrl} alt="" />
-					<div className="info-class">
-						<h3> {item.name} </h3>
-						<p> {item.description} </p>
+						}}
+					>
+						<img
+							src={item.avatarUrl === null || item.avatarUrl === '' ? anh_logo_1 : item.avatarUrl}
+							alt=""
+						/>
+						<div className="info-class">
+							<h3> {item.name} </h3>
+							<p> {item.description} </p>
+						</div>
 					</div>
-				</div>
-			))}
+				))}
 		</div>
 	);
 }

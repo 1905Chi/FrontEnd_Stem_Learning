@@ -6,10 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectexam, selectquestionChoose, deletequestionChoose } from '../../../redux/Exam';
 import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
-import { toast,ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
-
 
 export default function SubmitCompetition() {
 	const [loading, setloading] = useState(false);
@@ -21,9 +20,9 @@ export default function SubmitCompetition() {
 	const [selectedAnswers, setSelectedAnswers] = useState([]);
 	const dispatch = useDispatch();
 	const [targetTime, setTargetTime] = useState(0);
-	const { uuid,id } = useParams();
+	const { uuid, id } = useParams();
 
-	const [currentQuestion,setCurrentQuestion]= useState();
+	const [currentQuestion, setCurrentQuestion] = useState();
 	const onFinish = () => {
 		setloading(true);
 		Api.post(url + 'api/v1/submissions/submit?submissionId=' + localStorage.getItem('submissionId'), {
@@ -62,20 +61,17 @@ export default function SubmitCompetition() {
 						localStorage.setItem('submissionId', response.data.result.submissionId);
 						setCurrentQuestion(response.data.result.questions[0]);
 						setTargetTime(Number(localStorage.getItem('duration')) * 60 * 1000);
-						
+
 						localStorage.setItem('typesubmit', 'continue');
 
 						setiscreate(true);
 					} else {
-						
 						toast.error(response.data.message);
-						
 					}
 				})
 				.catch((error) => {
-						toast.error('Bạn đã thực hoàn thành bài thi này. Không được phép làm lại');			
+					toast.error('Bạn đã thực hoàn thành bài thi này. Không được phép làm lại');
 					window.history.back();
-					
 				});
 		}
 		if (typesubmit === 'continue') {
@@ -155,7 +151,6 @@ export default function SubmitCompetition() {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex = oldSelectedAnswers
 					.filter((item) => item.questionId === questionId)[0]
 					.answerIndex.filter((item) => item !== answer);
-			
 			} else if (typeCode === 'single_choice') {
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex = [];
 				oldSelectedAnswers.filter((item) => item.questionId === questionId)[0].answerIndex.push(answer);
@@ -180,10 +175,9 @@ export default function SubmitCompetition() {
 				},
 			}).then((response) => {
 				if (response) {
-		
 					dispatch(selectquestionChoose(data));
 				} else {
-									}
+				}
 			});
 		} else {
 			const data = { submissionDetailId: questionId };
@@ -194,29 +188,25 @@ export default function SubmitCompetition() {
 				},
 			}).then((response) => {
 				if (response) {
-					
 					dispatch(deletequestionChoose({ id: questionId }));
 				} else {
-					
 				}
 			});
 		}
 	};
 
 	const handleNextQuestion = useCallback(() => {
-		console.log(currentQuestionIndex)
-		console.log(submition.questions[currentQuestionIndex + 1])
+		console.log(currentQuestionIndex);
+		console.log(submition.questions[currentQuestionIndex + 1]);
 		setCurrentQuestionIndex((prevIndex) => {
 			if (prevIndex < submition.questions.length - 1) {
 				setCurrentQuestion(submition.questions[currentQuestionIndex + 1]);
 				return prevIndex + 1;
-
 			} else {
 				onFinish();
 				return prevIndex;
-			}		
+			}
 		});
-		
 	}, [currentQuestionIndex, submition]);
 
 	if (loading) {
@@ -226,8 +216,6 @@ export default function SubmitCompetition() {
 	if (!submition) {
 		return null;
 	}
- 
-	
 
 	return (
 		<div className="submitcompetition">
@@ -238,7 +226,7 @@ export default function SubmitCompetition() {
 					onFinish={handleNextQuestion}
 					key={currentQuestionIndex} // Ensure countdown restarts on question change
 				/>
-				<button onClick={handleNextQuestion}>Nộp bài</button>
+				<button onClick={handleNextQuestion}>Qua câu sau</button>
 			</div>
 			<div className="question-container">
 				<div key={currentQuestion.submissionDetailId} className="item-question">

@@ -4,7 +4,8 @@
 
 .exam-item__button button {
     width: 150px;
-    height: 45px;
+    height: 35px;
+    margin-right: 10px;
 }
 .exam-item-component{
     

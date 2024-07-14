@@ -1,30 +1,24 @@
 import React, { useEffect } from 'react';
 import './PostItem.css'; // Import tệp CSS
-import { Input } from 'antd';
 import { useState } from 'react';
-import { Avatar, Button, Dropdown, Popconfirm } from 'antd';
-import { BiCommentDetail, BiSolidShare, BiLike, BiDislike } from 'react-icons/bi';
+import { Avatar, Dropdown } from 'antd';
+import { BiCommentDetail, BiLike } from 'react-icons/bi';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { MdBugReport } from 'react-icons/md';
-import CommentPost from './CommentPost';
 import { EditOutlined } from '@ant-design/icons';
 import Api from '../../../api/Api';
 import { url } from '../../../constants/Constant';
 import Editor from './Editor';
 import LabelFile from '../../profile/component/LabelFile';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
-import { Title } from '@material-ui/icons';
-import { PiStarThin } from 'react-icons/pi';
 import styled from '@emotion/styled';
-import { AiOutlineHeart, AiOutlineLike, AiOutlineSmile, AiOutlineCheckCircle } from 'react-icons/ai';
+
 function PostItem(props) {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const [myReaction, setMyReaction] = useState(props.reaction);
 	const [typeReacttion, setTypeReacttion] = useState(
 		props.reaction !== null && props.reaction !== undefined ? props.reaction.type : null
@@ -118,11 +112,6 @@ function PostItem(props) {
 			if (props.updatePostList) {
 				props.updatePostList(response.data.result.posts);
 			}
-			if (response.data.statusCode === 200) {
-				console.log('data', response.data.result.posts);
-			} else {
-				console.log(response.error);
-			}
 		} catch {
 			console.log('error');
 		}
@@ -149,8 +138,7 @@ function PostItem(props) {
 			Api.put(url + `api/v1/reactions`, data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						toast.success(response.data.message);
-
+						
 						if (props.updatePostList) {
 							homePosts();
 						}
@@ -167,7 +155,7 @@ function PostItem(props) {
 			Api.delete(url + `api/v1/reactions/${props.reaction.id}`, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						toast.success(response.data.message);
+						
 						setTypeReacttion(null);
 						if (props.updatePostList) {
 							homePosts();
@@ -232,9 +220,19 @@ function PostItem(props) {
 		setXemthem(!xemthem);
 	}
 	useEffect(() => {
+		if (props.content !== null && props.content !== undefined) {
+			setContentPost(props.content);
+		}
+		if (props.reaction !== null && props.reaction !== undefined) {
+			setMyReaction(props.reaction);
+		}
+		if (props.totalReactions !== null && props.totalReactions !== undefined) {
+			setCountReaction(props.totalReactions);
+		}
 		const contentContainer = document.querySelector('.content' + props.id);
 		const showMoreButton = document.querySelector('#show' + props.id);
 		const showLessButton = document.querySelector('#less' + props.id);
+
 		if (contentContainer && showMoreButton) {
 			if (contentContainer.scrollHeight > 500) {
 				showMoreButton.style.display = 'block';
@@ -246,16 +244,9 @@ function PostItem(props) {
 				showLessButton.style.display = 'none';
 			}
 		}
-		if (props.content !== null && props.content !== undefined) {
-			setContentPost(props.content);
-		}
-		if (props.reaction !== null && props.reaction !== undefined) {
-			setMyReaction(props.reaction);
-		}
-		if (props.totalReactions !== null && props.totalReactions !== undefined) {
-			setCountReaction(props.totalReactions);
-		}
-	}, []);
+
+		
+	}, [props.content, props.reaction, props.totalReactions, props.id]);
 	const SeeMore = () => {
 		const contentContainer = document.querySelector('.content' + props.id);
 		const showMoreButton = document.querySelector('#show' + props.id);
@@ -263,6 +254,7 @@ function PostItem(props) {
 		const post = document.querySelector('#post');
 
 		if (contentContainer && showMoreButton) {
+			console.log(contentContainer.scrollHeight);
 			if (contentContainer.scrollHeight > 500) {
 				showMoreButton.style.display = 'none';
 				showLessButton.style.display = 'block';
@@ -270,7 +262,6 @@ function PostItem(props) {
 				post.style.maxHeight = 'max-content';
 			}
 		}
-		
 	};
 	const SeeLess = () => {
 		const contentContainer = document.querySelector('.content' + props.id);
@@ -847,14 +838,14 @@ function PostItem(props) {
 						</p>
 					</a>
 					<p className="user-name" style={{ display: 'block' }}>
-						đã đăng {props.type === 'QUESTION' ? 'Câu hỏi ' : null}
+						đã đăng
 						{props.type === 'POST' &&
 						props.content !== null &&
 						props.content !== undefined &&
-						props.refUrls === ''
+						(props.refUrls === '' || props.refUrls === null)
 							? 'bài viết '
 							: null}
-						{props.type === 'POST' && props.content !== '' ? 'tài liệu ' : null}
+						{props.type === 'POST' && props.refUrls !== '' && props.refUrls !== null ? 'tài liệu ' : null}
 						trong nhóm
 					</p>
 				</div>
@@ -893,12 +884,24 @@ function PostItem(props) {
 						homePosts={props.updatePostList}
 					></Editor>
 				) : (
-					<div className="post-content" dangerouslySetInnerHTML={{ __html: contentPost }} id="post" />
+					<div className="post-content" dangerouslySetInnerHTML={{ __html: props.content }} id="post" />
 				)}
-				<button className={'show-more-button'} id={'show' + props.id} onClick={()=>{SeeMore()}}>
+				<button
+					className={'show-more-button'}
+					id={'show' + props.id}
+					onClick={() => {
+						SeeMore();
+					}}
+				>
 					Xem thêm
 				</button>
-				<button className={'show-more-button'} id={'less' + props.id} onClick={()=>{SeeLess()}}>
+				<button
+					className={'show-more-button'}
+					id={'less' + props.id}
+					onClick={() => {
+						SeeLess();
+					}}
+				>
 					Thu gọn
 				</button>
 			</div>
@@ -923,7 +926,7 @@ function PostItem(props) {
 					: null}
 			</div>
 			<div>
-				<Button style={{ backgroundColor: 'white', border: 'none' }}>{countReaction} reactions</Button>
+				<Button style={{ backgroundColor: 'white', border: 'none',marginLeft:'3%' }}>{countReaction} reactions</Button>
 			</div>
 
 			<div className="post-actions">
@@ -939,7 +942,7 @@ function PostItem(props) {
 									handleLike();
 								}}
 							>
-								👍
+								👍 <span>( Thích)</span>
 							</ReactionButton>
 						</Button>
 					) : typeReacttion !== null && typeReacttion === 'DISLIKE' ? (
@@ -953,7 +956,7 @@ function PostItem(props) {
 									handleLike();
 								}}
 							>
-								👎
+								👎 <span>(Không thích)</span>
 							</ReactionButton>
 						</Button>
 					) : typeReacttion !== null && typeReacttion === 'DOUBTFUL' ? (
@@ -963,7 +966,7 @@ function PostItem(props) {
 									handleLike();
 								}}
 							>
-								❓
+								❓ <span>( Nghi vấn)</span>
 							</ReactionButton>
 						</Button>
 					) : typeReacttion !== null && typeReacttion === 'USEFUL' ? (
@@ -977,7 +980,7 @@ function PostItem(props) {
 									handleLike();
 								}}
 							>
-								✔️
+								✔️ <span>( Hữu ích)</span>
 							</ReactionButton>
 						</button>
 					) : (

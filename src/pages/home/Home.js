@@ -12,13 +12,15 @@ import Left from '../../layouts/Left';
 import { selectlistpostHome, selectselectlistpostHome } from '../../redux/Post';
 import { Empty } from 'antd';
 import './Home.css';
+import ServeyItem from './../group/components/ServeyItem';
 //import { verifyJwtToken } from '../../api/Jwt';
 function Home() {
 	const [ispost, setIspost] = useState(false);
 
 	const [listpost, setListpost] = useState(null);
 	const [page, setPage] = useState(0);
-	const [size, setSize] = useState(30);
+	const [size, setSize] = useState(100);
+	const [currentElements, setCurrentElements] = useState(0)
 	const [openLeft, setOpenLeft] = useState(false);
 	const LeftHomeRef = useRef(null);
 	useEffect(() => {
@@ -47,6 +49,12 @@ function Home() {
 	const updatePostList = (updatedPosts) => {
 		setListpost(updatedPosts);
 	};
+	const parseDate = (dateString) => {
+		const [date, time] = dateString.split(' ');
+		const [day, month, year] = date.split('-');
+		const [hours, minutes, seconds] = time.split(':');
+		return new Date(year, month - 1, day, hours, minutes, seconds);
+	};
 	const homePosts = async () => {
 		try {
 			const headers = {
@@ -57,14 +65,32 @@ function Home() {
 			const response = await Api.get(url + `api/v1/posts/home-posts?page=${page}&size=${size}`, {
 				headers: headers,
 			});
-			response.data.result !== null ? setListpost(response.data.result.posts): setListpost([]);
+
+			const responseSurvey = await Api.get(url + `api/v1/surveys/getHomeSurvey`, {
+				headers: headers,
+			});
+
+			console.log('responseSurvey', responseSurvey.data.result.surveys);
+			const combinedList = [
+				...responseSurvey.data.result.surveys.map((post) => ({
+					...post,
+					createdAt: parseDate(post.createdAt),
+				})),
+				...response.data.result.posts.map((item) => ({ ...item, createdAt: parseDate(item.post.createdAt) })),
+			];
+
+			// Sắp xếp danh sách gộp theo createdAt
+			combinedList.sort((a, b) => b.createdAt - a.createdAt);
+
+			console.log(combinedList);
+			combinedList !== null ? setListpost(combinedList) : setListpost([]);
 			if (response.data.statusCode === 200) {
 				console.log('data', response.data.result.posts);
 			} else {
 				console.log(response.error);
 			}
-		} catch {
-			console.log('error');
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -87,35 +113,55 @@ function Home() {
 				</div>
 			) : null}
 			<div className="home-page">
-				{listpost === null  ? (
+				{listpost === null ? (
 					<Skeleton active />
-				) :listpost !== null  && listpost.length === 0 ? (
+				) : listpost !== null && listpost.length === 0 ? (
 					<Empty style={{ marginTop: '10px' }} description="Không có bài viết nào" />
-				): null}
+				) : null}
 				{listpost !== null &&
 					listpost.length > 0 &&
 					listpost.map((post, index) => {
-						return (
-							<PostItem
-								key={index}
-								id={post.post.id}
-								authorId={post.post.authorId}
-								authorFirstName={post.post.authorFirstName}
-								authorLastName={post.post.authorLastName}
-								authorAvatar={post.post.authorAvatar}
-								type={post.post.type}
-								refUrls={post.post.refUrls}
-								totalReactions={post.post.totalReactions}
-								totalComments={post.post.totalComments}
-								createdAt={post.post.createdAt}
-								updatedAt={post.post.updatedAt}
-								content={post.post.content}
-								comments={post.post.comments}
-								reaction={post.reaction}
-								homePosts={homePosts}
-								updatePostList={updatePostList}
-							/>
-						);
+						if (post.post) {
+							return (
+								<PostItem
+									key={index}
+									id={post.post.id}
+									authorId={post.post.authorId}
+									authorFirstName={post.post.authorFirstName}
+									authorLastName={post.post.authorLastName}
+									authorAvatar={post.post.authorAvatar}
+									type={post.post.type}
+									refUrls={post.post.refUrls}
+									totalReactions={post.post.totalReactions}
+									totalComments={post.post.totalComments}
+									createdAt={post.post.createdAt}
+									updatedAt={post.post.updatedAt}
+									content={post.post.content}
+									comments={post.post.comments}
+									reaction={post.reaction}
+									homePosts={homePosts}
+									updatePostList={updatePostList}
+								/>
+							);
+						} else {
+							return (
+								<ServeyItem
+									key={index}
+									id={post.id}
+									authorId={post.author.id}
+									authorAvatar={post.author.avatarUrl}
+									authorFirstName={post.author.firstName}
+									authorLastName={post.author.lastName}
+									question={post.content}
+									options={post.options}
+									isAddOption={post.isAddOtherOption}
+									isMultiSelect={post.isMultipleChoice}
+									listAnswer={post.options}
+									callBackApi={homePosts}
+									index={index}
+								/>
+							);
+						}
 					})}
 				<ToastContainer />
 			</div>

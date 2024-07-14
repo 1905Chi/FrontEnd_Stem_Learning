@@ -275,7 +275,7 @@ export default function ExamItem(props) {
 			title: 'Học sinh',
 
 			key: 'firstName',
-			render: (record) => <span>{record.firstName + ' ' + record.lastName}</span>,
+			render: (record) => <span>{record.lastName + ' ' + record.firstName}</span>,
 		},
 		{
 			title: 'Điểm',
@@ -283,17 +283,17 @@ export default function ExamItem(props) {
 			key: 'score',
 		},
 		{
-			title: 'Thời gian bắt đầu',
+			title: 'làm bài lúc',
 			dataIndex: 'createdAt',
 			key: 'createdAt',
 		},
 		{
-			title: 'Thời gian nộp bài',
+			title: 'nộp bài lúc',
 			dataIndex: 'updatedAt',
 			key: 'updatedAt',
 		},
 		{
-			title: 'Action',
+			title: 'Hành động',
 			dataIndex: 'action',
 			key: 'action',
 			render: (text, record) => (
@@ -344,15 +344,16 @@ export default function ExamItem(props) {
 		},
 	];
 	const handleExportExcel = () => {
-		const filteredData = listsubmit.map(item => {
+		const filteredData = listsubmit.map((item) => {
 			return {
-			  Họ: item.firstName,
-			  Tên: item.lastName,
-			  Điểm: item.score,
-			  note: item.createdAt
+				Họ: item.lastName,
+				Tên: item.firstName,
+				'Làm bài lúc': item.createdAt,
+				'Nộp bài lúc': item.updatedAt,
+				Điểm: item.score,
+				note: "",
 			};
-		  });
-		
+		});
 
 		// Tạo worksheet từ dữ liệu
 		const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -361,7 +362,7 @@ export default function ExamItem(props) {
 		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
 		const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
 		const data = new Blob([excelBuffer], { type: fileType });
-		FileSaver.saveAs(data, "Điểm "+examId.exam.name + examId.exam.description+ fileExtension);
+		FileSaver.saveAs(data, 'Điểm ' + examId.exam.name + examId.exam.description + fileExtension);
 	};
 	return (
 		<div className="exam-item-component">
@@ -397,6 +398,7 @@ export default function ExamItem(props) {
 								<div style={{ display: 'flex', justifyContent: 'center' }}>
 									<div className="exam-item__button">
 										<button
+										style={{backgroundColor:'red'}}
 											className="exam-item__button__start"
 											onClick={() => {
 												deleteExam();
@@ -408,11 +410,18 @@ export default function ExamItem(props) {
 									<div className="exam-item__button">
 										<button
 											className="exam-item__button__start"
+											style={{backgroundColor:'#b5b540'}}
 											onClick={() => {
 												navigate('/classes/' + uuid + '/edit-exam/' + id);
 											}}
 										>
 											Chỉnh sửa
+										</button>
+									</div>
+									<div className="exam-item__button">
+
+										<button style={{backgroundColor:'#91917c'}} className="exam-item__button__start" onClick={handleExportExcel}>
+											Lưu kết quả
 										</button>
 									</div>
 								</div>
@@ -449,10 +458,7 @@ export default function ExamItem(props) {
 						) : null}
 						{user.role === 'TEACHER' || localStorage.getItem('role') === 'TEACHER' ? (
 							<div style={{ textAlign: 'center' }}>
-								
-									<h3>Danh sách bài làm</h3>
-									<button onClick={handleExportExcel}>Lưu kết quả</button>
-							
+								<h3>Danh sách bài làm</h3>
 
 								<Table
 									columns={columns}

@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 export default function LeftSubmit() {
 	const exam = useSelector(selectselectexam);
 	const questionChoose = useSelector(selectselectquestionChoose);
+	console.log(exam);
+	console.log(questionChoose);
 	const isChoose = (id) => {
 		if (questionChoose.find((item) => item.id === id) !== undefined) {
 			return true;
@@ -16,7 +18,7 @@ export default function LeftSubmit() {
 		<div className="Left-submit">
 			<h2>Các câu hỏi đã trả lời</h2>
 			{ exam && exam.length > 0 ? (
-				<div style={{display:'flex'}}>
+				<div style={{display:'flex', flexWrap: "wrap"}}>
 				{exam.map((question, index) => (
 					<div style={{width:'50px', height:'auto'}}>
 					<button
@@ -31,9 +33,10 @@ export default function LeftSubmit() {
 							height: '30px',
 							width: '30px',
 							borderRadius: '5px',
+							marginLeft:"5px",
 						}}
 					></button>
-					<span style={{marginLeft:'5px'}}>Câu{index+1}</span>
+					<span style={{}}>Câu {index+1}</span>
 					</div>
 				))}
 				</div>):(<div></div>)}
