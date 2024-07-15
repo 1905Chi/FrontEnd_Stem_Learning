@@ -143,8 +143,8 @@ export default function Profile(props) {
 										<div style={{ width: '100%', margin: '5px 0' }}>
 											<span style={{ fontWeight: 'bold' }}>
 												Địa chỉ<CiLocationOn className="icon-profile"></CiLocationOn> :
-												{user.province ? user.province : null}
-												{user.district ? user.district : null}
+												{user.province ? user.province : null}  - 
+												{user.district ? " " +user.district : null}
 											</span>
 										</div>
 

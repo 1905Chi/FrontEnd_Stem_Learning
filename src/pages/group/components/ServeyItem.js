@@ -19,9 +19,11 @@ import { toast, ToastContainer } from 'react-toastify';
 import { MdDelete } from 'react-icons/md';
 import { Form, Row, Col } from 'antd';
 import { MdEdit } from 'react-icons/md';
+import { useLocation } from 'react-router-dom';
 export default function SurveyItem(props) {
 	console.log(props);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [inforReport, setInforReport] = useState(null);
 	const [selectedReport, setSelectedReport] = useState(null);
 	const [opentReport, setOpentReport] = useState(false);
@@ -582,7 +584,8 @@ export default function SurveyItem(props) {
 						</p>
 					</a>
 					<p className="user-name" style={{ display: 'block' }}>
-						đã tạo cuộc khảo sát trong nhóm
+						đã tạo cuộc khảo sát
+						{location.pathname.includes('classes') ? ' trong lớp ' : location.pathname.includes('groups') ? ' trong nhóm ' : null}
 					</p>
 				</div>
 				<Dropdown

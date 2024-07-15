@@ -59,7 +59,7 @@ export default function Left() {
 		},
 		user.role === 'PARENT' || localStorage.getItem('role') === 'PARENT' || user.role === 'TEACHER'
 			? {
-					title: 'Phụ huynh - Học sinh',
+					title: 'Chức năng của phụ huynh',
 					icon: FcCustomerSupport,
 					onClick: () => {
 						navigate('/parent');

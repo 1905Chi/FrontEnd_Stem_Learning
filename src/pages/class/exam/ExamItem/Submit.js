@@ -519,13 +519,14 @@ export default function Submit() {
 												}
 											</>
 										) : (
-											<div style={{ display: 'flex', marginBottom: '15px' }}>
+											<div style={{ display: 'flex', marginBottom: '15px' , width:'40%'}}>
 												<strong>Điểm: </strong>
 												<input
 													style={{ marginLeft: '15px' }}
 													onChange={(e) => setMark(e.target.value)}
 												/>
-												<button onClick={() => postMark(item.id)}>Chấm điểm</button>
+												<button  style={{width:'50%', marginLeft:'5%',borderRadius:'5px',backgroundColor:'#55c524'}}
+												onClick={() => postMark(item.id)}>Chấm điểm</button>
 											</div>
 										)}
 									</div>

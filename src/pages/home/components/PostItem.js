@@ -15,11 +15,13 @@ import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
+import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 function PostItem(props) {
 	const navigate = useNavigate();
 	const [myReaction, setMyReaction] = useState(props.reaction);
+	const location = useLocation();
 	const [typeReacttion, setTypeReacttion] = useState(
 		props.reaction !== null && props.reaction !== undefined ? props.reaction.type : null
 	);
@@ -838,15 +840,16 @@ function PostItem(props) {
 						</p>
 					</a>
 					<p className="user-name" style={{ display: 'block' }}>
-						đã đăng
+						đã đăng 
 						{props.type === 'POST' &&
 						props.content !== null &&
 						props.content !== undefined &&
 						(props.refUrls === '' || props.refUrls === null)
-							? 'bài viết '
+							? ' bài viết '
 							: null}
-						{props.type === 'POST' && props.refUrls !== '' && props.refUrls !== null ? 'tài liệu ' : null}
-						trong nhóm
+						{props.type === 'POST' && props.refUrls !== '' && props.refUrls !== null ? ' tài liệu ' : null}
+						{location.pathname.includes('classes') ? ' trong lớp ' : location.pathname.includes('groups') ? ' trong nhóm ' : null}
+						
 					</p>
 				</div>
 				<Dropdown

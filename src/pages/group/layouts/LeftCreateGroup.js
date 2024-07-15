@@ -209,7 +209,7 @@ export default function LeftCreateGroup() {
 							<Input
 								placeholder={isClassesPath ? 'Tên lớp' : 'Tên nhóm'}
 								onChange={setNameGroup}
-								style={{ width: '100%', marginLeft: '20px' }}
+								style={{ width: '88%', marginLeft: '20px' }}
 							/>
 						</Form.Item>
 						{isClassesPath ? (
@@ -226,7 +226,7 @@ export default function LeftCreateGroup() {
 								>
 									<Select
 										showSearch
-										style={{ width: '100%', marginLeft: '20px' }}
+										style={{ width: '88%', marginLeft: '20px' }}
 										placeholder="Môn học"
 										optionFilterProp="children"
 									>
@@ -252,7 +252,7 @@ export default function LeftCreateGroup() {
 							>
 								<Select
 									showSearch
-									style={{ width: '100%', marginLeft: '20px' }}
+									style={{ width: '88%', marginLeft: '20px' }}
 									placeholder="Khối học"
 									optionFilterProp="children"
 								>
@@ -272,7 +272,7 @@ export default function LeftCreateGroup() {
 								},
 							]}
 						>
-							<Input placeholder="Mô tả ngắn " style={{ width: '100%', marginLeft: '20px' }} />
+							<Input placeholder="Mô tả ngắn " style={{ width: '88%', marginLeft: '20px' }} />
 						</Form.Item>
 						<Form.Item
 							name="policy"
@@ -331,7 +331,7 @@ export default function LeftCreateGroup() {
 								))}
 							</Select>
 						</Form.Item> */}
-						<Form.Item style={{ width: '100%', margin: '15px' }}>
+						<Form.Item style={{ width: '88%', margin: '15px' }}>
 							<Button type="primary" htmlType="submit" style={{ width: '100%', height: '45px' }}>
 								Tạo
 							</Button>

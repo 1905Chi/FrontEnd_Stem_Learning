@@ -210,7 +210,8 @@ export default function LeftItemGroup() {
 			Api.get(url + 'api/v1/submissions/rank/' + uuid, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						const transformedData = response.data.result.map((item, index) => ({
+						const data = response.data.result.sort((a, b) => b.totalScore - a.totalScore);
+						const transformedData = data.map((item, index) => ({
 							id: item.author.id, // ID: assuming this is the user ID
 							key: index + 1, // STT: assuming STT is a sequential number starting from 1
 							name: ` ${item.author.lastName} ${item.author.firstName}`, // Họ và tên

@@ -17,7 +17,7 @@ export default function AddFile(props) {
 	const [selectedFile, setSelectedFile] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
-	const {uuid} = useParams();
+	const { uuid } = useParams();
 	const dispatch = useDispatch();
 	const headers = {
 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -49,36 +49,30 @@ export default function AddFile(props) {
 	const Save = () => {
 		if (selectedFile) {
 			const formData = new FormData();
-			
-			
+
 			for (let i = 0; i < selectedFile.length; i++) {
 				formData.append('mediaFiles', selectedFile[i]);
 			}
-			
 
 			formData.append('groupId', uuid);
-			
-			
+
 			formData.append('typeName', 'POST');
 			formData.append('content', '');
 			const data = formData;
 			setLoading(true);
 			Api.post(url + 'api/v1/posts', data, {
-				
 				headers: {
 					Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 					'Content-Type': 'multipart/form-data',
 				},
 			})
 				.then((res) => {
-					
-						if (res.data.statusCode === 200) {
-							toast.success('Thêm thành công');
-							callPostGroup();
-						} else {
-							toast.error(res.data.message);
-						}
-					
+					if (res.data.statusCode === 200) {
+						toast.success('Thêm thành công');
+						callPostGroup();
+					} else {
+						toast.error(res.data.message);
+					}
 				})
 				.catch((error) => {
 					if (error.response) {
@@ -104,33 +98,33 @@ export default function AddFile(props) {
 	};
 	const callPostGroup = () => {
 		Api.get(url + 'api/v1/posts?' + 'groupId=' + uuid, { headers: headers })
-		.then((response) => {
-			if (response.data.statusCode === 200) {
-				dispatch(selectPostGroup(response.data.result));
-			} else {
-				console.log(response.error);
-			}
-		})
-		.catch((error) => {
-			console.log(error);
-		})
-		.finally(() => {
-			dispatch(selectOption('post'));
-		});
-	}
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					dispatch(selectPostGroup(response.data.result));
+				} else {
+					console.log(response.error);
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
+				dispatch(selectOption('post'));
+			});
+	};
 	const [visible, setVisible] = useState(true);
 	return (
 		<>
-		{loading ? <Loading></Loading> : null}
+			{loading ? <Loading></Loading> : null}
 			<Dialog
-					header= {<h3 style={{ textAlign: 'center', margin: '0 0 0 10px' }}>Thêm tài liệu</h3>}
-					visible={visible}
-					style={{ width: '50vw' }}
-					onHide={() => {
-						setVisible(false)
-						props.onCancel();
-					}}
-				>
+				header={<h3 style={{ textAlign: 'center', margin: '0 0 0 10px' }}>Thêm tài liệu</h3>}
+				visible={visible}
+				style={{ width: '50vw' }}
+				onHide={() => {
+					setVisible(false);
+					props.onCancel();
+				}}
+			>
 				<div className="file">
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<h3 style={{ textAlign: 'start', margin: '0 0 0 10px' }}>Tài liệu học học</h3>
@@ -161,16 +155,18 @@ export default function AddFile(props) {
 					<input
 						style={{ display: 'none' }}
 						type="file"
-						accept="image/*, application/pdf , .doc, .docx, application/vnd.ms-powerpoint, .ppt, .pptx"
+						accept="image/*, application/pdf , .doc, .docx, application/vnd.ms-powerpoint, .ppt, .pptx, "
 						onChange={handelfileSelect}
 						id="AvatarPictureInput"
 					/>
-					<button style={{ margin: '30px 30px', width: '92%' }} onClick={Save}>
-						Lưu
-					</button>
+					{selectedFile.length > 0 ? (
+						<button style={{ margin: '30px 30px', width: '92%' }} onClick={Save}>
+							Lưu
+						</button>
+					) : null}
 				</div>
 			</Dialog>
-						<ToastContainer />
+			<ToastContainer />
 		</>
 	);
 }

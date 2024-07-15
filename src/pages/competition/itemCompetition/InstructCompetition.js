@@ -16,7 +16,7 @@ export default function InstructCompetition() {
 	const { uuid } = useParams();
 	const [exams, setExams] = useState([]);
 	const navigate = useNavigate();
-
+const user = JSON.parse(localStorage.getItem('user'));
 	const headers = {
 		'Content-Type': 'application/json',
 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -95,7 +95,7 @@ export default function InstructCompetition() {
 						}}
 						disabled={status !== 0}
 					>
-						{status === 0 ? 'Vào thi' : status === -1 ? 'Chưa bắt đầu' : 'Đã kết thúc'}
+						{status === 0  && user.role !=="TEACHER" ? 'Vào thi' : status === -1 ? 'Chưa bắt đầu' : 'Đã kết thúc'}
 					</button>
 				);
 			},

@@ -162,8 +162,8 @@ export default function Profile() {
 								<span style={{ fontWeight: 'bold' }}>
 									{' '}
 									Địa chỉ<CiLocationOn className="icon-profile"></CiLocationOn> :
-									{user.province ? user.province : null}
-									{user.district ? user.district : null}
+									{user.province ? user.province : null}   -  
+									{user.district ? " " + user.district : null}
 								</span>
 							</div>
 
