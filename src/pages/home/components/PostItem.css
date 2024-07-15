@@ -12,7 +12,7 @@
   margin: 0 0 1em 0;
 }
 .post-content{
-  max-height: 500px;
+  /* max-height: 500px; */
 }
 .user-info {
   display: flex;

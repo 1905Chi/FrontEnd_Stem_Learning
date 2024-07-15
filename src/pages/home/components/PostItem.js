@@ -889,7 +889,7 @@ function PostItem(props) {
 				) : (
 					<div className="post-content" dangerouslySetInnerHTML={{ __html: props.content }} id="post" />
 				)}
-				<button
+				{/* <button
 					className={'show-more-button'}
 					id={'show' + props.id}
 					onClick={() => {
@@ -906,7 +906,7 @@ function PostItem(props) {
 					}}
 				>
 					Thu gọn
-				</button>
+				</button> */}
 			</div>
 
 			<div className="file-post">
