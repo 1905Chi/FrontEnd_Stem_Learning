@@ -138,6 +138,7 @@ function Home() {
 									updatedAt={post.post.updatedAt}
 									content={post.post.content}
 									comments={post.post.comments}
+									group= {post.group}
 									reaction={post.reaction}
 									homePosts={homePosts}
 									updatePostList={updatePostList}
@@ -157,6 +158,7 @@ function Home() {
 									isAddOption={post.isAddOtherOption}
 									isMultiSelect={post.isMultipleChoice}
 									listAnswer={post.options}
+									group= {post.group}
 									callBackApi={homePosts}
 									index={index}
 								/>

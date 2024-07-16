@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
+
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 
@@ -49,6 +50,7 @@ function PostItem(props) {
 	const handleStarClick = (value) => {
 		setRating(value);
 	};
+	const [listReaction, setListReaction] = useState();
 	const [openGiveStar, setOpenGiveStar] = useState(false);
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -118,6 +120,46 @@ function PostItem(props) {
 			console.log('error');
 		}
 	};
+
+	const callListReaction = async () => {
+		try {
+			const headers = {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
+				timeout: 15000,
+			};
+			const response2 = await Api.get(url + `api/v1/reactions/handleClick/post/${props.id}`, {
+				headers: headers,
+			});
+			if (Array.isArray(response2.data.result)) {
+				const groupedByType = response2.data.result.reduce((acc, item) => {
+					const type = item.type;
+					if (!acc[type]) {
+						acc[type] = { count: 0, items: [] };
+					}
+					acc[type].count += 1;
+					acc[type].items.push(item);
+					return acc;
+				}, {});
+
+				// Chuyển đổi groupedByType thành mảng với các đối tượng chứa type và count
+				const resultArray = Object.entries(groupedByType).map(([type, { count, items }]) => ({
+					type,
+					count,
+					items,
+				}));
+
+				// Sắp xếp mảng theo count giảm dần
+				resultArray.sort((a, b) => b.count - a.count);
+				console.log(resultArray);
+				setListReaction(resultArray);
+			} else {
+				console.error('Expected an array but got:', response2.data.result);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	function handleLike(type) {
 		if (localStorage.getItem('user') === null) {
 			toast.error('Bạn cần đăng nhập để thực hiện chức năng này');
@@ -140,8 +182,7 @@ function PostItem(props) {
 			Api.put(url + `api/v1/reactions`, data, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						
-						if (props.updatePostList) {
+						if (props.homePosts) {
 							homePosts();
 						}
 						setTypeReacttion(type);
@@ -157,7 +198,6 @@ function PostItem(props) {
 			Api.delete(url + `api/v1/reactions/${props.reaction.id}`, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						
 						setTypeReacttion(null);
 						if (props.updatePostList) {
 							homePosts();
@@ -188,7 +228,7 @@ function PostItem(props) {
 					toast.success(response.data.message);
 					setConfirmLoading(false);
 					setOpen(false);
-					if (props.updatePostList) {
+					if (props.homePosts) {
 						homePosts();
 					}
 					if (props.callBackApi) {
@@ -222,6 +262,7 @@ function PostItem(props) {
 		setXemthem(!xemthem);
 	}
 	useEffect(() => {
+		callListReaction();
 		if (props.content !== null && props.content !== undefined) {
 			setContentPost(props.content);
 		}
@@ -246,8 +287,6 @@ function PostItem(props) {
 				showLessButton.style.display = 'none';
 			}
 		}
-
-		
 	}, [props.content, props.reaction, props.totalReactions, props.id]);
 	const SeeMore = () => {
 		const contentContainer = document.querySelector('.content' + props.id);
@@ -741,6 +780,26 @@ function PostItem(props) {
 				setOpentReport(false);
 			});
 	};
+	const linktoProfile = (id) => {	
+		console.log(id)
+		navigate(`/profile/${id}`);
+	}
+	const lintoGroup = (id) => {
+		Api.get(url + `api/v1/groups/${id}`, { headers: headers })
+		.then((response) => {
+			if (response.data.statusCode === 200) {
+				if(response.data.result.group.isClass){
+					navigate(`/classes/${id}`);
+				} else {
+					navigate(`/groups/${id}`);
+				}	
+			} else {
+				console.log(response.error);
+			}
+		}).catch((error) => {
+			console.log(error);
+		})
+	}
 	return (
 		<div className="post-item">
 			<Modal
@@ -840,7 +899,7 @@ function PostItem(props) {
 						</p>
 					</a>
 					<p className="user-name" style={{ display: 'block' }}>
-						đã đăng 
+						đã đăng
 						{props.type === 'POST' &&
 						props.content !== null &&
 						props.content !== undefined &&
@@ -848,8 +907,12 @@ function PostItem(props) {
 							? ' bài viết '
 							: null}
 						{props.type === 'POST' && props.refUrls !== '' && props.refUrls !== null ? ' tài liệu ' : null}
-						{location.pathname.includes('classes') ? ' trong lớp ' : location.pathname.includes('groups') ? ' trong nhóm ' : null}
-						
+						{location.pathname.includes('classes')
+							? ' trong lớp '
+							: location.pathname.includes('groups')
+							? ' trong nhóm '
+							: null}
+						{props.group ? <strong onClick={()=>lintoGroup(props.group.id)}>{" trong " + props.group.name}</strong> : null}
 					</p>
 				</div>
 				<Dropdown
@@ -928,8 +991,49 @@ function PostItem(props) {
 					  })
 					: null}
 			</div>
-			<div>
-				<Button style={{ backgroundColor: 'white', border: 'none',marginLeft:'3%' }}>{countReaction} reactions</Button>
+			<div style={{ display: 'flex' }}>
+				<Button style={{ backgroundColor: 'white', border: 'none', marginLeft: '3%', flex: '1' }}>
+					{countReaction} {' reactions'}
+				</Button>
+				<div style={{flex: '7'}}>
+				{listReaction && listReaction.length > 0 ? (
+					<>
+						<Button style={{ backgroundColor: 'white', border: 'none', textAlign: 'start' }}>
+							(
+							{listReaction.map((reaction) => (
+								<React.Fragment key={reaction.type}>
+									<Dropdown
+										menu={{
+											items: reaction.items.slice(0, 10).map((item) => ({
+												key: item.id,
+												label: (
+													<span onClick={()=>linktoProfile(`${item.author.id}`)}>
+														{`${item.author.firstName} ${item.author.lastName}`}
+													</span>
+												),
+											})),
+										}}
+										placement="topLeft"
+										arrow
+									>
+										<span style={{ marginLeft: '5px' }}>
+											{reaction.type === 'LIKE'
+												? '👍'
+												: reaction.type === 'DISLIKE'
+												? '👎'
+												: reaction.type === 'DOUBTFUL'
+												? '❓'
+												: '✔️'}
+											: {reaction.count}
+										</span>
+									</Dropdown>
+								</React.Fragment>
+							))}
+							)
+						</Button>
+					</>
+				) : null}
+				</div>
 			</div>
 
 			<div className="post-actions">
