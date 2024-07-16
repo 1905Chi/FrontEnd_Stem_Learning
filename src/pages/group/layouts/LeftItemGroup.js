@@ -139,6 +139,13 @@ export default function LeftItemGroup() {
 				}
 			});
 	};
+	function sortByStartedAt(list) {
+		return list.sort((a, b) => {
+			const dateA = new Date(a.exam.startedAt.split(" ")[0].split("-").reverse().join("-"));
+			const dateB = new Date(b.exam.startedAt.split(" ")[0].split("-").reverse().join("-"));
+			return  dateB - dateA;
+		});
+	}
 	useEffect(() => {
 		getGroup();
 		Api.get(url + 'api/v1/group-members?groupId=' + uuid, { headers: headers })
@@ -198,7 +205,8 @@ export default function LeftItemGroup() {
 			Api.get(url + 'api/v1/exams/group/' + uuid, { headers: headers })
 				.then((response) => {
 					if (response.data.statusCode === 200) {
-						dispatch(selectexam(response.data.result));
+						const sortedList = sortByStartedAt(response.data.result);
+						dispatch(selectexam(sortedList));
 					} else {
 						console.log(response.error);
 					}

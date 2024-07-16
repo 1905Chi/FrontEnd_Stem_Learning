@@ -61,7 +61,7 @@ const PasswordForm = (props) => {
     <div className="body-password-resetform">
       <div className="password-resetform">
       <img
-						src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
+						src="https://png.pngtree.com/png-clipart/20211009/original/pngtree-logo-design-for-school-education-concept-book-and-cap-png-image_6849356.png"
 						alt="logo"
 						className="logo"
 					/>

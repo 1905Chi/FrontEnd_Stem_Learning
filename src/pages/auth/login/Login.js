@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Button, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import anh_logo_1 from "../../../../src/assets/images/anh_logo_1.jpg"
 import axios from 'axios';
 import { url } from '../../../constants/Constant';
 import { Link, useNavigate } from 'react-router-dom';
@@ -98,7 +99,7 @@ function Login() {
 				<div className="login-container">
 					<div style={{ overflow: 'hidden', width: '75%' }} className="login-logo">
 						<img
-							src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
+							src= "https://png.pngtree.com/png-clipart/20211009/original/pngtree-logo-design-for-school-education-concept-book-and-cap-png-image_6849356.png"
 							alt="logo"
 							className="logo"
 						/>

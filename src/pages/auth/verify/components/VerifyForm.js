@@ -134,7 +134,7 @@ export default function VerifyForm(props) {
 			<div className="form-verify">
 				<div style={{ width: '50%', maxWidth: '370px' }}>
 					<img
-						src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
+						src="https://png.pngtree.com/png-clipart/20211009/original/pngtree-logo-design-for-school-education-concept-book-and-cap-png-image_6849356.png"
 						alt="logo"
 						className="logo"
 					/>
@@ -153,21 +153,21 @@ export default function VerifyForm(props) {
 						<Form.Item
 							name="firstName"
 							rules={[{ required: true, message: 'Vui lòng nhập tên của bạn!' }]}
-							className="form-item-register"
+							className="form-item-register-verify"
 						>
 							<Input placeholder="Tên" style={{ width: '180px' }} />
 						</Form.Item>
 						<Form.Item
 							name="lastName"
 							rules={[{ required: true, message: 'Vui lòng nhập họ của bạn!' }]}
-							className="form-item-register"
+							className="form-item-register-verify"
 						>
 							<Input placeholder="Họ" style={{ width: '180px' }} />
 						</Form.Item>
 
 						<Form.Item
 							name="phone"
-							className="form-item-register"
+							className="form-item-register-verify"
 							rules={[
 								{
 									required: true,
@@ -183,7 +183,7 @@ export default function VerifyForm(props) {
 						>
 							<Input placeholder="Số điện thoại" style={{ width: '180px' }} />
 						</Form.Item>
-						<Form.Item name="date_picker" {...config} className="form-item-register">
+						<Form.Item name="date_picker" {...config} className="form-item-register-verify">
 							<DatePicker
 								format="DD-MM-YYYY"
 								style={{ width: '180px' }}
@@ -191,7 +191,7 @@ export default function VerifyForm(props) {
 							/>
 						</Form.Item>
 						<Form.Item
-							className="form-item-register"
+							className="form-item-register-verify"
 							name="province"
 							rules={[{ required: true, message: 'Vui lòng chọn tỉnh thành!' }]}
 						>
@@ -213,7 +213,7 @@ export default function VerifyForm(props) {
 							</Select>
 						</Form.Item>
 						<Form.Item
-							className="form-item-register"
+							className="form-item-register-verify"
 							name="district"
 							rules={[{ required: true, message: 'Vui lòng chọn quận huyện!' }]}
 						>
@@ -236,7 +236,7 @@ export default function VerifyForm(props) {
 						<Form.Item
 							name="school"
 							rules={[{ required: true, message: 'Vui lòng chọn trường học!' }]}
-							className="form-item-register"
+							className="form-item-register-verify"
 						>
 							<Select
 								showSearch
@@ -256,7 +256,7 @@ export default function VerifyForm(props) {
 							<Form.Item
 								name="subject"
 								rules={[{ required: true, message: 'Vui lòng chọn môn học!' }]}
-								className="form-item-register"
+								className="form-item-register-verify"
 							>
 								<Select
 									showSearch
@@ -284,7 +284,7 @@ export default function VerifyForm(props) {
 									message: 'Chọn giới tính',
 								},
 							]}
-							className="form-item-register"
+							className="form-item-register-verify"
 						>
 							<div>
 								<Radio.Group defaultValue="MALE" style={{ width: '180px' }}>

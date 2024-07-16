@@ -62,7 +62,7 @@ const EmailForm = () => {
 			<div style={{ background: '#f8f8f8', height: 'auto', display: 'flex', justifyContent: 'center' }}>
 				<div className="enteremail-resetform">
 					<img
-						src="https://in3ds.com/wp-content/uploads/2019/04/y-tuong-giao-duc-STEM.png"
+						src="https://png.pngtree.com/png-clipart/20211009/original/pngtree-logo-design-for-school-education-concept-book-and-cap-png-image_6849356.png"
 						alt="logo"
 						className="logo"
 					/>

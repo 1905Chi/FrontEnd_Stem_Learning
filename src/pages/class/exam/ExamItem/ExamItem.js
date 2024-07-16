@@ -123,7 +123,7 @@ export default function ExamItem(props) {
 								if (response.data.statusCode === 200) {
 									totalquestion = response.data.result.submissionDetail.length;
 									response.data.result.submissionDetail.forEach((element) => {
-										if (element.score === 1) {
+										if (element.score !== 0) {
 											correct++;
 										}
 									});

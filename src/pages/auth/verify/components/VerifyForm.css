@@ -46,5 +46,10 @@
     border: 3px solid blue;
     border-radius: 10px;
   }
+
+  .form-item-register-verify {
+    margin-bottom: 16px;
+    margin-right: 5px;
+  }
   
   

@@ -312,6 +312,7 @@ export default function Submit() {
 
 		console.log(id, mark);
 	};
+
 	return (
 		<div className="submit-sipn" style={{}}>
 			{submition === null && typesubmit !== 'review' ? (
@@ -323,7 +324,11 @@ export default function Submit() {
 					{submition &&
 						submition.questions.length > 0 &&
 						submition.questions.map((question, index) => (
-							<div key={question.submissionDetailId} className="item-question">
+							<div
+								key={question.submissionDetailId}
+								className="item-question"
+								style={{ backgroundColor: 'aliceblue' }}
+							>
 								<div>
 									<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 									<div
@@ -387,7 +392,7 @@ export default function Submit() {
 														{answer.answer}
 													</>
 												) : (
-													<>
+													<div>
 														<input
 															type="radio"
 															name={`question_${question.submissionDetailId}`}
@@ -406,16 +411,18 @@ export default function Submit() {
 																)
 															}
 														/>
-														{answer.answer}
-													</>
+														<span>{answer.answer}</span>
+													</div>
 												)}
 											</label>
 										))}
 								</div>
 							</div>
 						))}
-					<div style={{textAlign:"center"}}>
-						<button onClick={onFinish} style={{borderRadius:"5px",backgroundColor:'#55c524'}}>Nộp bài</button>
+					<div style={{ textAlign: 'center' }}>
+						<button onClick={onFinish} style={{ borderRadius: '5px', backgroundColor: '#55c524' }}>
+							Nộp bài
+						</button>
 					</div>
 				</div>
 			) : null}
@@ -449,7 +456,14 @@ export default function Submit() {
 										) : (
 											<div style={{ marginLeft: '15px' }}>
 												{item.userAnswer.map((answer) => (
-													<div>{answer}</div>
+													<div>
+														{answer}{' '}
+														{item.correctAnswer.includes(answer) ? (
+															<span style={{ color: 'green' }}>✓</span>
+														) : (
+															<span style={{ color: 'red' }}> ✗</span>
+														)}
+													</div>
 												))}
 											</div>
 										)}
@@ -460,7 +474,7 @@ export default function Submit() {
 										{
 											<div style={{ marginLeft: '15px' }}>
 												{item.correctAnswer.map((answer) => (
-													<div>* {answer}</div>
+													<div>{answer}</div>
 												))}
 											</div>
 										}
@@ -519,14 +533,23 @@ export default function Submit() {
 												}
 											</>
 										) : (
-											<div style={{ display: 'flex', marginBottom: '15px' , width:'40%'}}>
+											<div style={{ display: 'flex', marginBottom: '15px', width: '40%' }}>
 												<strong>Điểm: </strong>
 												<input
 													style={{ marginLeft: '15px' }}
 													onChange={(e) => setMark(e.target.value)}
 												/>
-												<button  style={{width:'50%', marginLeft:'5%',borderRadius:'5px',backgroundColor:'#55c524'}}
-												onClick={() => postMark(item.id)}>Chấm điểm</button>
+												<button
+													style={{
+														width: '50%',
+														marginLeft: '5%',
+														borderRadius: '5px',
+														backgroundColor: '#55c524',
+													}}
+													onClick={() => postMark(item.id)}
+												>
+													Chấm điểm
+												</button>
 											</div>
 										)}
 									</div>

@@ -26,7 +26,7 @@ import { Dropdown } from 'antd';
 import { Menu } from 'antd';
 const Topbar = (props) => {
 	
-	const adver4 = 'https://res.cloudinary.com/djzwxw0ao/image/upload/v1696942528/uqbxidtwcdbqn8glt6we.jpg';
+	const adver4 = anh_logo_1;
 	const [activeIndex, setActiveIndex] = useState(1);
 	const location = useLocation();
 	const [search, setSearch] = useState(false);
@@ -326,7 +326,7 @@ const Topbar = (props) => {
 				<div className="logo-topbar">
 					<img
 						alt="logo"
-						src="https://res.cloudinary.com/djzwxw0ao/image/upload/v1696942528/uqbxidtwcdbqn8glt6we.jpg"
+						src= {anh_logo_1}
 						height="40"
 						className="mr-2"
 						onClick={() => {
