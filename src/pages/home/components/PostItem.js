@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
+import DOMPurify from 'dompurify'
 
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -353,7 +354,7 @@ function PostItem(props) {
 							}}
 						>
 							<MdBugReport style={{ color: 'red' }} />
-							<span style={{ fontSize: '15px' }}>Báo cáo bài đăng cho quản trị viên</span>
+							<span style={{ fontSize: '15px' }}>Báo cáo bài đăng cho quản trị viên nhóm</span>
 						</div>
 					)}
 				</div>
@@ -378,7 +379,7 @@ function PostItem(props) {
 							}}
 						>
 							<MdBugReport style={{ color: 'red' }} />
-							<span style={{ fontSize: '15px' }}>Báo cáo bài đăng </span>
+							<span style={{ fontSize: '15px' }}>Báo cáo bài đăng cho hệ thống </span>
 						</div>
 					)}
 				</div>

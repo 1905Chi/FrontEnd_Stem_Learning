@@ -12,7 +12,7 @@ import EditInforQuestion from './EditInforQuestion';
 import { GiCancel } from 'react-icons/gi';
 import './EditExam.css';
 import { Checkbox } from 'antd';
-
+import DOMPurify from 'dompurify';
 export default function EditExam() {
 	const { id } = useParams();
 	const [listQuestion,SetlistQuestion]= useState();
@@ -251,7 +251,7 @@ export default function EditExam() {
 			dataIndex: 'content',
 			key: 'content',
 			width: '50%',
-			render: (content) => <div dangerouslySetInnerHTML={{ __html: content }} className='question-content-edit' />,
+			render: (content) => <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} className='question-content-edit' />,
 		},
 		{
 			title: 'Mức độ ',

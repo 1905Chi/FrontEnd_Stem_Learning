@@ -34,15 +34,17 @@ import { selectFriendInvite, editSelectFriendInvite, selectselectFriendInvite } 
 import anh_logo_1 from './../../../assets/images/anh_logo_1.jpg';
 import Loading from '../../../components/Loading';
 import { Edit } from '@material-ui/icons';
-import { MdDriveFileRenameOutline } from "react-icons/md";
-import { FaRankingStar } from "react-icons/fa6";
-import { CiCamera } from "react-icons/ci";
-import {selectedSurveyGroup,selectSelectedSurveyGroup} from '../../../redux/Group';
-import { MdOutlineReportGmailerrorred } from "react-icons/md";
+import { MdDriveFileRenameOutline } from 'react-icons/md';
+import { FaRankingStar } from 'react-icons/fa6';
+import { CiCamera } from 'react-icons/ci';
+import { selectedSurveyGroup, selectSelectedSurveyGroup } from '../../../redux/Group';
+import { MdOutlineReportGmailerrorred } from 'react-icons/md';
 import { Modal } from 'antd';
 import { Table } from 'antd';
-import PostItem from "../../home/components/PostItem";
+import PostItem from '../../home/components/PostItem';
 import { selectlistRank } from '../../../redux/Group';
+import { MdAutoDelete } from 'react-icons/md';
+
 export default function LeftItemGroup() {
 	const { theme } = UseTheme();
 	const [inforGroup, setInforGroup] = useState(null);
@@ -66,10 +68,11 @@ export default function LeftItemGroup() {
 	const [newDescription, setNewDescription] = useState('');
 	const [openChangeAvatar, setOpenChangeAvatar] = useState(false);
 	const [openReport, setOpenReport] = useState(false);
-	const [dataReport , setDataReport] = useState([]);
+	const [dataReport, setDataReport] = useState([]);
 	const [openPost, setOpenPost] = useState(false);
 	const [post, setPost] = useState(null);
 	const [idUserReport, setIdUserReport] = useState(null);
+	const [groupMemberId, setGroupMemberId] = useState(null);
 	const headers = {
 		Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
 		'Content-Type': 'application/json', // Đặt tiêu đề 'Content-Type' nếu bạn gửi dữ liệu dưới dạng JSON.
@@ -106,6 +109,7 @@ export default function LeftItemGroup() {
 				if (response.data.statusCode === 200) {
 					if (response.data.result.user) {
 						setRole(response.data.result.user.role);
+						setGroupMemberId(response.data.result.user.id);
 						localStorage.setItem('roleGroup', response.data.result.user.role);
 					}
 
@@ -141,9 +145,9 @@ export default function LeftItemGroup() {
 	};
 	function sortByStartedAt(list) {
 		return list.sort((a, b) => {
-			const dateA = new Date(a.exam.startedAt.split(" ")[0].split("-").reverse().join("-"));
-			const dateB = new Date(b.exam.startedAt.split(" ")[0].split("-").reverse().join("-"));
-			return  dateB - dateA;
+			const dateA = new Date(a.exam.startedAt.split(' ')[0].split('-').reverse().join('-'));
+			const dateB = new Date(b.exam.startedAt.split(' ')[0].split('-').reverse().join('-'));
+			return dateB - dateA;
 		});
 	}
 	useEffect(() => {
@@ -200,7 +204,7 @@ export default function LeftItemGroup() {
 			})
 			.catch((error) => {
 				console.log(error);
-			});	
+			});
 		if (isClassesPath) {
 			Api.get(url + 'api/v1/exams/group/' + uuid, { headers: headers })
 				.then((response) => {
@@ -226,10 +230,10 @@ export default function LeftItemGroup() {
 							point: item.totalSubmission, // Số bài làm
 							total: item.totalScore, // Tổng điểm
 							Avatar: item.author.avatarUrl, // Ảnh đại diện
-							 // Xếp hạng: placeholder value; you might need to calculate this based on your criteria
+							// Xếp hạng: placeholder value; you might need to calculate this based on your criteria
 						}));
 						transformedData.sort((a, b) => b.total - a.total);
-						console.log(transformedData)
+						console.log(transformedData);
 						dispatch(selectlistRank(transformedData));
 					} else {
 						console.log(response.error);
@@ -239,7 +243,7 @@ export default function LeftItemGroup() {
 					console.log(error);
 				});
 		}
-		dispatch(selectOption('post'))
+		dispatch(selectOption('post'));
 	}, [uuid]);
 
 	const convertDay = (date) => {
@@ -333,28 +337,88 @@ export default function LeftItemGroup() {
 			setVisible(false);
 		}
 	};
+	const DeleteGroup = () => {
+		Api.delete(url + 'api/v1/groups/' + uuid, { headers: headers })
+
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success(response.data.message);
+					if (isClassesPath) {
+						setTimeout(() => {
+							navigate('/classes/');
+						}, 1000);
+					} else {
+						setTimeout(() => {
+							navigate('/groups/');
+						}, 1000);
+					}
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			});
+	};
 	const items = [
 		{
-			key:'1',
-			label:(<div style={{display:'flex',alignItems:'center'}} onClick={()=>{setOpenEditName(true)}}><MdDriveFileRenameOutline style={{marginRight:'10px'}}/>Đổi thông tin nhóm</div>),
-			
+			key: '1',
+			label: (
+				<div
+					style={{ display: 'flex', alignItems: 'center' }}
+					onClick={() => {
+						setOpenEditName(true);
+					}}
+				>
+					<MdDriveFileRenameOutline style={{ marginRight: '10px' }} />
+					Đổi thông tin nhóm
+				</div>
+			),
 		},
 		{
-			key:'2',
-			label: (<div style={{display:'flex',alignItems:'center'}} onClick={()=>{setOpenChangeAvatar(true)}}><CiCamera style={{marginRight:'10px'}}/>Đổi ảnh đại diện</div>),
-			
-			
+			key: '2',
+			label: (
+				<div
+					style={{ display: 'flex', alignItems: 'center' }}
+					onClick={() => {
+						setOpenChangeAvatar(true);
+					}}
+				>
+					<CiCamera style={{ marginRight: '10px' }} />
+					Đổi ảnh đại diện
+				</div>
+			),
 		},
 		{
-			key:'3',
-			label: (<div style={{display:'flex',alignItems:'center'}} onClick={()=>{OpenViewReport()}}><MdOutlineReportGmailerrorred  style={{marginRight:'10px'}}/>Danh sách vi phạm</div>),
-			
-			
+			key: '3',
+			label: (
+				<div
+					style={{ display: 'flex', alignItems: 'center' }}
+					onClick={() => {
+						OpenViewReport();
+					}}
+				>
+					<MdOutlineReportGmailerrorred style={{ marginRight: '10px' }} />
+					Danh sách vi phạm
+				</div>
+			),
+		},
+		{
+			key: '4',
+			label: (
+				<div
+					style={{ display: 'flex', alignItems: 'center' }}
+					onClick={() => {
+						DeleteGroup();
+					}}
+				>
+					<MdAutoDelete style={{ marginRight: '10px' }} />
+					Giải tán {location.pathname.includes('classes') ? 'Lớp' : 'Nhóm'}
+				</div>
+			),
 		},
 	];
 	const OpenViewReport = () => {
 		setLoading(true);
-		Api.get(url + 'api/v1/reports/groupReport/' + uuid , { headers: headers })
+		Api.get(url + 'api/v1/reports/groupReport/' + uuid, { headers: headers })
 			.then((response) => {
 				if (response.data.statusCode === 200) {
 					setDataReport(response.data.result);
@@ -369,7 +433,7 @@ export default function LeftItemGroup() {
 			.finally(() => {
 				setLoading(false);
 			});
-	}
+	};
 	const EditNameGroup = () => {
 		setLoading(true);
 		Api.put(
@@ -417,52 +481,52 @@ export default function LeftItemGroup() {
 	};
 	const viewPost = (postId) => {
 		Api.get(url + 'api/v1/posts/' + postId, { headers: headers })
-		.then((response) => {
-			if (response.data.statusCode === 200) {
-				setPost(response.data.result);
-				setIdUserReport(response.data.result.post.authorId);
-				setOpenPost(true);
-				
-			} else {
-				toast.error(response.data.message);
-			}
-		})
-		.catch((error) => {
-			toast.error(error);
-		}
-	);
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					setPost(response.data.result);
+					setIdUserReport(response.data.result.post.authorId);
+					setOpenPost(true);
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			});
 	};
 	const columns = [
-		
-        {
-            title: 'id bài viết',
-            dataIndex: 'postId',
-            key: 'postId',
-            width: 200,
-        },
-        {
-            title: 'Nội dung vi phạm',
-            dataIndex: 'content',
-            key: 'content',
-            width: 10,
-        },
-        
-        {
-            title: 'Hành động',
-            dataIndex: 'action',
+		{
+			title: 'id bài viết',
+			dataIndex: 'postId',
+			key: 'postId',
+			width: 200,
+		},
+		{
+			title: 'Nội dung vi phạm',
+			dataIndex: 'content',
+			key: 'content',
+			width: 10,
+		},
+
+		{
+			title: 'Hành động',
+			dataIndex: 'action',
 			key: 'action',
 			width: 10,
 			render: (text, record) => {
 				return (
-					<button onClick={()=> {viewPost(record.postId)}}> Xem</button>
-				)
-			}
-
-
-           
-        },
-        
-    ]
+					<button
+						onClick={() => {
+							viewPost(record.postId);
+						}}
+					>
+						{' '}
+						Xem
+					</button>
+				);
+			},
+		},
+	];
 	const UpdateAvatar = () => {
 		const headers = {
 			Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
@@ -494,73 +558,97 @@ export default function LeftItemGroup() {
 	const handelBanuser = () => {
 		var idmember = null;
 		memberGroup.map((item, index) => {
-			if(item.user.id ===  post?.post.authorId) {
+			if (item.user.id === post?.post.authorId) {
 				idmember = item.id;
 			}
-		})
-			
-		Api.put(url + `api/v1/group-members/lock`, { groupMemberId: idmember}, { headers: headers })
+		});
+
+		Api.put(url + `api/v1/group-members/lock`, { groupMemberId: idmember }, { headers: headers })
 			.then((res) => {
 				toast.success('Cấm tài khoản thành công');
 			})
 			.catch((err) => {
 				toast.error('Cấm tài khoản thất bại');
 			})
-			.finally (()=> {
+			.finally(() => {
 				setOpenPost(false);
-				
-			})
+			});
 	};
+
+	const leaveGroup = () => {
+		Api.delete(url + 'api/v1/group-members/' + groupMemberId, { headers: headers })
+			.then((response) => {
+				if (response.data.statusCode === 200) {
+					toast.success(response.data.message);
+					location.pathname.includes('classes') ? navigate('/classes/') : navigate('/groups/');
+				} else {
+					toast.error(response.data.message);
+				}
+			})
+			.catch((error) => {
+				toast.error(error);
+			});
+	};
+
 	return (
 		<>
 			{loading ? <Loading /> : null}
 			<Modal
 				title="Danh sách báo cáo "
 				open={openReport}
-				onCancel={()=>{setOpenReport(false)}}
-				onOk={()=>{setOpenReport(false)}}
+				onCancel={() => {
+					setOpenReport(false);
+				}}
+				onOk={() => {
+					setOpenReport(false);
+				}}
 				width={1000}
-
-				
 			>
 				<div style={{ marginBottom: '10px' }}>
-				<Table columns={columns} dataSource={dataReport} />
+					<Table columns={columns} dataSource={dataReport} />
 				</div>
 			</Modal>
 			<Modal
 				title="Nội dung bài viết"
 				open={openPost}
-				onCancel={()=>{setOpenPost(false)}}
-				onOk={()=>{setOpenPost(false)}}
+				onCancel={() => {
+					setOpenPost(false);
+				}}
+				onOk={() => {
+					setOpenPost(false);
+				}}
 				width={800}
-				footer = {[
-					<div style ={{display:'flex', flex :'', width: '30%'}}>
-						<button style={{backgroundColor:'#a4a4d0'}} onClick = {()=>{handelBanuser()}}>Cấm tài khoản</button>,
-						<button style={{backgroundColor:'red'}} > Xóa bài viết</button>
-						</div>
+				footer={[
+					<div style={{ display: 'flex', flex: '', width: '30%' }}>
+						<button
+							style={{ backgroundColor: '#a4a4d0' }}
+							onClick={() => {
+								handelBanuser();
+							}}
+						>
+							Cấm tài khoản
+						</button>
+						,<button style={{ backgroundColor: 'red' }}> Xóa bài viết</button>
+					</div>,
 				]}
-
-				
 			>
 				<div style={{ marginBottom: '10px' }}>
-				<PostItem
-								
-								id={post?.post.id}
-								authorId={post?.post.authorId}
-								authorFirstName={post?.post.authorFirstName}
-								authorLastName={post?.post.authorLastName}
-								authorAvatar={post?.post.authorAvatar}
-								type={post?.post.type}
-								refUrls={post?.post.refUrls}
-								totalReactions={post?.post.totalReactions}
-								totalComments={post?.post.totalComments}
-								createdAt={post?.post.createdAt}
-								updatedAt={post?.post.updatedAt}
-								content={post?.post.content}
-								comments={post?.post.comments}
-								reaction={post?.Editreaction}
-								
-							/>
+					<PostItem
+						id={post?.post.id}
+						authorId={post?.post.authorId}
+						authorFirstName={post?.post.authorFirstName}
+						authorLastName={post?.post.authorLastName}
+						authorAvatar={post?.post.authorAvatar}
+						type={post?.post.type}
+						refUrls={post?.post.refUrls}
+						totalReactions={post?.post.totalReactions}
+						totalComments={post?.post.totalComments}
+						createdAt={post?.post.createdAt}
+						updatedAt={post?.post.updatedAt}
+						content={post?.post.content}
+						comments={post?.post.comments}
+						reaction={post?.Editreaction}
+					/>
 				</div>
 			</Modal>
 
@@ -615,7 +703,7 @@ export default function LeftItemGroup() {
 												{item.firstName} {item.lastName}
 											</span>
 											<button
-												style={{ marginLeft: 'auto', backgroundColor: 'white',  }}
+												style={{ marginLeft: 'auto', backgroundColor: 'white' }}
 												onClick={() => {
 													dispatch(editSelectFriendInvite(item));
 												}}
@@ -639,10 +727,9 @@ export default function LeftItemGroup() {
 				</div>
 			</Dialog>
 			<Dialog
-				header= {<div style={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5em" }}>Đổi thông tin</div>}
+				header={<div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>Đổi thông tin</div>}
 				visible={openEditName}
 				style={{ width: '50vw' }}
-				
 				onHide={() => {
 					setOpenEditName(false);
 					setNewName('');
@@ -650,30 +737,30 @@ export default function LeftItemGroup() {
 				}}
 			>
 				<div className="p-fluid">
-					<div className="p-field" style={{textAlign:'center'}}>
-						<div style={{display:'flex', marginTop:'2rem'}}>
-						<label >Tên nhóm</label>
-						<Input
-							value={newName}
-							label="Tên nhóm"
-							onChange={(e) => {
-								setNewName(e.target.value);
-							}}
-							placeholder={group.name}
-							style={{ marginBottom: '1rem' , width:'80%', marginLeft:'1.2rem'}}
-						/>
+					<div className="p-field" style={{ textAlign: 'center' }}>
+						<div style={{ display: 'flex', marginTop: '2rem' }}>
+							<label>Tên nhóm</label>
+							<Input
+								value={newName}
+								label="Tên nhóm"
+								onChange={(e) => {
+									setNewName(e.target.value);
+								}}
+								placeholder={group.name}
+								style={{ marginBottom: '1rem', width: '80%', marginLeft: '1.2rem' }}
+							/>
 						</div>
-						<div style={{display:'flex'}}>
-						<label htmlFor="description">Mô tả</label>
-						<Input
-							value={newDescription}
-							label="Mô tả"
-							onChange={(e) => {
-								setNewDescription(e.target.value);
-							}}
-							placeholder={group.description}
-							style={{ marginBottom: '1rem', width:'80%' , marginLeft:'3rem'}}
-						/>
+						<div style={{ display: 'flex' }}>
+							<label htmlFor="description">Mô tả</label>
+							<Input
+								value={newDescription}
+								label="Mô tả"
+								onChange={(e) => {
+									setNewDescription(e.target.value);
+								}}
+								placeholder={group.description}
+								style={{ marginBottom: '1rem', width: '80%', marginLeft: '3rem' }}
+							/>
 						</div>
 					</div>
 				</div>
@@ -689,7 +776,9 @@ export default function LeftItemGroup() {
 			</Dialog>
 
 			<Dialog
-				header= {<div style={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5em" }}>Đổi ảnh đại diện</div>}
+				header={
+					<div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>Đổi ảnh đại diện</div>
+				}
 				visible={openChangeAvatar}
 				style={{ width: '50vw' }}
 				onHide={() => {
@@ -706,7 +795,7 @@ export default function LeftItemGroup() {
 										textAlign: 'end',
 										margin: '0 10px 0 0',
 										color: 'blue',
-										backgroundColor:'white',
+										backgroundColor: 'white',
 									}}
 									onClick={openAvatarPictureDialog}
 								>
@@ -725,7 +814,6 @@ export default function LeftItemGroup() {
 								onChange={handleAvatarPictureChange}
 								id="AvartarPictureInput"
 							/>
-						
 						</div>
 					</div>
 				</div>
@@ -860,7 +948,7 @@ export default function LeftItemGroup() {
 												dispatch(selectOption('rank'));
 											}}
 										>
-											<FaRankingStar  className="icon-option-group" size={20} />
+											<FaRankingStar className="icon-option-group" size={20} />
 											<span className="option-label-group">Xếp hạng</span>
 										</div>
 									) : null}
@@ -885,6 +973,23 @@ export default function LeftItemGroup() {
 										<MdEventNote className="icon-option-group" size={20} />
 										<span className="option-label-group">Sự kiện</span>
 									</div>
+									{/* {role === 'GROUP_MEMBER' ? (
+										<div
+											className={`custom-option-group ${
+												selectedOption === 'leave' ? 'active' : ''
+											}`}
+											onClick={() => {
+												leaveGroup();
+												dispatch(selectOption('leave'));
+											}}
+										>
+											<MdAutoDelete className="icon-option-group" size={20} />
+											<span className="option-label-group">
+												Rời {location.pathname.includes('class') ? 'Lớp' : 'Nhóm'}
+											</span>
+										</div>
+									) : null} */}
+
 									{role === 'GROUP_ADMIN' || role === 'GROUP_OWNER' ? (
 										<div>
 											<div
@@ -898,7 +1003,7 @@ export default function LeftItemGroup() {
 												<AiOutlineUsergroupAdd className="icon-option-group" size={20} />
 												<span className="option-label-group">Quản lý thành viên</span>
 											</div>
-											<div className='custom-option-group '>
+											<div className="custom-option-group ">
 												<Dropdown
 													menu={{
 														items,
@@ -909,8 +1014,14 @@ export default function LeftItemGroup() {
 													}}
 													style={{ border: 'none', flex: 1 }}
 												>
-													<button style={{backgroundColor:'white', width:'94%',textAlign:'start'}}>
-														<HiInformationCircle className="icon-option-group" size={20}  />
+													<button
+														style={{
+															backgroundColor: 'white',
+															width: '94%',
+															textAlign: 'start',
+														}}
+													>
+														<HiInformationCircle className="icon-option-group" size={20} />
 														<span className="option-label-group">Quản lý nhóm</span>
 													</button>
 												</Dropdown>

@@ -13,6 +13,7 @@ import moment from 'moment';
 import Loading from '../../../../components/Loading';
 import { selectsubmition, selectexam, selectquestionChoose, deletequestionChoose } from '../../../../redux/Exam';
 import Editor from '../../../home/components/Editor';
+import DOMPurify from 'dompurify';
 export default function Submit() {
 	const [submition, setsubmition] = useState();
 	const user = JSON.parse(localStorage.getItem('user'));
@@ -333,7 +334,7 @@ export default function Submit() {
 									<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 									<div
 										className="quest-content"
-										dangerouslySetInnerHTML={{ __html: question.content }}
+										dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(question.content) }}
 										style={{ marginTop: '15px' }}
 									/>
 								</div>
@@ -445,14 +446,14 @@ export default function Submit() {
 										<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 										<div
 											className="quest-content"
-											dangerouslySetInnerHTML={{ __html: item.question }}
+											dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.question) }}
 											style={{ marginTop: '15px' }}
 										/>
 									</div>
 									<div style={{ marginLeft: '20px', marginBottom: '15px' }}>
 										<strong>Đáp án của bạn: </strong>
 										{item.correctAnswer[0] === 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
-											<div dangerouslySetInnerHTML={{ __html: item.userAnswer[0] }} />
+											<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.userAnswer[0]) }} />
 										) : (
 											<div style={{ marginLeft: '15px' }}>
 												{item.userAnswer.map((answer) => (
@@ -503,14 +504,14 @@ export default function Submit() {
 										<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {index + 1}: </strong>
 										<div
 											className="quest-content"
-											dangerouslySetInnerHTML={{ __html: item.question }}
+											dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.question)  }}
 											style={{ marginTop: '15px' }}
 										/>
 									</div>
 									<div style={{ marginLeft: '20px', marginBottom: '15px' }}>
 										<strong>Đáp án được trả lời: </strong>
 										{item.correctAnswer[0] === 'Câu hỏi tự luận điểm do giáo viên chấm !!!' ? (
-											<div dangerouslySetInnerHTML={{ __html: item.userAnswer[0] }} />
+											<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.userAnswer[0]) }} />
 										) : (
 											<div style={{ marginLeft: '15px' }}>
 												{item.userAnswer.map((answer) => (

@@ -12,6 +12,7 @@ import Api from '../../../../api/Api';
 import { url } from '../../../../constants/Constant';
 import { useNavigate } from 'react-router-dom';
 import { Select } from 'antd';
+import DOMPurify from 'dompurify';
 export default function EditInforExam(props) {
 	const [loading, setloading] = useState(false);
 	const [form] = Form.useForm();
@@ -287,7 +288,7 @@ export default function EditInforExam(props) {
 												>
 													<lable> Câu hỏi: </lable>
 													<div
-														dangerouslySetInnerHTML={{ __html: value[index] }}
+														dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value[index]) }}
 														className="question-content"
 														hidden={editingIndex === index}
 													/>

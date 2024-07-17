@@ -21,7 +21,7 @@ import AddFile from './../components/AddFile';
 import { Modal } from 'antd';
 import LabelFile from '../../profile/component/LabelFile';
 import create from '@ant-design/icons/lib/components/IconFont';
-
+import DOMPurify from 'dompurify';
 const CreateQuiz = () => {
 	const [form] = Form.useForm();
 	const dispatch = useDispatch();
@@ -447,7 +447,7 @@ const CreateQuiz = () => {
 											>
 												<lable> Câu hỏi: </lable>
 												<div
-													dangerouslySetInnerHTML={{ __html: value[index] }}
+													dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value[index]) }}
 													className="question-content"
 													hidden={editingIndex === index}
 												/>

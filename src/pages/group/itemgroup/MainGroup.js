@@ -27,7 +27,7 @@ export default function MainGroup() {
     <>
     
       <div>
-        <BannerGroup />
+        <BannerGroup style ={{width:"94%"}}/>
 
        
         {selectedOption === 'post' ? <PostGroup /> : null}

@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { Select } from 'antd';
 import { editquestion } from '../../../../redux/Exam';
 import { useDispatch } from 'react-redux';
+import DOMPurify from 'dompurify';
 export default function EditInforQuestion(props) {
 	const [loading, setloading] = useState(false);
 	const [form] = Form.useForm();
@@ -160,7 +161,7 @@ export default function EditInforQuestion(props) {
 								onClick={() => handleEditQuestion()}
 							>
 								<lable> Câu hỏi: </lable>
-								<div dangerouslySetInnerHTML={{ __html: value }} />
+								<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value) }} />
 							</div>
 							<Form.Item name="answerType" valuePropName="checked">
 								<Radio.Group

@@ -9,7 +9,7 @@ import { url } from '../../../constants/Constant';
 import { toast, ToastContainer } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
-
+import DOMPurify from 'dompurify';
 export default function SubmitCompetition() {
 	const [loading, setloading] = useState(false);
 	const [submition, setSubmition] = useState(null);
@@ -234,7 +234,7 @@ export default function SubmitCompetition() {
 						<strong style={{ margin: '16px 15px 0 15px' }}>Câu hỏi {currentQuestionIndex + 1}: </strong>
 						<div
 							className="quest-content"
-							dangerouslySetInnerHTML={{ __html: currentQuestion.content }}
+							dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(currentQuestion.content)}}
 							style={{ marginTop: '15px' }}
 						/>
 					</div>
