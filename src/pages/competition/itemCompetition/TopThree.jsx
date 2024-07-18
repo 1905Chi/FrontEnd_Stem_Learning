@@ -13,7 +13,6 @@ import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import './TopThree.css';
-
 const TopThree = (props) => {
 	
 
@@ -55,7 +54,7 @@ const TopThree = (props) => {
 					{
 						id: topThree[0].id,
 						name: topThree[0].name,
-						avatar: topThree[0].avatarUrl,
+						avatar: topThree[0].Avatar,
 						medal:  GoldMedal,
 					},
 				
@@ -72,13 +71,13 @@ const TopThree = (props) => {
 					{
 						id: topThree[1].id,
 						name: topThree[1].name,
-						avatar: topThree[1].avatarUrl,
+						avatar: topThree[1].Avatar,
 						medal: SliverMedal,
 					},
 					{
 						id: topThree[0].id,
 						name: topThree[0].name,
-						avatar: topThree[0].avatarUrl,
+						avatar: topThree[0].Avatar,
 						medal: GoldMedal,
 					},
 					{
@@ -94,19 +93,19 @@ const TopThree = (props) => {
 					{
 						id: topThree[1].id,
 						name: topThree[1].name,
-						avatar: topThree[1].avatarUrl,
+						avatar: topThree[1].Avatar,
 						medal: SliverMedal,
 					},
 					{
 						id: topThree[0].id,
 						name: topThree[0].name,
-						avatar: topThree[0].avatarUrl,
+						avatar: topThree[0].Avatar,
 						medal: GoldMedal,
 					},
 					{
 						id: topThree[2].id,
 						name: topThree[2].name,
-						avatar: topThree[2].avatarUrl,
+						avatar: topThree[2].Avatar,
 						medal: BronzeMedal,
 					},
 				])
@@ -132,7 +131,7 @@ const TopThree = (props) => {
 
 							{item.avatar !== null && item.avatar !== undefined ?
 							<Avatar className={`top-three-avatar ${index === 1 ? 'large' : ''}`} src={item.avatar} />
-							: <Avatar className={`top-three-avatar ${index === 1 ? 'large' : ''}`} src={GoldMedal}/>
+							: <Avatar className={`top-three-avatar ${index === 1 ? 'large' : ''}`} icon={<UserOutlined style={{ height: '3em' }} />}/>
 						}
 							<div className="medal-container">
 								<img className="medal" src={item.medal} alt="Medal Icon" />

@@ -61,6 +61,7 @@ export default function SubmitCompetition() {
 						localStorage.setItem('submissionId', response.data.result.submissionId);
 						setCurrentQuestion(response.data.result.questions[0]);
 						setTargetTime(Number(localStorage.getItem('duration')) * 60 * 1000);
+						console.log(Number(localStorage.getItem('duration')) * 60 * 1000)
 
 						localStorage.setItem('typesubmit', 'continue');
 
